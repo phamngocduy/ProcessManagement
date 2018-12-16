@@ -1,20 +1,20 @@
-﻿@model WebApplication.Models.ExternalLoginListViewModel
+﻿@model ProcessManagement.Models.ExternalLoginListViewModel
 @using Microsoft.Owin.Security
 
-<h4>Use another service to log in.</h4>
+<h4>@ProcessManagement.Content.resources.CWlogin.clockworks_login_service</h4>
 <hr />
 @{
     var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
     if (loginProviders.Count() == 0) {
         <div>
             <p>
-                There are no external authentication services configured. See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
+                There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
                 for details on setting up this ASP.NET application to support logging in via external services.
             </p>
         </div>
     }
     else {
-        using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = Model.ReturnUrl })) {
+        using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = Model.ReturnUrl}, FormMethod.Post ,new { id = "externallogin" })) {
             @Html.AntiForgeryToken()
             <div id="socialLoginList">
                 <p>

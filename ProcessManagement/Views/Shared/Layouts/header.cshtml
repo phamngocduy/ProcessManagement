@@ -1,0 +1,21 @@
+﻿<div class="top_nav">
+    <div class="nav_menu" id="header">
+        <nav>
+            <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+            </div>
+            <ul class="nav navbar-nav navbar-left" style="padding:10px 40px">
+                <a href="@Url.Action("Index","Home")"><img src="~/Content/images/logo-big.png" width="205" alt="Alternate Text"  /></a>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                @Html.Partial("_LoginPartial")
+                <li>
+                    <a class="setLang" data-lang="vi" style="display:inline-block">Tiếng Việt</a>
+                </li>
+                <li>
+                    <a class="setLang" data-lang="en" style="display:inline-block">English</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

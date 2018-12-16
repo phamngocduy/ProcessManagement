@@ -1,31 +1,32 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_NullLayout.cshtml";
+
 }
+@section CustomCss{
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+}
+<div class="cw-intro-page row">
+    <div class="col-sm-6 cw-wapper">
+        <h1 style="font-size: 40px;line-height: 47px;text-align: left;font-weight:300"><strong>BUSINESS PROCESS MODELING</strong> MADE EASILY</h1>
+        <div class="cw-benefit">
+            <p>This&nbsp;<strong>business process modeling tool</strong>&nbsp;has everything an expert in processes could ever want</p>
+            <ul>
+                <li>Model your processes</li>
+                <li>Quick and easy to use.</li>
+                <li>Uses BPMN 2.0 notation.</li>
+                <li>
+                    Generates perfect, beautiful, complete, professional and stylish documentation.
+                </li>
+            </ul>
+            <div class="cw-btn-intro">
+                <a href="#" class="btn btn-success cw-btn-big" btn>Create Account</a>
+                <a href="#" class="btn btn-default cw-btn-big" btn>Find Group</a>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+    <div class="col-sm-6 cw-wapper">
+        <img src="~/Content/images/intro.jpg" width="600" height="400" alt="Alternate Text" />
     </div>
 </div>

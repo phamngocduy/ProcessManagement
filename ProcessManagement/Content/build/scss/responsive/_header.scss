@@ -1,0 +1,15 @@
+
+@include respond-to(extra-small-screens) {
+    .cw-header{
+        padding: 5px 25%;
+        .cw-header-left{
+            #search{
+                display: none
+            }
+        }
+        .cw-header-right{
+            float:left;
+            padding: 0px;
+        }
+    }
+}

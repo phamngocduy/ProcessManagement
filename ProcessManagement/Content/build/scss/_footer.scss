@@ -1,0 +1,26 @@
+.cw-footer{
+    padding: 20px;
+    background-color: $primaryColor;
+    .cw-social{
+        list-style: none;
+        text-align: center;
+        li{
+            display: inline;
+            a{
+                text-decoration: none;
+                color: $iconColor;
+                margin-right: 18px;
+                i{
+                    font-size: 18px;
+                }
+                &:hover{
+                    color: $iconColor-Hover;
+                }
+            }
+        }
+    }
+    .cw-copyright{
+        color: white;
+        text-align: center;
+    }
+}

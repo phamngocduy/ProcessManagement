@@ -1,0 +1,219 @@
+﻿@model ProcessManagement.Models.Group
+@{
+    ViewBag.Title = ProcessManagement.Content.resources.CWgroup_create.clockworks_group_create_title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section CustomCss{
+    <style>
+        input[type=file] {
+            outline: 0;
+            opacity: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .label {
+            width: 120px;
+            border: 2px dashed grey;
+            border-radius: 5px;
+            display: block;
+            padding: 1.2em;
+            transition: border 300ms ease;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .label i {
+            display: block;
+            font-size: 42px;
+            padding-bottom: 16px;
+        }
+
+        .label i,
+        .label .title {
+            color: grey;
+            transition: 200ms color;
+        }
+
+        .label:hover {
+            border: 2px solid black;
+        }
+
+        .label:hover i,
+        .label:hover .title {
+            color: black;
+        }
+    </style>
+    <style>
+        .form-check {
+            position: relative;
+            display: block;
+        }
+        .form-check-input {
+            position: absolute;
+            margin-top: 0.6rem !important;
+        }
+        .form-check-label {
+            margin-bottom: 0;
+            margin-left: 18px;
+        }
+        .form-check i.fa, .form-check i.fas {
+            margin: 2px 0;
+            font-size: 20px;
+        }
+        .form-check .option-title {
+            font-weight: 600;
+            display: inline-block;
+        }
+        .form-check .option-description,.form-check .option-disabled-reason {
+            margin-left: 30px;
+            font-weight:normal;
+        }
+    </style>
+}
+<div class="cw-container">
+    <div class="cw-title">Sign up your group</div>
+    <ol class="cw-steps">
+        <li class="current">
+            <i class="fas fa-briefcase"></i>
+            <strong class="cw-step">Step 1:</strong>Set up your group
+        </li>
+        <li>
+            <i class="fas fa-user-plus"></i>
+            <strong class="cw-step">Step 2:</strong>Invite Members
+        </li>
+    </ol>
+    <div class="cw-create-workspace row">
+        @using (Html.BeginForm("Create", "Group", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <h2 class="cw-header-light">Create your group right away!!</h2>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "cw-required" })
+                    <div>
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @Required = "required" } })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        <span class="cw-hint">This will be your workspace name on our website</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Visibility,"Visibility Level")
+                    <div>
+                        <span class="cw-hint">Who will be able to see this group? </span>
+                        <div class="form-check">
+                            <input type="radio" name="Visibility" value="1" class="form-check-input" id="group_visibility_private" checked/>
+                            <label class="form-check-label" for="group_visibility_private">
+                                <i aria-hidden="true" data-hidden="true" class="fa fa-lock fa-fw"></i>
+                                <div class="option-title">
+                                    Private
+                                </div>
+                                <div class="option-description">
+                                    The group and its projects can only be viewed by members.
+                                </div>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" name="Visibility" value="2" class="form-check-input" id="group_visibility_internal"/>
+                            <label class="form-check-label" for="group_visibility_internal">
+                                <i aria-hidden="true" data-hidden="true" class="fas fa-shield-alt fa-fw"></i>
+                                <div class="option-title">
+                                    Internal
+                                </div>
+                                <div class="option-description">
+                                    The group and any internal projects can be viewed by any logged in user.
+                                </div>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" name="Visibility" value="3" class="form-check-input" id="group_visibility_public"/>
+                            <label class="form-check-label" for="group_visibility_public">
+                                <i aria-hidden="true" data-hidden="true" class="fa fa-globe fa-fw"></i>
+                                <div class="option-title">
+                                    Public
+                                </div>
+                                <div class="option-description">
+                                    The group and any public projects can be viewed without any authentication
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Description, "Description (Optional)")
+                    <div>
+                        @Html.TextAreaFor(model => model.Description, new { @class = "form-control", rows = 7 })
+                        <span class="cw-hint">Describe your group that you want to establish</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Avatar,"Group Avatar (Optional)")
+                    <div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="label">
+                                    <i class="fas fa-paperclip"></i>
+                                    <span class="title">Add Image</span>
+                                    <input type="file" name="ImageWS" id="imgInp" />
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <img style="max-width: 400px;height: auto" id='img-upload' />
+                </div>
+            </div>
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-success">@ProcessManagement.Content.resources.CWgroup_create.clockworks_group_create_button</button>
+            </div>
+        }
+    </div>
+</div>
+
+@section CustomScripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $(document).on('change', '.btn-file :file', function () {
+                var input = $(this),
+                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                input.trigger('fileselect', [label]);
+            });
+
+            $('.btn-file :file').on('fileselect', function (event, label) {
+
+                var input = $(this).parents('.input-group').find(':text'),
+                    log = label;
+
+                if (input.length) {
+                    input.val(log);
+                } else {
+                    if (log) alert(log);
+                }
+
+            });
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#img-upload').attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $("#imgInp").change(function () {
+                readURL(this);
+            });
+        });
+    </script>
+}
+

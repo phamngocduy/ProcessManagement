@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="e433c0bab1ea45d682be887da5d82725" Name="Diagram1" ZoomLevel="86">
+        <EntityTypeShape EntityType="PMSModel.AspNetRole" Width="1.5" PointX="0.75" PointY="6.375" />
+        <EntityTypeShape EntityType="PMSModel.AspNetUserClaim" Width="1.5" PointX="5.25" PointY="11.5" />
+        <EntityTypeShape EntityType="PMSModel.AspNetUserLogin" Width="1.5" PointX="5.25" PointY="9" />
+        <EntityTypeShape EntityType="PMSModel.AspNetUser" Width="1.5" PointX="3" PointY="4.875" />
+        <EntityTypeShape EntityType="PMSModel.Group" Width="1.5" PointX="5.25" PointY="4.5" />
+        <EntityTypeShape EntityType="PMSModel.Participate" Width="1.5" PointX="7.5" PointY="5.625" />
+        <EntityTypeShape EntityType="PMSModel.Process" Width="1.5" PointX="10.5" PointY="5.5" />
+        <EntityTypeShape EntityType="PMSModel.Step" Width="1.5" PointX="12.75" PointY="5.625" />
+        <EntityTypeShape EntityType="PMSModel.Visibility" Width="1.5" PointX="3" PointY="1.125" />
+        <AssociationConnector Association="PMSModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="PMSModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="PMSModel.FK_Group_AspNetUsers" />
+        <AssociationConnector Association="PMSModel.FK_Participate_AspNetUsers" />
+        <AssociationConnector Association="PMSModel.FK_Process_AspNetUsers" />
+        <AssociationConnector Association="PMSModel.FK_Group_Visibility" />
+        <AssociationConnector Association="PMSModel.FK_Participate_Group" />
+        <AssociationConnector Association="PMSModel.FK_Process_Group" />
+        <AssociationConnector Association="PMSModel.FK_Step_Process" />
+        <AssociationConnector Association="PMSModel.AspNetUserRoles" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

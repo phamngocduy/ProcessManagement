@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using WebApplication;
-using WebApplication.Controllers;
+using ProcessManagement;
+using ProcessManagement.Controllers;
 
-namespace WebApplication.Tests.Controllers
+namespace ProcessManagement.Tests.Controllers
 {
     [TestClass]
     public class HomeControllerTest
