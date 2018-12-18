@@ -308,6 +308,33 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\build\css\custom.css" />
+    <Content Include="Content\build\css\custom.min.css" />
+    <Content Include="Content\build\css\grid-boostrap-fixheight.css" />
+    <Content Include="Content\build\css\guest-style.css" />
+    <Content Include="Content\build\css\responsive.css" />
+    <Content Include="Content\build\css\style.css" />
+    <Content Include="Content\build\js\common.js" />
+    <Content Include="Content\build\js\cookie.js" />
+    <Content Include="Content\build\js\custom.js" />
+    <Content Include="Content\build\js\custom.min.js" />
+    <Content Include="Content\build\js\fixHeight.js" />
+    <Content Include="Content\build\js\include.js" />
+    <Content Include="Content\build\js\language.js" />
+    <Content Include="Content\build\js\script.js" />
+    <Content Include="Content\build\scripts\bootstrap.js" />
+    <Content Include="Content\build\scripts\bootstrap.min.js" />
+    <None Include="Content\build\scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Content\build\scripts\jquery-3.3.1.js" />
+    <Content Include="Content\build\scripts\jquery-3.3.1.min.js" />
+    <Content Include="Content\build\scripts\jquery-3.3.1.slim.js" />
+    <Content Include="Content\build\scripts\jquery-3.3.1.slim.min.js" />
+    <None Include="Content\build\scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Content\build\scripts\jquery.validate.js" />
+    <Content Include="Content\build\scripts\jquery.validate.min.js" />
+    <Content Include="Content\build\scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Content\build\scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Content\build\scripts\modernizr-2.8.3.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Models\PMS.Context.tt">
@@ -363,16 +390,46 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_NullLayout.cshtml" />
+    <Content Include="Views\Group\EditRoleMember.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\build\css\guest-style.css.map" />
+    <Content Include="Content\build\css\responsive.css.map" />
+    <Content Include="Content\build\css\style.css.map" />
+    <Content Include="Content\build\scripts\jquery-3.3.1.min.map" />
+    <Content Include="Content\build\scripts\jquery-3.3.1.slim.min.map" />
+    <Content Include="Content\build\scss\guest-style.scss" />
+    <Content Include="Content\build\scss\responsive\responsive.scss" />
+    <Content Include="Content\build\scss\responsive\_add_member.scss" />
+    <Content Include="Content\build\scss\responsive\_config.scss" />
+    <Content Include="Content\build\scss\responsive\_header.scss" />
+    <Content Include="Content\build\scss\responsive\_layout.scss" />
+    <Content Include="Content\build\scss\style.scss" />
+    <Content Include="Content\build\scss\_add-member.scss" />
+    <Content Include="Content\build\scss\_common.scss" />
+    <Content Include="Content\build\scss\_config.scss" />
+    <Content Include="Content\build\scss\_content.scss" />
+    <Content Include="Content\build\scss\_create-workspace.scss" />
+    <Content Include="Content\build\scss\_footer.scss" />
+    <Content Include="Content\build\scss\_header.scss" />
+    <Content Include="Content\build\scss\_intro-page.scss" />
+    <Content Include="Content\build\scss\_layout.scss" />
+    <Content Include="Content\build\scss\_menu.scss" />
+    <Content Include="Content\build\scss\_show-member.scss" />
+    <Content Include="Content\build\scss\_show-setup-workspace.scss" />
+    <Content Include="Content\build\scss\_show-workspace.scss" />
+    <Content Include="Content\build\scss\_theme.scss" />
     <None Include="packages.config" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Group\Index.cshtml" />
     <Content Include="Views\Group\Create.cshtml" />
+    <Content Include="Views\Group\Show.cshtml" />
+    <Content Include="Views\Group\AddMember.cshtml" />
+    <Content Include="Views\Group\Settings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

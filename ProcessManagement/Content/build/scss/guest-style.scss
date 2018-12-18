@@ -4,6 +4,8 @@ $version: "1.0";
 @import '../css/custom.min.css';
 @import 'config';
 @import 'theme';
+@import 'layout';
 @import 'common';
 @import 'intro-page';
+@import 'content';   
 /* sass --watch public/build/scss/style.scss public/build/css/style.css */

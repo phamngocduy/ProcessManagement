@@ -1,0 +1,87 @@
+﻿@model ProcessManagement.Models.Group
+@{
+    ViewBag.Title = "ShowGroup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="cw-workspace-header">
+    <div class="cw-workspace-intro">
+        <div class="cw-workspace-avatar">
+            <img src="~/Content/images/workspace/@Html.DisplayFor(model => model.Avatar)" alt="@Html.DisplayFor(model => model.Name)'s Avatar">
+        </div>
+        <div class="cw-workspace-name cw-normal-header">
+            @Html.DisplayFor(model => model.Name)
+        </div>
+    </div>
+    <ul class="cw-tabs">
+        <li class="cw-active-tab" rel="process">
+            <a href="@Url.Action("Show", "Group", new { id = Model.Id })"><i class="fas fa-sitemap"></i> Process</a>
+        </li>
+        <li rel="members">
+            <a href="@Url.Action("AddMember", "Group", new { id = Model.Id })"><i class="fas fa-user-friends"></i> Members</a>
+        </li>
+        <li rel="settings">
+            <a href="@Url.Action("Settings", "Group", new { id = Model.Id })"><i class="fas fa-cog"></i> Settings</a>
+        </li>
+    </ul>
+</div>
+<div class="cw-workspace-header" style="position:relative">
+    <div class="cw-find-members">
+        <div class="form-group">
+            <span class="cw-input-icon">
+                <input type="text" name="name" class="form-control cw-input-has-icon" id="cw-members-name"
+                       placeholder="Find a process">
+                <i class="fas fa-search cw-label-icon"></i>
+            </span>
+            <button class="btn btn-primary" style="margin-bottom:0%">Find</button>
+            <div style="float: right">
+                <span>Customize pinned proccess</span>
+                <button class="btn btn-success"><i class="fas fa-sitemap"></i> New</button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <hr class="cw-normal-hr">
+    <div class="cw-workspace-internal">
+        <div class="row" style="margin:0">
+            <div class="col-md-8 cw-workspace-list-process" style="padding-top: 2%; padding-bottom:2%">
+                <div align="left">
+                    <a class="cw-header-large cw-error-no-process">SEP</a>
+                    <h5>This is college a gradution project of Van lang student</h5>
+                    <hr class="cw-normal-hr">
+                    <a class="cw-header-large cw-error-no-process">SEP</a>
+                    <h5>This is college a gradution project of Van lang student</h5>
+                </div>
+            </div>
+            <div class="col-md-4" style="padding-right: 0">
+                <div class="col-md-12 cw-workspace-members cw-box">
+                    <div class="cw-box-header">
+                        <div class="cw-box-title">People</div>
+                        <div class="cw-member-total">1 <i class="fas fa-users"></i></div>
+                        <div class="clearfix"></div>
+                        <hr class="cw-normal-hr" style="margin-top: 10px">
+                    </div>
+                    <div class="cw-box-body">
+                        <ul class="cw-members-list media-list">
+                            <li class="media">
+                                <a href="#" class="cw-member-infor">
+                                    <div class="media-left">
+                                        <img alt="user's avatar" class="media-object"
+                                             src="public/images/workspace/avatar2.png" style="width: 64px; height: 64px;">
+                                    </div>
+                                    <div class="media-body" style="padding-top:7%">
+                                        Tuan Ho
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <hr class="cw-normal-hr">
+                    <div align="center">
+                        <button class="btn btn-success"><i class="fas fa-plus"></i> Invite Member</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

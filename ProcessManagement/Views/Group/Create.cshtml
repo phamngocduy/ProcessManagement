@@ -1,7 +1,7 @@
 ﻿@model ProcessManagement.Models.Group
 @{
     ViewBag.Title = ProcessManagement.Content.resources.CWgroup_create.clockworks_group_create_title;
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_NullLayout.cshtml";
 }
 
 @section CustomCss{
@@ -73,8 +73,8 @@
     </style>
 }
 <div class="cw-container">
-    <div class="cw-title">Sign up your group</div>
-    <ol class="cw-steps">
+    @*<div class="cw-title">Sign up your group</div>*@
+    @*<ol class="cw-steps">
         <li class="current">
             <i class="fas fa-briefcase"></i>
             <strong class="cw-step">Step 1:</strong>Set up your group
@@ -83,12 +83,12 @@
             <i class="fas fa-user-plus"></i>
             <strong class="cw-step">Step 2:</strong>Invite Members
         </li>
-    </ol>
+    </ol>*@
     <div class="cw-create-workspace row">
         @using (Html.BeginForm("Create", "Group", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
-            <h2 class="cw-header-light">Create your group right away!!</h2>
+            <h1 class="col-sm-12">Create your group right away!!</h1>
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="col-sm-6">
                 <div class="form-group">
@@ -149,23 +149,18 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6">
-                <div class="form-group">
+            <div class="col-md-6 row">
+                <div class="col-md-4">
                     @Html.LabelFor(model => model.Avatar,"Group Avatar (Optional)")
                     <div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label class="label">
-                                    <i class="fas fa-paperclip"></i>
-                                    <span class="title">Add Image</span>
-                                    <input type="file" name="ImageWS" id="imgInp" />
-                                </label>
-                            </div>
-
-                        </div>
+                        <label class="label">
+                            <i class="fas fa-paperclip"></i>
+                            <span class="title">Add Image</span>
+                            <input type="file" name="ImageWS" id="imgInp" />
+                        </label>
                     </div>
                 </div>
-                <div>
+                <div class="col-md-8">
                     <img style="max-width: 400px;height: auto" id='img-upload' />
                 </div>
             </div>

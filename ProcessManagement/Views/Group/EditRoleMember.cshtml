@@ -1,0 +1,113 @@
+﻿@model ProcessManagement.Models.Participate
+@{
+    ViewBag.Title = "EditRoleMember";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var checkAdmin = Model.IsAdmin ? "checked" : "";
+    var adminValue = Model.IsAdmin ? "true" : "false";
+    var checkManager = Model.IsManager ? "checked" : "";
+    var ManagerValue = Model.IsManager ? "true" : "false";
+
+
+}
+@section CustomCss{
+    @*<!-- NProgress -->
+        <link href="~/Content/libs/nprogress/nprogress.css" rel="stylesheet">
+        <!-- iCheck -->
+        <link href="~/Content/libs/iCheck/skins/flat/green.css" rel="stylesheet">
+        <!-- bootstrap-wysiwyg -->
+        <link href="~/Content/libs/google-code-prettify/bin/prettify.min.css" rel="stylesheet">
+        <!-- Select2 -->
+        <link href="~/Content/libs/select2/dist/css/select2.min.css" rel="stylesheet">*@
+    <!-- Switchery -->
+    <link href="~/Content/libs/switchery/dist/switchery.min.css" rel="stylesheet">
+    @*<!-- starrr -->
+        <link href="~/Content/libs/starrr/dist/starrr.css" rel="stylesheet">
+        <!-- bootstrap-daterangepicker -->
+        <link href="~/Content/libs/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">*@
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>@Html.ValueFor(model => model.Group.Name)</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IdUser, "User_ID", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AspNetUser.Email, new { htmlAttributes = new { @class = "form-control", @Readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.IdUser, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsAdmin, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="checkbox" class="js-switch" name="IsAdmin" value=@adminValue @checkAdmin />
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsManager, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="checkbox" class="js-switch" name="IsManager" value=@ManagerValue @checkManager />
+            </div>
+        </div>
+
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.Role_Member, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.Role_Member)
+                        @Html.ValidationMessageFor(model => model.Role_Member, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>*@
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button class="btn btn-success" type="submit">Save Change</button>
+            </div>
+        </div>
+    </div>
+}
+@section CustomScripts {
+    @*<script src="~/Content/libs/fastclick/lib/fastclick.js"></script>
+        <!-- NProgress -->
+        <script src="~/Content/libs/nprogress/nprogress.js"></script>
+        <!-- bootstrap-progressbar -->
+        <script src="~/Content/libs/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+        <!-- iCheck -->
+        <script src="~/Content/libs/iCheck/icheck.min.js"></script>
+        <!-- bootstrap-daterangepicker -->
+        <script src="~/Content/libs/moment/min/moment.min.js"></script>
+        <script src="~/Content/libs/bootstrap-daterangepicker/daterangepicker.js"></script>
+        <!-- bootstrap-wysiwyg -->
+        <script src="~/Content/libs/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
+        <script src="~/Content/libs/jquery.hotkeys/jquery.hotkeys.js"></script>
+        <script src="~/Content/libs/google-code-prettify/src/prettify.js"></script>
+        <!-- jQuery Tags Input -->
+        <script src="~/Content/libs/jquery.tagsinput/src/jquery.tagsinput.js"></script>*@
+    <!-- Switchery -->
+    <script src="~/Content/libs/switchery/dist/switchery.min.js"></script>
+    @*<!-- Select2 -->
+        <script src="~/Content/libs/select2/dist/js/select2.full.min.js"></script>
+        <!-- Parsley -->
+        <script src="~/Content/libs/parsleyjs/dist/parsley.min.js"></script>
+        <!-- Autosize -->
+        <script src="~/Content/libs/autosize/dist/autosize.min.js"></script>
+        <!-- jQuery autocomplete -->
+        <script src="~/Content/libs/devbridge-autocomplete/dist/jquery.autocomplete.min.js"></script>
+        <!-- starrr -->
+        <script src="~/Content/libs/starrr/dist/starrr.js"></script>*@
+    <script>
+        $(document).ready(function () {
+            $('.js-switch').on('change', function () {
+                var sw = $(this);
+                sw.val(sw.prop('checked'));
+            });
+        });
+    </script>    
+}

@@ -9,7 +9,7 @@
 <div class="group-list row display-flex">
     @foreach (var item in grouplist)
     {
-        var des = item.Description == null?"":item.Description;
+        var des = item.Description == null ? "" : item.Description;
         if (des.Length > 100)
         {
             des = des.Substring(1, 100) + "...";
@@ -17,12 +17,12 @@
         <div class="col-sm-3">
             <div class="cw-card">
                 <div class="cw-group-image">
-                    <a href="@Url.Action("ShowGroup","Group",new { id = item.Id})">
+                    <a href="@Url.Action("Show","Group",new { id = item.Id})">
                         <img src="~/Content/images/workspace/@Html.DisplayFor(modle => item.Avatar)" alt="@item.Name" class="image-medium" />
                     </a>
                 </div>
                 <div class="cw-group-infor">
-                    <div class="cw-group-name">@Html.ActionLink(item.Name, "ShowGroup", new { id = item.Id })</div>
+                    <div class="cw-group-name">@Html.ActionLink(item.Name, "Show", new { id = item.Id })</div>
                     <div class="cw-group-author"><span class="cw-label">Author:</span>@Html.DisplayFor(modle => item.AspNetUser.UserName)</div>
                     <div class="cw-group-date"><span class="cw-label">Update at:</span>@Html.DisplayFor(modle => item.Updated_At)</div>
                     <div class="cw-group-des" style="word-break:break-all">

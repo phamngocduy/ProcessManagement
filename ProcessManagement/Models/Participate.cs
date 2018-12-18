@@ -14,6 +14,7 @@ namespace ProcessManagement.Models
     
     public partial class Participate
     {
+        public int Id { get; set; }
         public int IdGroup { get; set; }
         public string IdUser { get; set; }
         public bool IsAdmin { get; set; }
