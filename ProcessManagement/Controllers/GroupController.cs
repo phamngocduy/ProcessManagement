@@ -17,7 +17,7 @@ namespace ProcessManagement.Controllers
         public ActionResult Index()
         {
             string IdUser = User.Identity.GetUserId();
-            //lấy ra những group mà user tham da
+            //lấy ra những group mà user tham gia
             var ListGroupAttend = db.Participates.Where(m => m.IdUser == IdUser).ToList();
             //tạo 1 list chứa id các group mà user tham gia
             List<int> ListGroupid = new List<int>();
@@ -35,27 +35,27 @@ namespace ProcessManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(Group group, HttpPostedFileBase ImageGr)
+        public ActionResult Create(Group group, HttpPostedFileBase ImageWS)
         {
 
             string userid = User.Identity.GetUserId();
-            if (ImageGr != null)
+            if (ImageWS != null)
             {
                 string avatar = "";
-                if (ImageGr.ContentLength > 0)
+                if (ImageWS.ContentLength > 0)
                 {
-                    var filename = Path.GetFileName(ImageGr.FileName);
+                    var filename = Path.GetFileName(ImageWS.FileName);
                     var path = Path.Combine(Server.MapPath("~/Content/images/workspace/"), filename);
-                    ImageGr.SaveAs(path);
+					ImageWS.SaveAs(path);
                     avatar = filename;
                 }
                 group.Avatar = avatar;
             }
-            else
-            {
-                group.Avatar = "default.png";
-            }
-            group.IdOwner = userid;
+			else
+			{
+				group.Avatar = "default.jpg";
+			}
+			group.IdOwner = userid;
             group.Created_At = DateTime.Now;
             group.Updated_At = DateTime.Now;
 
