@@ -3,6 +3,8 @@ using System;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
+using ProcessManagement.Models;
 namespace ProcessManagement.Controllers
 {
     public class BaseController : Controller
@@ -11,6 +13,13 @@ namespace ProcessManagement.Controllers
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            if (Request.IsAuthenticated)
+            {
+                AspNetUser user = new AspNetUser();
+                user.UserName = User.Identity.GetUserName();
+                user.Id = User.Identity.GetUserId();
+                Session["User"] = user;
+            }
             string cultureOnCookie = GetCultureOnCookie(filterContext.HttpContext.Request);
             string cultureOnURL = filterContext.RouteData.Values.ContainsKey("lang")
             ? filterContext.RouteData.Values["lang"].ToString()

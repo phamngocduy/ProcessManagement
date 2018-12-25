@@ -254,6 +254,8 @@
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Filters\GroupAuthorizeAttribute.cs" />
+    <Compile Include="Filters\RoleAuthorizeAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -6490,7 +6492,9 @@
     <Content Include="Models\PMS.edmx.diagram">
       <DependentUpon>PMS.edmx</DependentUpon>
     </Content>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -6527,6 +6531,10 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_NullLayout.cshtml" />
     <Content Include="Views\Group\EditRoleMember.cshtml" />
+    <Content Include="Views\Shared\Layouts\Settings\General.cshtml" />
+    <Content Include="Views\Shared\Layouts\Settings\Members.cshtml" />
+    <Content Include="Views\Shared\Layouts\Settings\Visibility.cshtml" />
+    <Content Include="Views\Shared\Layouts\Settings\Advanced.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

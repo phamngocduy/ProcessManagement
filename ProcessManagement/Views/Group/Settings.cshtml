@@ -1,18 +1,7 @@
 ﻿@model ProcessManagement.Models.Group
-@using Microsoft.AspNet.Identity;
 @{
     ViewBag.Title = "Setting";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var userlist = ViewData["ListUser"] as List<ProcessManagement.Models.AspNetUser>;
-    var participentlist = ViewData["ListParticipant"] as List<ProcessManagement.Models.Participate>;
-    var visibilitylist = ViewData["ListVisibility"] as List<ProcessManagement.Models.Visibility>;
-    bool isUserEmpty = !userlist.Any();
-    var showGaneralSetting = TempData["GaneralSetting"] != null ? "in" : "";
-    var showUserSetting = TempData["UserSetting"] != null ? "in" : "";
-    var showPermissionSetting = TempData["PermissionSetting"] != null ? "in" : "";
-
-
-
 }
 @section CustomCss{
     <style>
@@ -140,253 +129,13 @@
 <div class="cw-container">
     @*<h4> Setting</h4>*@
     <div class="project-edit-container">
-        <section class="settings">
-            <div class="settings-header">
-                <h4>General Group</h4>
-                <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#genaral-settings" aria-expanded="false" aria-controls="genaral-settings">
-                    Expand
-                </button>
-                <p>
-                    Update your group name, description, avatar, and other general settings.
-                </p>
-            </div>
-            <div class="settings-content collapse @showGaneralSetting" id="genaral-settings">
-                @using (Html.BeginForm("Edit", "Group", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                {
-                    @Html.AntiForgeryToken()
-
-                    <div class="form-horizontal">
-                        <br />
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        @Html.HiddenFor(model => model.Id)
-
-                        <div class="row">
-                            <div class="form-group col-md-9">
-                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "cw-required" })
-                                <div>
-                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", value = Model.Name } })
-                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                            <div class="form-group col-md-3">
-                                @Html.LabelFor(model => model.Id, "Project ID")
-                                <div>
-                                    <input type="text" value="@Model.Id" class="form-control" disabled />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Description)
-                            <div>
-                                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", rows = 7, value = Model.Description })
-                                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Avatar, "Avatar Group")
-                            <div>
-                                <div class="row">
-                                    <div class="col-md-2">
-                                        <label class="label">
-                                            <i class="fas fa-paperclip"></i>
-                                            <span class="title">Add Image</span>
-                                            <input type="file" name="ImageWS" id="imgInp" />
-                                        </label>
-                                    </div>
-                                    <div class="col-md-10">
-                                        <img style="width: 200px;height: auto" id='img-upload' src="~/Content/images/workspace/@Model.Avatar" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-success" type="submit">Save Change</button>
-                        </div>
-                    </div>
-                }
-            </div>
-        </section>
-        <section class="settings">
-            <div class="settings-header">
-                <h4>Members</h4>
-                <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#member-settings" aria-expanded="false" aria-controls="member-settings">
-                    Expand
-                </button>
-                <p>
-                    You can invite a new member to @Model.Name.
-                </p>
-            </div>
-            <div class="settings-content collapse @showUserSetting" id="member-settings">
-                @using (Html.BeginForm("AddMember", "Group", FormMethod.Post))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    @Html.HiddenFor(model => model.Id)
+        @Html.Partial("~/Views/Shared/Layouts/Settings/General.cshtml")
+        @Html.Partial("~/Views/Shared/Layouts/Settings/Members.cshtml")
+        @Html.Partial("~/Views/Shared/Layouts/Settings/Visibility.cshtml")
+        @Html.Partial("~/Views/Shared/Layouts/Settings/Advanced.cshtml")
 
 
-                    <div class="input-group row">
-                        @if (!isUserEmpty)
-                        {
-                            <span class="control-label col-md-3 col-sm-3 col-xs-12">User</span>
-                            <div class="col-md-9 col-sm-9 col-xs-12">
-                                @foreach (var item in userlist)
-                                {
-                                    <div class="input-group col-md-3" style="margin:7px;padding: 0;margin-left:20px">
-                                        <span class="form-control-radio">@item.Email</span>
-                                        <input runat="server" value="@item.Email" id="@item.Id" type="checkbox" class="form-control-radio" name="adduser">
-                                    </div>
 
-                                }
-                            </div>
-                            <div>
-                                <button type="submit" class="btn btn-default">Add Member</button>
-                            </div>
-                        }
-
-                    </div>
-                }
-
-                <h5 class="member existing-title">
-                    Existing members and groups
-                </h5>
-                <table class="table table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th colspan="3" style="font-weight:normal" class="default">
-                                Members of <b style="font-size:16px">@Model.Name</b> <span class="badge">@participentlist.Count()</span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in participentlist)
-                        {
-                            <tr>
-                                <td>
-                                    @item.AspNetUser.Email
-                                    @if (item.AspNetUser.Id == User.Identity.GetUserId())
-                                    {
-                                        <span class="badge" style="background-color:#26B99A;color:white;">It's you</span>
-                                    }
-                                </td>
-                                <td>
-                                    @if (item.IsAdmin)
-                                    {
-                                        <p>Admin</p>
-                                    }
-                                    @if (item.IsManager)
-                                    {
-                                        <p>Manager</p>
-                                    }
-                                    @if (!item.IsManager && !item.IsAdmin)
-                                    {
-                                        <p>Member</p>
-                                    }
-                                </td>
-                                <td>
-                                    <a href="@Url.Action("EditRoleMember","Group", new { id = item.Id })" class="btn btn-primary"><i class="fas fa-pen"></i></a>
-                                    <span>|</span>
-                                    @*@if (item.AspNetUser.Id == User.Identity.GetUserId() && User.Identity.GetUserId() != item.Group.IdOwner)*@
-                                    @if (item.AspNetUser.Id == User.Identity.GetUserId())
-                                    {
-                                        <a href="@Url.Action("MemberLeaveGroup", "Group", new { id = item.Id })" onclick="return confirmBeforeLeave()" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Leave</a>
-                                    } else {
-                                        <a href="@Url.Action("DeleteMember", "Group", new { id = item.Id })" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </section>
-        <section class="settings">
-            <div class="settings-header">
-                <h4>Permissions</h4>
-                <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#visibility-settings" aria-expanded="false" aria-controls="visibility-settings">
-                    Expand
-                </button>
-                <p>
-                    Choose access levels.
-                </p>
-            </div>
-            <div class="settings-content collapse @showPermissionSetting" id="visibility-settings">
-                @using (Html.BeginForm("EditVisibility", "Group", FormMethod.Post))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    @Html.HiddenFor(model => model.Id)
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Visibility, "Project visibility")
-                        <div>
-                            <select name="Visibility" id="visibility" class="form-control" style="width:432px">
-                                @foreach (var item in visibilitylist)
-                                {
-                                    if (item.Id == Model.Visibility)
-                                    {
-                                        <option value="@item.Id" selected>@item.Name</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@item.Id">@item.Name</option>
-
-                                    }
-                                }
-                            </select>
-                        </div>
-                        <div id="visibility-description" style="margin-top:4px;">@visibilitylist[Model.Visibility-1].Description</div>
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-success" type="submit">Save Change</button>
-                    </div>
-
-                }
-
-            </div>
-        </section>
-        <section class="settings">
-            <div class="settings-header">
-                <h4>Advanced</h4>
-                <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#advanced-settings" aria-expanded="false" aria-controls="advanced-settings">
-                    Expand
-                </button>
-                <p>
-                    Perform advanced options such as housekeeping, archiving, renaming, transferring, or removing your group.
-                </p>
-            </div>
-            <div class="settings-content collapse" id="advanced-settings">
-                <div class="sub-section">
-                    <h4 class="danger-title">
-                        Transfer Group
-                    </h4>
-                    <form action="" accept-charset="UTF-8" data-remote="true" method="post">
-                        <label class="label-bold" for="new_namespace_id">
-                            <span>Select a new namespace</span>
-                        </label>
-                        <div class="form-group">
-                            <input type="type" name="name" class="form-control" value="" />
-                        </div>
-                        <ul>
-                            <li>Be careful. Changing the group's namespace can have unintended side effects.</li>
-                            <li>You can only transfer the group to namespaces you manage.</li>
-                            <li>You will need to update your local repositories to point to the new location.</li>
-                            <li>Group visibility level will be changed to match namespace rules when transferring to a group.</li>
-                        </ul>
-                        <input type="submit" name="commit" value="Transfer group" class="btn btn-remove js-confirm-danger" data-confirm-danger-message="You are going to transfer Nguyễn Đình Quốc An / greenvalley_laravel to another owner. Are you ABSOLUTELY sure?" data-disable-with="Transfer group" disabled="">
-                    </form>
-                </div>
-                <div class="sub-section">
-                    <h4 class="danger-title">
-                        Remove group
-                    </h4>
-
-                    <p>
-                        Removing the group will delete its repository and all related resources including issues, merge requests etc.<br />
-                        <strong>Removed projects cannot be restored!</strong>
-                    </p>
-                    <button class="btn btn-danger" id="btn-removegroup" type="submit">Remove group</button>
-                </div>
-            </div>
-        </section>
     </div>
     <!-- Modal -->
     <div class="modal fade" id="delete-project-modal" role="dialog">
@@ -505,12 +254,17 @@
                 var visibilityLevel = $(this).val();
                 $('#visibility-description').text(visibilityDes[visibilityLevel-1]);
             })
+
                 
         })
     </script>
     <script>
         function confirmBeforeLeave() {
-            var check = confirm("Are you sure you want to leave the @Model.Name group?");
+            let check = confirm("Are you sure you want to leave the @Model.Name group?");
+            return check;
+        }
+        function confirmBeforeDeleteMember(name) {
+            let check = confirm(`Are you sure you want to remove ${name}`);
             return check;
         }
     </script>

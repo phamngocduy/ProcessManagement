@@ -1,12 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using System.IO;
 using System.Web;
 using Microsoft.AspNet.Identity;
 using ProcessManagement.Models;
-using System;
-using System.Collections.Generic;
-
+using ProcessManagement.Filters;
 namespace ProcessManagement.Controllers
 {
     [Authorize]
@@ -25,7 +25,7 @@ namespace ProcessManagement.Controllers
             {
                 ListGroupid.Add(item.IdGroup);
             }
-            var ListGroup = db.Groups.Where(m=>ListGroupid.Contains(m.Id)).OrderByDescending(m => m.Updated_At).ToList();
+            var ListGroup = db.Groups.Where(m => ListGroupid.Contains(m.Id)).OrderByDescending(m => m.Updated_At).ToList();
             ViewData["ListGroup"] = ListGroup;
             return View();
         }
@@ -35,27 +35,27 @@ namespace ProcessManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(Group group, HttpPostedFileBase ImageWS)
+        public ActionResult Create(Group group, HttpPostedFileBase ImageGr)
         {
 
             string userid = User.Identity.GetUserId();
-            if (ImageWS != null)
+            if (ImageGr != null)
             {
                 string avatar = "";
-                if (ImageWS.ContentLength > 0)
+                if (ImageGr.ContentLength > 0)
                 {
-                    var filename = Path.GetFileName(ImageWS.FileName);
+                    var filename = Path.GetFileName(ImageGr.FileName);
                     var path = Path.Combine(Server.MapPath("~/Content/images/workspace/"), filename);
-					ImageWS.SaveAs(path);
+                    ImageGr.SaveAs(path);
                     avatar = filename;
                 }
                 group.Avatar = avatar;
             }
-			else
-			{
-				group.Avatar = "default.jpg";
-			}
-			group.IdOwner = userid;
+            else
+            {
+                group.Avatar = "default.jpg";
+            }
+            group.IdOwner = userid;
             group.Created_At = DateTime.Now;
             group.Updated_At = DateTime.Now;
 
@@ -66,6 +66,7 @@ namespace ProcessManagement.Controllers
             Participate role = new Participate();
             role.IdGroup = group.Id;
             role.IdUser = userid;
+            role.is
             role.IsAdmin = true;
             role.Created_At = DateTime.Now;
             role.Updated_At = DateTime.Now;
@@ -81,26 +82,28 @@ namespace ProcessManagement.Controllers
             {
                 return HttpNotFound();
             }
+            Session["idGroup"] = id;
             return View(group);
         }
-        public ActionResult AddMember(int? id)
-        {
-            string userid = User.Identity.GetUserId();
-            Group group = db.Groups.Find(id);
-            if (group == null) return HttpNotFound();
-           
-            var ListParticipant = db.Participates.Where(x => x.IdGroup == id).ToList();
-            ViewData["ListParticipant"] = ListParticipant;
-            List<string> userInGroup = new List<string>();
-            foreach (var item in ListParticipant)
-            {
-                userInGroup.Add(item.IdUser);
-            }
+        //public ActionResult AddMember(int? id)
+        //{
+        //    string userid = User.Identity.GetUserId();
+        //    Group group = db.Groups.Find(id);
+        //    if (group == null) return HttpNotFound();
 
-            //string temp = String.Join(", ", userInGroup); 
-            ViewData["ListUser"] = db.AspNetUsers.Where(x=>!userInGroup.Contains(x.Id)).OrderByDescending(x => x.Id).ToList();
-            return View(group);
-        }
+        //    var ListParticipant = db.Participates.Where(x => x.IdGroup == id).ToList();
+        //    ViewData["ListParticipant"] = ListParticipant;
+        //    List<string> userInGroup = new List<string>();
+        //    foreach (var item in ListParticipant)
+        //    {
+        //        userInGroup.Add(item.IdUser);
+        //    }
+
+        //    //string temp = String.Join(", ", userInGroup); 
+        //    ViewData["ListUser"] = db.AspNetUsers.Where(x => !userInGroup.Contains(x.Id)).OrderByDescending(x => x.Id).ToList();
+        //    Session["idGroup"] = id;
+        //    return View(group);
+        //}
         [HttpPost]
         public ActionResult AddMember(Group model, List<string> adduser)
         {
@@ -120,9 +123,11 @@ namespace ProcessManagement.Controllers
             TempData["UserSetting"] = "ABC";
             return RedirectToAction("settings", new { id = model.Id });
         }
+        [RoleAuthorize("Admin")]
         public ActionResult Settings(int? id)
         {
             string userid = User.Identity.GetUserId();
+            Session["idGroup"] = id;
             Group group = db.Groups.Find(id);
             if (group == null) return HttpNotFound();
             var ListParticipant = db.Participates.Where(x => x.IdGroup == id).ToList();
@@ -136,6 +141,7 @@ namespace ProcessManagement.Controllers
             //string temp = String.Join(", ", userInGroup); 
             ViewData["ListUser"] = db.AspNetUsers.Where(x => !userInGroup.Contains(x.Id)).OrderByDescending(x => x.Id).ToList();
             ViewData["ListVisibility"] = db.Visibilities.ToList();
+
             return View(group);
         }
         [HttpPost]
@@ -143,7 +149,7 @@ namespace ProcessManagement.Controllers
         {
             Group group = db.Groups.Find(model.Id);
             if (group == null) return HttpNotFound();
-           
+
             if (ImageGr != null)
             {
                 string avatar = "";
@@ -187,7 +193,7 @@ namespace ProcessManagement.Controllers
         }
         public ActionResult DeleteMember(Participate model)
         {
-            Participate user = db.Participates.SingleOrDefault(x=>x.Id == model.Id);
+            Participate user = db.Participates.SingleOrDefault(x => x.Id == model.Id);
             var groupId = user.IdGroup;
             db.Participates.Remove(user);
             db.SaveChanges();
@@ -220,5 +226,6 @@ namespace ProcessManagement.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
     }
 }
