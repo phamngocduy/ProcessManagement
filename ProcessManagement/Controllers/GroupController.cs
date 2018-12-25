@@ -87,7 +87,16 @@ namespace ProcessManagement.Controllers
                 return HttpNotFound();
             }
             Session["idGroup"] = id;
-            
+            var ListParticipant = db.Participates.Where(x => x.IdGroup == id).ToList();
+            ViewData["ListParticipant"] = ListParticipant;
+            List<string> userInGroup = new List<string>();
+            foreach (var item in ListParticipant)
+            {
+                userInGroup.Add(item.IdUser);
+            }
+            //string temp = String.Join(", ", userInGroup); 
+            ViewData["ListUser"] = db.AspNetUsers.Where(x => !userInGroup.Contains(x.Id)).OrderByDescending(x => x.Id).ToList();
+            ViewData["ListProcess"] = db.Processes.Where(x => x.IdGroup == id).OrderByDescending(x => x.Created_At).ToList();
             return View(group);
         }
         //public ActionResult AddMember(int? id)
@@ -238,46 +247,48 @@ namespace ProcessManagement.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        [Authorize]
         public ActionResult CreateProcess(int? id)
         {
+            Group gr = db.Groups.Find(id);
             Process pr = new Process();
             return View(pr);
         }
+        [Authorize]
+        [HttpPost]
+        public ActionResult CreateProcess(Group model, Process pro)
+        {
+            string userid = User.Identity.GetUserId();
+            Group gr = db.Groups.Find(model.Id);
+            Process ps = new Process();
+            ps.IdGroup = gr.Id;
+            ps.IdOwner = userid;
+            ps.Name = pro.Name;
+            ps.Description = pro.Description;
+            ps.Created_At = DateTime.Now;
+            ps.Updated_At = DateTime.Now;
+            db.Processes.Add(ps);
+            db.SaveChanges();
+            return RedirectToAction("DrawProcess", new { id = ps.Id });
+        }
 
-        //[HttpPost]
-        //public ActionResult CreateProcess(Group model, Process pro)
-        //{
-        //    string userid = User.Identity.GetUserId();
-        //    Group ws = db.Groups.Find(model.Id);
-        //    Process ps = new Process();
-        //    ps.IdGroup = model.Id;
-        //    ps.IdOwner = userid;
-        //    ps.Name = pro.Name;
-        //    ps.Description = pro.Description;
-        //    ps.Created_At = DateTime.Now;
-        //    ps.Updated_At = DateTime.Now;
-        //    db.Processes.Add(ps);
-        //    db.SaveChanges();
-        //    return RedirectToAction("DrawProcess", new { id = ps.Id });
-        //}
+        public ActionResult DrawProcess(int? id)
+        {
+            Process ps = db.Processes.Find(id);
+            return View(ps);
+        }
+        [HttpPost]
+        public JsonResult DrawProcess(int processId, string data/*, Array[] linkDataArray, Array[] nodeDataArray*/)
+        {
+            Process ps = db.Processes.Find(processId);
+            ps.DataJson = data.ToString();
+            db.Entry(ps).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+            //return RedirectToAction("ShowGroup", new { id = ws.Group_ID });
+            return Json(new { id =  ps.IdGroup});
+            //return Json(new { data = data , processId = processId, linkDataArray = linkDataArray, nodeDataArray = nodeDataArray });
+        }
 
-        //public ActionResult DrawProcess(int? id)
-        //{
-        //    Process ws = db.Processes.Find(id);
-        //    return View(ws);
-        //}
-        //[HttpPost]
-        //public JsonResult DrawProcess(int processId, string data/*, Array[] linkDataArray, Array[] nodeDataArray*/)
-        //{
-        //    Process ws = db.Processes.Find(processId);
-        //    ws.DataJson = data.ToString();
-        //    db.Entry(ws).State = System.Data.Entity.EntityState.Modified;
-        //    db.SaveChanges();
-        //    //return RedirectToAction("ShowGroup", new { id = ws.Group_ID });
-        //    return Json(new { id = ws.Id });
-        //    //return Json(new { data = data , processId = processId, linkDataArray = linkDataArray, nodeDataArray = nodeDataArray });
-        //}
 
-        
     }
 }

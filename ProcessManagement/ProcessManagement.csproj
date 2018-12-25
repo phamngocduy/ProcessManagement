@@ -321,6 +321,7 @@
     <Content Include="Content\build\js\custom.js" />
     <Content Include="Content\build\js\custom.min.js" />
     <Content Include="Content\build\js\fixHeight.js" />
+    <Content Include="Content\build\js\go.js" />
     <Content Include="Content\build\js\include.js" />
     <Content Include="Content\build\js\language.js" />
     <Content Include="Content\build\js\script.js" />

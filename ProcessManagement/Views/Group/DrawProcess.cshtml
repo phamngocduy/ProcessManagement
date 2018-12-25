@@ -299,7 +299,7 @@
             let data = $("#mySavedModel").val();
             //let linkDataArray = $("#myDiagram.model.linkDataArray").val();
             //let nodeDataArray = $("#myDiagram.model.nodeDataArray").val();
-            let idProcess = @Model.ID;
+            let idProcess = @Model.Id;
             //truyen nguyen cai json voi idGroup
             let a = {
                 data: data,
@@ -316,7 +316,7 @@
                 success: function (response) {
                     //thanh cong thi no tra du lieu ve
                     console.log(response);
-                    location.href = '/Group/ShowGroup/' + response.id;
+                    location.href = '/Group/Show/' + response.id;
                 }
             })
         })

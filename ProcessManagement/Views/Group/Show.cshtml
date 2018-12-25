@@ -4,8 +4,9 @@
     ViewBag.Title = "ShowGroup";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var db = new PMSEntities();
-    var listprocess = db.Processes.Where(x => x.IdGroup == Model.Id).ToList();
-   
+    var listprocess = ViewData["ListProcess"] as List<ProcessManagement.Models.Process>;
+    var listuser = ViewData["ListUser"] as List<ProcessManagement.Models.AspNetUser>;
+
 }
 
 <div class="cw-workspace-header">
@@ -50,21 +51,22 @@
         <div class="row" style="margin:0">
             <div class="col-md-8 cw-workspace-list-process" style="padding-top: 2%; padding-bottom:2%">
                 <div align="left">
-                    @if (listprocess == null)
+                    @if (!listprocess.Any())
                     {
+                    <div style="margin:0 auto;display:table">
                         <p class="cw-header-large cw-error-no-process">This organization has no process</p>
-                        <button class="btn btn-success">Create a new process</button>
+                        <a class="btn btn-success" href="@Url.Action("CreateProcess","Group",new { id=Model.Id})" style="margin:0 25%">Create a new process</a>
+                    </div>
 
                     }
                     else
                     {
                         foreach (var item in listprocess)
                         {
-                            <a class="cw-header-large cw-error-no-process">@item.Name</a>
+                            <a href="@Url.Action("DrawProcess","Group",new { id = item.Id })" class="cw-header-large cw-error-no-process">@item.Name</a>
                             <h5>@item.Description</h5>
                             <hr class="cw-normal-hr">
                         }
-                        <p class="cw-header-large cw-error-no-process">This organization has no process</p>
                         @Html.ActionLink("Create a new process", "CreateProcess", new { id = Model.Id }, new { @class = "btn btn-success" })
                     }
 
@@ -80,17 +82,20 @@
                     </div>
                     <div class="cw-box-body">
                         <ul class="cw-members-list media-list">
-                            <li class="media">
-                                <a href="#" class="cw-member-infor">
-                                    <div class="media-left">
-                                        <img alt="user's avatar" class="media-object"
-                                             src="public/images/workspace/avatar2.png" style="width: 64px; height: 64px;">
-                                    </div>
-                                    <div class="media-body" style="padding-top:7%">
-                                        Tuan Ho
-                                    </div>
-                                </a>
-                            </li>
+                            @foreach (var item in listuser)
+                            {
+                                <li class="media">
+                                    <a href="#" class="cw-member-infor">
+                                        <div class="media-left">
+                                            <img alt="user's avatar" class="media-object"
+                                                 src="public/images/workspace/avatar2.png" style="width: 64px; height: 64px;">
+                                        </div>
+                                        <div class="media-body" style="padding-top:7%">
+                                            @item.Email
+                                        </div>
+                                    </a>
+                                </li>
+                            }
                         </ul>
                     </div>
                     <hr class="cw-normal-hr">
