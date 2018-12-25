@@ -33,6 +33,5 @@ namespace ProcessManagement.Models
         public virtual DbSet<Participate> Participates { get; set; }
         public virtual DbSet<Process> Processes { get; set; }
         public virtual DbSet<Step> Steps { get; set; }
-        public virtual DbSet<Visibility> Visibilities { get; set; }
     }
 }

@@ -305,9 +305,6 @@
     <Compile Include="Models\Step.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Visibility.cs">
-      <DependentUpon>PMS.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\build\css\custom.css" />

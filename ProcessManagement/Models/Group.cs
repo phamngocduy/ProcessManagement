@@ -26,12 +26,10 @@ namespace ProcessManagement.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public string Avatar { get; set; }
-        public int Visibility { get; set; }
         public System.DateTime Created_At { get; set; }
         public System.DateTime Updated_At { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
-        public virtual Visibility Visibility1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Participate> Participates { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

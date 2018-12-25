@@ -155,7 +155,6 @@ namespace ProcessManagement.Controllers
             //string temp = String.Join(", ", userInGroup); 
             ViewData["Roles"] = db.Participates.Where(x => x.IdUser == userid && x.IdGroup == id).FirstOrDefault();
             ViewData["ListUser"] = db.AspNetUsers.Where(x => !userInGroup.Contains(x.Id)).OrderByDescending(x => x.Id).ToList();
-            ViewData["ListVisibility"] = db.Visibilities.ToList();
 
             return View(group);
         }
@@ -199,16 +198,7 @@ namespace ProcessManagement.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-        [Authorize]
-        public ActionResult EditVisibility(Group model)
-        {
-            Group group = db.Groups.Find(model.Id);
-            group.Visibility = model.Visibility;
-            group.Updated_At = DateTime.Now;
-            db.SaveChanges();
-            TempData["PermissionSetting"] = "ABC";
-            return RedirectToAction("Settings", new { id = model.Id });
-        }
+        
         [Authorize]
         public ActionResult DeleteMember(Participate model)
         {

@@ -138,7 +138,7 @@
 <div class="cw-container">
     @*<h4> Setting</h4>*@
     <div class="project-edit-container">
-        @if (isAdmin)
+        @if (isAdmin||isOwner)
         {
             @Html.Partial("~/Views/Shared/Layouts/Settings/Auth/General.cshtml")
 

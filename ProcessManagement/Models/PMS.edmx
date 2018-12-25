@@ -65,7 +65,6 @@
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="Avatar" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Visibility" Type="int" Nullable="false" />
           <Property Name="Created_At" Type="datetime" Nullable="false" />
           <Property Name="Updated_At" Type="datetime" Nullable="false" />
         </EntityType>
@@ -105,16 +104,6 @@
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="NodeData" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Created_At" Type="datetime" Nullable="false" />
-          <Property Name="Updated_At" Type="datetime" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Visibility">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="Created_At" Type="datetime" Nullable="false" />
           <Property Name="Updated_At" Type="datetime" Nullable="false" />
         </EntityType>
@@ -183,18 +172,6 @@
             </Principal>
             <Dependent Role="Group">
               <PropertyRef Name="IdOwner" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Group_Visibility">
-          <End Role="Visibility" Type="Self.Visibility" Multiplicity="1" />
-          <End Role="Group" Type="Self.Group" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Visibility">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Group">
-              <PropertyRef Name="Visibility" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -268,7 +245,6 @@
           <EntitySet Name="Participate" EntityType="Self.Participate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Process" EntityType="Self.Process" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Step" EntityType="Self.Step" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Visibility" EntityType="Self.Visibility" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
@@ -287,10 +263,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_Group_AspNetUsers" Association="Self.FK_Group_AspNetUsers">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="Group" EntitySet="Group" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Group_Visibility" Association="Self.FK_Group_Visibility">
-            <End Role="Visibility" EntitySet="Visibility" />
             <End Role="Group" EntitySet="Group" />
           </AssociationSet>
           <AssociationSet Name="FK_Participate_AspNetUsers" Association="Self.FK_Participate_AspNetUsers">
@@ -327,7 +299,6 @@
           <EntitySet Name="Participates" EntityType="PMSModel.Participate" />
           <EntitySet Name="Processes" EntityType="PMSModel.Process" />
           <EntitySet Name="Steps" EntityType="PMSModel.Step" />
-          <EntitySet Name="Visibilities" EntityType="PMSModel.Visibility" />
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="PMSModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="AspNetUserClaim" EntitySet="AspNetUserClaims" />
@@ -347,10 +318,6 @@
           <AssociationSet Name="FK_Process_AspNetUsers" Association="PMSModel.FK_Process_AspNetUsers">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="Process" EntitySet="Processes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Group_Visibility" Association="PMSModel.FK_Group_Visibility">
-            <End Role="Visibility" EntitySet="Visibilities" />
-            <End Role="Group" EntitySet="Groups" />
           </AssociationSet>
           <AssociationSet Name="FK_Participate_Group" Association="PMSModel.FK_Participate_Group">
             <End Role="Group" EntitySet="Groups" />
@@ -430,11 +397,9 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Avatar" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Visibility" Type="Int32" Nullable="false" />
           <Property Name="Created_At" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Updated_At" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="AspNetUser" Relationship="PMSModel.FK_Group_AspNetUsers" FromRole="Group" ToRole="AspNetUser" />
-          <NavigationProperty Name="Visibility1" Relationship="PMSModel.FK_Group_Visibility" FromRole="Group" ToRole="Visibility" />
           <NavigationProperty Name="Participates" Relationship="PMSModel.FK_Participate_Group" FromRole="Group" ToRole="Participate" />
           <NavigationProperty Name="Processes" Relationship="PMSModel.FK_Process_Group" FromRole="Group" ToRole="Process" />
         </EntityType>
@@ -482,17 +447,6 @@
           <Property Name="Created_At" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Updated_At" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Process" Relationship="PMSModel.FK_Step_Process" FromRole="Step" ToRole="Process" />
-        </EntityType>
-        <EntityType Name="Visibility">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Created_At" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Updated_At" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Groups" Relationship="PMSModel.FK_Group_Visibility" FromRole="Visibility" ToRole="Group" />
         </EntityType>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Type="PMSModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
@@ -555,18 +509,6 @@
             </Principal>
             <Dependent Role="Process">
               <PropertyRef Name="IdOwner" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Group_Visibility">
-          <End Type="PMSModel.Visibility" Role="Visibility" Multiplicity="1" />
-          <End Type="PMSModel.Group" Role="Group" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Visibility">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Group">
-              <PropertyRef Name="Visibility" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -666,7 +608,6 @@
               <MappingFragment StoreEntitySet="Group">
                 <ScalarProperty Name="Updated_At" ColumnName="Updated_At" />
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
-                <ScalarProperty Name="Visibility" ColumnName="Visibility" />
                 <ScalarProperty Name="Avatar" ColumnName="Avatar" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -712,17 +653,6 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="IdProcess" ColumnName="IdProcess" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Visibilities">
-            <EntityTypeMapping TypeName="PMSModel.Visibility">
-              <MappingFragment StoreEntitySet="Visibility">
-                <ScalarProperty Name="Updated_At" ColumnName="Updated_At" />
-                <ScalarProperty Name="Created_At" ColumnName="Created_At" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

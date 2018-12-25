@@ -103,7 +103,7 @@
                             {
                                 <a href="@Url.Action("MemberLeaveGroup", "Group", new { id = item.Id })" onclick="return confirmBeforeLeave()" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Leave</a>
                             }
-                            else if ((isAdmin || isOwner) && item.AspNetUser.Id != User.Identity.GetUserId())
+                            else if ((isAdmin || isOwner) && item.AspNetUser.Id != User.Identity.GetUserId()&& !item.IsOwner)
                             {
 
                                 <a href="@Url.Action("DeleteMember", "Group", new { id = item.Id })" onclick="return confirmBeforeDeleteMember('@Model.AspNetUser.Email')" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
