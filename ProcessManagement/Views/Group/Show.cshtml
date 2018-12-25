@@ -1,7 +1,11 @@
 ﻿@model ProcessManagement.Models.Group
+@using ProcessManagement.Models;
 @{
     ViewBag.Title = "ShowGroup";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var db = new PMSEntities();
+    var listprocess = db.Processes.Where(x => x.IdGroup == Model.Id).ToList();
+   
 }
 
 <div class="cw-workspace-header">
@@ -46,11 +50,24 @@
         <div class="row" style="margin:0">
             <div class="col-md-8 cw-workspace-list-process" style="padding-top: 2%; padding-bottom:2%">
                 <div align="left">
-                    <a class="cw-header-large cw-error-no-process">SEP</a>
-                    <h5>This is college a gradution project of Van lang student</h5>
-                    <hr class="cw-normal-hr">
-                    <a class="cw-header-large cw-error-no-process">SEP</a>
-                    <h5>This is college a gradution project of Van lang student</h5>
+                    @if (listprocess == null)
+                    {
+                        <p class="cw-header-large cw-error-no-process">This organization has no process</p>
+                        <button class="btn btn-success">Create a new process</button>
+
+                    }
+                    else
+                    {
+                        foreach (var item in listprocess)
+                        {
+                            <a class="cw-header-large cw-error-no-process">@item.Name</a>
+                            <h5>@item.Description</h5>
+                            <hr class="cw-normal-hr">
+                        }
+                        <p class="cw-header-large cw-error-no-process">This organization has no process</p>
+                        @Html.ActionLink("Create a new process", "CreateProcess", new { id = Model.Id }, new { @class = "btn btn-success" })
+                    }
+
                 </div>
             </div>
             <div class="col-md-4" style="padding-right: 0">

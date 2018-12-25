@@ -17,6 +17,7 @@ namespace ProcessManagement.Models
         public int Id { get; set; }
         public int IdGroup { get; set; }
         public string IdUser { get; set; }
+        public bool IsOwner { get; set; }
         public bool IsAdmin { get; set; }
         public bool IsManager { get; set; }
         public System.DateTime Created_At { get; set; }

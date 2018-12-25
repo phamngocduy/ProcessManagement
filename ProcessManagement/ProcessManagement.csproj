@@ -6531,10 +6531,13 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_NullLayout.cshtml" />
     <Content Include="Views\Group\EditRoleMember.cshtml" />
-    <Content Include="Views\Shared\Layouts\Settings\General.cshtml" />
+    <Content Include="Views\Shared\Layouts\Settings\Auth\General.cshtml" />
     <Content Include="Views\Shared\Layouts\Settings\Members.cshtml" />
     <Content Include="Views\Shared\Layouts\Settings\Visibility.cshtml" />
     <Content Include="Views\Shared\Layouts\Settings\Advanced.cshtml" />
+    <Content Include="Views\Group\DrawProcess.cshtml" />
+    <Content Include="Views\Group\CreateProcess.cshtml" />
+    <Content Include="Views\Shared\Layouts\Settings\General.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

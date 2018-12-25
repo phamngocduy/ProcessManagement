@@ -1,10 +1,15 @@
 ﻿@model ProcessManagement.Models.Group
 @using Microsoft.AspNet.Identity;
 @{
-    var userlist = ViewData["ListUser"] as List<ProcessManagement.Models.AspNetUser>;
-    bool isUserEmpty = !userlist.Any();
+    var userList = ViewData["ListUser"] as List<ProcessManagement.Models.AspNetUser>;
+    bool isUserEmpty = !userList.Any();
     var participentlist = ViewData["ListParticipant"] as List<ProcessManagement.Models.Participate>;
     var showUserSetting = TempData["UserSetting"] != null ? "in" : "";
+    //role 
+    var userRole = ViewData["Roles"] as ProcessManagement.Models.Participate;
+    var isAdmin = userRole.IsAdmin;
+    var isOwner = userRole.IsOwner;
+    var isManager = userRole.IsManager;
 
 }
 <section class="settings">
@@ -26,11 +31,11 @@
 
 
             <div class="input-group row">
-                @if (!isUserEmpty)
+                @if (!isUserEmpty && isAdmin)
                 {
                     <span class="control-label col-md-3 col-sm-3 col-xs-12">User</span>
                     <div class="col-md-9 col-sm-9 col-xs-12">
-                        @foreach (var item in userlist)
+                        @foreach (var item in userList)
                         {
                             <div class="input-group col-md-3" style="margin:7px;padding: 0;margin-left:20px">
                                 <span class="form-control-radio">@item.Email</span>
@@ -70,6 +75,10 @@
                             }
                         </td>
                         <td>
+                            @if (item.IsOwner)
+	                        {
+                                <p>Owner</p>
+	                        }
                             @if (item.IsAdmin)
                             {
                                 <p>Admin</p>
@@ -84,16 +93,25 @@
                             }
                         </td>
                         <td>
-                            <a href="@Url.Action("EditRoleMember","Group", new { id = item.Id })" class="btn btn-primary"><i class="fas fa-pen"></i></a>
-                            <span>|</span>
+
                             @*@if (item.AspNetUser.Id == User.Identity.GetUserId() && User.Identity.GetUserId() != item.Group.IdOwner)*@
-                            @if (item.AspNetUser.Id == User.Identity.GetUserId())
+                            @if (isAdmin || isOwner)
+                            {
+                                <a href="@Url.Action("EditRoleMember","Group", new { id = item.Id })" class="btn btn-primary" style="margin-right:15px"><i class="fas fa-pen"></i></a>
+                            }
+                            @if (item.AspNetUser.Id == User.Identity.GetUserId() && !isOwner)
                             {
                                 <a href="@Url.Action("MemberLeaveGroup", "Group", new { id = item.Id })" onclick="return confirmBeforeLeave()" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Leave</a>
                             }
-                            else
+                            else if ((isAdmin || isOwner) && item.AspNetUser.Id != User.Identity.GetUserId())
                             {
+
                                 <a href="@Url.Action("DeleteMember", "Group", new { id = item.Id })" onclick="return confirmBeforeDeleteMember('@Model.AspNetUser.Email')" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                            }
+                            else {
+                                <div style="display:inline">
+                                    <span>You cant leave because you're owner</span>
+                                </div>
                             }
                         </td>
                     </tr>

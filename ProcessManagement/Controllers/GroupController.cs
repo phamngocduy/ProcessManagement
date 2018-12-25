@@ -9,11 +9,12 @@ using ProcessManagement.Models;
 using ProcessManagement.Filters;
 namespace ProcessManagement.Controllers
 {
-    [Authorize]
+    
     public class GroupController : Controller
     {
         PMSEntities db = new PMSEntities();
         // GET: Group
+        [Authorize]
         public ActionResult Index()
         {
             string IdUser = User.Identity.GetUserId();
@@ -29,11 +30,13 @@ namespace ProcessManagement.Controllers
             ViewData["ListGroup"] = ListGroup;
             return View();
         }
+        [Authorize]
         public ActionResult Create()
         {
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult Create(Group group, HttpPostedFileBase ImageGr)
         {
@@ -59,14 +62,13 @@ namespace ProcessManagement.Controllers
             group.Created_At = DateTime.Now;
             group.Updated_At = DateTime.Now;
 
-
             db.Groups.Add(group);
             db.SaveChanges();
 
             Participate role = new Participate();
             role.IdGroup = group.Id;
             role.IdUser = userid;
-            role.is
+            role.IsOwner = true;
             role.IsAdmin = true;
             role.Created_At = DateTime.Now;
             role.Updated_At = DateTime.Now;
@@ -75,14 +77,17 @@ namespace ProcessManagement.Controllers
             return RedirectToAction("Index", "Group");
             //return RedirectToAction("InviteMember", "Group", new { id = ws.ID });
         }
+        [GroupAuthorize]
         public ActionResult Show(int? id)
         {
+            string userid = User.Identity.GetUserId();
             Group group = db.Groups.Find(id);
             if (group == null)
             {
                 return HttpNotFound();
             }
             Session["idGroup"] = id;
+            
             return View(group);
         }
         //public ActionResult AddMember(int? id)
@@ -104,6 +109,7 @@ namespace ProcessManagement.Controllers
         //    Session["idGroup"] = id;
         //    return View(group);
         //}
+        [Authorize]
         [HttpPost]
         public ActionResult AddMember(Group model, List<string> adduser)
         {
@@ -123,11 +129,11 @@ namespace ProcessManagement.Controllers
             TempData["UserSetting"] = "ABC";
             return RedirectToAction("settings", new { id = model.Id });
         }
-        [RoleAuthorize("Admin")]
+        [Authorize]
+        //[RoleAuthorize("Admin")]
         public ActionResult Settings(int? id)
         {
             string userid = User.Identity.GetUserId();
-            Session["idGroup"] = id;
             Group group = db.Groups.Find(id);
             if (group == null) return HttpNotFound();
             var ListParticipant = db.Participates.Where(x => x.IdGroup == id).ToList();
@@ -136,14 +142,15 @@ namespace ProcessManagement.Controllers
             foreach (var item in ListParticipant)
             {
                 userInGroup.Add(item.IdUser);
-            }
-
+            } 
             //string temp = String.Join(", ", userInGroup); 
+            ViewData["Roles"] = db.Participates.Where(x => x.IdUser == userid && x.IdGroup == id).FirstOrDefault();
             ViewData["ListUser"] = db.AspNetUsers.Where(x => !userInGroup.Contains(x.Id)).OrderByDescending(x => x.Id).ToList();
             ViewData["ListVisibility"] = db.Visibilities.ToList();
 
             return View(group);
         }
+        [Authorize]
         [HttpPost]
         public ActionResult Edit(Group model, HttpPostedFileBase ImageGr)
         {
@@ -173,6 +180,7 @@ namespace ProcessManagement.Controllers
             TempData["GaneralSetting"] = "ABC";
             return RedirectToAction("Settings", new { id = model.Id });
         }
+        [Authorize]
         public ActionResult Remove(int id)
         {
             Group group = db.Groups.Find(id);
@@ -182,6 +190,7 @@ namespace ProcessManagement.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        [Authorize]
         public ActionResult EditVisibility(Group model)
         {
             Group group = db.Groups.Find(model.Id);
@@ -191,6 +200,7 @@ namespace ProcessManagement.Controllers
             TempData["PermissionSetting"] = "ABC";
             return RedirectToAction("Settings", new { id = model.Id });
         }
+        [Authorize]
         public ActionResult DeleteMember(Participate model)
         {
             Participate user = db.Participates.SingleOrDefault(x => x.Id == model.Id);
@@ -200,12 +210,13 @@ namespace ProcessManagement.Controllers
             TempData["UserSetting"] = "ABC";
             return RedirectToAction("Settings", new { id = groupId });
         }
+        [Authorize]
         public ActionResult EditRoleMember(int? id)
         {
             Participate ws = db.Participates.SingleOrDefault(x => x.Id == id);
             return View(ws);
         }
-
+        [Authorize]
         [HttpPost]
         public ActionResult EditRoleMember(Participate model)
         {
@@ -219,6 +230,7 @@ namespace ProcessManagement.Controllers
             TempData["UserSetting"] = "ABC";
             return RedirectToAction("Settings", new { id = groupId });
         }
+        [Authorize]
         public ActionResult MemberLeaveGroup(Participate model)
         {
             Participate user = db.Participates.SingleOrDefault(x => x.Id == model.Id);
@@ -226,6 +238,46 @@ namespace ProcessManagement.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        public ActionResult CreateProcess(int? id)
+        {
+            Process pr = new Process();
+            return View(pr);
+        }
 
+        //[HttpPost]
+        //public ActionResult CreateProcess(Group model, Process pro)
+        //{
+        //    string userid = User.Identity.GetUserId();
+        //    Group ws = db.Groups.Find(model.Id);
+        //    Process ps = new Process();
+        //    ps.IdGroup = model.Id;
+        //    ps.IdOwner = userid;
+        //    ps.Name = pro.Name;
+        //    ps.Description = pro.Description;
+        //    ps.Created_At = DateTime.Now;
+        //    ps.Updated_At = DateTime.Now;
+        //    db.Processes.Add(ps);
+        //    db.SaveChanges();
+        //    return RedirectToAction("DrawProcess", new { id = ps.Id });
+        //}
+
+        //public ActionResult DrawProcess(int? id)
+        //{
+        //    Process ws = db.Processes.Find(id);
+        //    return View(ws);
+        //}
+        //[HttpPost]
+        //public JsonResult DrawProcess(int processId, string data/*, Array[] linkDataArray, Array[] nodeDataArray*/)
+        //{
+        //    Process ws = db.Processes.Find(processId);
+        //    ws.DataJson = data.ToString();
+        //    db.Entry(ws).State = System.Data.Entity.EntityState.Modified;
+        //    db.SaveChanges();
+        //    //return RedirectToAction("ShowGroup", new { id = ws.Group_ID });
+        //    return Json(new { id = ws.Id });
+        //    //return Json(new { data = data , processId = processId, linkDataArray = linkDataArray, nodeDataArray = nodeDataArray });
+        //}
+
+        
     }
 }

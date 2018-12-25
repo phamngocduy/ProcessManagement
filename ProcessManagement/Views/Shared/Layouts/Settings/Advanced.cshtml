@@ -1,43 +1,52 @@
-﻿<section class="settings">
-    <div class="settings-header">
-        <h4>Advanced</h4>
-        <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#advanced-settings" aria-expanded="false" aria-controls="advanced-settings">
-            Expand
-        </button>
-        <p>
-            Perform advanced options such as housekeeping, archiving, renaming, transferring, or removing your group.
-        </p>
-    </div>
-    <div class="settings-content collapse" id="advanced-settings">
-        <div class="sub-section">
-            <h4 class="danger-title">
-                Transfer Group
-            </h4>
-            <form action="" accept-charset="UTF-8" data-remote="true" method="post">
-                <label class="label-bold" for="new_namespace_id">
-                    <span>Select a new namespace</span>
-                </label>
-                <div class="form-group">
-                    <input type="type" name="name" class="form-control" value="" />
-                </div>
-                <ul>
-                    <li>Be careful. Changing the group's namespace can have unintended side effects.</li>
-                    <li>You can only transfer the group to namespaces you manage.</li>
-                    <li>You will need to update your local repositories to point to the new location.</li>
-                    <li>Group visibility level will be changed to match namespace rules when transferring to a group.</li>
-                </ul>
-                <input type="submit" name="commit" value="Transfer group" class="btn btn-remove js-confirm-danger" data-confirm-danger-message="You are going to transfer Nguyễn Đình Quốc An / greenvalley_laravel to another owner. Are you ABSOLUTELY sure?" data-disable-with="Transfer group" disabled="">
-            </form>
-        </div>
-        <div class="sub-section">
-            <h4 class="danger-title">
-                Remove group
-            </h4>
+﻿@{ 
+    var userRole = ViewData["Roles"] as ProcessManagement.Models.Participate;
+    var isAdmin = userRole.IsAdmin;
+    var isOwner = userRole.IsOwner;
+    var isManager = userRole.IsManager;
+}
+@if (isAdmin)
+{
+    <section class="settings">
+        <div class="settings-header">
+            <h4>Advanced</h4>
+            <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#advanced-settings" aria-expanded="false" aria-controls="advanced-settings">
+                Expand
+            </button>
             <p>
-                Removing the group will delete its repository and all related resources including issues, merge requests etc.<br />
-                <strong>Removed projects cannot be restored!</strong>
+                Perform advanced options such as housekeeping, archiving, renaming, transferring, or removing your group.
             </p>
-            <button class="btn btn-danger" id="btn-removegroup" type="submit">Remove group</button>
         </div>
-    </div>
-</section>
+        <div class="settings-content collapse" id="advanced-settings">
+            <div class="sub-section">
+                <h4 class="danger-title">
+                    Transfer Group
+                </h4>
+                <form action="" accept-charset="UTF-8" data-remote="true" method="post">
+                    <label class="label-bold" for="new_namespace_id">
+                        <span>Select a new namespace</span>
+                    </label>
+                    <div class="form-group">
+                        <input type="type" name="name" class="form-control" value="" />
+                    </div>
+                    <ul>
+                        <li>Be careful. Changing the group's namespace can have unintended side effects.</li>
+                        <li>You can only transfer the group to namespaces you manage.</li>
+                        <li>You will need to update your local repositories to point to the new location.</li>
+                        <li>Group visibility level will be changed to match namespace rules when transferring to a group.</li>
+                    </ul>
+                    <input type="submit" name="commit" value="Transfer group" class="btn btn-remove js-confirm-danger" data-confirm-danger-message="You are going to transfer Nguyễn Đình Quốc An / greenvalley_laravel to another owner. Are you ABSOLUTELY sure?" data-disable-with="Transfer group" disabled="">
+                </form>
+            </div>
+            <div class="sub-section">
+                <h4 class="danger-title">
+                    Remove group
+                </h4>
+                <p>
+                    Removing the group will delete its repository and all related resources including issues, merge requests etc.<br />
+                    <strong>Removed projects cannot be restored!</strong>
+                </p>
+                <button class="btn btn-danger" id="btn-removegroup" type="submit">Remove group</button>
+            </div>
+        </div>
+    </section>
+}

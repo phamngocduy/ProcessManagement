@@ -25,6 +25,7 @@ namespace ProcessManagement.Models
         public string IdOwner { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string DataJson { get; set; }
         public Nullable<System.DateTime> Created_At { get; set; }
         public Nullable<System.DateTime> Updated_At { get; set; }
     

@@ -2,6 +2,10 @@
 @{
     ViewBag.Title = "Setting";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var userRole = ViewData["Roles"] as ProcessManagement.Models.Participate;
+    var isAdmin = userRole.IsAdmin;
+    var isOwner = userRole.IsOwner;
+    var isManager = userRole.IsManager;
 }
 @section CustomCss{
     <style>
@@ -103,6 +107,11 @@
             float:left;
         }
     </style>
+    <style>
+        .span-left::after{
+            content:' | ';
+        }
+    </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
 }
 <div class="cw-workspace-header">
@@ -129,13 +138,19 @@
 <div class="cw-container">
     @*<h4> Setting</h4>*@
     <div class="project-edit-container">
-        @Html.Partial("~/Views/Shared/Layouts/Settings/General.cshtml")
+        @if (isAdmin)
+        {
+            @Html.Partial("~/Views/Shared/Layouts/Settings/Auth/General.cshtml")
+
+        }
+        else
+        {
+            @Html.Partial("~/Views/Shared/Layouts/Settings/General.cshtml")
+
+
+        }
         @Html.Partial("~/Views/Shared/Layouts/Settings/Members.cshtml")
-        @Html.Partial("~/Views/Shared/Layouts/Settings/Visibility.cshtml")
         @Html.Partial("~/Views/Shared/Layouts/Settings/Advanced.cshtml")
-
-
-
     </div>
     <!-- Modal -->
     <div class="modal fade" id="delete-project-modal" role="dialog">

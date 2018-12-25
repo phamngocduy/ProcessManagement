@@ -32,65 +32,65 @@
 <div class="cw-container">
     @using (Html.BeginForm("AddMember", "Group", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
 
 
-        <div class="input-group row">
-            <span class="control-label col-md-3 col-sm-3 col-xs-12">User</span>
-            <div class="col-md-9 col-sm-9 col-xs-12">
-                @foreach (var item in userlist)
+    <div class="input-group row">
+        <span class="control-label col-md-3 col-sm-3 col-xs-12">User</span>
+        <div class="col-md-9 col-sm-9 col-xs-12">
+            @foreach (var item in userlist)
                 {
-                    <div class="input-group col-md-3" style="margin:7px;padding: 0;margin-left:20px">
-                        <span class="form-control-radio">@item.Email</span>
-                        <input runat="server" value="@item.Email" id="@item.Id" type="checkbox" class="form-control-radio" name="adduser">
-                    </div>
+            <div class="input-group col-md-3" style="margin:7px;padding: 0;margin-left:20px">
+                <span class="form-control-radio">@item.Email</span>
+                <input runat="server" value="@item.Email" id="@item.Id" type="checkbox" class="form-control-radio" name="adduser">
+            </div>
 
                 }
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Add Member" class="btn btn-default" />
-            </div>
         </div>
-        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>Member</th>
-                    <th>Role</th>
-                    <th>Tool</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in participentlist)
+        <div class="form-group">
+            <input type="submit" value="Add Member" class="btn btn-default" />
+        </div>
+    </div>
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Member</th>
+                <th>Role</th>
+                <th>Tool</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in participentlist)
                 {
-                    <tr>
-                        <td>@item.AspNetUser.Email</td>
-                        <td>
-                            @if (item.IsAdmin)
+            <tr>
+                <td>@item.AspNetUser.Email</td>
+                <td>
+                    @if (item.IsAdmin)
                             {
-                                <p>Admin</p>
+                    <p>Admin</p>
                             }
-                            @if (item.IsManager)
+                    @if (item.IsManager)
                             {
-                                <p>Manager</p>
+                    <p>Manager</p>
                             }
-                            @if(!item.IsManager && !item.IsAdmin)
+                    @if(!item.IsManager && !item.IsAdmin)
                             {
-                                <p>Member</p>
+                    <p>Member</p>
                             }
-                        </td>
-                        <td>
+                </td>
+                <td>
 
-                            @Html.ActionLink("Edit Role", "EditRoleMemberWS", new { id = item.Id })
-                            <span>|</span>
-                            <a href="@Url.Action("DeleteMember", "Group", new { id = item.Id })" onclick="return confirmDelete()" class="delele-user">Delete Role</a>
-                            <span>|</span>
-                            <a href="@Url.Action("MemberOutGroup", "Group", new { id = item.Id })" onclick="return confirmOut()" class="delete-user">Out Group</a>
-                        </td>
-                    </tr>
+                    @Html.ActionLink("Edit Role", "EditRoleMemberWS", new { id = item.Id })
+                    <span>|</span>
+                    <a href="@Url.Action("DeleteMember", "Group", new { id = item.Id })" onclick="return confirmDelete()" class="delele-user">Delete Role</a>
+                    <span>|</span>
+                    <a href="@Url.Action("MemberOutGroup", "Group", new { id = item.Id })" onclick="return confirmOut()" class="delete-user">Out Group</a>
+                </td>
+            </tr>
                 }
-            </tbody>
-        </table>
+        </tbody>
+    </table>
     }
 </div>
