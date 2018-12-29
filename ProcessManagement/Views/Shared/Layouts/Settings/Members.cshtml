@@ -5,7 +5,7 @@
     bool isUserEmpty = !userList.Any();
     var participentlist = ViewData["ListParticipant"] as List<ProcessManagement.Models.Participate>;
     var showUserSetting = TempData["UserSetting"] != null ? "in" : "";
-    //role 
+    //role
     var userRole = ViewData["Roles"] as ProcessManagement.Models.Participate;
     var isAdmin = userRole.IsAdmin;
     var isOwner = userRole.IsOwner;
@@ -30,16 +30,17 @@
             @Html.HiddenFor(model => model.Id)
 
 
-            <div class="input-group row">
-                @if (!isUserEmpty && (isAdmin||isOwner))
+            <div class=" row">
+                @if (!isUserEmpty && (isAdmin || isOwner))
                 {
-                    <span class="control-label col-md-3 col-sm-3 col-xs-12">User</span>
+                    <span class="control-label col-md-1 col-sm-1 col-xs-12">User</span>
                     <div class="col-md-9 col-sm-9 col-xs-12">
                         @foreach (var item in userList)
                         {
                             <div class="input-group col-md-3" style="margin:7px;padding: 0;margin-left:20px">
-                                <span class="form-control-radio">@item.Email</span>
-                                <input runat="server" value="@item.Email" id="@item.Id" type="checkbox" class="form-control-radio" name="adduser">
+                                <label>
+                                    <input runat="server" value="@item.Email" type="checkbox" class="flat" name="adduser"> @item.Email
+                                </label>
                             </div>
 
                         }
@@ -76,9 +77,9 @@
                         </td>
                         <td>
                             @if (item.IsOwner)
-	                        {
+                            {
                                 <p>Owner</p>
-	                        }
+                            }
                             @if (item.IsAdmin)
                             {
                                 <p>Admin</p>
@@ -103,12 +104,13 @@
                             {
                                 <a href="@Url.Action("MemberLeaveGroup", "Group", new { id = item.Id })" onclick="return confirmBeforeLeave()" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Leave</a>
                             }
-                            else if ((isAdmin || isOwner) && item.AspNetUser.Id != User.Identity.GetUserId()&& !item.IsOwner)
+                            else if ((isAdmin || isOwner) && item.AspNetUser.Id != User.Identity.GetUserId() && !item.IsOwner)
                             {
 
-                                <a href="@Url.Action("DeleteMember", "Group", new { id = item.Id })" onclick="return confirmBeforeDeleteMember('@Model.AspNetUser.Email')" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                                <a href="@Url.Action("DeleteMember", "Group", new { id = item.Id })" onclick="return confirmBeforeDeleteMember('@item.AspNetUser.Email')" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
                             }
-                            else if(isOwner && item.AspNetUser.Id != User.Identity.GetUserId()){
+                            else if (isOwner && item.AspNetUser.Id != User.Identity.GetUserId())
+                            {
                                 <div style="display:inline">
                                     <span>You cant leave because you're owner</span>
                                 </div>

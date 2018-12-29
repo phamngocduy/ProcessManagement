@@ -63,6 +63,10 @@ namespace ProcessManagement.Controllers
             }
             return culture;
         }
-
+        public void SetFlash(string flashType, string flashMessage)
+        {
+            TempData["FlashMessage.Type"] = flashType;
+            TempData["FlashMessage.Text"] = flashMessage;
+        }
     }
 }

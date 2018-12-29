@@ -127,9 +127,9 @@
         <li rel="process">
             <a href="@Url.Action("Show", "Group", new { id = Model.Id })"><i class="fas fa-sitemap"></i> Process</a>
         </li>
-        <li rel="members">
+        @*<li rel="members">
             <a href="@Url.Action("AddMember", "Group", new { id = Model.Id })"><i class="fas fa-user-friends"></i> Members</a>
-        </li>
+        </li>*@
         <li class="cw-active-tab" rel="settings">
             <a href="@Url.Action("Settings", "Group", new { id = Model.Id })"><i class="fas fa-cog"></i> Settings</a>
         </li>
@@ -161,7 +161,7 @@
                     <h4 class="modal-title">Confirmation required</h4>
                 </div>
                 <div class="modal-body">
-                    <p class="text-danger">You are going to remove @Model.AspNetUser.UserName / @Model.Name. Removed project CANNOT be restored! Are you ABSOLUTELY sure?</p>
+                    <p class="text-danger">You are going to remove @Model.Name / @Model.AspNetUser.UserName. Removed project CANNOT be restored! Are you ABSOLUTELY sure?</p>
                     <p>
                         <span class="js-warning-text">
                             This action can lead to data loss.

@@ -48,5 +48,23 @@
     {
         @RenderSection("CustomScripts", required: false)
     }
+    @{
+        string text = (string)TempData["FlashMessage.Text"];
+        string type = (string)TempData["FlashMessage.Type"];
+        if (!string.IsNullOrWhiteSpace(text))
+        {
+            if (type == "Success")
+            {
+                <script>
+                    alertify.set('notifier', 'position', 'bottom-left');
+                    alertify.success("@text");
+                </script>
+            }
+
+        }
+    }
+    <script>
+    </script>
+
 </body>
 </html>

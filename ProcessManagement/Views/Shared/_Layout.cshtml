@@ -5,10 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - @ProcessManagement.Content.resources.CWcommon.clockworks_common_title</title>
     @Styles.Render("~/Content/css")
+    <link href="~/Content/libs/iCheck/skins/flat/green.css" rel="stylesheet">
     <link href="~/Content/build/css/style.css" rel="stylesheet" />
     <style>
-        .nav.navbar-nav.navbar-left{
-            display:none;
+        .nav.navbar-nav.navbar-left {
+            display: none;
+        }
+        .nav-sm .container.body .col-md-3.left_col{
+            z-index:2 !important;
         }
     </style>
     @if (IsSectionDefined("CustomCss"))
@@ -31,10 +35,26 @@
     </div>
 
     @Scripts.Render("~/Content/js")
+    <script src="~/Content/libs/iCheck/icheck.min.js"></script>
     @if (IsSectionDefined("CustomScripts"))
     {
         @RenderSection("CustomScripts", required: false)
-        //hình như  
     }
+    @{
+        string text = (string)TempData["FlashMessage.Text"];
+        string type = (string)TempData["FlashMessage.Type"];
+        if (!string.IsNullOrWhiteSpace(text))
+        {
+            if (type== "Success")
+            {
+                <script>
+                    alertify.set('notifier', 'position', 'bottom-left');
+                    alertify.success("@text");
+                </script>
+            }
+
+        }
+    }
+
 </body>
 </html>

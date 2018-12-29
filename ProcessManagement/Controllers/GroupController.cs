@@ -6,28 +6,30 @@ using System.IO;
 using System.Web;
 using Microsoft.AspNet.Identity;
 using ProcessManagement.Models;
+using ProcessManagement.Services;
 using ProcessManagement.Filters;
 namespace ProcessManagement.Controllers
 {
     
-    public class GroupController : Controller
+    public class GroupController : BaseController
     {
+        ///=============================================================================================
         PMSEntities db = new PMSEntities();
+        GroupService groupService = new GroupService();
+        CommonService commonService = new CommonService();
+        ParticipateService participateService = new ParticipateService();
+        ProcessService processService = new ProcessService();
+        ///=============================================================================================
+        
+
+
         // GET: Group
         [Authorize]
         public ActionResult Index()
         {
             string IdUser = User.Identity.GetUserId();
-            //lấy ra những group mà user tham gia
-            var ListGroupAttend = db.Participates.Where(m => m.IdUser == IdUser).ToList();
-            //tạo 1 list chứa id các group mà user tham gia
-            List<int> ListGroupid = new List<int>();
-            foreach (var item in ListGroupAttend)
-            {
-                ListGroupid.Add(item.IdGroup);
-            }
-            var ListGroup = db.Groups.Where(m => ListGroupid.Contains(m.Id)).OrderByDescending(m => m.Updated_At).ToList();
-            ViewData["ListGroup"] = ListGroup;
+            //lấy ra những group mà user đó tham gia hoặc sở hữu
+            ViewData["ListGroup"] = groupService.getMyGroup(IdUser);
             return View();
         }
         [Authorize]
@@ -35,68 +37,46 @@ namespace ProcessManagement.Controllers
         {
             return View();
         }
-
         [Authorize]
         [HttpPost]
         public ActionResult Create(Group group, HttpPostedFileBase ImageGr)
         {
 
-            string userid = User.Identity.GetUserId();
-            if (ImageGr != null)
-            {
-                string avatar = "";
-                if (ImageGr.ContentLength > 0)
-                {
-                    var filename = Path.GetFileName(ImageGr.FileName);
-                    var path = Path.Combine(Server.MapPath("~/Content/images/workspace/"), filename);
-                    ImageGr.SaveAs(path);
-                    avatar = filename;
-                }
-                group.Avatar = avatar;
-            }
-            else
-            {
-                group.Avatar = "default.jpg";
-            }
-            group.IdOwner = userid;
-            group.Created_At = DateTime.Now;
-            group.Updated_At = DateTime.Now;
+            string idUser = User.Identity.GetUserId();
+            //save avatar
+            group.Avatar = commonService.saveAvatarGroup(ImageGr, Server.MapPath("~/Content/images/workspace/"));
+            //create new group
+            groupService.createGroup(idUser, group);
+            //create new participate
+            Participate part = new Participate();
+            participateService.createParticipate(idUser, group.Id, part, true);
 
-            db.Groups.Add(group);
-            db.SaveChanges();
-
-            Participate role = new Participate();
-            role.IdGroup = group.Id;
-            role.IdUser = userid;
-            role.IsOwner = true;
-            role.IsAdmin = true;
-            role.Created_At = DateTime.Now;
-            role.Updated_At = DateTime.Now;
-            db.Participates.Add(role);
-            db.SaveChanges();
+            //set flash
+            SetFlash("Success", "Created Group Successfully");
             return RedirectToAction("Index", "Group");
-            //return RedirectToAction("InviteMember", "Group", new { id = ws.ID });
         }
         [GroupAuthorize]
-        public ActionResult Show(int? id)
+        public ActionResult Show(int id)
         {
-            string userid = User.Identity.GetUserId();
-            Group group = db.Groups.Find(id);
-            if (group == null)
-            {
-                return HttpNotFound();
-            }
-            Session["idGroup"] = id;
-            var ListParticipant = db.Participates.Where(x => x.IdGroup == id).ToList();
+            //Tìm group theo id
+            Group group = groupService.findGroup(id);
+            if (group == null) return HttpNotFound();
+
+            Session["idGroup"] = group.Id;
+            //Tìm tất cả member thuộc group đó
+            var ListParticipant = participateService.findMemberOfGroup(group.Id);
             ViewData["ListParticipant"] = ListParticipant;
+
+            //Tìm tất cả member không thuộc group đó
             List<string> userInGroup = new List<string>();
             foreach (var item in ListParticipant)
             {
                 userInGroup.Add(item.IdUser);
             }
-            //string temp = String.Join(", ", userInGroup); 
             ViewData["ListUser"] = db.AspNetUsers.Where(x => !userInGroup.Contains(x.Id)).OrderByDescending(x => x.Id).ToList();
-            ViewData["ListProcess"] = db.Processes.Where(x => x.IdGroup == id).OrderByDescending(x => x.Created_At).ToList();
+
+            //Tìm tất cả các process thuộc group đó
+            ViewData["ListProcess"] = processService.getProcess(group.Id);
             return View(group);
         }
         //public ActionResult AddMember(int? id)
@@ -122,8 +102,9 @@ namespace ProcessManagement.Controllers
         [HttpPost]
         public ActionResult AddMember(Group model, List<string> adduser)
         {
-            Group group = db.Groups.Find(model.Id);
+            Group group = groupService.findGroup(model.Id);
             if (group == null) return HttpNotFound();
+
             foreach (var user in adduser)
             {
                 Participate role = new Participate();
@@ -136,6 +117,7 @@ namespace ProcessManagement.Controllers
             }
             db.SaveChanges();
             TempData["UserSetting"] = "ABC";
+            SetFlash("Success", "Added Members Successfully");
             return RedirectToAction("settings", new { id = model.Id });
         }
         [Authorize]
@@ -155,7 +137,6 @@ namespace ProcessManagement.Controllers
             //string temp = String.Join(", ", userInGroup); 
             ViewData["Roles"] = db.Participates.Where(x => x.IdUser == userid && x.IdGroup == id).FirstOrDefault();
             ViewData["ListUser"] = db.AspNetUsers.Where(x => !userInGroup.Contains(x.Id)).OrderByDescending(x => x.Id).ToList();
-
             return View(group);
         }
         [Authorize]
@@ -192,10 +173,12 @@ namespace ProcessManagement.Controllers
         public ActionResult Remove(int id)
         {
             Group group = db.Groups.Find(id);
+            var groupName = group.Name;
             var iduser = db.Participates.Where(x => x.IdGroup == id);
             db.Participates.RemoveRange(iduser);
             db.Groups.Remove(group);
             db.SaveChanges();
+            SetFlash("Success", "Removed Group "+ groupName + " Successfully");
             return RedirectToAction("Index");
         }
         
@@ -203,10 +186,12 @@ namespace ProcessManagement.Controllers
         public ActionResult DeleteMember(Participate model)
         {
             Participate user = db.Participates.SingleOrDefault(x => x.Id == model.Id);
+            var userName = user.AspNetUser.UserName;
             var groupId = user.IdGroup;
             db.Participates.Remove(user);
             db.SaveChanges();
             TempData["UserSetting"] = "ABC";
+            SetFlash("Success", "Removed "+ userName + " Successfully");
             return RedirectToAction("Settings", new { id = groupId });
         }
         [Authorize]
@@ -227,14 +212,17 @@ namespace ProcessManagement.Controllers
             db.Entry(user).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
             TempData["UserSetting"] = "ABC";
+            SetFlash("Success", "Edited Role of "+user.AspNetUser.UserName+" Successfully");
             return RedirectToAction("Settings", new { id = groupId });
         }
         [Authorize]
         public ActionResult MemberLeaveGroup(Participate model)
         {
             Participate user = db.Participates.SingleOrDefault(x => x.Id == model.Id);
+            var userName = user.Group.Name;
             db.Participates.Remove(user);
             db.SaveChanges();
+            SetFlash("Success", "Left Group " + userName + " Successfully");
             return RedirectToAction("Index");
         }
         [Authorize]
@@ -259,6 +247,7 @@ namespace ProcessManagement.Controllers
             ps.Updated_At = DateTime.Now;
             db.Processes.Add(ps);
             db.SaveChanges();
+            SetFlash("Success", "Created Process Successfully");
             return RedirectToAction("DrawProcess", new { id = ps.Id });
         }
 

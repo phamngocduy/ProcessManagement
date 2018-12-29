@@ -22,9 +22,9 @@
         <li class="cw-active-tab" rel="process">
             <a href="@Url.Action("Show", "Group", new { id = Model.Id })"><i class="fas fa-sitemap"></i> Process</a>
         </li>
-        <li rel="members">
+        @*<li rel="members">
             <a href="@Url.Action("AddMember", "Group", new { id = Model.Id })"><i class="fas fa-user-friends"></i> Members</a>
-        </li>
+        </li>*@
         <li rel="settings">
             <a href="@Url.Action("Settings", "Group", new { id = Model.Id })"><i class="fas fa-cog"></i> Settings</a>
         </li>

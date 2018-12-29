@@ -12,12 +12,15 @@ namespace ProcessManagement
                    "~/Content/libs/font-awesome-4/css/font-awesome.min.css",
                    "~/Content/libs/font-awesome-5/css/all.css",
                    "~/Content/libs/bootstrap/dist/css/bootstrap.min.css",
+                   "~/Content/libs/alertify/build/css/alertify.min.css",
+                   "~/Content/libs/alertify/build/css/themes/default.min.css",
                    "~/Content/build/css/responsive.css",
                    "~/Content/build/css/grid-boostrap-fixheight.css"
                ));
             bundles.Add(new ScriptBundle("~/Content/js").Include(
                 "~/Content/libs/jquery/dist/jquery.min.js",
                 "~/Content/libs/bootstrap/dist/js/bootstrap.min.js",
+                "~/Content/libs/alertify/build/alertify.min.js",
                 "~/Content/build/js/custom.min.js",
                 "~/Content/build/js/cookie.js",
                 "~/Content/build/js/language.js"
