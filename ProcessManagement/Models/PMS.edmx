@@ -104,9 +104,12 @@
           <Property Name="IdProcess" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Description" Type="nvarchar(max)" />
-          <Property Name="NodeData" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Created_At" Type="datetime" Nullable="false" />
           <Property Name="Updated_At" Type="datetime" Nullable="false" />
+          <Property Name="StartStep" Type="bit" />
+          <Property Name="NextStep1" Type="bit" />
+          <Property Name="NextStep2" Type="bit" />
+          <Property Name="Key" Type="int" />
         </EntityType>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
@@ -445,9 +448,12 @@
           <Property Name="IdProcess" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="NodeData" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Created_At" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Updated_At" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="StartStep" Type="Boolean" />
+          <Property Name="NextStep1" Type="Boolean" />
+          <Property Name="NextStep2" Type="Boolean" />
+          <Property Name="Key" Type="Int32" />
           <NavigationProperty Name="Process" Relationship="PMSModel.FK_Step_Process" FromRole="Step" ToRole="Process" />
         </EntityType>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
@@ -554,7 +560,7 @@
           <End Type="PMSModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
           <End Type="PMSModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
         </Association>
-      </Schema>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -650,9 +656,12 @@
           <EntitySetMapping Name="Steps">
             <EntityTypeMapping TypeName="PMSModel.Step">
               <MappingFragment StoreEntitySet="Step">
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="NextStep2" ColumnName="NextStep2" />
+                <ScalarProperty Name="NextStep1" ColumnName="NextStep1" />
+                <ScalarProperty Name="StartStep" ColumnName="StartStep" />
                 <ScalarProperty Name="Updated_At" ColumnName="Updated_At" />
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
-                <ScalarProperty Name="NodeData" ColumnName="NodeData" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="IdProcess" ColumnName="IdProcess" />

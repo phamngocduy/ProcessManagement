@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using System.IO;
 using System.Web;
 using Microsoft.AspNet.Identity;
+using Newtonsoft.Json.Linq;
 using ProcessManagement.Models;
 using ProcessManagement.Services;
 using ProcessManagement.Filters;
@@ -238,15 +239,26 @@ namespace ProcessManagement.Controllers
             return View(ps);
         }
         [HttpPost]
-        public JsonResult DrawProcess(int processId, string data/*, Array[] linkDataArray, Array[] nodeDataArray*/)
+        public JsonResult DrawProcess(int processId, string data,string nodeData)
         {
             Process ps = db.Processes.Find(processId);
             ps.DataJson = data.ToString();
+            //JObject json = JObject.Parse(nodeData);
+            JArray array = JArray.Parse(nodeData);
+            
+            for (int i = 0; i < array.Count; i++)
+            {
+                Step step = new Step();
+                step.IdProcess = processId;
+                step.Name = array[i]["text"].ToString();
+                step.Key = (int)array[i]["key"];
+                step.Created_At = DateTime.Now;
+                step.Updated_At = DateTime.Now;
+                db.Steps.Add(step);
+            }
             db.Entry(ps).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
-            //return RedirectToAction("ShowGroup", new { id = ws.Group_ID });
             return Json(new { id =  ps.IdGroup});
-            //return Json(new { data = data , processId = processId, linkDataArray = linkDataArray, nodeDataArray = nodeDataArray });
         }
 
 

@@ -297,15 +297,13 @@
     $(document).ready(function ($) {
         $('#btn-save').on('click', function () {
             let data = $("#mySavedModel").val();
-            //let linkDataArray = $("#myDiagram.model.linkDataArray").val();
-            //let nodeDataArray = $("#myDiagram.model.nodeDataArray").val();
+           
             let idProcess = @Model.Id;
             //truyen nguyen cai json voi idGroup
             let a = {
                 data: data,
                 processId: idProcess,
-                //linkDataArray: linkDataArray,
-                //nodeDataArray: nodeDataArray
+                nodeData: JSON.stringify(myDiagram.model.nodeDataArray)
             }
             //truyen qua controller
             $.ajax({
