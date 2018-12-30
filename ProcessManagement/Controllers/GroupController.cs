@@ -147,6 +147,7 @@ namespace ProcessManagement.Controllers
             if (group == null) return HttpNotFound();
             groupService.removeAvatar(model);
             TempData["GaneralSetting"] = "ABC";
+            SetFlash("Success", "Removed Avatar Successfully");
             return RedirectToAction("Settings", new { id = model.Id });
         }
         [Authorize]
