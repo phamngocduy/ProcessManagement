@@ -26,6 +26,7 @@ namespace ProcessManagement.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public string Avatar { get; set; }
+        public string AvatarDefault { get; set; }
         public System.DateTime Created_At { get; set; }
         public System.DateTime Updated_At { get; set; }
     

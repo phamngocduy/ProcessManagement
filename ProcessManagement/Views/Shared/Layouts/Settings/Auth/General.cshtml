@@ -1,6 +1,7 @@
 ﻿
 @model ProcessManagement.Models.Group
-@{ 
+@using Newtonsoft.Json.Linq;
+@{
     var showGaneralSetting = TempData["GaneralSetting"] != null ? "in" : "";
 }
 <section class="settings">
@@ -51,12 +52,27 @@
                                 </label>
                             </div>
                             <div class="col-md-10">
-                                <img style="width: 200px;height: auto" id='img-upload' src="~/Content/images/workspace/@Model.Avatar" />
+                                @if (Model.Avatar != null)
+                                {
+                                    <img style="width: 200px;height: auto" id='img-upload' src="~/Content/images/workspace/@Model.Avatar" />
+                                }
+                                else
+                                {
+                                    JObject defaultAvatar = JObject.Parse(Model.AvatarDefault);
+                                    <img style="width: 200px;height: auto" id='img-upload' src=""/>
+                                    <div class="avatar-default" style="background-color:@defaultAvatar["background"]">
+                                        @defaultAvatar["name"]
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
+                    @if (Model.Avatar != null)
+                    {
+                        <a href="@Url.Action("RemoveAvatar","Group",new { id = Model.Id})" class="btn btn-danger" onclick="return confirmBeforRemoveAvatar()">Reset Avatar</a>
+                    }
                     <button class="btn btn-success" type="submit">Save Change</button>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 ﻿
 @model ProcessManagement.Models.Group
-@{ 
+@using Newtonsoft.Json.Linq;
+@{
     var showGaneralSetting = TempData["GaneralSetting"] != null ? "in" : "";
 }
 <section class="settings">
@@ -38,7 +39,17 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.Avatar, "Avatar Group")
                 <div>
+                    @if (Model.Avatar != null)
+                    {
                     <img style="width: 200px;height: auto" id='img-upload' src="~/Content/images/workspace/@Model.Avatar" />
+                    }
+                    else
+                    {
+                        JObject defaultAvatar = JObject.Parse(Model.AvatarDefault);
+                        <div class="avatar-default" style="background-color:@defaultAvatar["background"]">
+                            @defaultAvatar["name"]
+                        </div>
+                    }
                 </div>
             </div>
         </div>

@@ -1,18 +1,39 @@
 ﻿@model ProcessManagement.Models.Group
-@using ProcessManagement.Models;
+@using Newtonsoft.Json.Linq;
 @{
     ViewBag.Title = "ShowGroup";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var db = new PMSEntities();
     var listprocess = ViewData["ListProcess"] as List<ProcessManagement.Models.Process>;
-    var listuser = ViewData["ListUser"] as List<ProcessManagement.Models.AspNetUser>;
+    var listuser = ViewData["ListParticipant"] as List<ProcessManagement.Models.Participate>;
 
 }
-
+@section CustomCss{
+    <style>
+        .avatar-default {
+            font-size: 100px;
+            text-align: center;
+            font-weight: bold;
+            color: black;
+            width:150px;
+            height:150px;
+            display:inline-block;
+        }
+    </style>
+}
 <div class="cw-workspace-header">
     <div class="cw-workspace-intro">
         <div class="cw-workspace-avatar">
-            <img src="~/Content/images/workspace/@Html.DisplayFor(model => model.Avatar)" alt="@Html.DisplayFor(model => model.Name)'s Avatar">
+            @if (Model.Avatar != null)
+            {
+                <img src="~/Content/images/workspace/@Html.DisplayFor(model => model.Avatar)" alt="@Html.DisplayFor(model => model.Name)'s Avatar">
+            }
+            else
+            {
+                JObject defaultAvatar = JObject.Parse(Model.AvatarDefault);
+                <div class="avatar-default" style="background-color:@defaultAvatar["background"]">
+                    @defaultAvatar["name"]
+                </div>
+            }
         </div>
         <div class="cw-workspace-name cw-normal-header">
             @Html.DisplayFor(model => model.Name)
@@ -23,8 +44,8 @@
             <a href="@Url.Action("Show", "Group", new { id = Model.Id })"><i class="fas fa-sitemap"></i> Process</a>
         </li>
         @*<li rel="members">
-            <a href="@Url.Action("AddMember", "Group", new { id = Model.Id })"><i class="fas fa-user-friends"></i> Members</a>
-        </li>*@
+                <a href="@Url.Action("AddMember", "Group", new { id = Model.Id })"><i class="fas fa-user-friends"></i> Members</a>
+            </li>*@
         <li rel="settings">
             <a href="@Url.Action("Settings", "Group", new { id = Model.Id })"><i class="fas fa-cog"></i> Settings</a>
         </li>
@@ -53,10 +74,10 @@
                 <div align="left">
                     @if (!listprocess.Any())
                     {
-                    <div style="margin:0 auto;display:table">
-                        <p class="cw-header-large cw-error-no-process">This organization has no process</p>
-                        <a class="btn btn-success" href="@Url.Action("CreateProcess","Group",new { id=Model.Id})" style="margin:0 25%">Create a new process</a>
-                    </div>
+                        <div style="margin:0 auto;display:table">
+                            <p class="cw-header-large cw-error-no-process">This organization has no process</p>
+                            <a class="btn btn-success" href="@Url.Action("CreateProcess","Group",new { id=Model.Id})" style="margin:0 25%">Create a new process</a>
+                        </div>
 
                     }
                     else
@@ -75,8 +96,8 @@
             <div class="col-md-4" style="padding-right: 0">
                 <div class="col-md-12 cw-workspace-members cw-box">
                     <div class="cw-box-header">
-                        <div class="cw-box-title">People</div>
-                        <div class="cw-member-total">1 <i class="fas fa-users"></i></div>
+                        <div class="cw-box-title">Members</div>
+                        <div class="cw-member-total">@listuser.Count() <i class="fas fa-users"></i></div>
                         <div class="clearfix"></div>
                         <hr class="cw-normal-hr" style="margin-top: 10px">
                     </div>
@@ -88,10 +109,10 @@
                                     <a href="#" class="cw-member-infor">
                                         <div class="media-left">
                                             <img alt="user's avatar" class="media-object"
-                                                 src="public/images/workspace/avatar2.png" style="width: 64px; height: 64px;">
+                                                 src="~/Content/images/user/avatar1.jpg" style="width: 64px; height: 64px;">
                                         </div>
                                         <div class="media-body" style="padding-top:7%">
-                                            @item.Email
+                                            @item.AspNetUser.UserName
                                         </div>
                                     </a>
                                 </li>

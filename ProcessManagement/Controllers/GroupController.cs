@@ -44,7 +44,7 @@ namespace ProcessManagement.Controllers
 
             string idUser = User.Identity.GetUserId();
             //save avatar
-            group.Avatar = commonService.saveAvatarGroup(ImageGr, Server.MapPath("~/Content/images/workspace/"));
+            commonService.saveAvatarGroup(group,ImageGr, Server.MapPath("~/Content/images/workspace/"));
             //create new group
             groupService.createGroup(idUser, group);
             //create new participate
@@ -64,17 +64,8 @@ namespace ProcessManagement.Controllers
 
             Session["idGroup"] = group.Id;
             //Tìm tất cả member thuộc group đó
-            var ListParticipant = participateService.findMemberOfGroup(group.Id);
+            var ListParticipant = participateService.findMemberInGroup(group.Id);
             ViewData["ListParticipant"] = ListParticipant;
-
-            //Tìm tất cả member không thuộc group đó
-            List<string> userInGroup = new List<string>();
-            foreach (var item in ListParticipant)
-            {
-                userInGroup.Add(item.IdUser);
-            }
-            ViewData["ListUser"] = db.AspNetUsers.Where(x => !userInGroup.Contains(x.Id)).OrderByDescending(x => x.Id).ToList();
-
             //Tìm tất cả các process thuộc group đó
             ViewData["ListProcess"] = processService.getProcess(group.Id);
             return View(group);
@@ -122,50 +113,39 @@ namespace ProcessManagement.Controllers
         }
         [Authorize]
         //[RoleAuthorize("Admin")]
-        public ActionResult Settings(int? id)
+        public ActionResult Settings(int id)
         {
-            string userid = User.Identity.GetUserId();
-            Group group = db.Groups.Find(id);
+            string idUser = User.Identity.GetUserId();
+            Group group = groupService.findGroup(id);
             if (group == null) return HttpNotFound();
-            var ListParticipant = db.Participates.Where(x => x.IdGroup == id).ToList();
+            //Tìm tất cả member thuộc group đó
+            var ListParticipant = participateService.findMemberInGroup(group.Id);
             ViewData["ListParticipant"] = ListParticipant;
-            List<string> userInGroup = new List<string>();
-            foreach (var item in ListParticipant)
-            {
-                userInGroup.Add(item.IdUser);
-            } 
-            //string temp = String.Join(", ", userInGroup); 
-            ViewData["Roles"] = db.Participates.Where(x => x.IdUser == userid && x.IdGroup == id).FirstOrDefault();
-            ViewData["ListUser"] = db.AspNetUsers.Where(x => !userInGroup.Contains(x.Id)).OrderByDescending(x => x.Id).ToList();
+
+            //Tìm tất cả member không thuộc group đó
+            ViewData["ListUser"] = participateService.findMemberNotInGroup(ListParticipant);
+            ViewData["Roles"] = participateService.getRoleOfMember(idUser, group.Id);
             return View(group);
         }
         [Authorize]
         [HttpPost]
         public ActionResult Edit(Group model, HttpPostedFileBase ImageGr)
         {
-            Group group = db.Groups.Find(model.Id);
+            Group group = groupService.findGroup(model.Id);
             if (group == null) return HttpNotFound();
 
-            if (ImageGr != null)
-            {
-                string avatar = "";
-                if (ImageGr.ContentLength > 0)
-                {
-                    var filename = Path.GetFileName(ImageGr.FileName);
-                    var path = Path.Combine(Server.MapPath("~/Content/images/workspace/"), filename);
-                    ImageGr.SaveAs(path);
-                    avatar = filename;
-                }
-                group.Avatar = avatar;
-            }
-            else
-            {
-                group.Avatar = group.Avatar != "default.png" ? group.Avatar : "default.png";
-            }
-            group.Description = model.Description;
-            group.Name = model.Name;
-            group.Updated_At = DateTime.Now;
-            db.SaveChanges();
+            commonService.saveAvatarGroup(model,ImageGr, Server.MapPath("~/Content/images/workspace/"));
+            groupService.editGroup(model);
+            TempData["GaneralSetting"] = "ABC";
+            return RedirectToAction("Settings", new { id = model.Id });
+        }
+        [Authorize]
+        [HttpGet]
+        public ActionResult RemoveAvatar(Group model)
+        {
+            Group group = groupService.findGroup(model.Id);
+            if (group == null) return HttpNotFound();
+            groupService.removeAvatar(model);
             TempData["GaneralSetting"] = "ABC";
             return RedirectToAction("Settings", new { id = model.Id });
         }

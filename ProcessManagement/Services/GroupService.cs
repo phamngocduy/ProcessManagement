@@ -36,6 +36,26 @@ namespace ProcessManagement.Services
             db.SaveChanges();
         }
         /// <summary>
+        /// Edit thông tin một group
+        /// </summary>
+        /// <param name="model">Group Model</param>
+        public void editGroup(Group model)
+        {
+            Group group = findGroup(model.Id);
+            group.Name = model.Name;
+            group.Avatar = model.Avatar;
+            group.Description = model.Description;
+            group.Updated_At = DateTime.Now;
+            db.SaveChanges();
+        }
+        public void removeAvatar(Group model)
+        {
+            Group group = findGroup(model.Id);
+            group.Avatar = null;
+            group.Updated_At = DateTime.Now;
+            db.SaveChanges();
+        }
+        /// <summary>
         /// Lấy ra những group mà user tham gia hoặc sỡ hữu
         /// </summary>
         /// <param name="id">Id của User</param>

@@ -1,4 +1,5 @@
 ﻿@model ProcessManagement.Models.Group
+@using Newtonsoft.Json.Linq;
 @{
     ViewBag.Title = "Setting";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -27,57 +28,64 @@
             text-align: center;
         }
 
-        .label i {
-            display: block;
-            font-size: 42px;
-            padding-bottom: 16px;
-        }
+            .label i {
+                display: block;
+                font-size: 42px;
+                padding-bottom: 16px;
+            }
 
-        .label i,
-        .label .title {
-            color: grey;
-            transition: 200ms color;
-        }
+            .label i,
+            .label .title {
+                color: grey;
+                transition: 200ms color;
+            }
 
-        .label:hover {
-            border: 2px solid black;
-        }
+            .label:hover {
+                border: 2px solid black;
+            }
 
-        .label:hover i,
-        .label:hover .title {
-            color: black;
-        }
+                .label:hover i,
+                .label:hover .title {
+                    color: black;
+                }
     </style>
     <style>
         .settings {
             border-bottom: 1px solid #dfe2e5;
         }
+
         .settings-header {
             position: relative;
             padding: 20px 110px 10px 0;
         }
-        .settings-header h4 {
-            margin-top: 0;
-        }
-        .settings-header button {
-            position: absolute;
-            top: 20px;
-            right: 6px;
-            min-width: 80px;
-        }
+
+            .settings-header h4 {
+                margin-top: 0;
+            }
+
+            .settings-header button {
+                position: absolute;
+                top: 20px;
+                right: 6px;
+                min-width: 80px;
+            }
+
         .settings-content {
             padding: 10px 110px 15px 40px;
             border: 1px solid #dfe2e5;
         }
-        .settings-content .sub-section:first-child{
-            margin-top:20px;
-        }
-        .settings-content .sub-section {
-            margin-bottom: 32px;
-            padding: 20px;
-            border: 1px solid #e5e5e5;
-            background-color: #fafafa;
-        }
+
+            .settings-content .sub-section:first-child {
+                margin-top: 20px;
+            }
+
+            .settings-content .sub-section {
+                margin-bottom: 32px;
+                padding: 20px;
+                border: 1px solid #e5e5e5;
+                background-color: #fafafa;
+            }
+
         .danger-title {
             color: #db3b21;
         }
@@ -88,8 +96,9 @@
             background-color: #212529;
             border-color: #fff;
         }
+
         .table tbody tr td {
-            background-color:white;
+            background-color: white;
         }
     </style>
     <style>
@@ -97,27 +106,51 @@
             font-weight: 600;
             color: #db3b21;
         }
+
         code {
             padding: 2px 4px;
             color: #c0341d;
             background-color: #fbe5e1;
             border-radius: 4px;
+            font-weight: bold;
+            font-size: 13px;
         }
-        #btn-remove-project-comfirm{
-            float:left;
+
+        #btn-remove-project-comfirm {
+            float: left;
         }
     </style>
     <style>
-        .span-left::after{
-            content:' | ';
+        .span-left::after {
+            content: ' | ';
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
+    <style>
+        .avatar-default {
+            font-size: 100px;
+            text-align: center;
+            font-weight: bold;
+            color: black;
+            width: 150px;
+            height: 150px;
+            display: inline-block;
+        }
+    </style>
 }
 <div class="cw-workspace-header">
     <div class="cw-workspace-intro">
         <div class="cw-workspace-avatar">
-            <img src="~/Content/images/workspace/@Html.DisplayFor(model => model.Avatar)" alt="@Html.DisplayFor(model => model.Name)'s Avatar">
+            @if (Model.Avatar != null)
+            {
+                <img src="~/Content/images/workspace/@Html.DisplayFor(model => model.Avatar)" alt="@Html.DisplayFor(model => model.Name)'s Avatar">
+            }
+            else
+            {
+                JObject defaultAvatar = JObject.Parse(Model.AvatarDefault);
+                <div class="avatar-default" style="background-color:@defaultAvatar["background"]">
+                    @defaultAvatar["name"]
+                </div>
+            }
         </div>
         <div class="cw-workspace-name cw-normal-header">
             @Html.DisplayFor(model => model.Name)
@@ -128,8 +161,8 @@
             <a href="@Url.Action("Show", "Group", new { id = Model.Id })"><i class="fas fa-sitemap"></i> Process</a>
         </li>
         @*<li rel="members">
-            <a href="@Url.Action("AddMember", "Group", new { id = Model.Id })"><i class="fas fa-user-friends"></i> Members</a>
-        </li>*@
+                <a href="@Url.Action("AddMember", "Group", new { id = Model.Id })"><i class="fas fa-user-friends"></i> Members</a>
+            </li>*@
         <li class="cw-active-tab" rel="settings">
             <a href="@Url.Action("Settings", "Group", new { id = Model.Id })"><i class="fas fa-cog"></i> Settings</a>
         </li>
@@ -138,7 +171,7 @@
 <div class="cw-container">
     @*<h4> Setting</h4>*@
     <div class="project-edit-container">
-        @if (isAdmin||isOwner)
+        @if (isAdmin || isOwner)
         {
             @Html.Partial("~/Views/Shared/Layouts/Settings/Auth/General.cshtml")
 
@@ -161,7 +194,7 @@
                     <h4 class="modal-title">Confirmation required</h4>
                 </div>
                 <div class="modal-body">
-                    <p class="text-danger">You are going to remove @Model.Name / @Model.AspNetUser.UserName. Removed project CANNOT be restored! Are you ABSOLUTELY sure?</p>
+                    <p class="text-danger">You are going to remove <span style="font-weight:bolder;font-style:italic;font-size:14px">@Model.Name / @Model.AspNetUser.UserName</span>. Removed project CANNOT be restored! Are you ABSOLUTELY sure?</p>
                     <p>
                         <span class="js-warning-text">
                             This action can lead to data loss.
@@ -200,42 +233,23 @@
 @section CustomScripts {
     <script>
         $(document).ready(function () {
-            $(document).on('change', '.btn-file :file', function () {
-                var input = $(this),
-                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-                input.trigger('fileselect', [label]);
-            });
-
-            $('.btn-file :file').on('fileselect', function (event, label) {
-
-                var input = $(this).parents('.input-group').find(':text'),
-                    log = label;
-
-                if (input.length) {
-                    input.val(log);
-                } else {
-                    if (log) alert(log);
-                }
-
-            });
-            function readURL(input) {
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
-
-                    reader.onload = function (e) {
-                        $('#img-upload').attr('src', e.target.result);
-                    }
-
-                    reader.readAsDataURL(input.files[0]);
-                }
-            }
-
             $("#imgInp").change(function () {
+                $('.avatar-default').remove();
                 readURL(this);
             });
         });
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#img-upload').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
     <script>
         $(document).ready(function () {
             var groupname = '@Html.DisplayFor(model => model.Name)';
@@ -270,7 +284,7 @@
                 $('#visibility-description').text(visibilityDes[visibilityLevel-1]);
             })
 
-                
+
         })
     </script>
     <script>
@@ -280,6 +294,10 @@
         }
         function confirmBeforeDeleteMember(name) {
             let check = confirm(`Are you sure you want to remove ${name}`);
+            return check;
+        }
+        function confirmBeforRemoveAvatar(name) {
+            let check = confirm(`Are you sure you want to set avatar to default`);
             return check;
         }
     </script>

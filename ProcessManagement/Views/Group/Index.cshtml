@@ -1,15 +1,26 @@
-﻿
+﻿@using Newtonsoft.Json.Linq;
 @{
     ViewBag.Title = "Group List";
     Layout = "~/Views/Shared/_NullLayout.cshtml";
     var grouplist = ViewData["ListGroup"] as List<ProcessManagement.Models.Group>;
 
 }
+@section CustomCss{
+    <style>
+        .avatar-default{
+            padding-top:10%;
+            font-size:100px;
+            text-align:center;
+            font-weight:bold;
+            color:black;
+        }
+    </style>
+}
 <div class="clearfix"><a href="@Url.Action("Create","Group")" class="btn btn-success pull-right">Create Group</a></div>
 <div class="group-list row display-flex">
-    @foreach (var item in grouplist)
+    @foreach (var group in grouplist)
     {
-        var des = item.Description == null ? "" : item.Description;
+        var des = group.Description == null ? "" : group.Description;
         if (des.Length > 100)
         {
             des = des.Substring(1, 100) + "...";
@@ -17,14 +28,26 @@
         <div class="col-sm-3">
             <div class="cw-card">
                 <div class="cw-group-image">
-                    <a href="@Url.Action("Show","Group",new { id = item.Id})">
-                        <img src="~/Content/images/workspace/@Html.DisplayFor(modle => item.Avatar)" alt="@item.Name" class="image-medium"  />
+                    <a href="@Url.Action("Show","Group",new { id = group.Id})">
+                        @if (group.Avatar != null)
+                        {
+                            <img src="~/Content/images/workspace/@Html.DisplayFor(modle => group.Avatar)" alt="@group.Name" class="image-medium" />
+                        }
+                        else
+                        {
+
+                            JObject defaultAvatar = JObject.Parse(group.AvatarDefault);
+
+                            <div class="image-medium avatar-default" style="background-color:@defaultAvatar["background"]">
+                                @defaultAvatar["name"]
+                            </div>
+                        }
                     </a>
                 </div>
                 <div class="cw-group-infor">
-                    <div class="cw-group-name">@Html.ActionLink(item.Name, "Show", new { id = item.Id })</div>
-                    <div class="cw-group-author"><span class="cw-label">Author:</span>@Html.DisplayFor(modle => item.AspNetUser.UserName)</div>
-                    <div class="cw-group-date"><span class="cw-label">Update at:</span>@Html.DisplayFor(modle => item.Updated_At)</div>
+                    <div class="cw-group-name">@Html.ActionLink(group.Name, "Show", new { id = group.Id })</div>
+                    <div class="cw-group-author"><span class="cw-label">Author:</span>@Html.DisplayFor(modle => group.AspNetUser.UserName)</div>
+                    <div class="cw-group-date"><span class="cw-label">Update at:</span>@Html.DisplayFor(modle => group.Updated_At)</div>
                     <div class="cw-group-des" style="word-break:break-all">
                         <span class="cw-label">Description:</span>
                         @des
