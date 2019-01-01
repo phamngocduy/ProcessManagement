@@ -303,7 +303,8 @@
             let a = {
                 data: data,
                 processId: idProcess,
-                nodeData: JSON.stringify(myDiagram.model.nodeDataArray)
+                nodeData: JSON.stringify(myDiagram.model.nodeDataArray),
+                linkData: JSON.stringify(myDiagram.model.linkDataArray)
             }
             //truyen qua controller
             $.ajax({

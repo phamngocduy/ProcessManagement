@@ -7,8 +7,13 @@ namespace ProcessManagement.Services
 {
     public class GroupService
     {
+        ///=============================================================================================
         public readonly PMSEntities db = new PMSEntities();
+        ParticipateService participateService = new ParticipateService();
+        ProcessService processService = new ProcessService();
+        ///=============================================================================================
 
+        
 
 
         /// <summary>
@@ -46,6 +51,20 @@ namespace ProcessManagement.Services
             group.Avatar = model.Avatar;
             group.Description = model.Description;
             group.Updated_At = DateTime.Now;
+            db.SaveChanges();
+        }
+        /// <summary>
+        /// Xóa một group
+        /// </summary>
+        /// <param name="group">Model Group</param>
+        public void removeGroup(Group group)
+        {
+            var listUser = participateService.findMembersInGroup(group.Id);
+            //remove user in group
+            participateService.removeUsersInGroup(listUser);
+            //remove tất cả các process của group
+            processService.removeProcesses(group.Id);
+            db.Groups.Remove(group);
             db.SaveChanges();
         }
         public void removeAvatar(Group model)

@@ -65,7 +65,7 @@ namespace ProcessManagement.Controllers
 
             Session["idGroup"] = group.Id;
             //Tìm tất cả member thuộc group đó
-            var ListParticipant = participateService.findMemberInGroup(group.Id);
+            var ListParticipant = participateService.findMembersInGroup(group.Id);
             ViewData["ListParticipant"] = ListParticipant;
             //Tìm tất cả các process thuộc group đó
             ViewData["ListProcess"] = processService.getProcess(group.Id);
@@ -97,17 +97,8 @@ namespace ProcessManagement.Controllers
             Group group = groupService.findGroup(model.Id);
             if (group == null) return HttpNotFound();
 
-            foreach (var user in adduser)
-            {
-                Participate role = new Participate();
-                role.IdUser = db.AspNetUsers.SingleOrDefault(x => x.Email == user).Id;
-                role.IdGroup = group.Id;
-                role.Created_At = DateTime.Now;
-                role.Updated_At = DateTime.Now;
-
-                db.Participates.Add(role);
-            }
-            db.SaveChanges();
+            //Add members
+            participateService.addMembers(model, adduser);
             TempData["UserSetting"] = "ABC";
             SetFlash("Success", "Added Members Successfully");
             return RedirectToAction("settings", new { id = model.Id });
@@ -120,11 +111,11 @@ namespace ProcessManagement.Controllers
             Group group = groupService.findGroup(id);
             if (group == null) return HttpNotFound();
             //Tìm tất cả member thuộc group đó
-            var ListParticipant = participateService.findMemberInGroup(group.Id);
+            var ListParticipant = participateService.findMembersInGroup(group.Id);
             ViewData["ListParticipant"] = ListParticipant;
 
             //Tìm tất cả member không thuộc group đó
-            ViewData["ListUser"] = participateService.findMemberNotInGroup(ListParticipant);
+            ViewData["ListUser"] = participateService.findMembersNotInGroup(ListParticipant);
             ViewData["Roles"] = participateService.getRoleOfMember(idUser, group.Id);
             return View(group);
         }
@@ -154,12 +145,16 @@ namespace ProcessManagement.Controllers
         [Authorize]
         public ActionResult Remove(int id)
         {
-            Group group = db.Groups.Find(id);
+            Group group = groupService.findGroup(id);
             var groupName = group.Name;
-            var iduser = db.Participates.Where(x => x.IdGroup == id);
-            db.Participates.RemoveRange(iduser);
-            db.Groups.Remove(group);
-            db.SaveChanges();
+            ////////////////////////////////////////////////////////////////////////////
+            //TODO
+            //hỏi thầy lúc xóa group có nên xóa process luôn hông 
+            //tại process này có thể là con của một process khác năng ở group khác
+            ///////////////////////////////////////////////////////////////////////////
+            
+            //remove group (bao gồm remove participant,process,step)
+            groupService.removeGroup(group);
             SetFlash("Success", "Removed Group "+ groupName + " Successfully");
             return RedirectToAction("Index");
         }
@@ -167,11 +162,11 @@ namespace ProcessManagement.Controllers
         [Authorize]
         public ActionResult DeleteMember(Participate model)
         {
-            Participate user = db.Participates.SingleOrDefault(x => x.Id == model.Id);
+            Participate user = participateService.findMemberInGroup(model.Id);
+            if (user == null) return HttpNotFound();
             var userName = user.AspNetUser.UserName;
             var groupId = user.IdGroup;
-            db.Participates.Remove(user);
-            db.SaveChanges();
+            participateService.removeUserInGroup(user);
             TempData["UserSetting"] = "ABC";
             SetFlash("Success", "Removed "+ userName + " Successfully");
             return RedirectToAction("Settings", new { id = groupId });
@@ -239,19 +234,41 @@ namespace ProcessManagement.Controllers
             return View(ps);
         }
         [HttpPost]
-        public JsonResult DrawProcess(int processId, string data,string nodeData)
+        public JsonResult DrawProcess(int processId, string data, string nodeData, string linkData)
         {
             Process ps = db.Processes.Find(processId);
             ps.DataJson = data.ToString();
             //JObject json = JObject.Parse(nodeData);
-            JArray array = JArray.Parse(nodeData);
-            
-            for (int i = 0; i < array.Count; i++)
+            JArray nodeArray = JArray.Parse(nodeData);
+            JArray linkArray = JArray.Parse(linkData);
+            var idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();
+            List<int> a = new List<int>();
+            for (int i = 0; i < nodeArray.Count; i++)
             {
+                var key = (int)nodeArray[i]["key"];
+                var from = linkArray.Where(x => (int)x["from"] == key).FirstOrDefault();
+                var nextStep2 = 0;
+                if (from !=null)
+                {
+                    var to = (int)from["to"];
+                    
+                    if (!a.Contains(to))
+                    {
+                        a.Add(to);
+                    }
+                    else
+                    {
+                        nextStep2 = to;
+                    }
+                }
                 Step step = new Step();
                 step.IdProcess = processId;
-                step.Name = array[i]["text"].ToString();
-                step.Key = (int)array[i]["key"];
+                step.Name = nodeArray[i]["text"].ToString();
+                step.Key = key;
+                step.StartStep = (int)idfirstStep["to"]==(int)nodeArray[i]["key"] ? true: false;
+                step.NextStep1 = from == null ?  0 : (int)from["to"];
+                step.NextStep2 = nextStep2;
+                 step.Figure = nodeArray[i]["figure"] == null? "Step" : nodeArray[i]["figure"].ToString();
                 step.Created_At = DateTime.Now;
                 step.Updated_At = DateTime.Now;
                 db.Steps.Add(step);

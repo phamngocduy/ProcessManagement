@@ -21,9 +21,10 @@ namespace ProcessManagement.Models
         public System.DateTime Created_At { get; set; }
         public System.DateTime Updated_At { get; set; }
         public Nullable<bool> StartStep { get; set; }
-        public Nullable<bool> NextStep1 { get; set; }
-        public Nullable<bool> NextStep2 { get; set; }
+        public Nullable<int> NextStep1 { get; set; }
+        public Nullable<int> NextStep2 { get; set; }
         public Nullable<int> Key { get; set; }
+        public string Figure { get; set; }
     
         public virtual Process Process { get; set; }
     }

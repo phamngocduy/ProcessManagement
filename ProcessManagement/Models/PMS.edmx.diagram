@@ -12,7 +12,6 @@
         <EntityTypeShape EntityType="PMSModel.Group" Width="1.5" PointX="5.25" PointY="5.875" />
         <EntityTypeShape EntityType="PMSModel.Participate" Width="1.5" PointX="10.5" PointY="6" />
         <EntityTypeShape EntityType="PMSModel.Process" Width="1.5" PointX="7.5" PointY="5.875" />
-        <EntityTypeShape EntityType="PMSModel.Step" Width="1.5" PointX="9.75" PointY="9.875" />
         <AssociationConnector Association="PMSModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="PMSModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="PMSModel.FK_Group_AspNetUsers" />
@@ -20,8 +19,9 @@
         <AssociationConnector Association="PMSModel.FK_Process_AspNetUsers" />
         <AssociationConnector Association="PMSModel.FK_Participate_Group" />
         <AssociationConnector Association="PMSModel.FK_Process_Group" />
-        <AssociationConnector Association="PMSModel.FK_Step_Process" />
         <AssociationConnector Association="PMSModel.AspNetUserRoles" />
+        <EntityTypeShape EntityType="PMSModel.Step" Width="1.5" PointX="9.75" PointY="9.75" />
+        <AssociationConnector Association="PMSModel.FK_Step_Process" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

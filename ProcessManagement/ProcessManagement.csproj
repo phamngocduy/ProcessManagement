@@ -305,6 +305,7 @@
     <Compile Include="Services\GroupService.cs" />
     <Compile Include="Services\ParticipateService.cs" />
     <Compile Include="Services\ProcessService.cs" />
+    <Compile Include="Services\StepService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Models\Step.cs">
       <DependentUpon>PMS.tt</DependentUpon>
