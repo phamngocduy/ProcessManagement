@@ -172,22 +172,23 @@ namespace ProcessManagement.Controllers
             return RedirectToAction("Settings", new { id = groupId });
         }
         [Authorize]
-        public ActionResult EditRoleMember(int? id)
+        public ActionResult EditRoleMember(int id)
         {
-            Participate ws = db.Participates.SingleOrDefault(x => x.Id == id);
-            return View(ws);
+ 
+            Participate user = participateService.findMemberInGroup(id);
+            if (user == null) return HttpNotFound();
+            return View(user);
         }
         [Authorize]
         [HttpPost]
         public ActionResult EditRoleMember(Participate model)
         {
-            Participate user = db.Participates.SingleOrDefault(x => x.Id == model.Id);
+            Participate user = participateService.findMemberInGroup(model.Id);
+            if (user == null) return HttpNotFound();
+            //chỉnh sửa role của 1 user
+            participateService.editRoleUser(model);
+
             var groupId = user.IdGroup;
-            user.IsAdmin = model.IsAdmin;
-            user.IsManager = model.IsManager;
-            user.Updated_At = DateTime.Now;
-            db.Entry(user).State = System.Data.Entity.EntityState.Modified;
-            db.SaveChanges();
             TempData["UserSetting"] = "ABC";
             SetFlash("Success", "Edited Role of "+user.AspNetUser.UserName+" Successfully");
             return RedirectToAction("Settings", new { id = groupId });

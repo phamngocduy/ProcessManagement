@@ -59,7 +59,9 @@ namespace ProcessManagement.Controllers
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            //return View();
+            return new ChallengeResult("Văn Lang", Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
+
         }
 
         //

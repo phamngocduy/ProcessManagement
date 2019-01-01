@@ -35,11 +35,11 @@
                 {
                     <span class="control-label col-md-1 col-sm-1 col-xs-12">User</span>
                     <div class="col-md-11 col-sm-11 col-xs-12">
-                        @foreach (var item in userList)
+                        @foreach (var user in userList)
                         {
                             <div class="input-group col-md-3" style="margin:7px;padding: 0;margin-left:20px">
                                 <label>
-                                    <input runat="server" value="@item.Email" type="checkbox" class="flat" name="adduser"> @item.Email
+                                    <input runat="server" value="@user.Email" type="checkbox" class="flat" name="adduser"> @user.UserName
                                 </label>
                             </div>
 
@@ -66,7 +66,7 @@
                 {
                     <tr>
                         <td>
-                            @item.AspNetUser.Email
+                            @item.AspNetUser.UserName
                             @if (item.AspNetUser.Id == User.Identity.GetUserId())
                             {
                                 <span class="badge" style="background-color:#26B99A;color:white;">It's you</span>

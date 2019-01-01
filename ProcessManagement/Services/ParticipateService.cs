@@ -42,6 +42,19 @@ namespace ProcessManagement.Services
             db.Participates.Add(part);
             db.SaveChanges();
         }
+        /// <summary>
+        /// Thay đổi role của một user
+        /// </summary>
+        /// <param name="model">Participate model</param>
+        public void editRoleUser(Participate model)
+        {
+            var user = findMemberInGroup(model.Id);
+            user.IsAdmin = model.IsAdmin;
+            user.IsManager = model.IsManager;
+            user.Updated_At = DateTime.Now;
+            db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+        }
         public void removeUserInGroup(Participate participate)
         {
             db.Participates.Remove(participate);
