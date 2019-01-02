@@ -55,6 +55,10 @@ namespace ProcessManagement.Services
             db.Entry(user).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
         }
+        /// <summary>
+        /// Xóa user ra khỏi group
+        /// </summary>
+        /// <param name="participate">Oarticipate Model</param>
         public void removeUserInGroup(Participate participate)
         {
             db.Participates.Remove(participate);

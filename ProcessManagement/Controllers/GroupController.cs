@@ -5,7 +5,6 @@ using System.Web.Mvc;
 using System.IO;
 using System.Web;
 using Microsoft.AspNet.Identity;
-using Newtonsoft.Json.Linq;
 using ProcessManagement.Models;
 using ProcessManagement.Services;
 using ProcessManagement.Filters;
@@ -68,7 +67,7 @@ namespace ProcessManagement.Controllers
             var ListParticipant = participateService.findMembersInGroup(group.Id);
             ViewData["ListParticipant"] = ListParticipant;
             //Tìm tất cả các process thuộc group đó
-            ViewData["ListProcess"] = processService.getProcess(group.Id);
+            ViewData["ListProcess"] = processService.findProcess(group.Id);
             return View(group);
         }
         //public ActionResult AddMember(int? id)
@@ -196,89 +195,15 @@ namespace ProcessManagement.Controllers
         [Authorize]
         public ActionResult MemberLeaveGroup(Participate model)
         {
-            Participate user = db.Participates.SingleOrDefault(x => x.Id == model.Id);
-            var userName = user.Group.Name;
-            db.Participates.Remove(user);
-            db.SaveChanges();
-            SetFlash("Success", "Left Group " + userName + " Successfully");
+            Participate user = participateService.findMemberInGroup(model.Id);
+            if (user == null) return HttpNotFound();
+            var groupName = user.Group.Name;
+
+            //xóa thành viên trong group
+            participateService.removeUserInGroup(user);
+            
+            SetFlash("Success", "Left Group " + groupName + " Successfully");
             return RedirectToAction("Index");
         }
-        [Authorize]
-        public ActionResult CreateProcess(int? id)
-        {
-            Group gr = db.Groups.Find(id);
-            Process pr = new Process();
-            return View(pr);
-        }
-        [Authorize]
-        [HttpPost]
-        public ActionResult CreateProcess(Group model, Process pro)
-        {
-            string userid = User.Identity.GetUserId();
-            Group gr = db.Groups.Find(model.Id);
-            Process ps = new Process();
-            ps.IdGroup = gr.Id;
-            ps.IdOwner = userid;
-            ps.Name = pro.Name;
-            ps.Description = pro.Description;
-            ps.Created_At = DateTime.Now;
-            ps.Updated_At = DateTime.Now;
-            db.Processes.Add(ps);
-            db.SaveChanges();
-            SetFlash("Success", "Created Process Successfully");
-            return RedirectToAction("DrawProcess", new { id = ps.Id });
-        }
-
-        public ActionResult DrawProcess(int? id)
-        {
-            Process ps = db.Processes.Find(id);
-            return View(ps);
-        }
-        [HttpPost]
-        public JsonResult DrawProcess(int processId, string data, string nodeData, string linkData)
-        {
-            Process ps = db.Processes.Find(processId);
-            ps.DataJson = data.ToString();
-            //JObject json = JObject.Parse(nodeData);
-            JArray nodeArray = JArray.Parse(nodeData);
-            JArray linkArray = JArray.Parse(linkData);
-            var idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();
-            List<int> a = new List<int>();
-            for (int i = 0; i < nodeArray.Count; i++)
-            {
-                var key = (int)nodeArray[i]["key"];
-                var from = linkArray.Where(x => (int)x["from"] == key).FirstOrDefault();
-                var nextStep2 = 0;
-                if (from !=null)
-                {
-                    var to = (int)from["to"];
-                    
-                    if (!a.Contains(to))
-                    {
-                        a.Add(to);
-                    }
-                    else
-                    {
-                        nextStep2 = to;
-                    }
-                }
-                Step step = new Step();
-                step.IdProcess = processId;
-                step.Name = nodeArray[i]["text"].ToString();
-                step.Key = key;
-                step.StartStep = (int)idfirstStep["to"]==(int)nodeArray[i]["key"] ? true: false;
-                step.NextStep1 = from == null ?  0 : (int)from["to"];
-                step.NextStep2 = nextStep2;
-                 step.Figure = nodeArray[i]["figure"] == null? "Step" : nodeArray[i]["figure"].ToString();
-                step.Created_At = DateTime.Now;
-                step.Updated_At = DateTime.Now;
-                db.Steps.Add(step);
-            }
-            db.Entry(ps).State = System.Data.Entity.EntityState.Modified;
-            db.SaveChanges();
-            return Json(new { id =  ps.IdGroup});
-        }
-
-
     }
 }
