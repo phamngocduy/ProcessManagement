@@ -1,30 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using ProcessManagement.Models;
 using Microsoft.AspNet.Identity;
+using ProcessManagement.Models;
+using ProcessManagement.Services;
 namespace ProcessManagement.Filters
 {
-    public class GroupAuthorizeAttribute : AuthorizeAttribute
+    public class GroupAuthorizeAttribute : ActionFilterAttribute
     {
+        ///=============================================================================================
         PMSEntities db = new PMSEntities();
-        
-        protected override bool AuthorizeCore(HttpContextBase httpContext)
+        GroupService groupService = new GroupService();
+        ///=============================================================================================
+
+
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             string idUser = System.Web.HttpContext.Current.User.Identity.GetUserId();
-            int idGroup = int.Parse(HttpContext.Current.Request.RequestContext.RouteData.Values["id"].ToString());
-            if (idUser == null || idGroup == -1)
+            //int idGroup = int.Parse(HttpContext.Current.Request.RequestContext.RouteData.Values["id"].ToString());
+
+            string ownerSlug = HttpContext.Current.Request.RequestContext.RouteData.Values["userslug"] != null ?
+                HttpContext.Current.Request.RequestContext.RouteData.Values["userslug"].ToString() : null;
+            string groupSlug = HttpContext.Current.Request.RequestContext.RouteData.Values["groupslug"] != null ?
+                HttpContext.Current.Request.RequestContext.RouteData.Values["groupslug"].ToString() : null;
+            int groupid = HttpContext.Current.Session["groupid"] != null ? 
+                (int)HttpContext.Current.Session["groupid"] : -1;
+            Group group;
+            if (ownerSlug == null && groupSlug == null && groupid == -1)
             {
-                return false;
+                filterContext.Result = new HttpStatusCodeResult(404);
+                return;
             }
-            var check = db.Participates.Where(x => x.IdUser == idUser && x.IdGroup == idGroup).FirstOrDefault();
-            return check == null ? false : true;
+            if (ownerSlug != null || groupSlug != null) group = groupService.findGroup(ownerSlug, groupSlug);
+            else group = groupService.findGroup(groupid);
+
+            if (group == null)
+            {
+                filterContext.Result = new HttpStatusCodeResult(404);
+                return;
+            }
+            var check = db.Participates.Where(x => x.IdUser == idUser && x.IdGroup == group.Id).FirstOrDefault();
+            if (check == null) filterContext.Result = new HttpStatusCodeResult(404);
+
         }
-        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            filterContext.Result = new HttpUnauthorizedResult();
+            if(HttpContext.Current.Session["groupid"] != null)
+                HttpContext.Current.Session.Remove("groupid");
         }
+
+
     }
+    //protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+    //{
+    //    filterContext.Result = new HttpUnauthorizedResult();
+    //}
 }

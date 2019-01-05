@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Text;
 using System.Web;
-using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using ProcessManagement.Models;
 namespace ProcessManagement.Services
@@ -57,6 +55,22 @@ namespace ProcessManagement.Services
             opacity = opacity / 100;
             string color = String.Format("rgba({0},{1},{2},{3})",red,green,blue,opacity);
             return color;
+        }
+        /// <summary>
+        /// Chuyển chữ có dấu thành chữ không dấu
+        /// </summary>
+        /// <param name="utf8String">Chứ có dấu</param>
+        /// <returns>Return chữ không dấu</returns>
+        public string convertToNonUtf8(string utf8String)
+        {
+            System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex("\\p{IsCombiningDiacriticalMarks}+");
+            string temp = utf8String.Normalize(NormalizationForm.FormD);
+            return regex.Replace(temp, String.Empty).Replace('\u0111', 'd').Replace('\u0110', 'D');
+        }
+        public string converToSlug(string s)
+        {
+            string slug = convertToNonUtf8(s).Trim().ToLower().Replace(" ", "-").Trim();
+            return slug;
         }
     }
 }

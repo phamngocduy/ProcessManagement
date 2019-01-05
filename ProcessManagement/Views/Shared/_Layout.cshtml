@@ -40,21 +40,26 @@
     {
         @RenderSection("CustomScripts", required: false)
     }
-    @{
-        string text = (string)TempData["FlashMessage.Text"];
-        string type = (string)TempData["FlashMessage.Type"];
-        if (!string.IsNullOrWhiteSpace(text))
-        {
-            if (type== "Success")
+    <script type="text/javascript">
+        alertify.set('notifier', 'position', 'bottom-left');
+        @{
+            string text = (string)TempData["FlashMessage.Text"];
+            string type = (string)TempData["FlashMessage.Type"];
+            if (!string.IsNullOrWhiteSpace(text))
             {
-                <script>
-                    alertify.set('notifier', 'position', 'bottom-left');
-                    alertify.success("@text");
-                </script>
-            }
+                if (type == "Success")
+                {
 
+                    @:alertify.success("@text");
+
+                }
+                else if (type == "Fail")
+                {
+                     @:alertify.error("@text");
+                }
+            }
         }
-    }
+    </script>
 
 </body>
 </html>

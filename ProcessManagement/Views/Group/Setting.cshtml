@@ -1,8 +1,8 @@
 ﻿@model ProcessManagement.Models.Group
-@using Newtonsoft.Json.Linq;
 @{
     ViewBag.Title = "Setting";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    Session["groupid"] = Model.Id;
     var userRole = ViewData["Roles"] as ProcessManagement.Models.Participate;
     var isAdmin = userRole.IsAdmin;
     var isOwner = userRole.IsOwner;
@@ -158,13 +158,13 @@
     </div>
     <ul class="cw-tabs">
         <li rel="process">
-            <a href="@Url.Action("Show", "Group", new { id = Model.Id })"><i class="fas fa-sitemap"></i> Process</a>
+            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "show", userslug = Model.ownerSlug,groupslug = Model.groupSlug})"><i class="fas fa-sitemap"></i> Process</a>
         </li>
         @*<li rel="members">
                 <a href="@Url.Action("AddMember", "Group", new { id = Model.Id })"><i class="fas fa-user-friends"></i> Members</a>
             </li>*@
         <li class="cw-active-tab" rel="settings">
-            <a href="@Url.Action("Settings", "Group", new { id = Model.Id })"><i class="fas fa-cog"></i> Settings</a>
+            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "setting", userslug = Model.ownerSlug,groupslug = Model.groupSlug})""><i class="fas fa-cog"></i> Settings</a>
         </li>
     </ul>
 </div>
@@ -182,8 +182,8 @@
 
 
         }
-        @Html.Partial("~/Views/Shared/Layouts/Settings/Members.cshtml")
-        @Html.Partial("~/Views/Shared/Layouts/Settings/Advanced.cshtml")
+        @Html.Partial("~/Views/Shared/Layouts/Settings/Auth/Members.cshtml")
+        @Html.Partial("~/Views/Shared/Layouts/Settings/Auth/Advanced.cshtml")
     </div>
     <!-- Modal -->
     <div class="modal fade" id="delete-project-modal" role="dialog">
@@ -277,7 +277,7 @@
 
             })
             $('#btn-remove-project-comfirm').on('click', function () {
-                window.location.replace("@Url.Action("Remove", "Group", new { id = Model.Id })");
+                window.location.replace("@Url.RouteUrl("GroupLocalizedDefault",new { controller = "Group", action = "Remove" })");
             })
             $('#visibility').on('change', function () {
                 var visibilityLevel = $(this).val();

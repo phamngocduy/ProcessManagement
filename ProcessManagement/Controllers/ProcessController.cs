@@ -40,7 +40,7 @@ namespace ProcessManagement.Controllers
             ps.Updated_At = DateTime.Now;
             db.Processes.Add(ps);
             db.SaveChanges();
-            SetFlash("Success", "Created Process Successfully");
+            SetFlash(FlashType.Success, "Created Process Successfully");
             return RedirectToAction("DrawProcess", new { id = ps.Id });
         }
 

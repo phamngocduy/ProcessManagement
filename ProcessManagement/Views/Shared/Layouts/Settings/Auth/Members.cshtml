@@ -2,6 +2,7 @@
 @using Microsoft.AspNet.Identity;
 @{
     var userList = ViewData["ListUser"] as List<ProcessManagement.Models.AspNetUser>;
+    var group = ViewData["Group"] as ProcessManagement.Models.Group;
     bool isUserEmpty = !userList.Any();
     var participentlist = ViewData["ListParticipant"] as List<ProcessManagement.Models.Participate>;
     var showUserSetting = TempData["UserSetting"] != null ? "in" : "";
@@ -23,13 +24,10 @@
         </p>
     </div>
     <div class="settings-content collapse @showUserSetting" id="member-settings">
-        @using (Html.BeginForm("AddMember", "Group", FormMethod.Post))
-        {
+
+        <form action="@Url.RouteUrl("GroupLocalizedDefault",new { controller = "Group", action = "AddMember" })" method="post">
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.HiddenFor(model => model.Id)
-
-
             <div class=" row">
                 @if (!isUserEmpty && (isAdmin || isOwner))
                 {
@@ -44,11 +42,11 @@
                             </div>
 
                         }
-                    <button type="submit" class="btn btn-success">Add Member</button>
+                        <button type="submit" class="btn btn-success">Add Member</button>
                     </div>
                 }
             </div>
-        }
+        </form>
 
         <h5 class="member existing-title">
             Existing members and groups
@@ -93,20 +91,20 @@
                         <td>
 
                             @*@if (item.AspNetUser.Id == User.Identity.GetUserId() && User.Identity.GetUserId() != item.Group.IdOwner)*@
-                            @if (isAdmin || isOwner)
+                            @if (isAdmin && !item.IsOwner && item.IdUser != User.Identity.GetUserId())
                             {
-                                <a href="@Url.Action("EditRoleMember","Group", new { id = item.Id })" class="btn btn-primary" style="margin-right:15px"><i class="fas fa-pen"></i></a>
+                                <a href=" @Url.RouteUrl("GroupControlLocalizedDefault",new { userslug = group.ownerSlug, groupslug = group.groupSlug, action = "EditRoleMember", id = item.Id })" class="btn btn-primary" style="margin-right:15px"><i class="fas fa-pen"></i></a>
                             }
                             @if (item.AspNetUser.Id == User.Identity.GetUserId() && !isOwner)
                             {
-                                <a href="@Url.Action("MemberLeaveGroup", "Group", new { id = item.Id })" onclick="return confirmBeforeLeave()" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Leave</a>
+
+                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { userslug = group.ownerSlug, groupslug = group.groupSlug, action = "MemberLeaveGroup", id = item.Id })" onclick="return confirmBeforeLeave()" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Leave</a>
                             }
                             else if ((isAdmin || isOwner) && item.AspNetUser.Id != User.Identity.GetUserId() && !item.IsOwner)
                             {
-
-                                <a href="@Url.Action("DeleteMember", "Group", new { id = item.Id })" onclick="return confirmBeforeDeleteMember('@item.AspNetUser.Email')" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { userslug = group.ownerSlug, groupslug = group.groupSlug, action = "DeleteMember", id = item.Id })" onclick="return confirmBeforeDeleteMember('@item.AspNetUser.Email')" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
                             }
-                            else if (isOwner && item.AspNetUser.Id != User.Identity.GetUserId())
+                            else if (isOwner && item.IdUser == User.Identity.GetUserId())
                             {
                                 <div style="display:inline">
                                     <span>You cant leave because you're owner</span>

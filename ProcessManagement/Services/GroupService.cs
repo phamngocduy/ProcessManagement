@@ -11,13 +11,14 @@ namespace ProcessManagement.Services
         public readonly PMSEntities db = new PMSEntities();
         ParticipateService participateService = new ParticipateService();
         ProcessService processService = new ProcessService();
+        CommonService commonService = new CommonService();
         ///=============================================================================================
 
         
 
 
         /// <summary>
-        /// Tạo group mới
+        /// Tìm Group dưa trên id
         /// </summary>
         /// <param name="idGroup">Id Group</param>
         /// <return>Return một object group</return>
@@ -27,18 +28,53 @@ namespace ProcessManagement.Services
             return group;
         }
         /// <summary>
+        /// Tìm Group dưa trên Sluug
+        /// </summary>
+        /// <param name="ownerSlug">Slug Owner</param>
+        /// <param name="groupSlug">Slug Group</param>
+        /// <returns></returns>
+        public Group findGroup(string ownerSlug, string groupSlug)
+        {
+            Group group = db.Groups.FirstOrDefault(m => m.ownerSlug == ownerSlug && m.groupSlug == groupSlug);
+            return group;
+        }
+        /// <summary>
         /// Tạo một group mới
         /// </summary>
         /// <param name="idUser">Id User</param>
         /// <param name="group">Model group</param>
         public void createGroup(string idUser, Group group)
         {
-            group.IdOwner = idUser;
+            AspNetUser user = db.AspNetUsers.Find(idUser);
+            group.IdOwner = user.Id;
             group.Created_At = DateTime.Now;
             group.Updated_At = DateTime.Now;
-
+            group.ownerSlug = user.NickName;
+            group.groupSlug = commonService.converToSlug(group.Name);
             db.Groups.Add(group);
             db.SaveChanges();
+        }
+        public Group compareBeforeEdit(Group oldGroup, Group newGroup)
+        {
+            newGroup.Id = oldGroup.Id;
+            if (newGroup.Name.Substring(0, 1).ToUpper() == oldGroup.Name.Substring(0, 1).ToUpper())
+            {
+                newGroup.AvatarDefault = oldGroup.AvatarDefault;
+            }
+            //if(newGroup.Name.ToLower().Trim() != oldGroup.Name.ToLower().Trim())
+            //{ 
+  
+            //    newGroup.groupSlug = commonService.converToSlug(newGroup.Name.Trim());
+            //}
+            //else
+            //{
+            //    newGroup.groupSlug = oldGroup.groupSlug;
+            //}
+            if (newGroup.Avatar == null)
+            {
+                newGroup.Avatar = oldGroup.Avatar;
+            }
+            return newGroup;
         }
         /// <summary>
         /// Edit thông tin một group
@@ -49,7 +85,9 @@ namespace ProcessManagement.Services
             Group group = findGroup(model.Id);
             group.Name = model.Name;
             group.Avatar = model.Avatar;
+            group.AvatarDefault = model.AvatarDefault;
             group.Description = model.Description;
+            //group.groupSlug = model.groupSlug;
             group.Updated_At = DateTime.Now;
             db.SaveChanges();
         }

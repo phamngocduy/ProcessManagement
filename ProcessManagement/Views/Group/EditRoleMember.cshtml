@@ -2,12 +2,11 @@
 @{
     ViewBag.Title = "EditRoleMember";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    Session["groupid"] = Model.Group.Id;
     var checkAdmin = Model.IsAdmin ? "checked" : "";
     var adminValue = Model.IsAdmin ? "true" : "false";
     var checkManager = Model.IsManager ? "checked" : "";
     var ManagerValue = Model.IsManager ? "true" : "false";
-
-
 }
 @section CustomCss{
     @*<!-- NProgress -->

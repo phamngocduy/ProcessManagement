@@ -1,5 +1,4 @@
-﻿@using Newtonsoft.Json.Linq;
-@{
+﻿@{
     ViewBag.Title = "Group List";
     Layout = "~/Views/Shared/_NullLayout.cshtml";
     var grouplist = ViewData["ListGroup"] as List<ProcessManagement.Models.Group>;
@@ -16,7 +15,7 @@
         }
     </style>
 }
-<div class="clearfix"><a href="@Url.Action("Create","Group")" class="btn btn-success pull-right">Create Group</a></div>
+<div class="clearfix"><a href="@Url.RouteUrl("GroupLocalizedDefault",new { controller = "Group", action = "Create"})" class="btn btn-success pull-right">Create Group</a></div>
 <div class="group-list row display-flex">
     @foreach (var group in grouplist)
     {
@@ -28,7 +27,7 @@
         <div class="col-sm-3">
             <div class="cw-card">
                 <div class="cw-group-image">
-                    <a href="@Url.Action("Show","Group",new { id = group.Id})">
+                    <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "show", userslug = group.ownerSlug,groupslug = group.groupSlug})">
                         @if (group.Avatar != null)
                         {
                             <img src="~/Content/images/workspace/@Html.DisplayFor(modle => group.Avatar)" alt="@group.Name" class="image-medium" />
@@ -45,7 +44,7 @@
                     </a>
                 </div>
                 <div class="cw-group-infor">
-                    <div class="cw-group-name">@Html.ActionLink(group.Name, "Show", new { id = group.Id })</div>
+                    <div class="cw-group-name"><a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "show", userslug = group.ownerSlug,groupslug = group.groupSlug})">@group.Name</a></div>
                     <div class="cw-group-author"><span class="cw-label">Author:</span>@Html.DisplayFor(modle => group.AspNetUser.UserName)</div>
                     <div class="cw-group-date"><span class="cw-label">Update at:</span>@Html.DisplayFor(modle => group.Updated_At)</div>
                     <div class="cw-group-des" style="word-break:break-all">

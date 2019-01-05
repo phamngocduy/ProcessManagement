@@ -9,9 +9,11 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ProcessManagement.Models;
+using ProcessManagement.Filters;
 
 namespace ProcessManagement.Controllers
 {
+    [LanguageFilter]
     [Authorize]
     public class AccountController : BaseController
     {
@@ -347,6 +349,7 @@ namespace ProcessManagement.Controllers
                     // If the user does not have an account, then prompt the user to create an account
                     ViewBag.ReturnUrl = returnUrl;
                     ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
+                    Session["loginInfor"] = loginInfo;
                     return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
             }
         }
@@ -371,13 +374,15 @@ namespace ProcessManagement.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                ExternalLoginInfo loginInfo = (ExternalLoginInfo) Session["loginInfor"];
+                var user = new ApplicationUser { UserName = model.UserName, Email = loginInfo.Email, NickName = loginInfo.ExternalIdentity.GetUserName() };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
                     result = await UserManager.AddLoginAsync(user.Id, info.Login);
                     if (result.Succeeded)
                     {
+                        Session.Remove("loginInfor");
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                         return RedirectToLocal(returnUrl);
                     }

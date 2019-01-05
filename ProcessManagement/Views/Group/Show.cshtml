@@ -1,5 +1,4 @@
 ﻿@model ProcessManagement.Models.Group
-@using Newtonsoft.Json.Linq;
 @{
     ViewBag.Title = Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -41,13 +40,13 @@
     </div>
     <ul class="cw-tabs">
         <li class="cw-active-tab" rel="process">
-            <a href="@Url.Action("Show", "Group", new { id = Model.Id })"><i class="fas fa-sitemap"></i> Process</a>
+            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "show", userslug = Model.ownerSlug,groupslug = Model.groupSlug})"><i class="fas fa-sitemap"></i> Process</a>
         </li>
         @*<li rel="members">
                 <a href="@Url.Action("AddMember", "Group", new { id = Model.Id })"><i class="fas fa-user-friends"></i> Members</a>
             </li>*@
         <li rel="settings">
-            <a href="@Url.Action("Settings", "Group", new { id = Model.Id })"><i class="fas fa-cog"></i> Settings</a>
+            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "setting", userslug = Model.ownerSlug,groupslug = Model.groupSlug})"><i class="fas fa-cog"></i> Settings</a>
         </li>
     </ul>
 </div>

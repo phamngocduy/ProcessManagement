@@ -6,15 +6,21 @@ namespace ProcessManagement.Models
     public class ExternalLoginConfirmationViewModel
     {
 
-        [Display(Name = "Id")]
-        public string Id { get; set; }
+        //[Display(Name = "Id")]
+        //public string Id { get; set; }
 
-        [Required]
+        //[Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-    }
+        [Required]
+        [Display(Name = "UserName")]
+        public string UserName { get; set; }
 
+        [Display(Name = "NickName")]
+        public string NickName { get; set; }
+
+    }
     public class ExternalLoginListViewModel
     {
         public string ReturnUrl { get; set; }

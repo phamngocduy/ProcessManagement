@@ -18,13 +18,13 @@ namespace ProcessManagement.Models
         public int IdProcess { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public System.DateTime Created_At { get; set; }
-        public System.DateTime Updated_At { get; set; }
         public Nullable<bool> StartStep { get; set; }
         public Nullable<int> NextStep1 { get; set; }
         public Nullable<int> NextStep2 { get; set; }
         public Nullable<int> Key { get; set; }
         public string Figure { get; set; }
+        public System.DateTime Created_At { get; set; }
+        public System.DateTime Updated_At { get; set; }
     
         public virtual Process Process { get; set; }
     }

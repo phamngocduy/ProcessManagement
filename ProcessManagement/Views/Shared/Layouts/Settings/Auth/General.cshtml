@@ -2,7 +2,7 @@
 @model ProcessManagement.Models.Group
 @using Newtonsoft.Json.Linq;
 @{
-    var showGaneralSetting = TempData["GaneralSetting"] != null ? "in" : "";
+    var showGaneralSetting = TempData["GeneralSetting"] != null ? "in" : "";
 }
 <section class="settings">
     <div class="settings-header">
@@ -15,10 +15,8 @@
         </p>
     </div>
     <div class="settings-content collapse @showGaneralSetting" id="genaral-settings">
-        @using (Html.BeginForm("Edit", "Group", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
+        <form action="@Url.RouteUrl("GroupLocalizedDefault",new { controller = "group", action = "edit"})" method="post" enctype="multipart/form-data">
             @Html.AntiForgeryToken()
-
             <div class="form-horizontal">
                 <br />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -59,7 +57,7 @@
                                 else
                                 {
                                     JObject defaultAvatar = JObject.Parse(Model.AvatarDefault);
-                                    <img style="width: 200px;height: auto" id='img-upload' src=""/>
+                                    <img style="width: 200px;height: auto" id='img-upload' src="" />
                                     <div class="avatar-default" style="background-color:@defaultAvatar["background"]">
                                         @defaultAvatar["name"]
                                     </div>
@@ -76,6 +74,6 @@
                     <button class="btn btn-success" type="submit">Save Change</button>
                 </div>
             </div>
-        }
+        </form>
     </div>
 </section>

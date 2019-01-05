@@ -11,38 +11,31 @@ namespace ProcessManagement.Controllers
     {
         private static string _cookieLangName = "LangForProcessManagementSystem";
 
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            if (Request.IsAuthenticated)
-            {
-                AspNetUser user = new AspNetUser();
-                user.UserName = User.Identity.GetUserName();
-                user.Id = User.Identity.GetUserId();
-                Session["User"] = user;
-            }
-            string cultureOnCookie = GetCultureOnCookie(filterContext.HttpContext.Request);
-            string cultureOnURL = filterContext.RouteData.Values.ContainsKey("lang")
-            ? filterContext.RouteData.Values["lang"].ToString()
-            : GlobalHelper.DefaultCulture;
-            string culture = (cultureOnCookie == string.Empty)
-                ? (filterContext.RouteData.Values["lang"].ToString())
-                : cultureOnCookie;
+        //protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        //{
+        //    string cultureOnCookie = GetCultureOnCookie(filterContext.HttpContext.Request);
+        //    string cultureOnURL = filterContext.RouteData.Values.ContainsKey("lang")
+        //    ? filterContext.RouteData.Values["lang"].ToString()
+        //    : GlobalHelper.DefaultCulture;
+        //    string culture = (cultureOnCookie == string.Empty)
+        //        ? (filterContext.RouteData.Values["lang"].ToString())
+        //        : cultureOnCookie;
 
-            if (cultureOnURL != culture)
-            {
-                filterContext.HttpContext.Response.RedirectToRoute("LocalizedDefault",
-                new
-                {
-                    lang = culture,
-                    controller = filterContext.RouteData.Values["controller"],
-                    action = filterContext.RouteData.Values["action"]
-                });
-                return;
-            }
+        //    if (cultureOnURL != culture)
+        //    {
+        //        filterContext.HttpContext.Response.RedirectToRoute("LocalizedDefault",
+        //        new
+        //        {
+        //            lang = culture,
+        //            controller = filterContext.RouteData.Values["controller"],
+        //            action = filterContext.RouteData.Values["action"]
+        //        });
+        //        return;
+        //    }
 
-            SetCurrentCultureOnThread(culture);
-            base.OnActionExecuting(filterContext);
-        }
+        //    SetCurrentCultureOnThread(culture);
+        //    base.OnActionExecuting(filterContext);
+        //}
 
         private static void SetCurrentCultureOnThread(string lang)
         {
@@ -63,10 +56,27 @@ namespace ProcessManagement.Controllers
             }
             return culture;
         }
-        public void SetFlash(string flashType, string flashMessage)
+        public enum FlashType
         {
-            TempData["FlashMessage.Type"] = flashType;
+            Success,
+            Fail,
+            Warning
+        }
+        public enum TabType
+        {
+            GeneralSetting,
+            UserSetting,
+            AdvancedSetting,
+            VisibilitySetting
+        }
+        public void SetFlash(FlashType flashType, string flashMessage)
+        {
+            TempData["FlashMessage.Type"] = flashType.ToString();
             TempData["FlashMessage.Text"] = flashMessage;
+        }
+        public void SetTab(TabType tabType)
+        {
+            TempData[tabType.ToString()] = "ABC";
         }
     }
 }
