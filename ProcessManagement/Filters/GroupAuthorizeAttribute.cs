@@ -11,29 +11,31 @@ namespace ProcessManagement.Filters
         ///=============================================================================================
         PMSEntities db = new PMSEntities();
         GroupService groupService = new GroupService();
+        CommonService commonService = new CommonService();
         ///=============================================================================================
 
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            string idUser = System.Web.HttpContext.Current.User.Identity.GetUserId();
-            //int idGroup = int.Parse(HttpContext.Current.Request.RequestContext.RouteData.Values["id"].ToString());
+            int groupid;
+            string idUser = HttpContext.Current.User.Identity.GetUserId();
+            if (HttpContext.Current.Request.RequestContext.RouteData.Values["idgroup"] != null)
+            {
+                groupid = int.Parse(HttpContext.Current.Request.RequestContext.RouteData.Values["idgroup"].ToString());
+            }
+            else if (HttpContext.Current.Session["groupid"] != null)
+            {
 
-            string ownerSlug = HttpContext.Current.Request.RequestContext.RouteData.Values["userslug"] != null ?
-                HttpContext.Current.Request.RequestContext.RouteData.Values["userslug"].ToString() : null;
-            string groupSlug = HttpContext.Current.Request.RequestContext.RouteData.Values["groupslug"] != null ?
-                HttpContext.Current.Request.RequestContext.RouteData.Values["groupslug"].ToString() : null;
-            int groupid = HttpContext.Current.Session["groupid"] != null ? 
-                (int)HttpContext.Current.Session["groupid"] : -1;
-            Group group;
-            if (ownerSlug == null && groupSlug == null && groupid == -1)
+                groupid = (int)HttpContext.Current.Session["groupid"];
+            }
+            else
             {
                 filterContext.Result = new HttpStatusCodeResult(404);
                 return;
             }
-            if (ownerSlug != null || groupSlug != null) group = groupService.findGroup(ownerSlug, groupSlug);
-            else group = groupService.findGroup(groupid);
-
+             
+           
+            Group group = groupService.findGroup(groupid);
             if (group == null)
             {
                 filterContext.Result = new HttpStatusCodeResult(404);
@@ -41,18 +43,16 @@ namespace ProcessManagement.Filters
             }
             var check = db.Participates.Where(x => x.IdUser == idUser && x.IdGroup == group.Id).FirstOrDefault();
             if (check == null) filterContext.Result = new HttpStatusCodeResult(404);
-
+            HttpContext.Current.Session["groupid"] = groupid;
         }
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             if(HttpContext.Current.Session["groupid"] != null)
                 HttpContext.Current.Session.Remove("groupid");
         }
-
-
+        //protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        //{
+        //    filterContext.Result = new HttpUnauthorizedResult();
+        //}
     }
-    //protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
-    //{
-    //    filterContext.Result = new HttpUnauthorizedResult();
-    //}
 }

@@ -466,14 +466,14 @@
             }
             //truyen qua controller
             $.ajax({
-                url: "/Process/DrawProcess/",
+                url: "@Url.RouteUrl("GroupLocalizedDefault", new { action = "DrawProcess" })",
                 type: "POST",
                 data: a,
                 dataType: "json",
                 success: function (response) {
                     //thanh cong thi no tra du lieu ve
                     console.log(response);
-                    location.href = '@Url.RouteUrl("GroupControlLocalizedDefault", new { action = "show", userslug = Model.Group.ownerSlug, groupslug = Model.Group.groupSlug })' ;
+                    @*location.href = '@Url.RouteUrl("GroupControlLocalizedDefault", new { action = "show", userslug = Model.Group.ownerSlug, groupslug = Model.Group.groupSlug })' ;*@
                 }
             })
         })

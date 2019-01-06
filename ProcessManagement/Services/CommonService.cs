@@ -72,5 +72,18 @@ namespace ProcessManagement.Services
             string slug = convertToNonUtf8(s).Trim().ToLower().Replace(" ", "-").Trim();
             return slug;
         }
+        public string getIdFromSlug(string slug)
+        {
+            string[] temp = slug.Split('-');
+            return temp[temp.Length - 1];
+        }
+        public bool checkIsInteger(string s)
+        {
+            int number;
+            bool sucess = int.TryParse(s, out number);
+            bool isInteger = sucess ? true : false;
+            return isInteger;
+
+        }
     }
 }

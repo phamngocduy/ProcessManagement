@@ -1,10 +1,10 @@
 ﻿@model ProcessManagement.Models.Group
 @{
     ViewBag.Title = Model.Name;
+    Session["groupid"] = Model.Id;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var listprocess = ViewData["ListProcess"] as List<ProcessManagement.Models.Process>;
     var listuser = ViewData["ListParticipant"] as List<ProcessManagement.Models.Participate>;
-
 }
 @section CustomCss{
     <style>
@@ -40,13 +40,13 @@
     </div>
     <ul class="cw-tabs">
         <li class="cw-active-tab" rel="process">
-            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "show", userslug = Model.ownerSlug,groupslug = Model.groupSlug})"><i class="fas fa-sitemap"></i> Process</a>
+            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "show", groupslug = Model.groupSlug, idgroup = Model.Id })"><i class="fas fa-sitemap"></i> Process</a>
         </li>
         @*<li rel="members">
                 <a href="@Url.Action("AddMember", "Group", new { id = Model.Id })"><i class="fas fa-user-friends"></i> Members</a>
             </li>*@
         <li rel="settings">
-            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "setting", userslug = Model.ownerSlug,groupslug = Model.groupSlug})"><i class="fas fa-cog"></i> Settings</a>
+            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "setting", groupslug = Model.groupSlug, idgroup = Model.Id })"><i class="fas fa-cog"></i> Settings</a>
         </li>
     </ul>
 </div>
@@ -75,7 +75,7 @@
                     {
                         <div style="margin:0 auto;display:table">
                             <p class="cw-header-large cw-error-no-process">This organization has no process</p>
-                            <a class="btn btn-success" href="@Url.Action("CreateProcess","Process",new { id=Model.Id})" style="margin:0 25%">Create a new process</a>
+                            <a class="btn btn-success" href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "CreateProcess", groupslug = Model.groupSlug, idgroup = Model.Id})" style="margin:0 25%">Create a new process</a>
                         </div>
 
                     }
@@ -83,11 +83,12 @@
                     {
                         foreach (var item in listprocess)
                         {
-                            <a href="@Url.Action("DrawProcess","Process",new { id = item.Id })" class="cw-header-large cw-error-no-process">@item.Name</a>
+                           
+                            <a href=" @Url.RouteUrl("GroupControlLocalizedDefault",new { action = "DrawProcess", groupslug = Model.groupSlug, idgroup = Model.Id, id = item.Id })" class="cw-header-large cw-error-no-process">@item.Name</a>
                             <h5>@item.Description</h5>
                             <hr class="cw-normal-hr">
                         }
-                        @Html.ActionLink("Create a new process", "CreateProcess", new { id = Model.Id }, new { @class = "btn btn-success" })
+                        <a class="btn btn-success" href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "CreateProcess", groupslug = Model.groupSlug, idgroup = Model.Id})">Create a new process</a>
                     }
 
                 </div>
