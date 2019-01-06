@@ -473,7 +473,7 @@
                 success: function (response) {
                     //thanh cong thi no tra du lieu ve
                     console.log(response);
-                    location.href = '/Group/Show/' + response.id;
+                    location.href = '@Url.RouteUrl("GroupControlLocalizedDefault", new { action = "show", userslug = Model.Group.ownerSlug, groupslug = Model.Group.groupSlug })' ;
                 }
             })
         })

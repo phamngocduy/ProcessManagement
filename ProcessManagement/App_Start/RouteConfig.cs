@@ -20,13 +20,13 @@ namespace ProcessManagement
                 name: "LocalizedDefault",
                 url: "{lang}/{controller}/{action}/{id}",
                 defaults: new { controller = "group", action = "index", id = UrlParameter.Optional },
-                constraints: new { lang = "en|vi", controller = "home|account|error" }
+                constraints: new { lang = "en|vi", controller = "home|account|error|process" }
             );
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "group", action = "index", id = UrlParameter.Optional, lang = "en" },
-                constraints: new { lang = "en|vi", controller = "home|account|error" }
+                constraints: new { lang = "en|vi", controller = "home|account|error|process" }
             );
 
             //group list
