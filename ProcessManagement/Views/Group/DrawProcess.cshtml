@@ -2,11 +2,13 @@
 @{
     ViewBag.Title = "DrawProcess";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var link = ViewData["load"];
 }
 
 
 
-<body onload="init()">
+<body>
     <div id="sample">
         <div style="width: 100%; display: flex; justify-content: space-between">
             <div id="myPaletteDiv" style="width: 105px; margin-right: 2px; background-color: whitesmoke; border: solid 1px black"></div>
@@ -28,6 +30,7 @@
   "linkDataArray": [
  ]}
     </textarea>
+            <input type="hidden" id="stringJson" value="@link" />
         </div>
     </div>
 </body>
@@ -441,6 +444,12 @@
         loadDiagramProperties(); // do this after the Model.modelData has been brought into memory
     }
 
+    function onloadPage() {
+        var json = $('#stringJson').val();
+        myDiagram.model = go.Model.fromJson(json);
+        loadDiagramProperties(); // do this after the Model.modelData has been brought into memory
+    }
+
     function saveDiagramProperties() {
         myDiagram.model.modelData.position = go.Point.stringify(myDiagram.position);
     }
@@ -449,7 +458,12 @@
         // set Diagram.initialPosition, not Diagram.position, to handle initialization side-effects
         var pos = myDiagram.model.modelData.position;
         if (pos) myDiagram.initialPosition = go.Point.parse(pos);
-    }
+        }
+
+        window.onload = function () {
+            init();
+            onloadPage();
+        }
     </script>
     <script>
     $(document).ready(function ($) {

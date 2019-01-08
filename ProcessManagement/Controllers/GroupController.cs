@@ -287,6 +287,12 @@ namespace ProcessManagement.Controllers
         {
             Process ps = processService.findProcess(id);
             if (ps == null) return HttpNotFound();
+            if (ps != null)
+            {
+                var loadprocess = ps.DataJson.ToString();
+                JObject load = JObject.Parse(loadprocess);
+                ViewData["load"] = load;
+            }
             return View(ps);
         }
         [Authorize]
@@ -303,28 +309,44 @@ namespace ProcessManagement.Controllers
             for (int i = 0; i < nodeArray.Count; i++)
             {
                 var key = (int)nodeArray[i]["key"];
-                var from = linkArray.Where(x => (int)x["from"] == key).FirstOrDefault();
+                var from = linkArray.Where(x => (int)x["from"] == key).ToList();
                 var nextStep2 = 0;
+                Step step = new Step();
+                int j = 1;
                 if (from != null)
                 {
-                    var to = (int)from["to"];
-
-                    if (!a.Contains(to))
+                    foreach(var item in from)
                     {
-                        a.Add(to);
+                        var to = (int)item["to"];
+                        if(j == 1)
+                        {
+                            step.NextStep1 = to;
+                        }else if (j == 2)
+                        {
+                            step.NextStep2 = to;
+                        }
+                        j++;
+                        //if (!a.Contains(to))
+                        //{
+                        //    a.Add(to);
+                        //}
+                        //else
+                        //{
+                        //    nextStep2 = to;
+                        //    a.Add(to);
+                        //}
                     }
-                    else
+                    if (step.NextStep2 == null)
                     {
-                        nextStep2 = to;
+                        step.NextStep2 = 0;
                     }
                 }
-                Step step = new Step();
+              
                 step.IdProcess = processId;
                 step.Name = nodeArray[i]["text"].ToString();
                 step.Key = key;
-                step.StartStep = (int)idfirstStep["to"] == (int)nodeArray[i]["key"] ? true : false;
-                step.NextStep1 = from == null ? 0 : (int)from["to"];
-                step.NextStep2 = nextStep2;
+                step.StartStep = (int)idfirstStep["to"] == (int)nodeArray[i]["key"] ? true : false;              
+              
                 step.Figure = nodeArray[i]["figure"] == null ? "Step" : nodeArray[i]["figure"].ToString();
                 step.Created_At = DateTime.Now;
                 step.Updated_At = DateTime.Now;
