@@ -28,14 +28,11 @@ namespace ProcessManagement.Services
         }
         public void createProcess(int idGroup,string idUser, Process process)
         {
-            Process ps = new Process();
-            ps.IdGroup = idGroup;
-            ps.IdOwner = idUser;
-            ps.Name = process.Name;
-            ps.Description = process.Description;
-            ps.Created_At = DateTime.Now;
-            ps.Updated_At = DateTime.Now;
-            db.Processes.Add(ps);
+            process.IdGroup = idGroup;
+            process.IdOwner = idUser;
+            process.Created_At = DateTime.Now;
+            process.Updated_At = DateTime.Now;
+            db.Processes.Add(process);
             db.SaveChanges();
         }
         /// <summary>

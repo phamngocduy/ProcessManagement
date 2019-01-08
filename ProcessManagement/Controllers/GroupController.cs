@@ -266,24 +266,27 @@ namespace ProcessManagement.Controllers
         {
             Group group = groupService.findGroup(idgroup);
             Process pr = new Process();
+            ViewData["group"] = group;
             return View(pr);
         }
         [Authorize]
         [GroupAuthorize]
         [HttpPost]
-        public ActionResult CreateProcess(Group model, Process pro)
+        public ActionResult CreateProcess(Process pro)
         {
+            int idgroup = (int)Session["idgroup"];
             string idUser = User.Identity.GetUserId();
-            Group group = groupService.findGroup(model.Id);
+            Group group = groupService.findGroup(idgroup);
             processService.createProcess(group.Id, idUser, pro);
             SetFlash(FlashType.Success, "Created Process Successfully");
-            return RedirectToAction("DrawProcess", new { id = pro.Id });
+            return RedirectToRoute("GroupControlLocalizedDefault", new { action = "DrawProcess", groupslug = group.groupSlug, idgroup = group.Id, id = pro.Id });
         }
         [Authorize]
         [GroupAuthorize]
         public ActionResult DrawProcess(int id)
         {
             Process ps = processService.findProcess(id);
+            if (ps == null) return HttpNotFound();
             return View(ps);
         }
         [Authorize]
@@ -327,7 +330,7 @@ namespace ProcessManagement.Controllers
                 step.Updated_At = DateTime.Now;
                 db.Steps.Add(step);
             }
-            db.Entry(ps).State = System.Data.Entity.EntityState.Modified;
+            //db.Entry(ps).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
             return Json(new { id = ps.IdGroup });
         }

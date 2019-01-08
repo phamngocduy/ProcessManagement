@@ -2,13 +2,12 @@
 @{
     ViewBag.Title = "CreateProcess";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var group = ViewData["group"] as ProcessManagement.Models.Group;
+    Session["idgroup"] = group.Id;
 }
 
-
-@using (Html.BeginForm("CreateProcess", "Group", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
+<form action="@Url.RouteUrl("GroupLocalizedDefault",new { action = "CreateProcess",idgroup = string.Empty })" method="post">
     @Html.AntiForgeryToken()
-
     <div class="col-md-6">
         <h4>Process</h4>
         <hr />
@@ -32,4 +31,4 @@
             <input type="submit" value="Create" class="btn btn-success" />
         </div>
     </div>
-}
+</form>

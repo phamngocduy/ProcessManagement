@@ -455,14 +455,14 @@
     $(document).ready(function ($) {
         $('#btn-save').on('click', function () {
             let data = $("#mySavedModel").val();
-
+            //saveDiagramProperties();
             let idProcess = @Model.Id;
             //truyen nguyen cai json voi idGroup
             let a = {
-                data: data,
+                data: myDiagram.model.toJson(),
                 processId: idProcess,
-                nodeData: JSON.stringify(myDiagram.model.nodeDataArray),
-                linkData: JSON.stringify(myDiagram.model.linkDataArray)
+                nodeData: myDiagram.model.nodeDataArray,
+                linkData: myDiagram.model.linkDataArray
             }
             //truyen qua controller
             $.ajax({

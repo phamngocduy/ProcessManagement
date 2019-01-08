@@ -23,10 +23,10 @@ namespace ProcessManagement.Filters
             {
                 groupid = int.Parse(HttpContext.Current.Request.RequestContext.RouteData.Values["idgroup"].ToString());
             }
-            else if (HttpContext.Current.Session["groupid"] != null)
+            else if (HttpContext.Current.Session["idgroup"] != null)
             {
 
-                groupid = (int)HttpContext.Current.Session["groupid"];
+                groupid = (int)HttpContext.Current.Session["idgroup"];
             }
             else
             {
