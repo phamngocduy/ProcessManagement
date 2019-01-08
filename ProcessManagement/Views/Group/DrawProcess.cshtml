@@ -457,12 +457,22 @@
             let data = $("#mySavedModel").val();
             //saveDiagramProperties();
             let idProcess = @Model.Id;
+            let b = []
+            let linkdata = myDiagram.model.linkDataArray;
+            for (var link of linkdata) {
+                let c = {
+                    from: link["from"],
+                    to : link["to"]
+                }
+                b.push(c);
+            }
+            console.log(b);
             //truyen nguyen cai json voi idGroup
             let a = {
                 data: myDiagram.model.toJson(),
                 processId: idProcess,
-                nodeData: myDiagram.model.nodeDataArray,
-                linkData: myDiagram.model.linkDataArray
+                nodeData: JSON.stringify(myDiagram.model.nodeDataArray),
+                linkData: JSON.stringify(b)
             }
             //truyen qua controller
             $.ajax({

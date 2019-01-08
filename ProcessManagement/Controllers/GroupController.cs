@@ -294,7 +294,7 @@ namespace ProcessManagement.Controllers
         public JsonResult DrawProcess(int processId, string data, string nodeData, string linkData)
         {
             Process ps = processService.findProcess(processId);
-            ps.DataJson = data.ToString();
+            processService.insertDataJson(ps, data);
             //JObject json = JObject.Parse(nodeData);
             JArray nodeArray = JArray.Parse(nodeData);
             JArray linkArray = JArray.Parse(linkData);

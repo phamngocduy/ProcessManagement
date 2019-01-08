@@ -46,5 +46,10 @@ namespace ProcessManagement.Services
             db.Processes.RemoveRange(processes);
             db.SaveChanges();
         }
+        public void insertDataJson(Process ps,string data)
+        {
+            ps.DataJson = data;
+            db.SaveChanges();
+        }
     }
 }
