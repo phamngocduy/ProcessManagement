@@ -53,6 +53,7 @@ namespace ProcessManagement.Services
             group.groupSlug = commonService.converToSlug(group.Name);
             db.Groups.Add(group);
             db.SaveChanges();
+            commonService.CreateDirectory(group);
         }
         public Group compareBeforeEdit(Group oldGroup, Group newGroup)
         {
@@ -87,7 +88,7 @@ namespace ProcessManagement.Services
             group.Avatar = model.Avatar;
             group.AvatarDefault = model.AvatarDefault;
             group.Description = model.Description;
-            //group.groupSlug = model.groupSlug;
+            group.groupSlug = commonService.converToSlug(model.Name);
             group.Updated_At = DateTime.Now;
             db.SaveChanges();
         }

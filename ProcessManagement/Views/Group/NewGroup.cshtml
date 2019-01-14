@@ -85,7 +85,7 @@
         </li>
     </ol>*@
     <div class="cw-create-workspace row">
-        <form action="@Url.RouteUrl("GroupLocalizedDefault",new { controller = "Group", action = "Create"})" method="post" enctype="multipart/form-data">
+        <form action="@Url.RouteUrl("GroupLocalizedDefault",new { controller = "Group", action = "NewGroup"})" method="post" enctype="multipart/form-data">
             @Html.AntiForgeryToken()
             <h1 class="col-sm-12">Create your group right away!!</h1>
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })

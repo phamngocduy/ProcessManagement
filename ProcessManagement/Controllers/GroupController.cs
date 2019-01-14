@@ -20,6 +20,7 @@ namespace ProcessManagement.Controllers
         CommonService commonService = new CommonService();
         ParticipateService participateService = new ParticipateService();
         ProcessService processService = new ProcessService();
+        StepService stepService = new StepService();
         ///=============================================================================================
         
 
@@ -34,13 +35,13 @@ namespace ProcessManagement.Controllers
             return View();
         }
         [Authorize]
-        public ActionResult Create()
+        public ActionResult NewGroup()
         {
             return View();
         }
         [Authorize]
         [HttpPost]
-        public ActionResult Create(Group group, HttpPostedFileBase ImageGr)
+        public ActionResult NewGroup(Group group, HttpPostedFileBase ImageGr)
         {
 
             string idUser = User.Identity.GetUserId();
@@ -59,10 +60,39 @@ namespace ProcessManagement.Controllers
 
         [Authorize]
         [GroupAuthorize]
-        public ActionResult Show(int idgroup)
+        public ActionResult FileManager(int groupid)
+        {
+            Group group = groupService.findGroup(groupid);
+            if (group == null) return HttpNotFound();
+            return View(group);
+        }
+
+        [Authorize]
+        [GroupAuthorize]
+        [HttpPost]
+        public ActionResult FileManager(HttpPostedFileBase[] files)
+        {
+            int groupid = (int)Session["groupid"];
+            Group group = groupService.findGroup(groupid);
+            if (group == null) return HttpNotFound();
+            var folderName = String.Format("~/App_Data/Files/Groups/{0}-{1}/Intros", group.Name, group.Id);
+            foreach (var file in files)
+            {
+                if (file != null)
+                {
+                    var fileName = Path.GetFileName(file.FileName);
+                    var serverSavePath = Path.Combine(Server.MapPath(folderName),fileName);
+                    file.SaveAs(serverSavePath);
+                }
+            }
+            return View(group);
+        }
+        [Authorize]
+        [GroupAuthorize]
+        public ActionResult Show(int groupid)
         {
             //Tìm group theo id
-            Group group = groupService.findGroup(idgroup);
+            Group group = groupService.findGroup(groupid);
             if (group == null) return HttpNotFound();
 
             //Tìm tất cả member thuộc group đó
@@ -76,10 +106,10 @@ namespace ProcessManagement.Controllers
         [Authorize]
         [GroupAuthorize]
         //[RoleAuthorize("Admin")]
-        public ActionResult Setting(int idgroup)
+        public ActionResult Setting(int groupid)
         {
             string idUser = User.Identity.GetUserId();
-            Group group = groupService.findGroup(idgroup);
+            Group group = groupService.findGroup(groupid);
             if (group == null) return HttpNotFound();
             //Tìm tất cả member thuộc group đó
             var ListParticipant = participateService.findMembersInGroup(group.Id);
@@ -104,7 +134,7 @@ namespace ProcessManagement.Controllers
             participateService.addMembers(group, adduser);
             SetTab(TabType.UserSetting);
             SetFlash(FlashType.Success, "Added Members Successfully");
-            return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, idgroup = group.Id });
+            return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
         }
 
         [Authorize]
@@ -121,7 +151,7 @@ namespace ProcessManagement.Controllers
             commonService.saveAvatarGroup(groupEdit, ImageGr, Server.MapPath("~/Content/images/workspace/"));
             groupService.editGroup(groupEdit);
             SetTab(TabType.GeneralSetting);
-            return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, idgroup = group.Id });
+            return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
         }
         [Authorize]
         [GroupAuthorize]
@@ -134,7 +164,7 @@ namespace ProcessManagement.Controllers
             groupService.removeAvatar(group);
             SetTab(TabType.GeneralSetting);
             SetFlash(FlashType.Success, "Removed Avatar Successfully");
-            return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, idgroup = group.Id });
+            return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
         }
         [Authorize]
         [GroupAuthorize]
@@ -157,9 +187,9 @@ namespace ProcessManagement.Controllers
         
         [Authorize]
         [GroupAuthorize]
-        public ActionResult DeleteMember(Participate model)
+        public ActionResult DeleteMember(int participateid)
         {
-            Participate user = participateService.findMemberInGroup(model.Id);
+            Participate user = participateService.findMemberInGroup(participateid);
             if (user == null) return HttpNotFound();
             var userName = user.AspNetUser.UserName;
             int groupId = (int)Session["groupid"];
@@ -177,14 +207,14 @@ namespace ProcessManagement.Controllers
             }
 
             SetTab(TabType.UserSetting);
-            return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, idgroup = group.Id });
+            return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
         }
         [Authorize]
         [GroupAuthorize]
-        public ActionResult EditRoleMember(int id)
+        public ActionResult EditRoleMember(int participateid)
         {
             
-            Participate user = participateService.findMemberInGroup(id);
+            Participate user = participateService.findMemberInGroup(participateid);
             if (user == null) return HttpNotFound();
 
             int groupid = (int)Session["groupid"];
@@ -204,7 +234,7 @@ namespace ProcessManagement.Controllers
             {
                 SetFlash(FlashType.Fail, "Owner cant change their role");
                 SetTab(TabType.UserSetting);
-                return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, idgroup = group.Id });
+                return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
             }
             return View(user);
         }
@@ -230,14 +260,14 @@ namespace ProcessManagement.Controllers
                 SetFlash(FlashType.Fail, "Owner cant change their role");
 
             SetTab(TabType.UserSetting);
-            return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, idgroup = group.Id });
+            return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
         }
         [Authorize]
         [GroupAuthorize]
-        public ActionResult MemberLeaveGroup(Participate model)
+        public ActionResult MemberLeaveGroup(int participateid)
         {
             string idUser = User.Identity.GetUserId();
-            Participate user = participateService.findMemberInGroup(model.Id);
+            Participate user = participateService.findMemberInGroup(participateid);
             if (user == null) return HttpNotFound();
             var groupName = user.Group.Name;
 
@@ -256,105 +286,19 @@ namespace ProcessManagement.Controllers
             {
                 SetFlash(FlashType.Fail, "Left Group " + groupName + " Failed");
                 SetTab(TabType.AdvancedSetting);
-                return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = user.Group.groupSlug, idgroup = user.Group.Id });
+                return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = user.Group.groupSlug, groupid = user.Group.Id });
             }
             
         }
         [Authorize]
         //[GroupAuthorize]
-        public ActionResult CreateProcess(int idgroup)
+        public ActionResult CreateProcess(int groupid)
         {
-            Group group = groupService.findGroup(idgroup);
+            Group group = groupService.findGroup(groupid);
             Process pr = new Process();
             ViewData["group"] = group;
             return View(pr);
         }
-        [Authorize]
-        [GroupAuthorize]
-        [HttpPost]
-        public ActionResult CreateProcess(Process pro)
-        {
-            int idgroup = (int)Session["idgroup"];
-            string idUser = User.Identity.GetUserId();
-            Group group = groupService.findGroup(idgroup);
-            processService.createProcess(group.Id, idUser, pro);
-            SetFlash(FlashType.Success, "Created Process Successfully");
-            return RedirectToRoute("GroupControlLocalizedDefault", new { action = "DrawProcess", groupslug = group.groupSlug, idgroup = group.Id, id = pro.Id });
-        }
-        [Authorize]
-        [GroupAuthorize]
-        public ActionResult DrawProcess(int id)
-        {
-            Process ps = processService.findProcess(id);
-            if (ps == null) return HttpNotFound();
-            if (ps != null)
-            {
-                var loadprocess = ps.DataJson.ToString();
-                JObject load = JObject.Parse(loadprocess);
-                ViewData["load"] = load;
-            }
-            return View(ps);
-        }
-        [Authorize]
-        [HttpPost]
-        public JsonResult DrawProcess(int processId, string data, string nodeData, string linkData)
-        {
-            Process ps = processService.findProcess(processId);
-            processService.insertDataJson(ps, data);
-            //JObject json = JObject.Parse(nodeData);
-            JArray nodeArray = JArray.Parse(nodeData);
-            JArray linkArray = JArray.Parse(linkData);
-            var idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();
-            List<int> a = new List<int>();
-            for (int i = 0; i < nodeArray.Count; i++)
-            {
-                var key = (int)nodeArray[i]["key"];
-                var from = linkArray.Where(x => (int)x["from"] == key).ToList();
-                var nextStep2 = 0;
-                Step step = new Step();
-                int j = 1;
-                if (from != null)
-                {
-                    foreach(var item in from)
-                    {
-                        var to = (int)item["to"];
-                        if(j == 1)
-                        {
-                            step.NextStep1 = to;
-                        }else if (j == 2)
-                        {
-                            step.NextStep2 = to;
-                        }
-                        j++;
-                        //if (!a.Contains(to))
-                        //{
-                        //    a.Add(to);
-                        //}
-                        //else
-                        //{
-                        //    nextStep2 = to;
-                        //    a.Add(to);
-                        //}
-                    }
-                    if (step.NextStep2 == null)
-                    {
-                        step.NextStep2 = 0;
-                    }
-                }
-              
-                step.IdProcess = processId;
-                step.Name = nodeArray[i]["text"].ToString();
-                step.Key = key;
-                step.StartStep = (int)idfirstStep["to"] == (int)nodeArray[i]["key"] ? true : false;              
-              
-                step.Figure = nodeArray[i]["figure"] == null ? "Step" : nodeArray[i]["figure"].ToString();
-                step.Created_At = DateTime.Now;
-                step.Updated_At = DateTime.Now;
-                db.Steps.Add(step);
-            }
-            //db.Entry(ps).State = System.Data.Entity.EntityState.Modified;
-            db.SaveChanges();
-            return Json(new { id = ps.IdGroup });
-        }
+        
     }
 }

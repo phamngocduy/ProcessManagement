@@ -1,0 +1,28 @@
+﻿@model ProcessManagement.Models.Group
+
+@{
+    ViewBag.Title = "ShowStep";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var steps = ViewData["step"] as List<ProcessManagement.Models.Step>;
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var step in steps)
+        {
+            <tr>
+                <td><a>@step.Name</a></td>
+                <td>@step.Description</td>
+                <td><a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "EditStep", groupslug = Model.groupSlug, idgroup = Model.Id,id = step.Id })">Edit</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+

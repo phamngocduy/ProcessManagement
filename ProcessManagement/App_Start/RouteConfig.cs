@@ -21,44 +21,43 @@ namespace ProcessManagement
                 name: "LocalizedDefault",
                 url: "{lang}/{controller}/{action}/{id}",
                 defaults: new { controller = "group", action = "index", id = UrlParameter.Optional },
-                constraints: new { lang = "en|vi", controller = "home|account|error|group" }
+                constraints: new { lang = "en|vi", controller = "home|account|error" }
             );
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "group", action = "index", lang = "en", id = UrlParameter.Optional },
-                constraints: new { lang = "en|vi", controller = "home|account|error|group" }
+                constraints: new { lang = "en|vi", controller = "home|account|error" }
             );
 
             //group default
             routes.MapRoute(
                name: "GroupLocalizedDefault",
-               url: "{lang}/Group/{action}/{idgroup}",
-               defaults: new { action = "index", idgroup = UrlParameter.Optional },
-               constraints: new { lang = "en|vi" }
+               url: "{lang}/{controller}/{action}/{groupid}",
+               defaults: new { controller = "group", action = "index", groupid = UrlParameter.Optional },
+               constraints: new { lang = "en|vi", controller = "group" }
             );
             routes.MapRoute(
                name: "GroupDefault",
-               url: "Group/{action}/{idgroup}",
-               defaults: new {  action = "index", lang = "en", idgroup = UrlParameter.Optional },
-               constraints: new { lang = "en|vi" }
+               url: "{controller}/{action}/{groupid}",
+               defaults: new { controller = "group", action = "index", lang = "en", groupid = UrlParameter.Optional },
+               constraints: new { lang = "en|vi", controller = "group" }
             );
 
 
             //group control
             routes.MapRoute(
                name: "GroupControlLocalizedDefault",
-               url: "{lang}/{groupslug}-{idgroup}/{action}/{id}",
-               defaults: new { controller = "group", id = UrlParameter.Optional },
-               constraints: new { lang = "en|vi" }
+               url: "{lang}/{groupslug}-{groupid}/{controller}/{action}/{stepid}/{taskid}",
+               defaults: new { controller = "group", stepid = UrlParameter.Optional, taskid = UrlParameter.Optional },
+               constraints: new { lang = "en|vi", controller = "group|process" }
             );
             routes.MapRoute(
                name: "GroupControlDefault",
-               url: "{groupslug}-{idgroup}/{action}/{id}",
-               defaults: new { controller = "group", lang = "en", id = UrlParameter.Optional },
-               constraints: new { lang = "en|vi" }
+               url: "{groupslug}-{groupid}/{controller}/{action}/{stepid}/{taskid}",
+               defaults: new { controller = "group", lang = "en", stepid = UrlParameter.Optional, taskid = UrlParameter.Optional },
+               constraints: new { lang = "en|vi", controller = "group|process"}
             );
-
 
             //routes.MapRoute(
             //    name: "AccountDefault",

@@ -38,6 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vs9EF.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,6 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vs9EF.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -61,6 +63,18 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject, Version=3.3.3.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.3.3\lib\net45\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.Common, Version=3.3.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.Web.Common.3.3.0\lib\net45\Ninject.Web.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.Common.WebHost, Version=3.3.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.Web.Common.WebHost.3.3.0\lib\net45\Ninject.Web.Common.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.Mvc, Version=3.3.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.MVC5.3.3.0\lib\net45\Ninject.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -6568,14 +6582,16 @@
     <Content Include="Views\Shared\Layouts\Settings\Auth\Members.cshtml" />
     <Content Include="Views\Shared\Layouts\Settings\Auth\Visibility.cshtml" />
     <Content Include="Views\Shared\Layouts\Settings\Auth\Advanced.cshtml" />
-    <Content Include="Views\Group\DrawProcess.cshtml" />
-    <Content Include="Views\Group\CreateProcess.cshtml" />
+    <Content Include="Views\Process\Draw.cshtml" />
+    <Content Include="Views\Process\NewProcess.cshtml" />
     <Content Include="Views\Shared\Layouts\Settings\General.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Process\ShowStep.cshtml" />
+    <Content Include="Views\Group\EditStep.cshtml" />
+    <Content Include="Views\Group\FileManager.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Views\Process\" />
+    <Folder Include="App_Data\Files\Groups\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\build\css\guest-style.css.map" />
@@ -9267,7 +9283,7 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Group\Index.cshtml" />
-    <Content Include="Views\Group\Create.cshtml" />
+    <Content Include="Views\Group\NewGroup.cshtml" />
     <Content Include="Views\Group\Show.cshtml" />
     <Content Include="Views\Group\Setting.cshtml" />
   </ItemGroup>

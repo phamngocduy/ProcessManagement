@@ -34,5 +34,10 @@ namespace ProcessManagement.Services
             }
             db.SaveChanges();
         }
+        public Step findStep(int id)
+        {
+            Step step = db.Steps.Find(id);
+            return step;
+        }
     }
 }

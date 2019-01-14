@@ -2,7 +2,7 @@
 @using Microsoft.AspNet.Identity;
 @{
     var userList = ViewData["ListUser"] as List<ProcessManagement.Models.AspNetUser>;
-    var group = ViewData["Group"] as ProcessManagement.Models.Group;
+    //var group = ViewData["Group"] as ProcessManagement.Models.Group;
     bool isUserEmpty = !userList.Any();
     var participentlist = ViewData["ListParticipant"] as List<ProcessManagement.Models.Participate>;
     var showUserSetting = TempData["UserSetting"] != null ? "in" : "";
@@ -93,16 +93,16 @@
                             @*@if (item.AspNetUser.Id == User.Identity.GetUserId() && User.Identity.GetUserId() != item.Group.IdOwner)*@
                             @if (isAdmin && !item.IsOwner && item.IdUser != User.Identity.GetUserId())
                             {
-                                <a href=" @Url.RouteUrl("GroupControlLocalizedDefault",new { userslug = group.ownerSlug, groupslug = group.groupSlug, action = "EditRoleMember", id = item.Id })" class="btn btn-primary" style="margin-right:15px"><i class="fas fa-pen"></i></a>
+                                <a href=" @Url.RouteUrl("GroupControlLocalizedDefault",new { groupslug = Model.groupSlug, action = "editrolemember", groupid = Model.Id, participateid = item.Id })" class="btn btn-primary" style="margin-right:15px"><i class="fas fa-pen"></i></a>
                             }
                             @if (item.AspNetUser.Id == User.Identity.GetUserId() && !isOwner)
                             {
 
-                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { userslug = group.ownerSlug, groupslug = group.groupSlug, action = "MemberLeaveGroup", id = item.Id })" onclick="return confirmBeforeLeave()" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Leave</a>
+                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { groupslug = Model.groupSlug, action = "memberleavegroup", groupid = Model.Id, participateid = item.Id })" onclick="return confirmBeforeLeave()" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Leave</a>
                             }
                             else if ((isAdmin || isOwner) && item.AspNetUser.Id != User.Identity.GetUserId() && !item.IsOwner)
                             {
-                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { userslug = group.ownerSlug, groupslug = group.groupSlug, action = "DeleteMember", id = item.Id })" onclick="return confirmBeforeDeleteMember('@item.AspNetUser.Email')" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { groupslug = Model.groupSlug, action = "deletemember", groupid = Model.Id, participateid = item.Id })" onclick="return confirmBeforeDeleteMember('@item.AspNetUser.Email')" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
                             }
                             else if (isOwner && item.IdUser == User.Identity.GetUserId())
                             {

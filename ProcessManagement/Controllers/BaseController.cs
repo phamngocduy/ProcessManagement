@@ -7,6 +7,26 @@ using Microsoft.AspNet.Identity;
 using ProcessManagement.Models;
 namespace ProcessManagement.Controllers
 {
+    public enum UserRole
+    {
+        Owner,
+        Admin,
+        Manager
+
+    }
+    public enum FlashType
+    {
+        Success,
+        Fail,
+        Warning
+    }
+    public enum TabType
+    {
+        GeneralSetting,
+        UserSetting,
+        AdvancedSetting,
+        VisibilitySetting
+    }
     public class BaseController : Controller
     {
         private static string _cookieLangName = "LangForProcessManagementSystem";
@@ -56,19 +76,7 @@ namespace ProcessManagement.Controllers
             }
             return culture;
         }
-        public enum FlashType
-        {
-            Success,
-            Fail,
-            Warning
-        }
-        public enum TabType
-        {
-            GeneralSetting,
-            UserSetting,
-            AdvancedSetting,
-            VisibilitySetting
-        }
+       
         public void SetFlash(FlashType flashType, string flashMessage)
         {
             TempData["FlashMessage.Type"] = flashType.ToString();

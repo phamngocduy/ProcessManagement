@@ -277,7 +277,7 @@
 
             })
             $('#btn-remove-project-comfirm').on('click', function () {
-                window.location.replace("@Url.RouteUrl("GroupLocalizedDefault",new { controller = "Group", action = "Remove" })");
+                window.location.replace("@Url.RouteUrl("GroupLocalizedDefault",new { controller = "group", action = "remove" })");
             })
             $('#visibility').on('change', function () {
                 var visibilityLevel = $(this).val();

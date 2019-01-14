@@ -6,7 +6,7 @@
     Session["idgroup"] = group.Id;
 }
 
-<form action="@Url.RouteUrl("GroupLocalizedDefault",new { action = "CreateProcess",idgroup = string.Empty })" method="post">
+<form action="@Url.RouteUrl("GroupLocalizedDefault",new { action = "NewProcess",idgroup = string.Empty })" method="post">
     @Html.AntiForgeryToken()
     <div class="col-md-6">
         <h4>Process</h4>

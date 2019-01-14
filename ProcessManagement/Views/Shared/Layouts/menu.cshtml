@@ -1,3 +1,6 @@
+@{ 
+    var group = ViewBag.currentGroup as ProcessManagement.Models.Group;
+}
 <div class="col-md-3 left_col">
     <div class="left_col scroll-view">
         <div class="navbar nav_title" style="border: 0;">
@@ -13,7 +16,7 @@
             <h3>General</h3>
             <ul class="nav side-menu">
               <li>
-                  <a href="@Url.Action("Show","Group",new { idgroup  = Model.Id })"+><i class="fas fa-building"></i> @ProcessManagement.Content.resources.CWmenu.clockworks_menu_group</a>
+                  <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "show", groupslug = group.groupSlug, groupid = group.Id})"+><i class="fas fa-building"></i> @ProcessManagement.Content.resources.CWmenu.clockworks_menu_group</a>
               </li>
              </ul>
           </div>

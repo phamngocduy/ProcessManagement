@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Web;
+using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using ProcessManagement.Models;
 namespace ProcessManagement.Services
@@ -83,6 +84,18 @@ namespace ProcessManagement.Services
             bool sucess = int.TryParse(s, out number);
             bool isInteger = sucess ? true : false;
             return isInteger;
+        }
+        public void CreateDirectory(Group group)
+        {
+            string AppPath = AppDomain.CurrentDomain.BaseDirectory;
+            string filePath = AppPath + "App_Data\\Files\\Groups";
+            string folderName = string.Format("{0}-{1}", group.Name, group.Id);
+            filePath += String.Format("\\{0}", folderName);
+            string stepPath = filePath + String.Format("\\Steps");
+            string introPath = filePath + String.Format("\\Intros");
+            DirectoryInfo stepDirectory = Directory.CreateDirectory(stepPath);
+            DirectoryInfo introDirectory = Directory.CreateDirectory(introPath);
+
 
         }
     }

@@ -15,7 +15,7 @@
         }
     </style>
 }
-<div class="clearfix"><a href="@Url.RouteUrl("GroupLocalizedDefault",new { action = "Create" })" class="btn btn-success pull-right">Create Group</a></div>
+<div class="clearfix"><a href="@Url.RouteUrl("GroupLocalizedDefault",new { action = "NewGroup" })" class="btn btn-success pull-right">Create Group</a></div>
 <div class="group-list row display-flex">
     @foreach (var group in grouplist)
     {
@@ -27,7 +27,7 @@
         <div class="col-sm-3">
             <div class="cw-card">
                 <div class="cw-group-image">
-                    <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "show", groupslug = group.groupSlug, idgroup = group.Id})">
+                    <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "show", groupslug = group.groupSlug, groupid = group.Id})">
                         @if (group.Avatar != null)
                         {
                             <img src="~/Content/images/workspace/@Html.DisplayFor(modle => group.Avatar)" alt="@group.Name" class="image-medium" />
@@ -44,7 +44,7 @@
                     </a>
                 </div>
                 <div class="cw-group-infor">
-                    <div class="cw-group-name"><a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "show", groupslug = group.groupSlug, idgroup = group.Id})">@group.Name</a></div>
+                    <div class="cw-group-name"><a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "show", groupslug = group.groupSlug, groupid = group.Id})">@group.Name</a></div>
                     <div class="cw-group-author"><span class="cw-label">Author:</span>@Html.DisplayFor(modle => group.AspNetUser.UserName)</div>
                     <div class="cw-group-date"><span class="cw-label">Update at:</span>@Html.DisplayFor(modle => group.Updated_At)</div>
                     <div class="cw-group-des" style="word-break:break-all">
