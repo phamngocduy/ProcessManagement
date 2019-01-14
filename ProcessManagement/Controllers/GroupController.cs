@@ -287,7 +287,7 @@ namespace ProcessManagement.Controllers
         {
             Process ps = processService.findProcess(id);
             if (ps == null) return HttpNotFound();
-            if (ps != null)
+            if (ps.DataJson != null)
             {
                 var loadprocess = ps.DataJson.ToString();
                 JObject load = JObject.Parse(loadprocess);
@@ -356,5 +356,19 @@ namespace ProcessManagement.Controllers
             db.SaveChanges();
             return Json(new { id = ps.IdGroup });
         }
+		//[Authorize]
+		//[HttpPost]
+		//public ActionResult DeleteProcess(int id)
+		//{
+
+		//} 
+		public ActionResult CreateRole()
+		{
+			return View();
+		}
+		public ActionResult EditRole()
+		{
+			return View();
+		}
     }
 }

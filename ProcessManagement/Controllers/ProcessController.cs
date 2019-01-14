@@ -8,16 +8,14 @@ using ProcessManagement.Models;
 using ProcessManagement.Services;
 namespace ProcessManagement.Controllers
 {
-    public class ProcessController : BaseController
-    {
-        ///=============================================================================================
-        PMSEntities db = new PMSEntities();
-        GroupService groupService = new GroupService();
-        CommonService commonService = new CommonService();
-        ParticipateService participateService = new ParticipateService();
-        ProcessService processService = new ProcessService();
-        ///=============================================================================================
-     
-        
-    }
+	public class ProcessController : BaseController
+	{
+		///=============================================================================================
+		PMSEntities db = new PMSEntities();
+		GroupService groupService = new GroupService();
+		CommonService commonService = new CommonService();
+		ParticipateService participateService = new ParticipateService();
+		ProcessService processService = new ProcessService();
+		///=============================================================================================
+	}
 }
