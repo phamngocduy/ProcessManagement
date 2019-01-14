@@ -21,7 +21,7 @@ namespace ProcessManagement.Controllers
         ///=============================================================================================
 
         [Authorize]
-        //[GroupAuthorize]
+        [GroupAuthorize]
         public ActionResult NewProcess(int groupid)
         {
             Group group = groupService.findGroup(groupid);
