@@ -392,13 +392,6 @@ namespace ProcessManagement.Controllers
 		//{
 
 		//} 
-		public ActionResult CreateRole()
-		{
-			return View();
-		}
-		public ActionResult EditRole()
-		{
-			return View();
-		}
+		
     }
 }

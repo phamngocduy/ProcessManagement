@@ -30,8 +30,11 @@ namespace ProcessManagement.Models
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
+        public virtual DbSet<Input> Inputs { get; set; }
         public virtual DbSet<Participate> Participates { get; set; }
         public virtual DbSet<Process> Processes { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Step> Steps { get; set; }
+        public virtual DbSet<TaskProcess> TaskProcesses { get; set; }
     }
 }

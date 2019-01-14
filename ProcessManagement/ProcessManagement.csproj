@@ -38,7 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vs9EF.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\Dell\AppData\Local\Temp\vs6B54.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,7 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vs9EF.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\Dell\AppData\Local\Temp\vs6B54.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -297,6 +297,9 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Input.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Participate.cs">
       <DependentUpon>PMS.tt</DependentUpon>
@@ -317,6 +320,12 @@
       <DependentUpon>PMS.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\Process.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Role.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TaskProcess.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -6586,8 +6595,8 @@
     <Content Include="Views\Process\NewProcess.cshtml" />
     <Content Include="Views\Shared\Layouts\Settings\General.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
-    <Content Include="Views\Group\CreateRole.cshtml" />
-    <Content Include="Views\Group\EditRole.cshtml" />
+    <Content Include="Views\Process\CreateRole.cshtml" />
+    <Content Include="Views\Process\EditRole.cshtml" />
     <Content Include="Views\Process\ShowStep.cshtml" />
     <Content Include="Views\Group\EditStep.cshtml" />
     <Content Include="Views\Group\FileManager.cshtml" />

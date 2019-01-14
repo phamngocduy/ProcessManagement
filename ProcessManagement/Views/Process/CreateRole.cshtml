@@ -1,4 +1,5 @@
-﻿
+﻿@model ProcessManagement.Models.Process
+
 @{
     ViewBag.Title = "CreateRole";
     Layout = "~/Views/Shared/_NullLayout.cshtml";
@@ -14,31 +15,33 @@
         </div>
     </div>
     <ul class="cw-tabs">
-       
+
         <li class="cw-active-tab" rel="settings">
-            <i class="fas fa-people-carry"></i>&nbsp;Roles
+            <i class="fas fa-people-carry"></i>&nbsp;Role
         </li>
     </ul>
 </div>
 <div class="cw-workspace-header" style="position:relative">
     <div class="cw-find-members">
         <div class="cw-add-member">
-            <form action="#" method="POST">
+            <form action="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "process", action = "createrole"})" method="POST">
+                <input type="hidden" name="IdProcess" value="@Model.Id" />
                 <div class="form-group">
-                    <label for="cw-members-name" class="cw-required">Add Role</label>
+                    <label for="cw-members-name" class="cw-required">Role</label>
                     <span class="cw-input-icon">
                         <input type="text" name="name" class="form-control cw-input-has-icon" id="cw-roles-name">
+
                     </span>
                 </div>
                 <div class="form-group">
                     <label for="cw-members-name" class="cw-required">Role Description</label>
                     <span class="cw-input-icon">
-                        <textarea name="name" class="form-control cw-input-has-icon" id="cw-description-name" ols="" rows=""></textarea>
+                        <textarea name="description" class="form-control cw-input-has-icon" id="cw-description-name" ols="" rows=""></textarea>
                     </span>
                 </div>
 
                 <div>
-                    <button class="btn btn-success">Create</button>
+                    <button class="btn btn-success">Add</button>
                 </div>
             </form>
         </div>
@@ -48,6 +51,7 @@
                 <thead>
                     <tr style="text-align:center">
                         <td style="max-width:100%" width="10%">Roles</td>
+                        <td style="max-width:50%" width="50%">Description</td>
                         <td style="max-width:10%" width="10%"></td>
                     </tr>
                 </thead>
@@ -55,6 +59,9 @@
                     <tr style="text-align:center">
                         <td style="max-width:100%" width="10%">
                             <a href="#">Admin</a>
+                        </td>
+                        <td style="max-width:50%" width="50%">
+                            <p>description for admin</p>
                         </td>
                         <td style="max-width:10%" width="100%">
                             <button class="btn btn-default"><i class="fas fa-trash-alt"></i></button>

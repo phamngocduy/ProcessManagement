@@ -51,5 +51,10 @@ namespace ProcessManagement.Services
             ps.DataJson = data;
             db.SaveChanges();
         }
-    }
+		public void createRole(Role role)
+		{
+			db.Roles.Add(role);
+			db.SaveChanges();
+		}
+	}
 }

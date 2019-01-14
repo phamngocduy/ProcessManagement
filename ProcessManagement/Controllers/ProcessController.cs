@@ -144,5 +144,26 @@ namespace ProcessManagement.Controllers
             db.SaveChanges();
             return RedirectToRoute("GroupControlLocalizedDefault", new { action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, id = step.Process.Id });
         }
-    }
+		[GroupAuthorize(Role = new UserRole[] { UserRole.Manager })]
+		public ActionResult CreateRole(int processid)
+		{
+			Process process = processService.findProcess(processid);
+			return View(process);
+		}
+		[HttpPost]
+		public ActionResult CreateRole(int IdProcess, Role role)
+		{
+			role.IdProcess = IdProcess;
+			processService.createRole(role);
+			Process process = processService.findProcess(IdProcess);
+			Group group = groupService.findGroup(process.IdGroup);
+			//set flash
+			SetFlash(FlashType.Success, "Created Role Successfully");
+			return RedirectToRoute("GroupControlLocalizedDefault", new {controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
+		}
+		public ActionResult EditRole()
+		{
+			return View();
+		}
+	}
 }

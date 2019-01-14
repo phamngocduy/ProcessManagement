@@ -35,13 +35,13 @@ namespace ProcessManagement
                name: "GroupLocalizedDefault",
                url: "{lang}/{controller}/{action}/{groupid}",
                defaults: new { controller = "group", action = "index", groupid = UrlParameter.Optional },
-               constraints: new { lang = "en|vi", controller = "group" }
+               constraints: new { lang = "en|vi", controller = "group|process" }
             );
             routes.MapRoute(
                name: "GroupDefault",
                url: "{controller}/{action}/{groupid}",
                defaults: new { controller = "group", action = "index", lang = "en", groupid = UrlParameter.Optional },
-               constraints: new { lang = "en|vi", controller = "group" }
+               constraints: new { lang = "en|vi", controller = "group|process" }
             );
 
 
@@ -73,6 +73,6 @@ namespace ProcessManagement
             //);
 
 
-        }
+		}
     }
 }
