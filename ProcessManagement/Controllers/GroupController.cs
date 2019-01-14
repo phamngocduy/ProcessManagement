@@ -22,7 +22,7 @@ namespace ProcessManagement.Controllers
         ProcessService processService = new ProcessService();
         StepService stepService = new StepService();
         ///=============================================================================================
-        
+
 
 
         // GET: Group
@@ -46,7 +46,7 @@ namespace ProcessManagement.Controllers
 
             string idUser = User.Identity.GetUserId();
             //save avatar
-            commonService.saveAvatarGroup(group,ImageGr, Server.MapPath("~/Content/images/workspace/"));
+            commonService.saveAvatarGroup(group, ImageGr, Server.MapPath("~/Content/images/workspace/"));
             //create new group
             groupService.createGroup(idUser, group);
             //create new participate
@@ -145,7 +145,7 @@ namespace ProcessManagement.Controllers
             int groupid = (int)Session["groupid"];
             Group group = groupService.findGroup(groupid);
             if (group == null) return HttpNotFound();
-            
+
             //edit
             Group groupEdit = groupService.compareBeforeEdit(group, model);
             commonService.saveAvatarGroup(groupEdit, ImageGr, Server.MapPath("~/Content/images/workspace/"));
@@ -178,13 +178,13 @@ namespace ProcessManagement.Controllers
             //hỏi thầy lúc xóa group có nên xóa process luôn hông 
             //tại process này có thể là con của một process khác năng ở group khác
             ///////////////////////////////////////////////////////////////////////////
-            
+
             //remove group (bao gồm remove participant,process,step)
             groupService.removeGroup(group);
-            SetFlash(FlashType.Success, "Removed Group "+ groupName + " Successfully");
+            SetFlash(FlashType.Success, "Removed Group " + groupName + " Successfully");
             return RedirectToAction("Index");
         }
-        
+
         [Authorize]
         [GroupAuthorize]
         public ActionResult DeleteMember(int participateid)
@@ -220,7 +220,7 @@ namespace ProcessManagement.Controllers
             int groupid = (int)Session["groupid"];
             Group group = groupService.findGroup(groupid);
             if (group == null) return HttpNotFound();
-           
+
 
 
             ////////////////////////////////////////////////////////////////////////////
@@ -248,13 +248,13 @@ namespace ProcessManagement.Controllers
             Group group = groupService.findGroup(groupId);
             Participate user = participateService.findMemberInGroup(model.Id);
             if (user == null) return HttpNotFound();
-            
+
             //chỉnh sửa role của 1 user
 
             if (!user.IsOwner)
             {
                 participateService.editRoleUser(model);
-                SetFlash(FlashType.Success, "Edited Role of "+user.AspNetUser.UserName+" Successfully");
+                SetFlash(FlashType.Success, "Edited Role of " + user.AspNetUser.UserName + " Successfully");
             }
             else
                 SetFlash(FlashType.Fail, "Owner cant change their role");
@@ -288,7 +288,7 @@ namespace ProcessManagement.Controllers
                 SetTab(TabType.AdvancedSetting);
                 return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = user.Group.groupSlug, groupid = user.Group.Id });
             }
-            
+
         }
         [Authorize]
         //[GroupAuthorize]
@@ -335,48 +335,42 @@ namespace ProcessManagement.Controllers
             JArray nodeArray = JArray.Parse(nodeData);
             JArray linkArray = JArray.Parse(linkData);
             var idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();
-            List<int> a = new List<int>();
             for (int i = 0; i < nodeArray.Count; i++)
             {
                 var key = (int)nodeArray[i]["key"];
                 var from = linkArray.Where(x => (int)x["from"] == key).ToList();
-                var nextStep2 = 0;
                 Step step = new Step();
                 int j = 1;
                 if (from != null)
                 {
-                    foreach(var item in from)
+                    foreach (var item in from)
                     {
                         var to = (int)item["to"];
-                        if(j == 1)
+                        if (j == 1)
                         {
                             step.NextStep1 = to;
-                        }else if (j == 2)
+                        }
+                        else if (j == 2)
                         {
                             step.NextStep2 = to;
                         }
                         j++;
-                        //if (!a.Contains(to))
-                        //{
-                        //    a.Add(to);
-                        //}
-                        //else
-                        //{
-                        //    nextStep2 = to;
-                        //    a.Add(to);
-                        //}
                     }
                     if (step.NextStep2 == null)
                     {
                         step.NextStep2 = 0;
                     }
+                    if (step.NextStep1 == null)
+                    {
+                        step.NextStep1 = 0;
+                    }
                 }
-              
+
                 step.IdProcess = processId;
                 step.Name = nodeArray[i]["text"].ToString();
                 step.Key = key;
-                step.StartStep = (int)idfirstStep["to"] == (int)nodeArray[i]["key"] ? true : false;              
-              
+                step.StartStep = (int)idfirstStep["to"] == (int)nodeArray[i]["key"] ? true : false;
+
                 step.Figure = nodeArray[i]["figure"] == null ? "Step" : nodeArray[i]["figure"].ToString();
                 step.Created_At = DateTime.Now;
                 step.Updated_At = DateTime.Now;
@@ -386,12 +380,178 @@ namespace ProcessManagement.Controllers
             db.SaveChanges();
             return Json(new { id = ps.IdGroup });
         }
-		//[Authorize]
-		//[HttpPost]
-		//public ActionResult DeleteProcess(int id)
-		//{
 
-		//} 
-		
+        [Authorize]
+        [GroupAuthorize]
+        public ActionResult EditProcess(int id)
+        {
+            Process ps = processService.findProcess(id);
+            if (ps == null) return HttpNotFound();
+            if (ps.DataJson != null)
+            {
+                var loadprocess = ps.DataJson.ToString();
+                JObject load = JObject.Parse(loadprocess);
+                ViewData["load"] = load;
+            }
+            return View(ps);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public JsonResult EditProcess(int processId, string data, string nodeData, string linkData)
+        {
+            Process ps = processService.findProcess(processId);
+            processService.insertDataJson(ps, data);
+            JArray nodeArray = JArray.Parse(nodeData);
+            JArray linkArray = JArray.Parse(linkData);
+            var idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();
+            var liststep = db.Steps.Where(z => z.IdProcess == processId).ToList();
+            List<int> keystep = new List<int>();
+            List<int> keynode = new List<int>();
+
+            //chuyển linkstep về mặc định
+            //add new step nếu step chưa có trong liststep
+            //so sánh 2 list tìm giá trị giống nhau và khác nhau
+            //nếu 2 list có các phần tử giống nhau sẽ lưu vào 1 mảng khác để sử giá trị của step đó
+            //nếu 2 list có các phần tử khác nhau sẽ lưu vào 1 mảng khác để tạo mới step đó
+            //sau đó kt lại nếu step nào không có nextstep1 and nextstep2,step đó sẽ đc xóa
+            foreach (var ls in liststep)
+            {
+                ls.StartStep = false;
+                ls.NextStep1 = 0;
+                ls.NextStep2 = 0;
+                keystep.Add(ls.Key);
+            }
+
+            for (int i = 0; i < nodeArray.Count; i++)
+            {
+                keynode.Add((int)nodeArray[i]["key"]);
+            }
+
+            int[] same = keynode.Intersect(keystep).ToArray();
+            int[] diff = keynode.Union(keystep).Except(same).ToArray();
+
+            List<Step> keystepgiong = new List<Step>();
+            List<Step> keystepkhac = new List<Step>();
+            foreach (var item in same)
+            {
+                Step s = db.Steps.Where(p => p.Key == item && p.IdProcess == processId).FirstOrDefault();
+                keystepgiong.Add(s);
+            }
+
+            for (int i = 0; i < nodeArray.Count; i++)
+            {
+                var key = (int)nodeArray[i]["key"];
+                var from = linkArray.Where(x => (int)x["from"] == key).ToList();
+                Step step = new Step();
+                int j = 1;
+                if (from != null)
+                {
+                    foreach (var item1 in from)
+                    {
+                        var to = (int)item1["to"];
+                        if (j == 1)
+                        {
+                            step.NextStep1 = to;
+                        }
+                        else if (j == 2)
+                        {
+                            step.NextStep2 = to;
+                        }
+                        j++;
+                    }
+                    if (step.NextStep2 == null)
+                    {
+                        step.NextStep2 = 0;
+                    }
+                    if (step.NextStep1 == null)
+                    {
+                        step.NextStep1 = 0;
+                    }
+                }
+
+                step.IdProcess = processId;
+                step.Name = nodeArray[i]["text"].ToString();
+                step.Key = key;
+                step.StartStep = (int)idfirstStep["to"] == (int)nodeArray[i]["key"] ? true : false;
+
+                step.Figure = nodeArray[i]["figure"] == null ? "Step" : nodeArray[i]["figure"].ToString();
+                step.Created_At = DateTime.Now;
+                step.Updated_At = DateTime.Now;
+                foreach (var item in diff)
+                {
+                    if (key == item)
+                    {
+                        keystepkhac.Add(step);
+                    }
+                    else 
+                    {
+                        if (step.Figure == "Step" && step.NextStep1 == 0 && step.NextStep2 ==0)
+                        {
+                            Step st = db.Steps.Where(p => p.Key == item && p.IdProcess == processId).FirstOrDefault();
+                            db.Steps.Remove(st);
+                            db.SaveChanges();
+                        }
+                    }
+                }
+            }
+            foreach (var item3 in keystepkhac)
+            {
+                Step step = new Step();
+                step.IdProcess = processId;
+                step.Name = item3.Name;
+                step.Key = item3.Key;
+                step.StartStep = item3.StartStep;
+                step.Figure = item3.Figure;
+                step.Created_At = item3.Created_At;
+                step.Updated_At = item3.Updated_At;
+                step.NextStep1 = item3.NextStep1;
+                step.NextStep2 = item3.NextStep2;
+                db.Steps.Add(step);
+            }
+
+            foreach (var listst in keystepgiong)
+            {
+                for (int i = 0; i < nodeArray.Count; i++)
+                {
+                    var key = (int)nodeArray[i]["key"];
+                    if (key == listst.Key)
+                    {
+                        var from = linkArray.Where(x => (int)x["from"] == key).ToList();
+                        int j = 1;//if (from != null)
+                        {
+                            foreach (var item2 in from)
+                            {
+                                var to = (int)item2["to"];
+                                if (j == 1)
+                                {
+                                    listst.NextStep1 = to;
+                                }
+                                else if (j == 2)
+                                {
+                                    listst.NextStep2 = to;
+                                }
+                                j++;
+                            }
+                            if (listst.NextStep2 == null)
+                            {
+                                listst.NextStep2 = 0;
+                            }
+                            if (listst.NextStep1 == null)
+                            {
+                                listst.NextStep1 = 0;
+                            }
+                        }
+                        listst.StartStep = (int)idfirstStep["to"] == (int)nodeArray[i]["key"] ? true : false;
+                        listst.Name = nodeArray[i]["text"].ToString();
+                        listst.Updated_At = DateTime.Now;
+                    }
+                }
+            }
+
+            db.SaveChanges();
+            return Json(new { id = ps.IdGroup });
+        }
+
     }
 }
