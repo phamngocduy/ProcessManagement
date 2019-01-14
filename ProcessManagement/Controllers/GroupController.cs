@@ -299,6 +299,106 @@ namespace ProcessManagement.Controllers
             ViewData["group"] = group;
             return View(pr);
         }
-        
+        [Authorize]
+        [GroupAuthorize]
+        [HttpPost]
+        public ActionResult CreateProcess(Process pro)
+        {
+            int idgroup = (int)Session["idgroup"];
+            string idUser = User.Identity.GetUserId();
+            Group group = groupService.findGroup(idgroup);
+            processService.createProcess(group.Id, idUser, pro);
+            SetFlash(FlashType.Success, "Created Process Successfully");
+            return RedirectToRoute("GroupControlLocalizedDefault", new { action = "DrawProcess", groupslug = group.groupSlug, idgroup = group.Id, id = pro.Id });
+        }
+        [Authorize]
+        [GroupAuthorize]
+        public ActionResult DrawProcess(int id)
+        {
+            Process ps = processService.findProcess(id);
+            if (ps == null) return HttpNotFound();
+            if (ps.DataJson != null)
+            {
+                var loadprocess = ps.DataJson.ToString();
+                JObject load = JObject.Parse(loadprocess);
+                ViewData["load"] = load;
+            }
+            return View(ps);
+        }
+        [Authorize]
+        [HttpPost]
+        public JsonResult DrawProcess(int processId, string data, string nodeData, string linkData)
+        {
+            Process ps = processService.findProcess(processId);
+            processService.insertDataJson(ps, data);
+            //JObject json = JObject.Parse(nodeData);
+            JArray nodeArray = JArray.Parse(nodeData);
+            JArray linkArray = JArray.Parse(linkData);
+            var idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();
+            List<int> a = new List<int>();
+            for (int i = 0; i < nodeArray.Count; i++)
+            {
+                var key = (int)nodeArray[i]["key"];
+                var from = linkArray.Where(x => (int)x["from"] == key).ToList();
+                var nextStep2 = 0;
+                Step step = new Step();
+                int j = 1;
+                if (from != null)
+                {
+                    foreach(var item in from)
+                    {
+                        var to = (int)item["to"];
+                        if(j == 1)
+                        {
+                            step.NextStep1 = to;
+                        }else if (j == 2)
+                        {
+                            step.NextStep2 = to;
+                        }
+                        j++;
+                        //if (!a.Contains(to))
+                        //{
+                        //    a.Add(to);
+                        //}
+                        //else
+                        //{
+                        //    nextStep2 = to;
+                        //    a.Add(to);
+                        //}
+                    }
+                    if (step.NextStep2 == null)
+                    {
+                        step.NextStep2 = 0;
+                    }
+                }
+              
+                step.IdProcess = processId;
+                step.Name = nodeArray[i]["text"].ToString();
+                step.Key = key;
+                step.StartStep = (int)idfirstStep["to"] == (int)nodeArray[i]["key"] ? true : false;              
+              
+                step.Figure = nodeArray[i]["figure"] == null ? "Step" : nodeArray[i]["figure"].ToString();
+                step.Created_At = DateTime.Now;
+                step.Updated_At = DateTime.Now;
+                db.Steps.Add(step);
+            }
+            //db.Entry(ps).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+            return Json(new { id = ps.IdGroup });
+        }
+		//[Authorize]
+		//[HttpPost]
+		//public ActionResult DeleteProcess(int id)
+		//{
+
+		//} 
+		public ActionResult CreateRole()
+		{
+			return View();
+		}
+		public ActionResult EditRole()
+		{
+			return View();
+		}
     }
 }

@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewBag.Title = "EditRole";
+    Layout = "~/Views/Shared/_NullLayout.cshtml";
+}
+
+<div class="right_col" id="body" role="main">
+    <!-- content -->
+    <div class="cw-workspace-header">
+        <div class="cw-workspace-intro">
+            <div class="cw-workspace-avatar">
+                <img src="public/images/workspace/avatar2.png" alt="workspace's avatar">
+            </div>
+            <div class="cw-workspace-name cw-normal-header">
+                CapstoneProject-ClockWorks
+            </div>
+        </div>
+        <ul class="cw-tabs">
+            <li class="cw-active-tab" rel="settings">
+                <i class="fas fa-people-carry"></i>&nbsp;Roles
+            </li>
+        </ul>
+    </div>
+    <div class="cw-workspace-header" style="position:relative">
+        <div class="cw-find-members">
+            <div class="cw-add-member">
+                <form action="#" method="POST">
+                    <div class="form-group">
+                        <label for="cw-members-name" class="cw-required">Edit Role</label>
+                        <span class="cw-input-icon">
+                            <input type="text" name="name" class="form-control cw-input-has-icon" id="cw-roles-name">
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label for="cw-members-name" class="cw-required">Edit Role Description</label>
+                        <span class="cw-input-icon">
+                            <textarea name="name" class="form-control cw-input-has-icon" id="cw-description-name" ols="" rows=""></textarea>
+                        </span>
+                    </div>
+
+                    <div>
+                        <button class="btn btn-success">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
