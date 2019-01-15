@@ -448,6 +448,30 @@
         saveDiagramProperties(); // do this first, before writing to JSON
         document.getElementById("mySavedModel").value = myDiagram.model.toJson();
         myDiagram.isModified = false;
+
+        map = {};
+        Nodes = myDiagram.model.nodeDataArray;
+        Links = myDiagram.model.linkDataArray;
+        for (var i = 0; i < myDiagram.model.nodeDataArray.length; i++) {
+            map[myDiagram.model.nodeDataArray[i].key] = myDiagram.model.nodeDataArray[i];
+            myDiagram.model.nodeDataArray[i].input = 0;
+            myDiagram.model.nodeDataArray[i].output = 0;
+        }
+        for (var i = 0; i < myDiagram.model.linkDataArray.length; i++) {
+            if (Links[i].from != undefined)
+                map[myDiagram.model.linkDataArray[i].from].output++;
+            if (Links[i].to != undefined)
+                map[myDiagram.model.linkDataArray[i].to].input++;
+        }
+        for (var i = 0; i < myDiagram.model.nodeDataArray.length; i++) {
+            if (myDiagram.model.nodeDataArray[i].figure == 'Diamond') {
+                if (Nodes[i].output < 2)
+                    console.log(Nodes[i].text + 'needs more output');
+                if (Nodes[i].output > 2)
+                    console.log(Nodes[i].text + 'has too many output');
+            }
+        }
+
     }
 
     function load() {
