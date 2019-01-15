@@ -84,8 +84,8 @@
                         foreach (var item in listprocess)
                         {
 
-                            <a href=" @Url.RouteUrl("GroupControlLocalizedDefault",new { action = "DrawProcess", groupslug = Model.groupSlug, idgroup = Model.Id, id = item.Id })" class="cw-header-large cw-error-no-process">@item.Name</a>
-                            <p></p><a href=" @Url.RouteUrl("GroupControlLocalizedDefault",new { action = "EditProcess", groupslug = Model.groupSlug, idgroup = Model.Id, id = item.Id })" class="cw-header-large cw-error-no-process">Edit: @item.Name</a>
+                            <a href=" @Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process" ,action = "ShowStep", groupslug = Model.groupSlug, groupid = Model.Id, processid = item.Id })" class="cw-header-large cw-error-no-process">@item.Name</a>
+                            <p></p><a href=" @Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process" ,action = "EditProcess", groupslug = Model.groupSlug, groupid = Model.Id, processid = item.Id })" class="cw-header-large cw-error-no-process">Edit: @item.Name</a>
                             <h5>@item.Description</h5>
                             <hr class="cw-normal-hr">
                         }

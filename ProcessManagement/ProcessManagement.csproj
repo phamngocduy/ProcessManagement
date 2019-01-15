@@ -6600,7 +6600,7 @@
     <Content Include="Views\Process\ShowStep.cshtml" />
     <Content Include="Views\Group\EditStep.cshtml" />
     <Content Include="Views\Group\FileManager.cshtml" />
-    <Content Include="Views\Group\EditProcess.cshtml" />
+    <Content Include="Views\Process\EditProcess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\Groups\" />

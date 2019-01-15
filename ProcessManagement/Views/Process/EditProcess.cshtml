@@ -437,6 +437,44 @@
         saveDiagramProperties(); // do this first, before writing to JSON
         document.getElementById("mySavedModel").value = myDiagram.model.toJson();
         myDiagram.isModified = false;
+
+        map = {};
+        Nodes = myDiagram.model.nodeDataArray;
+        Links = myDiagram.model.linkDataArray;
+        for (var i = 0; i < myDiagram.model.nodeDataArray.length; i++) {
+            map[myDiagram.model.nodeDataArray[i].key] = myDiagram.model.nodeDataArray[i];
+            myDiagram.model.nodeDataArray[i].input = 0;
+            myDiagram.model.nodeDataArray[i].output = 0;
+        }
+        for (var i = 0; i < myDiagram.model.linkDataArray.length; i++) {
+            if (Links[i].from != undefined)
+                map[myDiagram.model.linkDataArray[i].from].output++;
+            if (Links[i].to != undefined)
+                map[myDiagram.model.linkDataArray[i].to].input++;
+        }
+        for (var i = 0; i < myDiagram.model.nodeDataArray.length; i++) {
+            if (myDiagram.model.nodeDataArray[i].figure == 'Diamond') {
+                if (Nodes[i].output < 2)
+                    console.log(Nodes[i].text + 'needs more output');
+                if (Nodes[i].output > 2)
+                    console.log(Nodes[i].text + 'has too many output');
+                if (NodesS[i].input < 1) {
+                    console.log(Nodes[i].text + 'undefined input');
+                }
+                if (Nodes[i].input > 1)
+                    console.log(Nodes[i].text + 'has too many input');
+            }
+        }
+        for (var i = 0; i < Nodes.length; i++) {
+            if ((Nodes[i].figure == 'Circle' && Nodes[i].fill == '#00AD5F').length > 2) {
+                console.log('Has too many Start Step');
+            }
+        }
+        for (var i = 0; i < Nodes.length; i++) {
+            if (Nodes[i].input == 0 && Nodes[i].output == 0) {
+                console.log('Some steps disconnect with steps in process!');
+            }
+        }
     }
 
     function load() {
@@ -480,7 +518,6 @@
                 }
                 b.push(c);
             }
-            console.log(b);
             //truyen nguyen cai json voi idGroup
             let a = {
                 data: myDiagram.model.toJson(),
@@ -490,14 +527,13 @@
             }
             //truyen qua controller
             $.ajax({
-                url: "@Url.RouteUrl("GroupLocalizedDefault", new { action = "EditProcess" })",
+                url: "@Url.RouteUrl("GroupLocalizedDefault", new { controller = "Process", action = "EditProcess" })",
                 type: "POST",
                 data: a,
                 dataType: "json",
                 success: function (response) {
                     //thanh cong thi no tra du lieu ve
-                    console.log(response);
-                    location.href = '@Url.RouteUrl("GroupControlLocalizedDefault", new { action = "show", userslug = Model.Group.ownerSlug, groupslug = Model.Group.groupSlug, idgroup = Model.Group.Id })' ;
+                    @*location.href = '@Url.RouteUrl("GroupControlLocalizedDefault", new { action = "show", groupslug = Model.Group.groupSlug, groupid = Model.Group.Id })' ;*@
                 }
             })
         })
