@@ -196,7 +196,7 @@ namespace ProcessManagement.Controllers
             Group group = groupService.findGroup(groupId);
             ////////////////////////////////////////////////////////////////////////////
             //NOTE
-            //Không được xóa đi owner,không được xóa thành viên khách group
+            //Không được xóa đi owner,không được xóa thành viên khác group
             ///////////////////////////////////////////////////////////////////////////
             if (user.IsOwner)
                 SetFlash(FlashType.Fail, "You cant remove owner");

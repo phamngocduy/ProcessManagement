@@ -2,26 +2,12 @@
 
 @{
     ViewBag.Title = "CreateRole";
-    Layout = "~/Views/Shared/_NullLayout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var listRole = ViewData["ListRole"] as List<ProcessManagement.Models.Role>;
 }
 
-<div class="cw-workspace-header">
-    <div class="cw-workspace-intro">
-        <div class="cw-workspace-avatar">
-            <img src="public/images/workspace/avatar2.png" alt="workspace's avatar">
-        </div>
-        <div class="cw-workspace-name cw-normal-header">
-            CapstoneProject-ClockWorks
-        </div>
-    </div>
-    <ul class="cw-tabs">
 
-        <li class="cw-active-tab" rel="settings">
-            <i class="fas fa-people-carry"></i>&nbsp;Role
-        </li>
-    </ul>
-</div>
-<div class="cw-workspace-header" style="position:relative">
+<div class="cw-workspace-header">
     <div class="cw-find-members">
         <div class="cw-add-member">
             <form action="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "process", action = "createrole"})" method="POST">
@@ -29,9 +15,14 @@
                 <div class="form-group">
                     <label for="cw-members-name" class="cw-required">Role</label>
                     <span class="cw-input-icon">
-                        <input type="text" name="name" class="form-control cw-input-has-icon" id="cw-roles-name">
-
+                        <input type="text" name="name" class="form-control cw-input-has-icon" id="rolename">
                     </span>
+                    <div class="row">
+                        <label class="col-sm-2"></label>
+                        <div class="col-sm-10">
+                            <p id="Status"></p>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="cw-members-name" class="cw-required">Role Description</label>
@@ -45,32 +36,60 @@
                 </div>
             </form>
         </div>
+
         <hr class="cw-normal-hr">
-        <div class="cw-workspace-members-list-detail">
-            <table class="cw-table-box cw-table-gray table table-hover" width="100%">
-                <thead>
-                    <tr style="text-align:center">
-                        <td style="max-width:100%" width="10%">Roles</td>
-                        <td style="max-width:50%" width="50%">Description</td>
-                        <td style="max-width:10%" width="10%"></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr style="text-align:center">
-                        <td style="max-width:100%" width="10%">
-                            <a href="#">Admin</a>
-                        </td>
-                        <td style="max-width:50%" width="50%">
-                            <p>description for admin</p>
-                        </td>
-                        <td style="max-width:10%" width="100%">
-                            <button class="btn btn-default"><i class="fas fa-trash-alt"></i></button>
-                            <button class="btn btn-default"><i class="fas fa-edit"></i></button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        @if (listRole.Any())
+        {
+            <div class="cw-workspace-members-list-detail">
+                <table class="cw-table-box cw-table-gray table table-hover" width="100%">
+                    <thead>
+                        <tr style="text-align:center">
+                            <td style="max-width:100%" width="10%">Roles</td>
+                            <td style="max-width:50%" width="50%">Description</td>
+                            <td style="max-width:10%" width="10%"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var role in listRole)
+                        {
+                            <tr style="text-align:center">
+                                <td style="max-width:100%" width="10%">
+                                    <a href="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "process", action = "EditRole", roleid = role.Id })">@role.Name</a>
+                                </td>
+                                <td style="max-width:50%" width="50%">
+                                    <p>@role.Description</p>
+                                </td>
+                                <td style="max-width:10%" width="100%">
+                                    <a href="@Url.RouteUrl("GroupLocalizedDefault",new { controller = "process", action = "DeleteRole", roleid = role.Id })"><button class="btn btn-default"><i class="fas fa-trash-alt"></i></button></a>
+                                    <a href="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "process", action = "EditRole", roleid = role.Id })"><button class="btn btn-default"><i class="fas fa-edit"></i></button></a>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        }
+
     </div>
 </div>
-
+<script>
+    function RoleCheck() {
+        $("#Status").html("Checking...");
+        $.post("@Url.Action("CheckRoleNameAvailability", "Process")",
+            {
+                roledata: $("#rolename").val()
+            },
+            function(data) {
+                if (data == 0) {
+                    $("#Status").html('<font color="Green">Available !. you can take it.</font>');
+                    $("#rolename").css("border-color", "Green");
+                }
+                else {
+                    $("#Status").html('<font color="Red">That name is taken.Try another</font>');
+                    $("#rolename").css("border-color", "Red");
+                }
+            }
+        )
+    }
+</script>
