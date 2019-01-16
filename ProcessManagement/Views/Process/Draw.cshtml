@@ -467,14 +467,18 @@
             }
             for (var i = 0; i < myDiagram.model.nodeDataArray.length; i++) {
                 if (myDiagram.model.nodeDataArray[i].figure == 'Diamond') {
-                    if (Nodes[i].output < 2)
-                        console.log(Nodes[i].text + ' needs more output');
-                    if (Nodes[i].output > 2)
-                        console.log(Nodes[i].text + ' has too many output');
-                    if (Nodes[i].input < 1)
-                        console.log(Nodes[i].text + ' undefined input');
-                    if (Nodes[i].input > 1)
-                        console.log(Nodes[i].text + ' has too many input');
+                    if (Nodes[i].output < 2) {
+                        alert(Nodes[i].text + ' needs more output');
+                    }
+                    if (Nodes[i].output > 2) {
+                        alert(Nodes[i].text + ' has too many output');
+                    } 
+                    if (Nodes[i].input < 1) {
+                        alert(Nodes[i].text + ' undefined input');
+                    }  
+                    if (Nodes[i].input > 1) {
+                        alert(Nodes[i].text + ' has too many input');
+                    } 
                 }
             }
             var count = 0;
@@ -482,18 +486,21 @@
                 if (Nodes[i].figure == 'Circle' && Nodes[i].fill == '#00AD5F') {
                     count++;
                     if (count == 2) {
-                        console.log('Has too many Start Step');
+                        alert('Has too many Start Step');
+                        return false;
                     }
                 }
             }
             for (var i = 0; i < Nodes.length; i++) {
                 if (Nodes[i].input == 0 && Nodes[i].output == 0) {
-                    console.log('Some steps disconnect with steps in process!');
+                    alert('Some steps disconnect with steps in process!');
+                    return false;
                 }
             }
             for (var i = 0; i < myDiagram.model.linkDataArray.length; i++) {
                 if (Links[i].from == undefined || Links[i].to == undefined) {
-                    console.log('Check the connection between steps');
+                    alert('Check the connection between steps');
+                    return false;
                 }
             }
         }
@@ -539,11 +546,12 @@
                 }
                 b.push(c);
             }
+            let nodedata = myDiagram.model.nodeDataArray;
             //truyen nguyen cai json voi idGroup
             let a = {
                 data: myDiagram.model.toJson(),
                 processId: idProcess,
-                nodeData: JSON.stringify(myDiagram.model.nodeDataArray),
+                nodeData: JSON.stringify(nodedata),
                 linkData: JSON.stringify(b)
             }
             //truyen qua controller
@@ -554,7 +562,7 @@
                 dataType: "json",
                 success: function (response) {
                     //thanh cong thi no tra du lieu ve
-                    @*location.href = '@Url.RouteUrl("GroupControlLocalizedDefault", new { action = "show",  groupslug = Model.Group.groupSlug,groupid = Model.Group.Id})' ;*@
+                    location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process" ,action = "ShowStep", groupslug = Model.Group.groupSlug, groupid = Model.Group.Id, processid = Model.Id })' ;
                 }
             })
         })

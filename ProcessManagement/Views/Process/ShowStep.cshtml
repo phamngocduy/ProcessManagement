@@ -1,5 +1,4 @@
-﻿@model ProcessManagement.Models.Group
-
+﻿@model List<ProcessManagement.Models.Step>
 @{
     ViewBag.Title = "ShowStep";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -15,12 +14,12 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var step in steps)
+        @foreach (var step in Model)
         {
             <tr>
                 <td><a>@step.Name</a></td>
                 <td>@step.Description</td>
-                <td><a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "EditStep", groupslug = Model.groupSlug, idgroup = Model.Id,id = step.Id })">Edit</a></td>
+     
             </tr>
         }
     </tbody>

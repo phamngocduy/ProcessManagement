@@ -39,5 +39,15 @@ namespace ProcessManagement.Services
             Step step = db.Steps.Find(id);
             return step;
         }
+        public Step findStepByKey(int processid,int key)
+        {
+            Step step = db.Steps.Where(x => x.IdProcess == processid && x.Key == key).FirstOrDefault();
+            return step;
+        }
+        public void removeStep(Step step)
+        {
+            db.Steps.Remove(step);
+            db.SaveChanges();
+        }
     }
 }

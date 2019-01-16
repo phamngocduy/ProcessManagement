@@ -48,12 +48,6 @@ namespace ProcessManagement.Controllers
 		{
 			Process ps = processService.findProcess(processid);
 			if (ps == null) return HttpNotFound();
-			if (ps.DataJson != null)
-			{
-				var loadprocess = ps.DataJson.ToString();
-				JObject load = JObject.Parse(loadprocess);
-				ViewData["load"] = load;
-			}
 			return View(ps);
 		}
 		[Authorize]
@@ -62,7 +56,6 @@ namespace ProcessManagement.Controllers
 		{
 			Process ps = processService.findProcess(processId);
 			processService.insertDataJson(ps, data);
-			//JObject json = JObject.Parse(nodeData);
 			JArray nodeArray = JArray.Parse(nodeData);
 			JArray linkArray = JArray.Parse(linkData);
 			var idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();
@@ -70,8 +63,11 @@ namespace ProcessManagement.Controllers
 			for (int i = 0; i < nodeArray.Count; i++)
 			{
 				var key = (int)nodeArray[i]["key"];
-				var from = linkArray.Where(x => (int)x["from"] == key).ToList();
-				var nextStep2 = 0;
+                //if (nodeArray[i]["figure"].ToString() == "Circle")
+                //{
+                //    nodeArray[i]["key"] = 0;
+                //}
+                var from = linkArray.Where(x => (int)x["from"] == key).ToList();
 				Step step = new Step();
 				int j = 1;
 				if (from != null)
@@ -88,15 +84,6 @@ namespace ProcessManagement.Controllers
 							step.NextStep2 = to;
 						}
 						j++;
-						//if (!a.Contains(to))
-						//{
-						//    a.Add(to);
-						//}
-						//else
-						//{
-						//    nextStep2 = to;
-						//    a.Add(to);
-						//}
 					}
 					if (step.NextStep1 == null)
 					{
@@ -116,26 +103,28 @@ namespace ProcessManagement.Controllers
 				step.Figure = nodeArray[i]["figure"] == null ? "Step" : nodeArray[i]["figure"].ToString();
 				step.Created_At = DateTime.Now;
 				step.Updated_At = DateTime.Now;
-				db.Steps.Add(step);
+                //if (step.Figure != "Circle")
+                //{
+                    db.Steps.Add(step);
+                //}
 			}
-			//db.Entry(ps).State = System.Data.Entity.EntityState.Modified;
 			db.SaveChanges();
-			return Json(new { id = ps.IdGroup });
+			return Json(new { id = ps.Id });
 		}
-		public ActionResult ShowStep(int groupid, int id)
+        [GroupAuthorize]
+		public ActionResult ShowStep(int processid)
 		{
-			var group = groupService.findGroup(groupid);
-			ViewData["step"] = stepService.findStepsOfProcess(id);
-			return View(group);
+		
+			return View(stepService.findStepsOfProcess(processid));
 		}
-
-		public ActionResult EditStep(int groupid, int id)
+        [GroupAuthorize]
+		public ActionResult EditStep(int processid)
 		{
-			var group = groupService.findGroup(groupid);
-			var step = stepService.findStep(id);
+			var step = stepService.findStep(processid);
 			return View(step);
 		}
-		[HttpPost]
+        [GroupAuthorize]
+        [HttpPost]
 		public ActionResult EditStep(int groupid, Step model)
 		{
 			var group = groupService.findGroup(groupid);
@@ -232,7 +221,7 @@ namespace ProcessManagement.Controllers
         public JsonResult EditProcess(int processId, string data, string nodeData, string linkData)
         {
             Process ps = processService.findProcess(processId);
-            //processService.insertDataJson(ps, data);
+            processService.insertDataJson(ps, data);
             JArray nodeArray = JArray.Parse(nodeData);
             JArray linkArray = JArray.Parse(linkData);
             var idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();
@@ -311,15 +300,14 @@ namespace ProcessManagement.Controllers
                 step.Updated_At = DateTime.Now;
                 foreach (var item in diff)
                 {
-                    if (key == item)
+                    if (item == key)
                     {
                         keystepkhac.Add(step);
                     }
-                    else
-                    {
-                            Step st = db.Steps.Where(p => p.Key == item && p.IdProcess == processId).FirstOrDefault();
-                            db.Steps.Remove(st);
-                    }
+                        Step ste = stepService.findStepByKey(processId, item);
+                        if(ste != null) { 
+                            stepService.removeStep(ste);
+                        }
                 }
             }
             foreach (var item3 in keystepkhac)
@@ -376,7 +364,7 @@ namespace ProcessManagement.Controllers
                 }
             }
 
-            //db.SaveChanges();
+            db.SaveChanges();
             return Json(new { id = ps.IdGroup });
         }
     }
