@@ -478,6 +478,12 @@
                         alert('Has too many Start Step');
                         return false;
                     }
+                    if (Nodes[i].output > 1) {
+                        alert(Nodes[i].text + ' has too many output');
+                    }
+                    if (Nodes[i].input > 0) {
+                        alert(Nodes[i].text + ' wrong structure');
+                    }
                 }
             }
             for (var i = 0; i < Nodes.length; i++) {
@@ -486,10 +492,33 @@
                     return false;
                 }
             }
-            for (var i = 0; i < myDiagram.model.linkDataArray.length; i++) {
+            for (var i = 0; i < Links.length; i++) {
                 if (Links[i].from == undefined || Links[i].to == undefined) {
                     alert('Check the connection between steps');
                     return false;
+                }
+            }
+            for (var i = 0; i < myDiagram.model.nodeDataArray.length; i++) {
+                if (myDiagram.model.nodeDataArray[i].figure == undefined) {
+                    if (Nodes[i].output < 1) {
+                        alert(Nodes[i].text + ' undefined output connection');
+                    }
+                    if (Nodes[i].output > 1) {
+                        alert(Nodes[i].text + ' has to many output connection, ' + Nodes[i].text + ' undefined output connection');
+                    }
+                    if (Nodes[i].input < 1) {
+                        alert(Nodes[i].text + ' undefined input connection');
+                    }
+                    if (Nodes[i].input > 2) {
+                        alert(Nodes[i].text + ' has too many input connection' + Nodes[i].text + ' undefined input connection');
+                    }
+                }
+            }
+            for (var i = 0; i < myDiagram.model.nodeDataArray.length; i++) {
+                if (myDiagram.model.nodeDataArray[i].fill == '#CE0620') {
+                    if (Nodes[i].output > 0) {
+                        alert(Nodes[i].text + ' wrong structure');
+                    }
                 }
             }
         }

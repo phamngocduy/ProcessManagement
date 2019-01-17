@@ -9,197 +9,211 @@ using ProcessManagement.Services;
 using ProcessManagement.Filters;
 namespace ProcessManagement.Controllers
 {
-	public class ProcessController : BaseController
-	{
-		///=============================================================================================
-		PMSEntities db = new PMSEntities();
-		GroupService groupService = new GroupService();
-		CommonService commonService = new CommonService();
-		ParticipateService participateService = new ParticipateService();
-		ProcessService processService = new ProcessService();
-		StepService stepService = new StepService();
-		///=============================================================================================
+    public class ProcessController : BaseController
+    {
+        ///=============================================================================================
+        PMSEntities db = new PMSEntities();
+        GroupService groupService = new GroupService();
+        CommonService commonService = new CommonService();
+        ParticipateService participateService = new ParticipateService();
+        ProcessService processService = new ProcessService();
+        StepService stepService = new StepService();
+        ///=============================================================================================
 
-		[Authorize]
-		[GroupAuthorize]
-		public ActionResult NewProcess(int groupid)
-		{
-			Group group = groupService.findGroup(groupid);
-			Process pr = new Process();
-			ViewData["group"] = group;
-			return View(pr);
-		}
-		[Authorize]
-		[GroupAuthorize]
-		[HttpPost]
-		public ActionResult NewProcess(Process pro)
-		{
-			int idgroup = (int)Session["idgroup"];
-			string idUser = User.Identity.GetUserId();
-			Group group = groupService.findGroup(idgroup);
-			processService.createProcess(group.Id, idUser, pro);
-			SetFlash(FlashType.Success, "Created Process Successfully");
-			return RedirectToAction("Draw", new { groupslug = group.groupSlug, groupid = group.Id, processid = pro.Id });
-			//return RedirectToRoute("GroupControlLocalizedDefault", new { action = "DrawProcess", groupslug = group.groupSlug, groupid = group.Id, id = pro.Id });
-		}
-		[Authorize]
-		[GroupAuthorize]
-		public ActionResult Draw(int processid)
-		{
-			Process ps = processService.findProcess(processid);
-			if (ps == null) return HttpNotFound();
-			return View(ps);
-		}
-		[Authorize]
-		[HttpPost]
-		public JsonResult Draw(int processId, string data, string nodeData, string linkData)
-		{
-			Process ps = processService.findProcess(processId);
-			processService.insertDataJson(ps, data);
-			JArray nodeArray = JArray.Parse(nodeData);
-			JArray linkArray = JArray.Parse(linkData);
-			var idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();
-			List<int> a = new List<int>();
-			for (int i = 0; i < nodeArray.Count; i++)
-			{
-				var key = (int)nodeArray[i]["key"];
-                //if (nodeArray[i]["figure"].ToString() == "Circle")
-                //{
-                //    nodeArray[i]["key"] = 0;
-                //}
-                var from = linkArray.Where(x => (int)x["from"] == key).ToList();
-				Step step = new Step();
-				int j = 1;
-				if (from != null)
-				{
-					foreach (var item in from)
-					{
-						var to = (int)item["to"];
-						if (j == 1)
-						{
-							step.NextStep1 = to;
-						}
-						else if (j == 2)
-						{
-							step.NextStep2 = to;
-						}
-						j++;
-					}
-					if (step.NextStep1 == null)
-					{
-						step.NextStep1 = 0;
-					}
-					if (step.NextStep2 == null)
-					{
-						step.NextStep2 = 0;
-					}
-				}
-
-				step.IdProcess = processId;
-				step.Name = nodeArray[i]["text"].ToString();
-				step.Key = key;
-				step.StartStep = (int)idfirstStep["to"] == (int)nodeArray[i]["key"] ? true : false;
-
-				step.Figure = nodeArray[i]["figure"] == null ? "Step" : nodeArray[i]["figure"].ToString();
-				step.Created_At = DateTime.Now;
-				step.Updated_At = DateTime.Now;
-                //if (step.Figure != "Circle")
-                //{
-                    db.Steps.Add(step);
-                //}
-			}
-			db.SaveChanges();
-			return Json(new { id = ps.Id });
-		}
+        [Authorize]
         [GroupAuthorize]
-		public ActionResult ShowStep(int processid)
-		{
-		
-			return View(stepService.findStepsOfProcess(processid));
-		}
-        [GroupAuthorize]
-		public ActionResult EditStep(int processid)
-		{
-			var step = stepService.findStep(processid);
-			return View(step);
-		}
+        public ActionResult NewProcess(int groupid)
+        {
+            Group group = groupService.findGroup(groupid);
+            Process pr = new Process();
+            ViewData["group"] = group;
+            return View(pr);
+        }
+        [Authorize]
         [GroupAuthorize]
         [HttpPost]
-		public ActionResult EditStep(int groupid, Step model)
-		{
-			var group = groupService.findGroup(groupid);
-			var step = db.Steps.Find(model.Id);
-			step.Description = model.Description;
-			db.SaveChanges();
-			return RedirectToRoute("GroupControlLocalizedDefault", new { action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, id = step.Process.Id });
-		}
-		[GroupAuthorize(Role = new UserRole[] { UserRole.Manager })]
-		public ActionResult CreateRole(int processid)
-		{
-			Process process = processService.findProcess(processid);
-			//Tìm tất cả các role thuộc quy trình đó
-			ViewData["ListRole"] = processService.findListRole(process.Id);
-			return View(process);
-		}
-		[GroupAuthorize]
-		[HttpPost]
-		public ActionResult CreateRole(int IdProcess, Role role)
-		{
-			role.IdProcess = IdProcess;
-			processService.createRole(role);
-			Process process = processService.findProcess(IdProcess);
-			Group group = groupService.findGroup(process.IdGroup);
-			//set flash
-			SetFlash(FlashType.Success, "Created Role Successfully");
-			return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
-		}
-		[GroupAuthorize]
-		public ActionResult DeleteRole(int roleid)
-		{
-			Role role = participateService.findRoleInProcess(roleid);
-			if (role == null) return HttpNotFound();
-			var roleId = role.Id;
-			Process process = processService.findProcess(role.IdProcess);
-			Group group = groupService.findGroup(process.IdGroup);
-			participateService.removeRoleInProcess(role);
-			SetFlash(FlashType.Success, "Removed " + roleId + " Successfully");
+        public ActionResult NewProcess(Process pro)
+        {
+            int idgroup = (int)Session["idgroup"];
+            string idUser = User.Identity.GetUserId();
+            Group group = groupService.findGroup(idgroup);
+            processService.createProcess(group.Id, idUser, pro);
+            SetFlash(FlashType.Success, "Created Process Successfully");
+            return RedirectToAction("Draw", new { groupslug = group.groupSlug, groupid = group.Id, processid = pro.Id });
+            //return RedirectToRoute("GroupControlLocalizedDefault", new { action = "DrawProcess", groupslug = group.groupSlug, groupid = group.Id, id = pro.Id });
+        }
+        [Authorize]
+        [GroupAuthorize]
+        public ActionResult Draw(int processid)
+        {
+            Process ps = processService.findProcess(processid);
+            if (ps == null) return HttpNotFound();
+            return View(ps);
+        }
+        [Authorize]
+        [HttpPost]
+        public JsonResult Draw(int processId, string data, string nodeData, string linkData)
+        {
+            Process ps = processService.findProcess(processId);
+            processService.insertDataJson(ps, data);
+            JArray nodeArray = JArray.Parse(nodeData);
+            JArray linkArray = JArray.Parse(linkData);
+            var idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();
+            List<int> b = new List<int>();
+            string circle = "Circle";
+            for (int i = 0; i < nodeArray.Count; i++)
+            {
+                if (nodeArray[i]["figure"] != null)
+                {
+                    if (nodeArray[i]["figure"].ToString() == circle && nodeArray[i]["fill"].ToString() == "#CE0620")
+                    {
+                        b.Add((int)nodeArray[i]["key"]);
+                    }
+                }
+            }
+            for (int i = 0; i < nodeArray.Count; i++)
+            {
+                var key = (int)nodeArray[i]["key"];
+                var from = linkArray.Where(x => (int)x["from"] == key).ToList();
+                Step step = new Step();
+                int j = 1;
+                if (from != null)
+                {
+                    foreach (var item in from)
+                    {
+                        var to = (int)item["to"];
+                        if (j == 1)
+                        {
+                            step.NextStep1 = to;
+                        }
+                        else if (j == 2)
+                        {
+                            step.NextStep2 = to;
+                        }
+                        j++;
+                    }
+                    if (step.NextStep1 == null)
+                    {
+                        step.NextStep1 = 0;
+                    }
+                    if (step.NextStep2 == null)
+                    {
+                        step.NextStep2 = 0;
+                    }
+                    foreach (var tokey in b)
+                    {
+                        if (step.NextStep1 == tokey)
+                        {
+                            step.NextStep1 = 0;
+                        }
+                    }
+                }
 
-			return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
-		}
-		public ActionResult EditRole(int roleid)
-		{
-			Role role = participateService.findRoleInProcess(roleid);
-			if (role == null) return HttpNotFound();
-			return View(role);
-		}
+                step.IdProcess = processId;
+                step.Name = nodeArray[i]["text"].ToString();
+                step.Key = key;
+                step.StartStep = (int)idfirstStep["to"] == (int)nodeArray[i]["key"] ? true : false;
 
-		[HttpPost]
-		[GroupAuthorize]
-		public ActionResult EditRole(Role model)
-		{
-			Process process = processService.findProcess(model.IdProcess);
-			int groupid = (int)Session["groupid"];
-			Group group = groupService.findGroup(groupid);
-			Role role = participateService.findRole(model.Id);
-			if (role == null) return HttpNotFound();
-			participateService.editRole(model);
-			SetFlash(FlashType.Success, "Edited Role of " + role.Name + " Successfully");
-			return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = role.IdProcess });
+                step.Figure = nodeArray[i]["figure"] == null ? "Step" : nodeArray[i]["figure"].ToString();
+                step.Created_At = DateTime.Now;
+                step.Updated_At = DateTime.Now;
+                if (step.Figure != "Circle")
+                {
+                    db.Steps.Add(step);
+                }
+            }
+            db.SaveChanges();
+            return Json(new { id = ps.Id });
+        }
+        [GroupAuthorize]
+        public ActionResult ShowStep(int processid)
+        {
 
-		}
-		public JsonResult CheckRoleNameAvailability(string roledata)
-		{
-			System.Threading.Thread.Sleep(200);
-			var searchData = db.Roles.Where(x => x.Name == roledata).SingleOrDefault();
-			if (searchData != null)
-			{
-				return Json(1);
-			}
-			else
-			{
-				return Json(0);
-			}
-		}
+            return View(stepService.findStepsOfProcess(processid));
+        }
+        [GroupAuthorize]
+        public ActionResult EditStep(int processid)
+        {
+            var step = stepService.findStep(processid);
+            return View(step);
+        }
+        [GroupAuthorize]
+        [HttpPost]
+        public ActionResult EditStep(int groupid, Step model)
+        {
+            var group = groupService.findGroup(groupid);
+            var step = db.Steps.Find(model.Id);
+            step.Description = model.Description;
+            db.SaveChanges();
+            return RedirectToRoute("GroupControlLocalizedDefault", new { action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, id = step.Process.Id });
+        }
+        [GroupAuthorize(Role = new UserRole[] { UserRole.Manager })]
+        public ActionResult CreateRole(int processid)
+        {
+            Process process = processService.findProcess(processid);
+            //Tìm tất cả các role thuộc quy trình đó
+            ViewData["ListRole"] = processService.findListRole(process.Id);
+            return View(process);
+        }
+        [GroupAuthorize]
+        [HttpPost]
+        public ActionResult CreateRole(int IdProcess, Role role)
+        {
+            role.IdProcess = IdProcess;
+            processService.createRole(role);
+            Process process = processService.findProcess(IdProcess);
+            Group group = groupService.findGroup(process.IdGroup);
+            //set flash
+            SetFlash(FlashType.Success, "Created Role Successfully");
+            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
+        }
+        [GroupAuthorize]
+        public ActionResult DeleteRole(int roleid)
+        {
+            Role role = participateService.findRoleInProcess(roleid);
+            if (role == null) return HttpNotFound();
+            var roleId = role.Id;
+            Process process = processService.findProcess(role.IdProcess);
+            Group group = groupService.findGroup(process.IdGroup);
+            participateService.removeRoleInProcess(role);
+            SetFlash(FlashType.Success, "Removed " + roleId + " Successfully");
+
+            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
+        }
+        public ActionResult EditRole(int roleid)
+        {
+            Role role = participateService.findRoleInProcess(roleid);
+            if (role == null) return HttpNotFound();
+            return View(role);
+        }
+
+        [HttpPost]
+        [GroupAuthorize]
+        public ActionResult EditRole(Role model)
+        {
+            Process process = processService.findProcess(model.IdProcess);
+            int groupid = (int)Session["groupid"];
+            Group group = groupService.findGroup(groupid);
+            Role role = participateService.findRole(model.Id);
+            if (role == null) return HttpNotFound();
+            participateService.editRole(model);
+            SetFlash(FlashType.Success, "Edited Role of " + role.Name + " Successfully");
+            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = role.IdProcess });
+
+        }
+        public JsonResult CheckRoleNameAvailability(string roledata)
+        {
+            System.Threading.Thread.Sleep(200);
+            var searchData = db.Roles.Where(x => x.Name == roledata).SingleOrDefault();
+            if (searchData != null)
+            {
+                return Json(1);
+            }
+            else
+            {
+                return Json(0);
+            }
+        }
 
         [Authorize]
         [GroupAuthorize]
@@ -304,10 +318,11 @@ namespace ProcessManagement.Controllers
                     {
                         keystepkhac.Add(step);
                     }
-                        Step ste = stepService.findStepByKey(processId, item);
-                        if(ste != null) { 
-                            stepService.removeStep(ste);
-                        }
+                    Step ste = stepService.findStepByKey(processId, item);
+                    if (ste != null)
+                    {
+                        stepService.removeStep(ste);
+                    }
                 }
             }
             foreach (var item3 in keystepkhac)
