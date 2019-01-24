@@ -242,6 +242,18 @@ namespace ProcessManagement.Controllers
             var liststep = db.Steps.Where(z => z.IdProcess == processId).ToList();
             List<int> keystep = new List<int>();
             List<int> keynode = new List<int>();
+            List<int> b = new List<int>();
+            string circle = "Circle";
+            for (int i = 0; i < nodeArray.Count; i++)
+            {
+                if (nodeArray[i]["figure"] != null)
+                {
+                    if (nodeArray[i]["figure"].ToString() == circle && nodeArray[i]["fill"].ToString() == "#CE0620")
+                    {
+                        b.Add((int)nodeArray[i]["key"]);
+                    }
+                }
+            }
 
             //chuyển linkstep về mặc định
             //add new step nếu step chưa có trong liststep
@@ -272,7 +284,7 @@ namespace ProcessManagement.Controllers
                 Step s = db.Steps.Where(p => p.Key == item && p.IdProcess == processId).FirstOrDefault();
                 keystepgiong.Add(s);
             }
-
+           
             for (int i = 0; i < nodeArray.Count; i++)
             {
                 var key = (int)nodeArray[i]["key"];
@@ -301,6 +313,13 @@ namespace ProcessManagement.Controllers
                     if (step.NextStep1 == null)
                     {
                         step.NextStep1 = 0;
+                    }
+                    foreach (var tokey in b)
+                    {
+                        if (step.NextStep1 == tokey)
+                        {
+                            step.NextStep1 = 0;
+                        }
                     }
                 }
 
@@ -337,7 +356,10 @@ namespace ProcessManagement.Controllers
                 step.Updated_At = item3.Updated_At;
                 step.NextStep1 = item3.NextStep1;
                 step.NextStep2 = item3.NextStep2;
-                db.Steps.Add(step);
+                if (step.Figure != "Circle")
+                {
+                    db.Steps.Add(step);
+                }
             }
 
             foreach (var listst in keystepgiong)
@@ -370,6 +392,13 @@ namespace ProcessManagement.Controllers
                             if (listst.NextStep1 == null)
                             {
                                 listst.NextStep1 = 0;
+                            }
+                            foreach (var tokey in b)
+                            {
+                                if (listst.NextStep1 == tokey)
+                                {
+                                    listst.NextStep1 = 0;
+                                }
                             }
                         }
                         listst.StartStep = (int)idfirstStep["to"] == (int)nodeArray[i]["key"] ? true : false;
