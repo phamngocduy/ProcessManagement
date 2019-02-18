@@ -2,7 +2,8 @@
 @{
     ViewBag.Title = "ShowStep";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var steps = ViewData["step"] as List<ProcessManagement.Models.Step>;
+    var group = ViewData["group"] as ProcessManagement.Models.Group;
+    var process = ViewData["process"] as ProcessManagement.Models.Process;
 }
 
 <table class="table">
@@ -19,7 +20,9 @@
             <tr>
                 <td><a>@step.Name</a></td>
                 <td>@step.Description</td>
-     
+                <td>
+                    <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "editstep", groupslug = group.groupSlug, groupid = group.Id, stepid = step.Id })" class="btn btn-primary">Edit</a>
+                </td>
             </tr>
         }
     </tbody>

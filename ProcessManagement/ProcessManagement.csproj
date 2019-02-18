@@ -38,7 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vsCBA2.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vsF0E.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,7 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vsCBA2.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vsF0E.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -265,6 +265,7 @@
       <DependentUpon>CWregister.vi.resx</DependentUpon>
     </Compile>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\APIController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
@@ -344,6 +345,8 @@
     <Content Include="Content\build\css\custom.min.css" />
     <Content Include="Content\build\css\grid-boostrap-fixheight.css" />
     <Content Include="Content\build\css\guest-style.css" />
+    <Content Include="Content\build\css\language.css" />
+    <Content Include="Content\build\css\loading.css" />
     <Content Include="Content\build\css\responsive.css" />
     <Content Include="Content\build\css\style.css" />
     <Content Include="Content\build\js\common.js" />
@@ -379,6 +382,8 @@
     <Content Include="Content\images\intro.jpg" />
     <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\logo-big.png" />
+    <Content Include="Content\images\logo-vlu-text.png" />
+    <Content Include="Content\images\logo-vlu.png" />
     <Content Include="Content\images\logo.png" />
     <Content Include="Content\images\user\avatar1.jpg" />
     <Content Include="Content\images\workspace\0bd9c5b4aaaf830d4653e160305f0aa7.jpg" />
@@ -6601,6 +6606,7 @@
     <Content Include="Views\Process\EditStep.cshtml" />
     <Content Include="Views\Group\FileManager.cshtml" />
     <Content Include="Views\Process\EditProcess.cshtml" />
+    <Content Include="Views\API\GroupList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\Groups\" />

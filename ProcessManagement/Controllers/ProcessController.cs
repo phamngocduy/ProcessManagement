@@ -128,13 +128,17 @@ namespace ProcessManagement.Controllers
         [GroupAuthorize]
         public ActionResult ShowStep(int processid)
         {
+            var process = processService.findProcess(processid);
+            var group = groupService.findGroup(process.IdGroup);
+            ViewData["group"] = group;
+            ViewData["process"] = process;
 
             return View(stepService.findStepsOfProcess(processid));
         }
         [GroupAuthorize]
-        public ActionResult EditStep(int processid)
+        public ActionResult EditStep(int stepid)
         {
-            var step = stepService.findStep(processid);
+            var step = stepService.findStep(stepid);
             return View(step);
         }
         [GroupAuthorize]
@@ -145,9 +149,9 @@ namespace ProcessManagement.Controllers
             var step = db.Steps.Find(model.Id);
             step.Description = model.Description;
             db.SaveChanges();
-            return RedirectToRoute("GroupControlLocalizedDefault", new { action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, id = step.Process.Id });
+            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, processid = step.Process.Id });
         }
-        [GroupAuthorize(Role = new UserRole[] { UserRole.Manager })]
+        [GroupAuthorize]
         public ActionResult CreateRole(int processid)
         {
             Process process = processService.findProcess(processid);
@@ -165,7 +169,8 @@ namespace ProcessManagement.Controllers
             Group group = groupService.findGroup(process.IdGroup);
             //set flash
             SetFlash(FlashType.Success, "Created Role Successfully");
-            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
+            return View();
+            //return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
         }
         [GroupAuthorize]
         public ActionResult DeleteRole(int roleid)
@@ -201,20 +206,7 @@ namespace ProcessManagement.Controllers
             return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = role.IdProcess });
 
         }
-        public JsonResult CheckRoleNameAvailability(string roledata)
-        {
-            System.Threading.Thread.Sleep(200);
-            var searchData = db.Roles.Where(x => x.Name == roledata).SingleOrDefault();
-            if (searchData != null)
-            {
-                return Json(1);
-            }
-            else
-            {
-                return Json(0);
-            }
-        }
-
+        
         [Authorize]
         [GroupAuthorize]
         public ActionResult EditProcess(int processid)

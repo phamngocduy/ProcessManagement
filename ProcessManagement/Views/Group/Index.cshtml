@@ -6,53 +6,102 @@
 }
 @section CustomCss{
     <style>
-        .avatar-default{
-            padding-top:10%;
-            font-size:100px;
-            text-align:center;
-            font-weight:bold;
-            color:black;
+        .avatar-default {
+            padding-top: 10%;
+            font-size: 100px;
+            text-align: center;
+            font-weight: bold;
+            color: black;
         }
     </style>
 }
-<div class="clearfix"><a href="@Url.RouteUrl("GroupLocalizedDefault",new { action = "NewGroup" })" class="btn btn-success pull-right">Create Group</a></div>
-<div class="group-list row display-flex">
-    @foreach (var group in grouplist)
-    {
-        var des = group.Description == null ? "" : group.Description;
-        if (des.Length > 100)
-        {
-            des = des.Substring(1, 100) + "...";
-        }
-        <div class="col-sm-3">
-            <div class="cw-card">
-                <div class="cw-group-image">
-                    <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "show", groupslug = group.groupSlug, groupid = group.Id})">
-                        @if (group.Avatar != null)
-                        {
-                            <img src="~/Content/images/workspace/@Html.DisplayFor(modle => group.Avatar)" alt="@group.Name" class="image-medium" />
-                        }
-                        else
-                        {
-
-                            JObject defaultAvatar = JObject.Parse(group.AvatarDefault);
-
-                            <div class="image-medium avatar-default" style="background-color:@defaultAvatar["background"]">
-                                @defaultAvatar["name"]
-                            </div>
-                        }
-                    </a>
-                </div>
-                <div class="cw-group-infor">
-                    <div class="cw-group-name"><a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "show", groupslug = group.groupSlug, groupid = group.Id})">@group.Name</a></div>
-                    <div class="cw-group-author"><span class="cw-label">Author:</span>@Html.DisplayFor(modle => group.AspNetUser.UserName)</div>
-                    <div class="cw-group-date"><span class="cw-label">Update at:</span>@Html.DisplayFor(modle => group.Updated_At)</div>
-                    <div class="cw-group-des" style="word-break:break-all">
-                        <span class="cw-label">Description:</span>
-                        @des
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
+<div id="main-body">
 </div>
+@section CustomScripts{
+    <script>
+        function setLoading() {
+            var loading = document.createElement('div');
+            loading.className = "loading";
+            var body = document.getElementById("main-body");
+            for (var i = 0; i < 4; i++) {
+                var square = document.createElement('li');
+                loading.appendChild(square);
+            }
+            body.appendChild(loading);
+        }
+    </script>
+    <script>
+        getGroupList();
+        function getGroupList() {
+            $.ajax({
+                type: "GET",
+                url: "/api/getgrouplist/",
+                beforeSend: setLoading(),
+                success: function (response) {
+                    //$("#main-body").html(viewHTML);
+                    console.log(response);
+                    if (response.status != 200) {
+                        alertify.error("Error");
+                    } else {
+                        var data = response.data;
+                        renderListGroupView(data);
+                    }
+                },
+                error: function (errorData) {
+                    console.error(errorData);
+                    alertify.error("Error");
+                }
+            });
+        }
+        function renderListGroupView(groups) {
+            var lang = getCurrentLang();
+            var action = "group/newgroup";
+            var grouplist = "";
+                groups.forEach((group) => {
+                    grouplist += renderGroupBox(group,lang);
+                });
+            var html = `<div class="clearfix">
+                            <a href="${lang}/${action}" class="btn btn-success pull-right">Create Group</a>
+                        </div>
+                        <div class="group-list row display-flex">
+                             ${grouplist}
+                        </div>`;
+
+            $("#main-body").html(html);
+        }
+        function renderGroupBox(group) {
+            var lang = getCurrentLang();
+            var avatar;
+            var action = `${lang}/${group["slug"]}-${group["id"]}/group/show`;
+            if (group.avatar != null) {
+                avatar = `<img src="~/Content/images/workspace/${ group.avatar }" alt = "${group.name}" class="image-medium" />`;
+            } else {
+                var temp = JSON.parse(group.default_avatar);
+                avatar = `<div class="image-medium avatar-default" style="background-color:${temp.background}"'>
+                            ${ temp.name }
+                        </div>`;
+            };
+            var html =
+                `<div class="col-sm-3">
+                    <div class="cw-card">
+                        <div class="cw-group-image">
+                            <a href="${ action }">
+                                ${ avatar }
+                            </a>
+                        </div>
+                        <div class="cw-group-infor">
+                            <div class="cw-group-name"><a href="${ action }">${ group.name }</a></div>
+                            <div class="cw-group-author"><span class="cw-label">Author:</span>${ group.owner }</div>
+                            <div class="cw-group-date"><span class="cw-label">Update at:</span>${ group.time_ralitive }</div>
+                            <div class="cw-group-des" style="word-break:break-all">
+                                <span class="cw-label">Description:</span>
+                                ${ group.des }
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            return html;
+        }
+        //$("#main-body").load("/API/GetGroupList");
+    </script>
+}

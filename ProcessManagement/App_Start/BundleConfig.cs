@@ -15,7 +15,9 @@ namespace ProcessManagement
                    "~/Content/libs/alertify/build/css/alertify.min.css",
                    "~/Content/libs/alertify/build/css/themes/default.min.css",
                    "~/Content/build/css/responsive.css",
-                   "~/Content/build/css/grid-boostrap-fixheight.css"
+                   "~/Content/build/css/grid-boostrap-fixheight.css",
+                   "~/Content/build/css/loading.css",
+                   "~/Content/build/css/language.css"
                ));
             bundles.Add(new ScriptBundle("~/Content/js").Include(
                 "~/Content/libs/jquery/dist/jquery.min.js",

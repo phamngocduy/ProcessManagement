@@ -14,7 +14,7 @@ namespace ProcessManagement.Filters
         private static string _cookieLangName = "LangForProcessManagementSystem";
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            //string cultureOnCookie = GetCultureOnCookie(filterContext.HttpContext.Request);
+            string cultureOnCookie = GetCultureOnCookie(filterContext.HttpContext.Request);
             string cultureOnURL = filterContext.RouteData.Values.ContainsKey("lang")
              ? filterContext.RouteData.Values["lang"].ToString()
              : GlobalHelper.DefaultCulture;
@@ -25,9 +25,9 @@ namespace ProcessManagement.Filters
             if (currentCulture != culture)
             {
                 SetCurrentCultureOnThread(culture);
-                SetCultureOnCookie(filterContext.HttpContext.Response,culture);
-
+                //SetCultureOnCookie(filterContext.HttpContext.Response,culture);
             }
+            HttpContext.Current.Session["lang"] = culture;
             //base.OnActionExecuting(filterContext);
         }
         private static void SetCurrentCultureOnThread(string lang)
