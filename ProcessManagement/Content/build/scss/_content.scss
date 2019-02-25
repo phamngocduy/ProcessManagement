@@ -1,58 +1,52 @@
-.cw-title{
-    font-size: 45px;
+.owner-default{
+    @extend %default-avatar;
+    height:35px;
 }
-.cw-steps{
-    list-style: none;
-    margin-top: 20px;
-    padding: 0px;
-    display: table;
-    width: 100%;
-    border-radius:3px;
-    -webkit-border-radius:3px;
-    -moz-border-radius:3px;
-    -ms-border-radius:3px;
-    -o-border-radius:3px;
-    
+.table-responsive{
+    overflow-x: hidden;
+}
+.team-info{
     li{
-        display: table-cell;
-        padding: 10px;
-        border: 1px solid #dfe2e5;
-        width: 50%;
-        background-color: #fafbfc;
-        color: #c6cbd1;
-        i{
-            font-size: 30px;
-            float: left;
-            margin-right: 15px;
-        }
-        .cw-step{
-            display: block;
-            font-weight: bold;
-            font-size: 16px;
-        }
-        &:nth-child(1){
-            border-right: none;
-        }
-        &.current{
-            background: none;
-            color: black;
-            
-        }
-        &:first-child.current,&:first-child.active{
-            i{
-                color:rgb(33, 76, 219);
+        .member-default{
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            -ms-border-radius: 50%;
+            -o-border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.2);
+            @extend %default-avatar;
+            &.member-left{
+                font-size: 22px;
+                background-color: #9e9ea0;
             }
         }
-        &:last-child.current,&:last-child.active{
-            i{
-                color: #0dda8b;
+    }
+}
+.process-list{
+    height: 387px;
+    .media{
+        &:hover{
+            background-color: #f7f7f7;
+        }
+        .process-avatar{
+            width: 64px;
+            height: 64px;
+        }
+    }
+}
+.card{
+    .header{
+        .header-dropdown{
+            .tab_btn{
+                i{
+                    font-size: 14px;
+                    font-weight: 100;
+                }
             }
         }
         
     }
 }
-@import 'create-workspace';
-@import 'add-member';
-@import 'show-workspace';
-@import 'show-member';
-@import 'show-setup-workspace';

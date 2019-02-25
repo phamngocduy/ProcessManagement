@@ -21,6 +21,7 @@ namespace ProcessManagement.Controllers
         ParticipateService participateService = new ParticipateService();
         ProcessService processService = new ProcessService();
         StepService stepService = new StepService();
+        FileService fileService = new FileService();
         ///=============================================================================================
 
 
@@ -41,20 +42,25 @@ namespace ProcessManagement.Controllers
         }
         [Authorize]
         [HttpPost]
-        public ActionResult NewGroup(Group group, HttpPostedFileBase ImageGr)
+        public ActionResult NewGroup(Group group, HttpPostedFileBase FileUpload)
         {
 
             string idUser = User.Identity.GetUserId();
-            //save avatar
-            commonService.saveAvatarGroup(group, ImageGr, Server.MapPath("~/Content/images/workspace/"));
             //create new group
             groupService.createGroup(idUser, group);
+
+            //save file 
+            fileService.CreateDirectory(group.Id);
+            string savePath = Server.MapPath(String.Format("~/App_Data/Files/group/{0}/intro", group.Id));
+            fileService.saveFile(FileUpload, savePath);
+            
+            
             //create new participate
             Participate part = new Participate();
             participateService.createParticipate(idUser, group.Id, part, true);
 
             //set flash
-            SetFlash(FlashType.Success, "Created Group Successfully");
+            SetFlash(FlashType.success, "Created Group Successfully");
             return RedirectToAction("index");
         }
 
@@ -87,6 +93,7 @@ namespace ProcessManagement.Controllers
             }
             return View(group);
         }
+
         [Authorize]
         [GroupAuthorize]
         public ActionResult Show(int groupid)
@@ -133,7 +140,7 @@ namespace ProcessManagement.Controllers
             //Add members
             participateService.addMembers(group, adduser);
             SetTab(TabType.UserSetting);
-            SetFlash(FlashType.Success, "Added Members Successfully");
+            SetFlash(FlashType.success, "Added Members Successfully");
             return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
         }
 
@@ -147,9 +154,8 @@ namespace ProcessManagement.Controllers
             if (group == null) return HttpNotFound();
 
             //edit
-            Group groupEdit = groupService.compareBeforeEdit(group, model);
-            commonService.saveAvatarGroup(groupEdit, ImageGr, Server.MapPath("~/Content/images/workspace/"));
-            groupService.editGroup(groupEdit);
+            
+            groupService.editGroup(group);
             SetTab(TabType.GeneralSetting);
             return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
         }
@@ -163,7 +169,7 @@ namespace ProcessManagement.Controllers
             if (group == null) return HttpNotFound();
             groupService.removeAvatar(group);
             SetTab(TabType.GeneralSetting);
-            SetFlash(FlashType.Success, "Removed Avatar Successfully");
+            SetFlash(FlashType.success, "Removed Avatar Successfully");
             return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
         }
         [Authorize]
@@ -181,7 +187,7 @@ namespace ProcessManagement.Controllers
 
             //remove group (bao gồm remove participant,process,step)
             groupService.removeGroup(group);
-            SetFlash(FlashType.Success, "Removed Group " + groupName + " Successfully");
+            SetFlash(FlashType.success, "Removed Group " + groupName + " Successfully");
             return RedirectToAction("Index");
         }
 
@@ -199,11 +205,11 @@ namespace ProcessManagement.Controllers
             //Không được xóa đi owner,không được xóa thành viên khác group
             ///////////////////////////////////////////////////////////////////////////
             if (user.IsOwner)
-                SetFlash(FlashType.Fail, "You cant remove owner");
+                SetFlash(FlashType.fail, "You cant remove owner");
             else
             {
                 participateService.removeUserInGroup(user);
-                SetFlash(FlashType.Success, "Removed " + userName + " Successfully");
+                SetFlash(FlashType.success, "Removed " + userName + " Successfully");
             }
 
             SetTab(TabType.UserSetting);
@@ -232,7 +238,7 @@ namespace ProcessManagement.Controllers
             ///////////////////////////////////////////////////////////////////////////
             if (user.IsOwner)
             {
-                SetFlash(FlashType.Fail, "Owner cant change their role");
+                SetFlash(FlashType.fail, "Owner cant change their role");
                 SetTab(TabType.UserSetting);
                 return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
             }
@@ -254,10 +260,10 @@ namespace ProcessManagement.Controllers
             if (!user.IsOwner)
             {
                 participateService.editRoleUser(model);
-                SetFlash(FlashType.Success, "Edited Role of " + user.AspNetUser.UserName + " Successfully");
+                SetFlash(FlashType.success, "Edited Role of " + user.AspNetUser.UserName + " Successfully");
             }
             else
-                SetFlash(FlashType.Fail, "Owner cant change their role");
+                SetFlash(FlashType.fail, "Owner cant change their role");
 
             SetTab(TabType.UserSetting);
             return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
@@ -279,16 +285,20 @@ namespace ProcessManagement.Controllers
             if (user.IdUser == idUser)
             {
                 participateService.removeUserInGroup(user);
-                SetFlash(FlashType.Success, "Left Group " + groupName + " Successfully");
+                SetFlash(FlashType.success, "Left Group " + groupName + " Successfully");
                 return RedirectToAction("Index");
             }
             else
             {
-                SetFlash(FlashType.Fail, "Left Group " + groupName + " Failed");
+                SetFlash(FlashType.fail, "Left Group " + groupName + " Failed");
                 SetTab(TabType.AdvancedSetting);
                 return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = user.Group.groupSlug, groupid = user.Group.Id });
             }
 
+        }
+        public ActionResult CreateTask()
+        {
+            return View();
         }
         //[Authorize]
         ////[GroupAuthorize]
@@ -308,7 +318,7 @@ namespace ProcessManagement.Controllers
         //    string idUser = User.Identity.GetUserId();
         //    Group group = groupService.findGroup(idgroup);
         //    processService.createProcess(group.Id, idUser, pro);
-        //    SetFlash(FlashType.Success, "Created Process Successfully");
+        //    SetFlash(FlashType.success, "Created Process Successfully");
         //    return RedirectToRoute("GroupControlLocalizedDefault", new { action = "DrawProcess", groupslug = group.groupSlug, idgroup = group.Id, id = pro.Id });
         //}
         //[Authorize]

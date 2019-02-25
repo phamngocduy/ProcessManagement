@@ -7,125 +7,319 @@
     var listuser = ViewData["ListParticipant"] as List<ProcessManagement.Models.Participate>;
 }
 @section CustomCss{
-    <style>
-        .avatar-default {
-            font-size: 100px;
-            text-align: center;
-            font-weight: bold;
-            color: black;
-            width:150px;
-            height:150px;
-            display:inline-block;
-        }
-    </style>
+    <link rel="stylesheet" href="~/Content/vendor/chartist/css/chartist.min.css">
+    <link rel="stylesheet" href="~/Content/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.css">
+    <link rel="stylesheet" href="~/Content/vendor/light-gallery/css/lightgallery.css">
 }
-<div class="cw-workspace-header">
-    <div class="cw-workspace-intro">
-        <div class="cw-workspace-avatar">
-            @if (Model.Avatar != null)
-            {
-                <img src="~/Content/images/workspace/@Html.DisplayFor(model => model.Avatar)" alt="@Html.DisplayFor(model => model.Name)'s Avatar">
-            }
-            else
-            {
-                JObject defaultAvatar = JObject.Parse(Model.AvatarDefault);
-                <div class="avatar-default" style="background-color:@defaultAvatar["background"]">
-                    @defaultAvatar["name"]
-                </div>
-            }
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+            <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Dashboard</h2>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-2.html"><i class="icon-home"></i></a></li>
+                <li class="breadcrumb-item active">Dashboard</li>
+            </ul>
         </div>
-        <div class="cw-workspace-name cw-normal-header">
-            @Html.DisplayFor(model => model.Name)
+        <div class="col-lg-6 col-md-4 col-sm-12 text-right">
+            <div class="bh_chart hidden-xs">
+                <div class="float-left m-r-15">
+                    <small>Visitors</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-user"></i> 1,784</h6>
+                </div>
+                <span class="bh_visitors float-right">2,5,1,8,3,6,7,5</span>
+            </div>
+            <div class="bh_chart hidden-sm">
+                <div class="float-left m-r-15">
+                    <small>Visits</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-globe"></i> 325</h6>
+                </div>
+                <span class="bh_visits float-right">10,8,9,3,5,8,5</span>
+            </div>
+            <div class="bh_chart hidden-sm">
+                <div class="float-left m-r-15">
+                    <small>Chats</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-bubbles"></i> 13</h6>
+                </div>
+                <span class="bh_chats float-right">1,8,5,6,2,4,3,2</span>
+            </div>
         </div>
     </div>
-    <ul class="cw-tabs">
-        <li class="cw-active-tab" rel="process">
-            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "show", groupslug = Model.groupSlug, groupid = Model.Id })"><i class="fas fa-sitemap"></i> Process</a>
-        </li>
-        @*<li rel="members">
-                <a href="@Url.Action("AddMember", "Group", new { id = Model.Id })"><i class="fas fa-user-friends"></i> Members</a>
-            </li>*@
-        <li rel="settings">
-            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { action = "setting", groupslug = Model.groupSlug, groupid = Model.Id })"><i class="fas fa-cog"></i> Settings</a>
-        </li>
-    </ul>
 </div>
-<div class="cw-workspace-header" style="position:relative">
-    <div class="cw-find-members">
-        <div class="form-group">
-            <span class="cw-input-icon">
-                <input type="text" name="name" class="form-control cw-input-has-icon" id="cw-members-name"
-                       placeholder="Find a process">
-                <i class="fas fa-search cw-label-icon"></i>
-            </span>
-            <button class="btn btn-primary" style="margin-bottom:0%">Find</button>
-            <div style="float: right">
-                <span>Customize pinned proccess</span>
-                <button class="btn btn-success"><i class="fas fa-sitemap"></i> New</button>
-            </div>
-            <div class="clearfix"></div>
-        </div>
-    </div>
-    <hr class="cw-normal-hr">
-    <div class="cw-workspace-internal">
-        <div class="row" style="margin:0">
-            <div class="col-md-8 cw-workspace-list-process" style="padding-top: 2%; padding-bottom:2%">
-                <div align="left">
-                    @if (!listprocess.Any())
-                    {
-                        <div style="margin:0 auto;display:table">
-                            <p class="cw-header-large cw-error-no-process">This organization has no process</p>
-                            <a class="btn btn-success" href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "newprocess", groupslug = Model.groupSlug, groupid = Model.Id})" style="margin:0 25%">Create a new process</a>
-                        </div>
 
-                    }
-                    else
-                    {
-                        foreach (var item in listprocess)
-                        {
-
-                            <a href=" @Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process" ,action = "ShowStep", groupslug = Model.groupSlug, groupid = Model.Id, processid = item.Id })" class="cw-header-large cw-error-no-process">@item.Name</a>
-                            <p></p><a href=" @Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process" ,action = "EditProcess", groupslug = Model.groupSlug, groupid = Model.Id, processid = item.Id })" class="cw-header-large cw-error-no-process">Edit: @item.Name</a>
-                            <h5>@item.Description</h5>
-                            <hr class="cw-normal-hr">
-                        }
-                        <a class="btn btn-success" href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "newprocess", groupslug = Model.groupSlug, groupid = Model.Id})">Create a new process</a>
-                    }
-
+<div class="row clearfix display-flex">
+    <div class="col-lg-3 col-md-6">
+        <div class="card top_counter">
+            <div class="body">
+                <div class="icon"><i class="fa fa-users"></i> </div>
+                <div class="content">
+                    <div class="text">Member</div>
+                    <h5 class="number">22</h5>
+                </div>
+                <hr>
+                <div class="icon">
+                    <object width="40" height="50" type="image/svg+xml" data="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiCgkgdmlld0JveD0iMCAwIDUxMiA1MTIiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDUxMiA1MTI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPGc+Cgk8Zz4KCQk8cGF0aCBkPSJNNDQ1LjY2LDQ5LjM0MUgzNDAuMjA2TDI5NC4wMDgsMy4xNDNjLTQuMTkyLTQuMTkxLTEwLjk5LTQuMTkxLTE1LjE4MywwbC00OS4zNDEsNDkuMzQyCgkJCWMtNC4xOTIsNC4xOTItNC4xOTIsMTAuOTksMCwxNS4xODNsNDYuMTk4LDQ2LjE5OHYzOC40OTRoLTgwLjUxNmMtNS45MjksMC0xMC43MzYsNC44MDYtMTAuNzM2LDEwLjczNXYyMS40NzFoLTQyLjk0MnYtMjEuNDcxCgkJCWMwLTUuOTI5LTQuODA2LTEwLjczNS0xMC43MzYtMTAuNzM1SDY2LjM0Yy01LjkyOSwwLTEwLjczNSw0LjgwNi0xMC43MzUsMTAuNzM1djY0LjQxM2MwLDUuOTI5LDQuODA2LDEwLjczNSwxMC43MzUsMTAuNzM1CgkJCWgyMC43NTV2OTMuNzk4YzAsNS45MjksNC44MDYsMTAuNzM2LDEwLjczNSwxMC43MzZoOTUuNDM3bC0xMC4zNDYsMTAuMzQ2Yy00LjE5Miw0LjE5Mi00LjE5MywxMC45OSwwLDE1LjE4MgoJCQljMi4wOTcsMi4wOTcsNC44NDQsMy4xNDQsNy41OTEsMy4xNDRjMi43NDcsMCw1LjQ5NS0xLjA0OSw3LjU5MS0zLjE0NGwxNS4wNjEtMTUuMDYxYzMuOTk0LDguODMsMTAuNTIxLDE2Ljg1OSwxOS4zMTEsMjMuNTQKCQkJYzExLjkzMiw5LjA2OCwyNi45ODcsMTQuNzgzLDQzLjIwNSwxNi41Mzl2MzIuNzkyaC00Mi45NDJjLTUuOTI5LDAtMTAuNzM1LDQuODA2LTEwLjczNSwxMC43MzZ2NjQuNDEzCgkJCWMwLDUuOTI5LDQuODA2LDEwLjczNSwxMC43MzUsMTAuNzM1aDEwNy4zNTVjNS45MjksMCwxMC43MzUtNC44MDYsMTAuNzM1LTEwLjczNXYtNjQuNDEzYzAtNS45MjktNC44MDYtMTAuNzM2LTEwLjczNS0xMC43MzYKCQkJaC00Mi45NDJ2LTMyLjc5MmMxNi4yMTgtMS43NTYsMzEuMjcyLTcuNDcxLDQzLjIwNS0xNi41MzljOC44MDEtNi42ODksMTUuMzMyLTE0LjczLDE5LjMyNS0yMy41NzJsMTUuMDkyLDE1LjA5MgoJCQljMi4wOTcsMi4wOTcsNC44NDQsMy4xNDQsNy41OTEsMy4xNDRzNS40OTUtMS4wNDksNy41OTEtMy4xNDRjNC4xOTItNC4xOTIsNC4xOTItMTAuOTksMC0xNS4xODJsLTEwLjM0Ni0xMC4zNDZoNjYuMDUKCQkJYzUuOTI5LDAsMTAuNzM2LTQuODA2LDEwLjczNi0xMC43MzZWNjAuMDc3QzQ1Ni4zOTYsNTQuMTQ4LDQ1MS41ODksNDkuMzQxLDQ0NS42Niw0OS4zNDF6IE0yNTIuMjU3LDYwLjA3OGwzNC4xNi0zNC4xNgoJCQlsMzQuMTYsMzQuMTZsLTM0LjE2LDM0LjE2TDI1Mi4yNTcsNjAuMDc4eiBNMjA1LjkwMSwxNzMuODMyaDE2MS4wMzJ2NDIuOTQySDIwNS45MDFWMTczLjgzMnogTTc3LjA3NSwyMTYuNzc0di00Mi45NDJoNDIuOTQyCgkJCXY0Mi45NDJINzcuMDc1eiBNMjEzLjI0OSwzMTAuOTIybC0xNS4xNDMtMTUuMTQzYy00LjE5Mi00LjE5Mi0xMC45OS00LjE5Mi0xNS4xODMsMGMtNC4xOTIsNC4xOTItNC4xOTIsMTAuOTksMCwxNS4xODMKCQkJbDEwLjM0NiwxMC4zNDZoLTg0LjcwMnYtODMuMDYzaDIyLjE4N2M1LjkyOSwwLDEwLjczNS00LjgwNiwxMC43MzUtMTAuNzM1di0yMS40NzFoNDIuOTQydjIxLjQ3MQoJCQljMCw1LjkyOSw0LjgwNiwxMC43MzUsMTAuNzM1LDEwLjczNWg4MC41MTZ2MzIuNzkyYy0xNi4yMTgsMS43NTYtMzEuMjcyLDcuNDcxLTQzLjIwNSwxNi41MzkKCQkJQzIyMy43NSwyOTQuMjA4LDIxNy4yNSwzMDIuMTY4LDIxMy4yNDksMzEwLjkyMnogTTMyOS4zNTksNDQ3LjU4N3Y0Mi45NDJoLTg1Ljg4NHYtNDIuOTQySDMyOS4zNTl6IE0yODYuNDE3LDM3Mi40MzkKCQkJYy0zMS4wNzgsMC01Ni4zNjEtMTguMDU5LTU2LjM2MS00MC4yNThzMjUuMjgzLTQwLjI1OCw1Ni4zNjEtNDAuMjU4YzMxLjA3OCwwLDU2LjM2MSwxOC4wNTksNTYuMzYxLDQwLjI1OAoJCQlTMzE3LjQ5NiwzNzIuNDM5LDI4Ni40MTcsMzcyLjQzOXogTTM3OS42MSwzMjEuMzA4bDEwLjM0Ny0xMC4zNDZjNC4xOTItNC4xOTIsNC4xOTItMTAuOTksMC0xNS4xODMKCQkJYy00LjE5Mi00LjE5MS0xMC45OS00LjE5MS0xNS4xODMsMGwtMTUuMTc1LDE1LjE3NWMtNC04Ljc2Ni0xMC41MDUtMTYuNzM4LTE5LjI0Mi0yMy4zNzgKCQkJYy0xMS45MzItOS4wNjgtMjYuOTg3LTE0Ljc4My00My4yMDUtMTYuNTM5di0zMi43OTJoODAuNTE2YzUuOTI5LDAsMTAuNzM1LTQuODA2LDEwLjczNS0xMC43MzV2LTY0LjQxMwoJCQljMC01LjkyOS00LjgwNi0xMC43MzUtMTAuNzM1LTEwLjczNWgtODAuNTE2di0zOC40OTRsNDMuMDU0LTQzLjA1NGg5NC43MTh2MjUwLjQ5NEgzNzkuNjF6Ii8+Cgk8L2c+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPC9zdmc+">
+                        fallback
+                    </object>
+                </div>
+                <div class="content">
+                    <div class="text">Total Process</div>
+                    <h5 class="number">425</h5>
                 </div>
             </div>
-            <div class="col-md-4" style="padding-right: 0">
-                <div class="col-md-12 cw-workspace-members cw-box">
-                    <div class="cw-box-header">
-                        <div class="cw-box-title">Members</div>
-                        <div class="cw-member-total">@listuser.Count() <i class="fas fa-users"></i></div>
-                        <div class="clearfix"></div>
-                        <hr class="cw-normal-hr" style="margin-top: 10px">
+        </div>
+        <div class="card top_counter">
+            <div class="body">
+                <div class="icon">
+                    <object width="30" height="50" type="image/svg+xml" data="data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjQ4N3B0IiB2aWV3Qm94PSIwIC00IDQ4Ny4yMzQxMiA0ODciIHdpZHRoPSI0ODdwdCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJtMzkyLjA0Mjk2OSAzMDQuMTE3MTg4Yy00OC42MDE1NjMgMC04OCAzOS4zOTg0MzctODggODggMCA0OC42MDE1NjIgMzkuMzk4NDM3IDg4IDg4IDg4IDQ4LjYwMTU2MiAwIDg4LTM5LjM5ODQzOCA4OC04OC0uMDU4NTk0LTQ4LjU3ODEyNi0zOS40MjE4NzUtODcuOTQxNDA3LTg4LTg4em0wIDE2MGMtMzkuNzY1NjI1IDAtNzItMzIuMjM0Mzc2LTcyLTcyIDAtMzkuNzY1NjI2IDMyLjIzNDM3NS03MiA3Mi03MnM3MiAzMi4yMzQzNzQgNzIgNzJjLS4wNDI5NjkgMzkuNzQ2MDkzLTMyLjI1MzkwNyA3MS45NTcwMzEtNzIgNzJ6bTAgMCIvPjxwYXRoIGQ9Im0xNjguMDQyOTY5IDMwNC4xMTcxODhoLTcydi04NC42ODc1bDIzLjYwMTU2MiAyMy41OTc2NTZjMy4xMzY3MTkgMy4wMzUxNTYgOC4xMjg5MDcgMi45ODgyODEgMTEuMjE0ODQ0LS4wOTc2NTYgMy4wODU5MzctMy4wODIwMzIgMy4xMjg5MDYtOC4wNzQyMTkuMDk3NjU2LTExLjIxMDkzOGwtMzcuMjU3ODEyLTM3LjI1NzgxMmMtMy4xMjUtMy4xMjEwOTQtOC4xODc1LTMuMTIxMDk0LTExLjMxMjUgMGwtMzcuMjUzOTA3IDM3LjI1NzgxMmMtMy4wMzEyNSAzLjEzNjcxOS0yLjk4ODI4MSA4LjEyODkwNi4wOTc2NTcgMTEuMjEwOTM4IDMuMDg1OTM3IDMuMDg1OTM3IDguMDc0MjE5IDMuMTMyODEyIDExLjIxNDg0My4wOTc2NTZsMjMuNTk3NjU3LTIzLjU5NzY1NnY4NC42ODc1aC03MmMtNC40MTc5NjkgMC04LjAwMDAwMDIgMy41ODIwMzEtOC4wMDAwMDAyIDh2MTYwYzAgNC40MTc5NjggMy41ODIwMzEyIDggOC4wMDAwMDAyIDhoMTYwYzQuNDE3OTY5IDAgOC0zLjU4MjAzMiA4LTh2LTE2MGMwLTQuNDE3OTY5LTMuNTgyMDMxLTgtOC04em0tOCAxNjBoLTE0NHYtMTQ0aDE0NHptMCAwIi8+PHBhdGggZD0ibTI0MC40NDUzMTIgNDUuMjAzMTI1Yy0yLjAxMTcxOC0yLjA3ODEyNS00Ljk4NDM3NC0yLjkxMDE1Ni03Ljc4MTI1LTIuMTc5Njg3LTIuNzk2ODc0LjczMDQ2OC00Ljk4MDQ2OCAyLjkxNzk2OC01LjcxNDg0MyA1LjcxNDg0My0uNzMwNDY5IDIuNzk2ODc1LjEwMTU2MiA1Ljc2OTUzMSAyLjE4MzU5MyA3Ljc3NzM0NGwyMy41OTc2NTcgMjMuNjAxNTYzaC03Ny4wOTM3NWMtNC4yNzczNDQtNDYuODQ3NjU3LTQ0LjY0NDUzMS04Mi4wNTA3ODItOTEuNjQwNjI1LTc5LjkxMDE1N3MtODMuOTk2MDk0IDQwLjg2NzE4OC04My45OTYwOTQgODcuOTEwMTU3YzAgNDcuMDQyOTY4IDM3IDg1Ljc2OTUzMSA4My45OTYwOTQgODcuOTEwMTU2czg3LjM2MzI4MS0zMy4wNjI1IDkxLjY0MDYyNS03OS45MTAxNTZoNzcuMDkzNzVsLTIzLjU5NzY1NyAyMy42MDE1NjJjLTIuMDgyMDMxIDIuMDA3ODEyLTIuOTE0MDYyIDQuOTgwNDY5LTIuMTgzNTkzIDcuNzc3MzQ0LjczNDM3NSAyLjc5Njg3NSAyLjkxNzk2OSA0Ljk4MDQ2OCA1LjcxNDg0MyA1LjcxNDg0NCAyLjc5Njg3Ni43MzA0NjggNS43Njk1MzItLjEwMTU2MyA3Ljc4MTI1LTIuMTgzNTk0bDM3LjI1MzkwNy0zNy4yNTM5MDZjMy4xMjUtMy4xMjUgMy4xMjUtOC4xODc1IDAtMTEuMzEyNXptLTE1Mi40MDIzNDMgMTE0LjkxNDA2M2MtMzkuNzY1NjI1IDAtNzItMzIuMjM0Mzc2LTcyLTcyIDAtMzkuNzY1NjI2IDMyLjIzNDM3NS03MiA3Mi03MnM3MiAzMi4yMzQzNzQgNzIgNzJjLS4wNDI5NjkgMzkuNzQ2MDkzLTMyLjI1MzkwNyA3MS45NTcwMzEtNzIgNzJ6bTAgMCIvPjxwYXRoIGQ9Im00ODQuMzAwNzgxIDgxLjkyNTc4MS04Ny4yMDMxMjUtNzEuMTk5MjE5Yy0yLjk0NTMxMi0yLjQxMDE1Ni03LjE3OTY4Ny0yLjQxMDE1Ni0xMC4xMjUgMGwtODcuMTk5MjE4IDcxLjE5OTIxOWMtMS44NTkzNzYgMS41MTk1MzEtMi45Mzc1IDMuNzkyOTY5LTIuOTM3NSA2LjE5MTQwNyAwIDIuMzk4NDM3IDEuMDc4MTI0IDQuNjcxODc0IDIuOTM3NSA2LjE5MTQwNmw4NC4yNjk1MzEgNjguODAwNzgxdjk3LjY5NTMxM2wtMjMuNTk3NjU3LTIzLjYwMTU2M2MtMy4xNDA2MjQtMy4wMzEyNS04LjEyODkwNi0yLjk4ODI4MS0xMS4yMTQ4NDMuMDk3NjU2LTMuMDg1OTM4IDMuMDg1OTM4LTMuMTI4OTA3IDguMDc4MTI1LS4wOTc2NTcgMTEuMjE0ODQ0bDM3LjI1MzkwNyAzNy4yNTc4MTNjMy4xMjUgMy4xMjEwOTMgOC4xODc1IDMuMTIxMDkzIDExLjMxMjUgMGwzNy4yNTc4MTItMzcuMjU3ODEzYzMuMDMxMjUtMy4xMzY3MTkgMi45ODgyODEtOC4xMjg5MDYtLjA5NzY1Ni0xMS4yMTQ4NDQtMy4wODU5MzctMy4wODU5MzctOC4wNzgxMjUtMy4xMjg5MDYtMTEuMjE0ODQ0LS4wOTc2NTZsLTIzLjYwMTU2MiAyMy42MDE1NjN2LTk3LjY5NTMxM2w4NC4yNTc4MTItNjguODAwNzgxYzEuODU1NDY5LTEuNTE5NTMyIDIuOTMzNTk0LTMuNzkyOTY5IDIuOTMzNTk0LTYuMTkxNDA2IDAtMi4zOTg0MzgtMS4wNzgxMjUtNC42NzE4NzYtMi45MzM1OTQtNi4xOTE0MDd6bS05Mi4yNTc4MTIgNjcuMDU0Njg4LTc0LjU0Mjk2OS02MC44NjMyODEgNzQuNTQyOTY5LTYwLjg2MzI4MiA3NC41NDI5NjkgNjAuODYzMjgyem0wIDAiLz48L3N2Zz4=">
+                        fallback
+                    </object>
+                </div>
+                <div class="content">
+                    <div class="text">Active Process</div>
+                    <h5 class="number">$2.8M</h5>
+                </div>
+                <hr>
+                <div class="icon"><i class="fa fa-university"></i> </div>
+                <div class="content">
+                    <div class="text">Avg. Salary</div>
+                    <h5 class="number">$1,250</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card text-center">
+            <div class="body">
+                <h5>Income Analysis</h5>
+                <span>8% High then last month</span>
+                <div class="sparkline-pie m-t-20">6,4,8</div>
+                <div class="stats-report m-b-30">
+                    <div class="stat-item">
+                        <h5>Design</h5>
+                        <b class="col-black">84.60%</b>
                     </div>
-                    <div class="cw-box-body">
-                        <ul class="cw-members-list media-list">
-                            @foreach (var item in listuser)
-                            {
-                                <li class="media">
-                                    <a href="#" class="cw-member-infor">
-                                        <div class="media-left">
-                                            <img alt="user's avatar" class="media-object"
-                                                 src="~/Content/images/user/avatar1.jpg" style="width: 64px; height: 64px;">
-                                        </div>
-                                        <div class="media-body" style="padding-top:7%">
-                                            @item.AspNetUser.UserName
-                                        </div>
-                                    </a>
-                                </li>
-                            }
+                    <div class="stat-item">
+                        <h5>Dev</h5>
+                        <b class="col-black">15.40%</b>
+                    </div>
+                    <div class="stat-item">
+                        <h5>SEO</h5>
+                        <b class="col-black">5.10%</b>
+                    </div>
+                </div>
+                <span id="sparkline-compositeline">8,4,0,0,0,0,1,4,4,10,10,10,10,0,0,0,4,6,5,9,10</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-12">
+        <div class="card">
+            <div class="header">
+                <h2>Group Name</h2>
+                <ul class="header-dropdown">
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"></a>
+                        <ul class="dropdown-menu dropdown-menu-right animated bounceIn">
+                            <li><a href="javascript:void(0);">Action</a></li>
+                            <li><a href="javascript:void(0);">Another Action</a></li>
+                            <li><a href="javascript:void(0);">Something else</a></li>
                         </ul>
-                    </div>
-                    <hr class="cw-normal-hr">
-                    <div align="center">
-                        <button class="btn btn-success"><i class="fas fa-plus"></i> Invite Member</button>
-                    </div>
-                </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="body">
+                <p>
+                    this is description
+                </p>
             </div>
         </div>
     </div>
 </div>
+
+<div class="row clearfix">
+    <div class="col-lg-8 col-md-12">
+        <div class="card">
+            <div class="header">
+                <h2>Processes in group</h2>
+                <ul class="header-dropdown">
+                    <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Weekly"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></li>
+                    <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Monthly"><i class="fa fa-arrow-right" aria-hidden="true"></i></a></li>
+                    <li><a class="tab_btn active" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Yearly">Y</a></li>
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"></a>
+                        <ul class="dropdown-menu dropdown-menu-right animated bounceIn">
+                            <li><a href="javascript:void(0);">Action</a></li>
+                            <li><a href="javascript:void(0);">Another Action</a></li>
+                            <li><a href="javascript:void(0);">Something else</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="body process-list">
+                <ul class="list-unstyled">
+                    <li class="media">
+                        <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
+                        <div class="media-body">
+                            <h5 class="mt-0 mb-1">List-based media object</h5>
+                            <p>This is description</p>
+                    </li>
+                    <li class="media my-4">
+                        <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
+                        <div class="media-body">
+                            <h5 class="mt-0 mb-1">List-based media object</h5>
+                            <p>This is description</p>
+                        </div>
+                    </li>
+                    <li class="media">
+                        <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
+                        <div class="media-body">
+                            <h5 class="mt-0 mb-1">List-based media object</h5>
+                            <p>This is description</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-12">
+        <div class="card">
+            <div class="header">
+                <h2>Processes in group</h2>
+                <ul class="header-dropdown">
+                    <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Weekly"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></li>
+                    <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Monthly"><i class="fa fa-arrow-right" aria-hidden="true"></i></a></li>
+                    <li><a class="tab_btn active" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Yearly">Y</a></li>
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"></a>
+                        <ul class="dropdown-menu dropdown-menu-right animated bounceIn">
+                            <li><a href="javascript:void(0);">Action</a></li>
+                            <li><a href="javascript:void(0);">Another Action</a></li>
+                            <li><a href="javascript:void(0);">Something else</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="body process-list">
+                <ul class="list-unstyled">
+                    <li class="media">
+                        <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
+                        <div class="media-body">
+                            <h5 class="mt-0 mb-1">List-based media object</h5>
+                            <p>This is description</p>
+                    </li>
+                    <li class="media my-4">
+                        <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
+                        <div class="media-body">
+                            <h5 class="mt-0 mb-1">List-based media object</h5>
+                            <p>This is description</p>
+                        </div>
+                    </li>
+                    <li class="media">
+                        <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
+                        <div class="media-body">
+                            <h5 class="mt-0 mb-1">List-based media object</h5>
+                            <p>This is description</p>
+                        </div>
+                    </li>
+                    <li class="media">
+                        <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
+                        <div class="media-body">
+                            <h5 class="mt-0 mb-1">List-based media object</h5>
+                            <p>This is description</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 col-md-7">
+        <div class="card" style="padding-bottom:0">
+            <div class="header">
+                <h2>Member of Group</h2>
+            </div>
+            <div class="body" style="padding-top:0">
+                <div class="table-responsive">
+                    <table class="table table-hover dataTable table-custom m-b-0" id="tablemember">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Avatar</th>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><img src="~/Content/images/xs/avatar1.jpg" class="rounded-circle width35" alt=""></td>
+                                <td>Marshall Nichols</td>
+                                <td><span>UI UX Designer</span></td>
+                                <td><span class="badge badge-success">Good</span></td>
+                            </tr>
+                            <tr>
+                                <td><img src="~/Content/images/xs/avatar2.jpg" class="rounded-circle width35" alt=""></td>
+                                <td>Susie Willis</td>
+                                <td><span>Designer</span></td>
+                                <td><span class="badge badge-warning">Average</span></td>
+                            </tr>
+                            <tr>
+                                <td><img src="~/Content/images/xs/avatar3.jpg" class="rounded-circle width35" alt=""></td>
+                                <td>Francisco Vasquez</td>
+                                <td><span>Team Leader</span></td>
+                                <td><span class="badge badge-primary">Excellent</span></td>
+                            </tr>
+                            <tr>
+                                <td><img src="~/Content/images/xs/avatar4.jpg" class="rounded-circle width35" alt=""></td>
+                                <td>Erin Gonzales</td>
+                                <td><span>Android Developer</span></td>
+                                <td><span class="badge badge-danger">Weak</span></td>
+                            </tr>
+                            <tr>
+                                <td><img src~/Content/images/xs/avatar5.jpg" class="rounded-circle width35" alt=""></td>
+                                <td>Ava Alexander</td>
+                                <td><span>UI UX Designer</span></td>
+                                <td><span class="badge badge-success">Good</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-5">
+        <div class="card">
+            <div class="header">
+                <h2>Employee Structure</h2>
+            </div>
+            <div class="body text-center">
+                <h6>Male</h6>
+                <input type="text" class="knob2" data-linecap="round" value="73" data-width="125" data-height="125" data-thickness="0.15" data-fgColor="#49a9e5" readonly>
+                <hr>
+                <h6>Female</h6>
+                <input type="text" class="knob2" data-linecap="round" value="27" data-width="125" data-height="125" data-thickness="0.15" data-fgColor="#b880e1" readonly>
+            </div>
+        </div>
+    </div>
+</div>
+@section CustomScripts{
+    <script src="~/Content/build/bundles/chartist.bundle.js"></script>
+    <script src="~/Content/build/bundles/knob.bundle.js"></script>
+    <script src="~/Content//vendor/light-gallery/js/lightgallery-all.min.js"></script>
+    <script src="~/Content/build/js/index.js"></script>
+    <script>
+        $(function () {
+            $("#tablemember").DataTable({
+                "bLengthChange": false,
+                "language": {
+                    "emptyTable": "There aren't member in group yet",
+                    "info": "Showing _START_ to _END_ of _TOTAL_ member",
+                }
+            });
+            $('#aniimated-thumbnials').lightGallery({
+                thumbnail: true,
+                selector: 'a'
+            });
+        });
+    </script>
+}

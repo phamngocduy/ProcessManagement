@@ -16,9 +16,19 @@ namespace ProcessManagement.Controllers
     }
     public enum FlashType
     {
-        Success,
-        Fail,
-        Warning
+        info,
+        success,
+        fail,
+        warning
+    }
+    public enum FlashPosition
+    {
+        BottomRight,
+        BottomLeft,
+        TopLeft,
+        TopRight,
+        TopCenter,
+        BottomCenter
     }
     public enum TabType
     {
@@ -77,10 +87,11 @@ namespace ProcessManagement.Controllers
             return culture;
         }
        
-        public void SetFlash(FlashType flashType, string flashMessage)
+        public void SetFlash(FlashType flashType, string flashMessage, FlashPosition flashPosition = FlashPosition.BottomLeft)
         {
-            TempData["FlashMessage.Type"] = flashType.ToString();
+            TempData["FlashMessage.Type"] = flashType;
             TempData["FlashMessage.Text"] = flashMessage;
+            TempData["FlashMessage.Position"] = flashPosition;
         }
         public void SetTab(TabType tabType)
         {

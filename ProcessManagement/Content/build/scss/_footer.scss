@@ -1,26 +1,11 @@
-.cw-footer{
-    padding: 20px;
-    background-color: $primaryColor;
-    .cw-social{
-        list-style: none;
-        text-align: center;
-        li{
-            display: inline;
-            a{
-                text-decoration: none;
-                color: $iconColor;
-                margin-right: 18px;
-                i{
-                    font-size: 18px;
-                }
-                &:hover{
-                    color: $iconColor-Hover;
-                }
-            }
+#footer{
+    margin-top: 10px;
+    font-size: 15px;
+    a{
+        font-weight: bold;
+        color:#5a5a5a;
+        &:hover{
+            color:darken(#5a5a5a,20%);
         }
-    }
-    .cw-copyright{
-        color: white;
-        text-align: center;
     }
 }

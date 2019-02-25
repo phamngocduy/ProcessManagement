@@ -1,17 +1,14 @@
-﻿function deleteCookie(name) {
-    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-}
-function setCookie(name, value, exday) {
-    deleteCookie(name);
-    var d = new Date()
-    d.setTime(d.getTime() + (exday * 24 * 60 * 60));
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     var expires = "expires=" + d.toUTCString();
-    console.log(expires);
-    document.cookie = name + "=" + value + "; " + expires+"; path=/";
+    var cookiee = cname + "=" + escape(cvalue) + ";" + expires + ";path=/";
+    document.cookie = cookiee;
 }
 function getCookie(cname) {
     var name = cname + "=";
-    var ca = document.cookie.split(';');
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
     for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
         while (c.charAt(0) == ' ') {
@@ -23,10 +20,6 @@ function getCookie(cname) {
     }
     return "";
 }
-$('.setLang').on('click', function () {
-    var lang = $(this).attr("data-lang");
-
-    deleteCookie("LangForProcessManagementSystem");
-    setCookie("LangForProcessManagementSystem", lang, 7);
-    location.reload(true);
-})
+function deleteCookie(name) {
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}

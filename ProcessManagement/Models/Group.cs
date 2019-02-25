@@ -25,8 +25,6 @@ namespace ProcessManagement.Models
         public string IdOwner { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Avatar { get; set; }
-        public string AvatarDefault { get; set; }
         public string ownerSlug { get; set; }
         public string groupSlug { get; set; }
         public System.DateTime Created_At { get; set; }

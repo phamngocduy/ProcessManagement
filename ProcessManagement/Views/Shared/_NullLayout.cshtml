@@ -2,75 +2,53 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - @ProcessManagement.Content.resources.CWcommon.clockworks_common_title</title>
+    <meta name="description" content="Process Management System">
+    <meta name="author" content="CAP2019, design by: Clockworks Team">
+    <title>:: Lucid System :: @ViewBag.Title</title>
     @Styles.Render("~/Content/css")
-    <link href="~/Content/build/css/guest-style.css" rel="stylesheet" />
-    <style>
-        .nav.toggle {
-            display: none;
-        }
-
-        .nav-sm .container.body .right_col {
-            margin-left: 0;
-            background: white;
-        }
-
-        .nav-sm .main_container .top_nav {
-            margin-left: 0;
-        }
-
-        .nav-sm footer {
-            margin-left: 0px;
-        }
-    </style>
-    </style>
-    @if(IsSectionDefined("CustomCss"))
+    @if (IsSectionDefined("CustomCss"))
     {
-        @RenderSection("CustomCss",required:false)
+        @RenderSection("CustomCss", required: false)
     }
 </head>
-<body class="nav-sm">
-    <div class="container body">
-        <div class="main_container">
-            @Html.Partial("~/Views/Shared/Layouts/header.cshtml")
-            <!--Content body-->
-            <div class="right_col" id="body" role="main">
-                @RenderBody()
-            </div>
-            <!--/ Content body-->
-            @Html.Partial("~/Views/Shared/Layouts/footer.cshtml")
+<body>
+    @Html.Partial("~/Views/Shared/Common/_Loader.cshtml")
+    <div id="wrapper">
+        <!-- header -->
+        @Html.Partial("~/Views/Shared/Common/_Header.cshtml")
+        <!-- end of header -->
+        <!-- main content -->
+        <div id="main-content">
+            @RenderBody()
         </div>
+        <!-- end of body content -->
     </div>
-
     @Scripts.Render("~/Content/js")
+    @*<script type="text/javascript">
+            alertify.set('notifier', 'position', 'bottom-left');
+            @{
+                string text = (string)TempData["FlashMessage.Text"];
+                string type = (string)TempData["FlashMessage.Type"];
+                if (!string.IsNullOrWhiteSpace(text))
+                {
+                    if (type == "Success")
+                    {
+
+                        @:alertify.success("@text");
+
+                    }
+                    else if (type == "Fail")
+                    {
+                         @:alertify.error("@text");
+                    }
+                }
+            }
+        </script>*@
     @if (IsSectionDefined("CustomScripts"))
     {
         @RenderSection("CustomScripts", required: false)
     }
-    <script type="text/javascript">
-        alertify.set('notifier', 'position', 'bottom-left');
-        @{
-            string text = (string)TempData["FlashMessage.Text"];
-            string type = (string)TempData["FlashMessage.Type"];
-            if (!string.IsNullOrWhiteSpace(text))
-            {
-                if (type == "Success")
-                {
-
-                    @:alertify.success("@text");
-
-                }
-                else if (type == "Fail")
-                {
-                     @:alertify.error("@text"); 
-                }
-            }
-        }
-
-    </script>
-<script>
-</script>
-
 </body>
 </html>

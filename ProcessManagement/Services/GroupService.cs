@@ -53,30 +53,29 @@ namespace ProcessManagement.Services
             group.groupSlug = commonService.converToSlug(group.Name);
             db.Groups.Add(group);
             db.SaveChanges();
-            commonService.CreateDirectory(group);
         }
-        public Group compareBeforeEdit(Group oldGroup, Group newGroup)
-        {
-            newGroup.Id = oldGroup.Id;
-            if (newGroup.Name.Substring(0, 1).ToUpper() == oldGroup.Name.Substring(0, 1).ToUpper())
-            {
-                newGroup.AvatarDefault = oldGroup.AvatarDefault;
-            }
-            //if(newGroup.Name.ToLower().Trim() != oldGroup.Name.ToLower().Trim())
-            //{ 
+        //public Group compareBeforeEdit(Group oldGroup, Group newGroup)
+        //{
+        //    newGroup.Id = oldGroup.Id;
+        //    if (newGroup.Name.Substring(0, 1).ToUpper() == oldGroup.Name.Substring(0, 1).ToUpper())
+        //    {
+        //        newGroup.AvatarDefault = oldGroup.AvatarDefault;
+        //    }
+        //    //if(newGroup.Name.ToLower().Trim() != oldGroup.Name.ToLower().Trim())
+        //    //{ 
   
-            //    newGroup.groupSlug = commonService.converToSlug(newGroup.Name.Trim());
-            //}
-            //else
-            //{
-            //    newGroup.groupSlug = oldGroup.groupSlug;
-            //}
-            if (newGroup.Avatar == null)
-            {
-                newGroup.Avatar = oldGroup.Avatar;
-            }
-            return newGroup;
-        }
+        //    //    newGroup.groupSlug = commonService.converToSlug(newGroup.Name.Trim());
+        //    //}
+        //    //else
+        //    //{
+        //    //    newGroup.groupSlug = oldGroup.groupSlug;
+        //    //}
+        //    if (newGroup.Avatar == null)
+        //    {
+        //        newGroup.Avatar = oldGroup.Avatar;
+        //    }
+        //    return newGroup;
+        //}
         /// <summary>
         /// Edit thông tin một group
         /// </summary>
@@ -85,8 +84,6 @@ namespace ProcessManagement.Services
         {
             Group group = findGroup(model.Id);
             group.Name = model.Name;
-            group.Avatar = model.Avatar;
-            group.AvatarDefault = model.AvatarDefault;
             group.Description = model.Description;
             group.groupSlug = commonService.converToSlug(model.Name);
             group.Updated_At = DateTime.Now;
@@ -109,7 +106,6 @@ namespace ProcessManagement.Services
         public void removeAvatar(Group model)
         {
             Group group = findGroup(model.Id);
-            group.Avatar = null;
             group.Updated_At = DateTime.Now;
             db.SaveChanges();
         }

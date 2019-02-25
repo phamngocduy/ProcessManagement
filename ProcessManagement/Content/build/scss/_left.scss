@@ -1,0 +1,13 @@
+.user-account{
+    .user-photo{
+        &.user-default{
+            height: 50px;
+            color: #000000;
+            font-weight: bold;
+            font-size: 30px;
+            text-align: center;
+            display: inline-block;
+            font-family: 'Poppins', sans-serif;
+        }
+    }
+}

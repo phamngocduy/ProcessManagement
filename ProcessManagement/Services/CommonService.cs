@@ -17,35 +17,36 @@ namespace ProcessManagement.Services
         /// <param name="ImageGr">Data hình muốn save</param>
         /// <param name="savePath">Đường dẫn tới thư mục muốn save</param>
         /// <return>Return tên của hình đã save</return>
-        public void saveAvatarGroup(Group group, HttpPostedFileBase ImageGr, string savePath)
-        {
-            string avatar = "";
-            //set avatar
-            if (ImageGr != null)
-            {
+        //public void saveAvatarGroup(Group group, HttpPostedFileBase ImageGr, string savePath)
+        //{
+        //    string avatar = "";
+        //    //set avatar
+        //    if (ImageGr != null)
+        //    {
                
-                if (ImageGr.ContentLength > 0)
-                {
-                    var filename = Path.GetFileName(ImageGr.FileName);
-                    var path = Path.Combine(savePath, filename);
-                    ImageGr.SaveAs(path);
-                    avatar = filename;
-                }
-            }
-            else
-            {
-                avatar =  group.Avatar != null ? group.Avatar : null;
-            }
-            group.Avatar = avatar;
-            if (group.AvatarDefault == null)
-            {
-                //set avatar default 
-                string charName = group.Name.Substring(0,1).ToUpper();
-                string background = getRandomColor();
-                var DefaultBackground = new JavaScriptSerializer().Serialize(new { name = charName, background = background });
-                group.AvatarDefault = DefaultBackground;
-            }
-        }
+        //        if (ImageGr.ContentLength > 0)
+        //        {
+        //            var filename = Path.GetFileName(ImageGr.FileName);
+        //            var path = Path.Combine(savePath, filename);
+        //            ImageGr.SaveAs(path);
+        //            avatar = filename;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        avatar =  group.Avatar != null ? group.Avatar : null;
+        //    }
+        //    group.Avatar = avatar;
+        //    if (group.AvatarDefault == null)
+        //    {
+        //        //set avatar default 
+        //        string charName = group.Name.Substring(0,1).ToUpper();
+        //        string background = getRandomColor();
+        //        var DefaultBackground = new JavaScriptSerializer().Serialize(new { name = charName, background = background });
+        //        group.AvatarDefault = DefaultBackground;
+        //    }
+        //}
+        
         public string getRandomColor()
         {
             Random rnd = new Random();
@@ -84,19 +85,6 @@ namespace ProcessManagement.Services
             bool sucess = int.TryParse(s, out number);
             bool isInteger = sucess ? true : false;
             return isInteger;
-        }
-        public void CreateDirectory(Group group)
-        {
-            string AppPath = AppDomain.CurrentDomain.BaseDirectory;
-            string filePath = AppPath + "App_Data\\Files\\Groups";
-            string folderName = string.Format("{0}-{1}", group.Name, group.Id);
-            filePath += String.Format("\\{0}", folderName);
-            string stepPath = filePath + String.Format("\\Steps");
-            string introPath = filePath + String.Format("\\Intros");
-            DirectoryInfo stepDirectory = Directory.CreateDirectory(stepPath);
-            DirectoryInfo introDirectory = Directory.CreateDirectory(introPath);
-
-
         }
         public string TimeAgo(DateTime date)
         {

@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ProcessManagement.Models;
 using ProcessManagement.Filters;
+using ProcessManagement.Services;
 
 namespace ProcessManagement.Controllers
 {
@@ -19,6 +20,8 @@ namespace ProcessManagement.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+
+        UserService userService = new UserService();
 
         public AccountController()
         {
@@ -84,7 +87,6 @@ namespace ProcessManagement.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    Session["UserId"] = User.Identity.GetUserId();
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -375,7 +377,12 @@ namespace ProcessManagement.Controllers
                     return View("ExternalLoginFailure");
                 }
                 ExternalLoginInfo loginInfo = (ExternalLoginInfo) Session["loginInfor"];
-                var user = new ApplicationUser { UserName = model.UserName, Email = loginInfo.Email, NickName = loginInfo.ExternalIdentity.GetUserName() };
+                //create avatar
+                var defaultavatar = userService.createAvatar(loginInfo.ExternalIdentity.GetUserName());
+                //set new user
+                var user = new ApplicationUser { UserName = model.UserName, Email = loginInfo.Email,
+                    NickName = loginInfo.ExternalIdentity.GetUserName(), AvatarDefault = defaultavatar,
+                    Avatar = ""};
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -454,6 +461,11 @@ namespace ProcessManagement.Controllers
 
         private ActionResult RedirectToLocal(string returnUrl)
         {
+
+            Session["UserId"] = User.Identity.GetUserId();
+            string sayHello = String.Format("Welcome back {0} !!", System.Web.HttpContext.Current.User.Identity.Name);
+            SetFlash(FlashType.info, sayHello, FlashPosition.TopRight);
+
             if (Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);

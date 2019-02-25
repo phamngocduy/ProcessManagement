@@ -11,8 +11,6 @@ namespace ProcessManagement.Services
 		PMSEntities db = new PMSEntities();
 		///=============================================================================================
 
-
-
 		/// <summary>
 		/// Tạo mới một particition
 		/// </summary>
@@ -79,22 +77,48 @@ namespace ProcessManagement.Services
 			Participate user = db.Participates.SingleOrDefault(x => x.Id == idParticipant);
 			return user;
 		}
-		/// <summary>
-		/// Tìm tất cả các member thuộc group do
-		/// </summary>
-		/// <param name="IdGroup">Id Group</param>
-		/// <returns>Return danh sach các member thuộc group đó</returns>
-		public List<Participate> findMembersInGroup(int IdGroup)
+		public int countMemberInGroup(int IdGroup)
+        {
+            int count = db.Participates.Where(x => x.IdGroup == IdGroup).Count();
+            return count;
+        }
+        /// <summary>
+        /// Tìm tất cả các member thuộc group đó
+        /// </summary>
+        /// <param name="IdGroup">id group</param>
+        /// <param name="quantity">số lượng muốn lấy,mặc định lấy tất cả</param>
+        /// <returns>return danh sách member của group đó</returns>
+		public List<Participate> findMembersInGroup(int IdGroup, int quantity = -1)
 		{
-			var ListParticipant = db.Participates.Where(x => x.IdGroup == IdGroup).ToList();
-			return ListParticipant;
+			var ListParticipant = db.Participates.Where(x => x.IdGroup == IdGroup);
+            if(quantity != -1)
+            {
+                ListParticipant = ListParticipant.Take(quantity);
+            }
+			return ListParticipant.ToList();
 		}
-		/// <summary>
-		/// Tìm tất cả member không thuộc group đó
-		/// </summary>
-		/// <param name="memberInGroup">List các Members thuộc group đó</param>
-		/// <returns>Return danh sách các Members không thuộc group đó</returns>
-		public List<AspNetUser> findMembersNotInGroup(List<Participate> memberInGroup)
+        /// <summary>
+        /// Lấy tất cả các member trong group trừ owner
+        /// </summary>
+        /// <param name="IdGroup">id group</param>
+        /// <param name="quantity">số lượng muốn lấy,mặc định lấy tất cả</param>
+        /// <returns>return danh sách member của group đó</returns>
+        public List<Participate> findMembersNotOwnerInGroup(int IdGroup, int quantity = -1)
+        {
+            Group group = db.Groups.Find(IdGroup);
+            var ListParticipant = db.Participates.Where(x => x.IdGroup == IdGroup && x.IdUser != group.IdOwner);
+            if (quantity != -1)
+            {
+                ListParticipant = ListParticipant.Take(quantity);
+            }
+            return ListParticipant.ToList();
+        }
+        /// <summary>
+        /// Tìm tất cả member không thuộc group đó
+        /// </summary>
+        /// <param name="memberInGroup">List các Members thuộc group đó</param>
+        /// <returns>Return danh sách các Members không thuộc group đó</returns>
+        public List<AspNetUser> findMembersNotInGroup(List<Participate> memberInGroup)
 		{
 			List<string> userInGroup = new List<string>();
 			foreach (var item in memberInGroup)

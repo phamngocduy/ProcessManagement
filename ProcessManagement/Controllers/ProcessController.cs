@@ -38,7 +38,7 @@ namespace ProcessManagement.Controllers
             string idUser = User.Identity.GetUserId();
             Group group = groupService.findGroup(idgroup);
             processService.createProcess(group.Id, idUser, pro);
-            SetFlash(FlashType.Success, "Created Process Successfully");
+            SetFlash(FlashType.success, "Created Process Successfully");
             return RedirectToAction("Draw", new { groupslug = group.groupSlug, groupid = group.Id, processid = pro.Id });
             //return RedirectToRoute("GroupControlLocalizedDefault", new { action = "DrawProcess", groupslug = group.groupSlug, groupid = group.Id, id = pro.Id });
         }
@@ -168,7 +168,7 @@ namespace ProcessManagement.Controllers
             Process process = processService.findProcess(IdProcess);
             Group group = groupService.findGroup(process.IdGroup);
             //set flash
-            SetFlash(FlashType.Success, "Created Role Successfully");
+            SetFlash(FlashType.success, "Created Role Successfully");
             return View();
             //return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
         }
@@ -181,7 +181,7 @@ namespace ProcessManagement.Controllers
             Process process = processService.findProcess(role.IdProcess);
             Group group = groupService.findGroup(process.IdGroup);
             participateService.removeRoleInProcess(role);
-            SetFlash(FlashType.Success, "Removed " + roleId + " Successfully");
+            SetFlash(FlashType.success, "Removed " + roleId + " Successfully");
 
             return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
         }
@@ -202,7 +202,7 @@ namespace ProcessManagement.Controllers
             Role role = participateService.findRole(model.Id);
             if (role == null) return HttpNotFound();
             participateService.editRole(model);
-            SetFlash(FlashType.Success, "Edited Role of " + role.Name + " Successfully");
+            SetFlash(FlashType.success, "Edited Role of " + role.Name + " Successfully");
             return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = role.IdProcess });
 
         }

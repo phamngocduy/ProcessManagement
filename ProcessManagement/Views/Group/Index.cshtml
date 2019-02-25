@@ -1,107 +1,324 @@
 ﻿@{
     ViewBag.Title = "Group List";
-    Layout = "~/Views/Shared/_NullLayout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var grouplist = ViewData["ListGroup"] as List<ProcessManagement.Models.Group>;
 
 }
 @section CustomCss{
-    <style>
-        .avatar-default {
-            padding-top: 10%;
-            font-size: 100px;
-            text-align: center;
-            font-weight: bold;
-            color: black;
-        }
-    </style>
+    @*<style>
+            .avatar-default {
+                padding-top: 10%;
+                font-size: 100px;
+                text-align: center;
+                font-weight: bold;
+                color: black;
+            }
+        </style>*@
 }
-<div id="main-body">
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+            <h2>
+                <a href="javascript:void(0);" class="btn btn-xs btn-link theme-color btn-toggle-fullwidth">
+                    <i class="fa fa-arrow-left"></i>
+                </a> Projects List
+            </h2>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-2.html" class="theme-color"><i class="icon-home"></i></a></li>
+                <li class="breadcrumb-item">Projects</li>
+                <li class="breadcrumb-item active">Projects List</li>
+            </ul>
+        </div>
+        <div class="col-lg-6 col-md-4 col-sm-12 text-right">
+            <div class="bh_chart hidden-xs">
+                <div class="float-left m-r-15">
+                    <small>Visitors</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-user"></i> 1,784</h6>
+                </div>
+                <span class="bh_visitors float-right">2,5,1,8,3,6,7,5</span>
+            </div>
+            <div class="bh_chart hidden-sm">
+                <div class="float-left m-r-15">
+                    <small>Visits</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-globe"></i> 325</h6>
+                </div>
+                <span class="bh_visits float-right">10,8,9,3,5,8,5</span>
+            </div>
+            <div class="bh_chart hidden-sm">
+                <div class="float-left m-r-15">
+                    <small>Chats</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-bubbles"></i> 13</h6>
+                </div>
+                <span class="bh_chats float-right">1,8,5,6,2,4,3,2</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="body project_report">
+                <div class="table-responsive">
+                    <table class="table table-hover js-grouplist-table dataTable table-custom m-b-0">
+                        <thead>
+                            <tr>
+                                <th>Group</th>
+                                <th>Owner</th>
+                                <th>Member</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @*<tr>
+                                    <td class="project-title">
+                                        <h6>InfiniO 4.1</h6>
+                                        <small>Created 14 July, 2018</small>
+                                    </td>
+                                    <td>
+                                        <img src="~/Content/images/xs/avatar1.jpg" data-toggle="tooltip"
+                                             data-placement="top" title="Team Lead" alt="Avatar"
+                                             class="width35 rounded">
+                                    </td>
+                                    <td>
+                                        <ul class="list-unstyled team-info">
+                                            <li>
+                                                <img src="~/Content/images/xs/avatar1.jpg"
+                                                     data-toggle="tooltip" data-placement="top"
+                                                     title="Avatar" alt="Avatar">
+                                            </li>
+                                            <li>
+                                                <img src="~/Content/images/xs/avatar2.jpg"
+                                                     data-toggle="tooltip" data-placement="top"
+                                                     title="Avatar">
+                                            </li>
+                                            <li>
+                                                <img src="~/Content/images/xs/avatar3.jpg"
+                                                     data-toggle="tooltip" data-placement="top"
+                                                     title="Avatar">
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td class="project-actions">
+                                        <a href="project-detail.html"
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="icon-eye"></i>
+                                        </a>
+                                        <a href="javascript:void(0);"
+                                           class="btn btn-sm btn-outline-success">
+                                            <i class="icon-pencil"></i>
+                                        </a>
+                                        <a href="javascript:void(0);"
+                                           class="btn btn-sm btn-outline-danger js-sweetalert"
+                                           title="Delete" data-type="confirm">
+                                            <i class="icon-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>*@
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @section CustomScripts{
+    <script src="~/Content/build/js/pages/tables/jquery-datatable.js"></script>
     <script>
-        function setLoading() {
-            var loading = document.createElement('div');
-            loading.className = "loading";
-            var body = document.getElementById("main-body");
-            for (var i = 0; i < 4; i++) {
-                var square = document.createElement('li');
-                loading.appendChild(square);
-            }
-            body.appendChild(loading);
-        }
-    </script>
-    <script>
-        getGroupList();
-        function getGroupList() {
-            $.ajax({
-                type: "GET",
-                url: "/api/getgrouplist/",
-                beforeSend: setLoading(),
-                success: function (response) {
-                    //$("#main-body").html(viewHTML);
-                    console.log(response);
-                    if (response.status != 200) {
-                        alertify.error("Error");
-                    } else {
-                        var data = response.data;
-                        renderListGroupView(data);
+        $(function () {
+            $(".js-grouplist-table").DataTable({
+                "processing": true,
+                "serverSide": false,
+                "ajax": {
+                    "type": "GET",
+                    "url": "@Url.Action("getgrouplist", "api")",
+                    "dataSrc": function (json) {
+                        json = json.data;
+                        console.log(json);
+                        var return_data = [];
+                        for (var i = 0; i < json.length; i++) {
+                            var name = `<a href="#"><h6>${json[i].name}</h6></a><small>${json[i].time_ralitive}</small>`;
+                            var sort = json[i].update_at.sort;
+                            var owner = getOwnerAvatar(json[i].owner.name, json[i].owner.avatar);
+                            var members = json[i].members.list;
+                            var memberAvatar;
+                            //member left
+                            var membertotal = json[i].members.total;
+                            var memberleft = membertotal - 4;
+
+                            var member;
+                            if (membertotal == 1) {
+                                member = "There aren't member in group yet";
+                            } else {
+                                member = `<ul class="list-unstyled team-info">`;
+                                for (var i = 0; i < members.length; i++) {
+
+                                    if (i == 3) {
+                                        if (memberleft > 1) {
+                                            member += `<li>${getMemberLeft(memberleft)}</li>`;
+                                            break;
+                                        }
+                                    }
+                                    memberAvatar = getMemberAvatar(members[i].name, members[i].avatar);
+                                    member += `<li>${memberAvatar}</li>`;
+                                }
+                                member += `</ul>`;
+                            }
+
+                            var status = `<span class="badge badge-success">Active</span>`;
+                            var action = `<a href="project-detail.html" class="btn btn-sm btn-outline-primary">
+                                            <i class="icon-eye"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-success">
+                                            <i class="icon-pencil"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger js-sweetalert" title="Delete" data-type="confirm">
+                                            <i class="icon-trash"></i>
+                                        </a>`;
+                            return_data.push({
+                                "name": name,
+                                "sort": sort,
+                                "owner": owner,
+                                "member": member,
+                                "status": status,
+                                "action": action
+                            })
+
+                        }
+                        return return_data;
                     }
                 },
-                error: function (errorData) {
-                    console.error(errorData);
-                    alertify.error("Error");
+                "createdRow": function (row, data, dataIndex) {
+                    if (dataIndex == 1 ) {
+                        $(row).addClass("project-title");
+                    }
+                },
+                "columns": [
+                    {
+                        data: {
+                            _: "name",
+                            sort: "sort"
+                        }
+                    },
+                    { data: "owner" },
+                    { data: "member" },
+                    { data: "status" },
+                    { data: "action" },
+                ],
+                "order": [[0, "desc"]],
+                "initComplete": function () {
+                    $(".btn-newgroup").html('<a href="#" class="btn btn-success">New Group</a>');
+                },
+                "drawCallback": function (setting) {
+                    $('[data-toggle="tooltip"]').tooltip();
                 }
             });
-        }
-        function renderListGroupView(groups) {
-            var lang = getCurrentLang();
-            var action = "group/newgroup";
-            var grouplist = "";
-                groups.forEach((group) => {
-                    grouplist += renderGroupBox(group,lang);
-                });
-            var html = `<div class="clearfix">
-                            <a href="${lang}/${action}" class="btn btn-success pull-right">Create Group</a>
-                        </div>
-                        <div class="group-list row display-flex">
-                             ${grouplist}
-                        </div>`;
-
-            $("#main-body").html(html);
-        }
-        function renderGroupBox(group) {
-            var lang = getCurrentLang();
-            var avatar;
-            var action = `${lang}/${group["slug"]}-${group["id"]}/group/show`;
-            if (group.avatar != null) {
-                avatar = `<img src="~/Content/images/workspace/${ group.avatar }" alt = "${group.name}" class="image-medium" />`;
+        })
+        function getOwnerAvatar(name, avatar) {
+            if (avatar.avatar != "") {
+                return `<img src="Content/images/xs/avatar1.jpg" data-toggle="tooltip" data-placement="top" title="${name}" alt="Avatar" class="width35 rounded">`;
             } else {
-                var temp = JSON.parse(group.default_avatar);
-                avatar = `<div class="image-medium avatar-default" style="background-color:${temp.background}"'>
-                            ${ temp.name }
-                        </div>`;
-            };
-            var html =
-                `<div class="col-sm-3">
-                    <div class="cw-card">
-                        <div class="cw-group-image">
-                            <a href="${ action }">
-                                ${ avatar }
-                            </a>
-                        </div>
-                        <div class="cw-group-infor">
-                            <div class="cw-group-name"><a href="${ action }">${ group.name }</a></div>
-                            <div class="cw-group-author"><span class="cw-label">Author:</span>${ group.owner }</div>
-                            <div class="cw-group-date"><span class="cw-label">Update at:</span>${ group.time_ralitive }</div>
-                            <div class="cw-group-des" style="word-break:break-all">
-                                <span class="cw-label">Description:</span>
-                                ${ group.des }
+                var avatardefault = JSON.parse(avatar.avatardefault);
+                return `<div data-toggle="tooltip" data-placement="top" title="${name}" class="width35 rounded owner-default" style="background-color:${avatardefault.background}">${avatardefault.name}</div>`
+            }
+        }
+        function getMemberAvatar(name, avatar) {
+            if (avatar.avatar != "") {
+                return `<img src="Content/images/xs/avatar1.jpg" data-toggle="tooltip" data-placement="top" title="${name}" alt="Avatar">`;
+            } else {
+                var avatardefault = JSON.parse(avatar.avatardefault);
+                return `<div data-toggle="tooltip" data-placement="top" title="${name}" class="member-default" style="background-color:${avatardefault.background}">${avatardefault.name}</div>`;
+            }
+        }
+        function getMemberLeft(memberleft) {
+            return `<div data-toggle="tooltip" data-placement="top" title="and ${memberleft} member more..." class="member-default member-left">${memberleft}+</div>`;
+        }
+    </script>
+    @*<script>
+            function setLoading() {
+                var loading = document.createElement('div');
+                loading.className = "loading";
+                var body = document.getElementById("main-body");
+                for (var i = 0; i < 4; i++) {
+                    var square = document.createElement('li');
+                    loading.appendChild(square);
+                }
+                body.appendChild(loading);
+            }
+        </script>
+        <script>
+            getGroupList();
+            function getGroupList() {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/getgrouplist/",
+                    beforeSend: setLoading(),
+                    success: function (response) {
+                        //$("#main-body").html(viewHTML);
+                        console.log(response);
+                        if (response.status != 200) {
+                            alertify.error("Error");
+                        } else {
+                            var data = response.data;
+                            renderListGroupView(data);
+                        }
+                    },
+                    error: function (errorData) {
+                        console.error(errorData);
+                        alertify.error("Error");
+                    }
+                });
+            }
+            function renderListGroupView(groups) {
+                var lang = getCurrentLang();
+                var action = "group/newgroup";
+                var grouplist = "";
+                    groups.forEach((group) => {
+                        grouplist += renderGroupBox(group,lang);
+                    });
+                var html = `<div class="clearfix">
+                                <a href="${lang}/${action}" class="btn btn-success pull-right">Create Group</a>
+                            </div>
+                            <div class="group-list row display-flex">
+                                 ${grouplist}
+                            </div>`;
+
+                $("#main-body").html(html);
+            }
+            function renderGroupBox(group) {
+                var lang = getCurrentLang();
+                var avatar;
+                var action = `${lang}/${group["slug"]}-${group["id"]}/group/show`;
+                if (group.avatar != null) {
+                    avatar = `<img src="~/Content/images/workspace/${ group.avatar }" alt = "${group.name}" class="image-medium" />`;
+                } else {
+                    var temp = JSON.parse(group.default_avatar);
+                    avatar = `<div class="image-medium avatar-default" style="background-color:${temp.background}"'>
+                                ${ temp.name }
+                            </div>`;
+                };
+                var html =
+                    `<div class="col-sm-3">
+                        <div class="cw-card">
+                            <div class="cw-group-image">
+                                <a href="${ action }">
+                                    ${ avatar }
+                                </a>
+                            </div>
+                            <div class="cw-group-infor">
+                                <div class="cw-group-name"><a href="${ action }">${ group.name }</a></div>
+                                <div class="cw-group-author"><span class="cw-label">Author:</span>${ group.owner }</div>
+                                <div class="cw-group-date"><span class="cw-label">Update at:</span>${ group.time_ralitive }</div>
+                                <div class="cw-group-des" style="word-break:break-all">
+                                    <span class="cw-label">Description:</span>
+                                    ${ group.des }
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>`;
-            return html;
-        }
-        //$("#main-body").load("/API/GetGroupList");
-    </script>
+                    </div>`;
+                return html;
+            }
+            //$("#main-body").load("/API/GetGroupList");
+        </script>*@
 }

@@ -2,64 +2,90 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - @ProcessManagement.Content.resources.CWcommon.clockworks_common_title</title>
+    <meta name="description" content="Process Management System">
+    <meta name="author" content="CAP2019, design by: Clockworks Team">
+    <title>:: Lucid System :: @ViewBag.Title</title>
     @Styles.Render("~/Content/css")
-    <link href="~/Content/libs/iCheck/skins/flat/green.css" rel="stylesheet">
-    <link href="~/Content/build/css/style.css" rel="stylesheet" />
-    <style>
-        .nav.navbar-nav.navbar-left {
-            display: none;
-        }
-        .nav-sm .container.body .col-md-3.left_col{
-            z-index:2 !important;
-        }
-    </style>
     @if (IsSectionDefined("CustomCss"))
     {
         @RenderSection("CustomCss", required: false)
     }
 </head>
-<body class="nav-sm">
-    <div class="container body">
-        <div class="main_container">
-            @Html.Partial("~/Views/Shared/Layouts/menu.cshtml")
-            @Html.Partial("~/Views/Shared/Layouts/header.cshtml")
-            <!--Content body-->
-            <div class="right_col" id="body" role="main">
+<body>
+    @Html.Partial("~/Views/Shared/Common/_Loader.cshtml")
+    <div id="wrapper">
+        <!-- header -->
+        @Html.Partial("~/Views/Shared/Common/_Header.cshtml")
+        <!-- end of header -->
+        
+        <!-- menu left -->
+        @Html.Partial("~/Views/Shared/Common/_Left.cshtml")
+        <!-- end of menu left -->
+        
+        <!-- main content -->
+        <div id="main-content">
+            <div class="container-fluid">
                 @RenderBody()
             </div>
-            <!--/ Content body-->
-            @Html.Partial("~/Views/Shared/Layouts/footer.cshtml")
+            @Html.Partial("~/Views/Shared/Common/_Footer.cshtml")
+            <!-- end of body content -->
         </div>
     </div>
-
     @Scripts.Render("~/Content/js")
-    <script src="~/Content/libs/iCheck/icheck.min.js"></script>
+    <script type="text/javascript">
+        function showToastr(type, message, position) {
+            toastr.options = {
+                closeButton : true,
+                positionClass: position,
+                showDuration: "300",
+                hideDuration: "1000",
+                timeOut: "3000"
+            }
+            toastr[type](message);
+        }
+        $(function () {
+        @{
+            string text = (string)TempData["FlashMessage.Text"];
+            if (!string.IsNullOrWhiteSpace(text))
+            {
+                FlashType type = (FlashType)TempData["FlashMessage.Type"];
+                FlashPosition position = (FlashPosition)TempData["FlashMessage.Position"];
+                string positionClass;
+                switch (position)
+                {
+                    case FlashPosition.BottomRight:
+                        positionClass = "toast-bottom-right";
+                        break;
+                    case FlashPosition.BottomLeft:
+                        positionClass = "toast-bottom-left";
+                        break;
+                    case FlashPosition.TopLeft:
+                        positionClass = "toast-top-left";
+                        break;
+                    case FlashPosition.TopRight:
+                        positionClass = "toast-top-right";
+                        break;
+                    case FlashPosition.TopCenter:
+                        positionClass = "toast-top-center";
+                        break;
+                    case FlashPosition.BottomCenter:
+                        positionClass = "toast-bottom-center";
+                        break;
+                    default:
+                        positionClass = "toast-bottom-left";
+                        break;
+                }
+                @:showToastr("@type", "@text", "@positionClass");
+
+            }
+        }
+        });
+    </script>
     @if (IsSectionDefined("CustomScripts"))
     {
         @RenderSection("CustomScripts", required: false)
     }
-    <script type="text/javascript">
-        alertify.set('notifier', 'position', 'bottom-left');
-        @{
-            string text = (string)TempData["FlashMessage.Text"];
-            string type = (string)TempData["FlashMessage.Type"];
-            if (!string.IsNullOrWhiteSpace(text))
-            {
-                if (type == "Success")
-                {
-
-                    @:alertify.success("@text");
-
-                }
-                else if (type == "Fail")
-                {
-                     @:alertify.error("@text");
-                }
-            }
-        }
-    </script>
-
 </body>
 </html>
