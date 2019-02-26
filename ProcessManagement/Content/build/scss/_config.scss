@@ -77,6 +77,26 @@ body, #wrapper{
                 
             }
         }
+        .fancy-radio{
+            input[type="radio"]{
+                &:checked{
+                    &+span{
+                        i{
+                            &::after{
+                                background-color :$color;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .btn-primary-theme{
+            background:$color;
+            color: #ffffff;
+            &:hover{
+                background: darken($color, 10%);    
+            }
+        }
     }    
 }
 .row{

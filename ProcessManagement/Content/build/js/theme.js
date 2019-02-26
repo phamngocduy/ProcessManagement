@@ -1,9 +1,11 @@
-$('.choose-skin li').on('click', function () {
-    let color = $(this).attr('data-theme');
-    setCookie('colortheme', color, 7);
-    $('body').removeClass();
-
-})
+$(function () {
+    setTheme();
+    $('.choose-skin li').on('click', function () {
+        let color = $(this).attr('data-theme');
+        setCookie('colortheme', color, 7);
+        $('body').removeClass();
+    });
+});
 function setTheme() {
     let theme = "theme-";
     let defaultColor = "blue";
@@ -35,4 +37,3 @@ function setTheme() {
     }
     $('body').removeClass().addClass(theme);
 }
-setTheme();

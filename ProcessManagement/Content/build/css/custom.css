@@ -48,6 +48,16 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-purple .card .header .header-dropdown .dropdown-toggle::after {
   color: #a27ce6;
 }
+.theme-purple .fancy-radio input[type=radio]:checked + span i::after {
+  background-color: #a27ce6;
+}
+.theme-purple .btn-primary-theme {
+  background: #a27ce6;
+  color: #ffffff;
+}
+.theme-purple .btn-primary-theme:hover {
+  background: #8451de;
+}
 
 .theme-cyan .theme-color {
   color: #2eacb3;
@@ -82,6 +92,16 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 }
 .theme-cyan .card .header .header-dropdown .dropdown-toggle::after {
   color: #2eacb3;
+}
+.theme-cyan .fancy-radio input[type=radio]:checked + span i::after {
+  background-color: #2eacb3;
+}
+.theme-cyan .btn-primary-theme {
+  background: #2eacb3;
+  color: #ffffff;
+}
+.theme-cyan .btn-primary-theme:hover {
+  background: #24858a;
 }
 
 .theme-blue .theme-color {
@@ -118,6 +138,16 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-blue .card .header .header-dropdown .dropdown-toggle::after {
   color: #449cff;
 }
+.theme-blue .fancy-radio input[type=radio]:checked + span i::after {
+  background-color: #449cff;
+}
+.theme-blue .btn-primary-theme {
+  background: #449cff;
+  color: #ffffff;
+}
+.theme-blue .btn-primary-theme:hover {
+  background: #1181ff;
+}
 
 .theme-green .theme-color {
   color: #31b96f;
@@ -152,6 +182,16 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 }
 .theme-green .card .header .header-dropdown .dropdown-toggle::after {
   color: #31b96f;
+}
+.theme-green .fancy-radio input[type=radio]:checked + span i::after {
+  background-color: #31b96f;
+}
+.theme-green .btn-primary-theme {
+  background: #31b96f;
+  color: #ffffff;
+}
+.theme-green .btn-primary-theme:hover {
+  background: #269157;
 }
 
 .theme-orange .theme-color {
@@ -188,6 +228,16 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-orange .card .header .header-dropdown .dropdown-toggle::after {
   color: #ff613c;
 }
+.theme-orange .fancy-radio input[type=radio]:checked + span i::after {
+  background-color: #ff613c;
+}
+.theme-orange .btn-primary-theme {
+  background: #ff613c;
+  color: #ffffff;
+}
+.theme-orange .btn-primary-theme:hover {
+  background: #ff3809;
+}
 
 .theme-blush .theme-color {
   color: #e84f5e;
@@ -222,6 +272,16 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 }
 .theme-blush .card .header .header-dropdown .dropdown-toggle::after {
   color: #e84f5e;
+}
+.theme-blush .fancy-radio input[type=radio]:checked + span i::after {
+  background-color: #e84f5e;
+}
+.theme-blush .btn-primary-theme {
+  background: #e84f5e;
+  color: #ffffff;
+}
+.theme-blush .btn-primary-theme:hover {
+  background: #e22235;
 }
 
 .row.display-flex {
@@ -325,6 +385,75 @@ table.dataTable {
 .card .header .header-dropdown .tab_btn i {
   font-size: 14px;
   font-weight: 100;
+}
+
+.fancy-input {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* Checked */
+  /* Transition */
+}
+.fancy-input input[type=checkbox], .fancy-input input[type=radio] {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+.fancy-input label {
+  position: relative;
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  padding-left: 30px;
+  padding-right: 10px;
+  line-height: 36px;
+  cursor: pointer;
+}
+.fancy-input label::before {
+  content: " ";
+  position: absolute;
+  top: 6px;
+  left: 0;
+  display: block;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #8e44ad;
+  border-radius: 4px;
+  z-index: -1;
+}
+.fancy-input input[type=radio] + label::before {
+  border-radius: 18px;
+}
+.fancy-input input[type=checkbox]:checked + label,
+.fancy-input input[type=radio]:checked + label {
+  padding-left: 10px;
+  color: #fff;
+}
+.fancy-input input[type=checkbox]:checked + label::before,
+.fancy-input input[type=radio]:checked + label::before {
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: #8e44ad;
+}
+.fancy-input label,
+.fancy-input label::before {
+  -webkit-transition: 0.25s all ease;
+  -o-transition: 0.25s all ease;
+  transition: 0.25s all ease;
+}
+
+.choose-file, .choose-input {
+  display: none;
+}
+
+#addnewtask label {
+  font-weight: normal;
+  color: #5a5a59;
+}
+#addnewtask .switch-custom label {
+  margin-right: 10px;
 }
 
 /* end of content */

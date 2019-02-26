@@ -13,9 +13,7 @@ namespace ProcessManagement
                    "~/Content/vendor/font-awesome/css/font-awesome.min.css",
                    "~/Content/vendor/toastr/toastr.min.css",
                    "~/Content/vendor/jquery-datatable/dataTables.bootstrap4.min.css",
-                   "~/Content/build/css/main.css",
-                   "~/Content/build/css/color_skins.css",
-                   "~/Content/build/css/custom.css"
+                   "~/Content/build/css/color_skins.css"
                ));
             bundles.Add(new ScriptBundle("~/Content/js").Include(
                 "~/Content/build/bundles/libscripts.bundle.js",
