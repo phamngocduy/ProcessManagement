@@ -97,6 +97,26 @@ body, #wrapper{
                 background: darken($color, 10%);    
             }
         }
+        .sidebar{
+            .tab-content{
+                .sidebar-nav{
+                    .metismenu{
+                        &>li{
+                            a{
+                                &:hover{
+                                    background-color: $color;
+                                    border-left-color: darken($color, 10%);
+                                    color:#ffffff;
+                                    &>i{
+                                        color:#ffffff !important;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }    
 }
 .row{

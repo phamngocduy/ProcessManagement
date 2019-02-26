@@ -35,6 +35,9 @@
             width: 64px;
             height: 64px;
         }
+        &:nth-last-child{
+            margin-bottom: 10px;
+        }
     }
 }
 .card{

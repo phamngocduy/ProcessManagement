@@ -4,6 +4,7 @@ $(function () {
         let color = $(this).attr('data-theme');
         setCookie('colortheme', color, 7);
         $('body').removeClass();
+        setTheme();
     });
 });
 function setTheme() {
