@@ -8414,6 +8414,7 @@
     <Content Include="Views\Shared\Common\_Loader.cshtml" />
     <Content Include="Views\Group\NewGroup.cshtml" />
     <Content Include="Views\Group\CreateTask.cshtml" />
+    <Content Include="Views\Group\ProcessManagement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\group\" />

@@ -107,8 +107,11 @@ namespace ProcessManagement.Controllers
             ViewData["ListParticipant"] = ListParticipant;
             //Tìm tất cả các process thuộc group đó
             ViewData["ListProcess"] = processService.findListProcess(group.Id);
+            Session["idgroup"] = group.Id;
+            Session["group.slug"] = group.groupSlug;
             return View(group);
         }
+
 
         [Authorize]
         [GroupAuthorize]
@@ -297,6 +300,10 @@ namespace ProcessManagement.Controllers
 
         }
         public ActionResult CreateTask()
+        {
+            return View();
+        }
+        public ActionResult ProcessManagement()
         {
             return View();
         }

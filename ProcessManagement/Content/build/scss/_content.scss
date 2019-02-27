@@ -109,9 +109,6 @@
         transition: .25s all ease;
     }
 }
-.choose-file,.choose-input{
-    display:none;
-}
 #addnewtask{
     label{
         font-weight: normal;
@@ -120,6 +117,16 @@
     .switch-custom{
         label{
             margin-right: 10px;
+        }
+    }
+}
+.process-list{
+    .process{
+        padding: 0 !important;
+        &:hover{
+            .action{
+                display: block;
+            }
         }
     }
 }

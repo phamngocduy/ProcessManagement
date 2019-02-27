@@ -1,5 +1,14 @@
 $(function () {
     setTheme();
+    var themeOptions = $("ul.choose-skin>li");
+    themeOptions.each(function (i,option) {
+        let colorData = option.getAttribute("data-theme");
+        let color = getCookie('colortheme');
+        if (colorData == color) {
+            option.classList.add("active")
+            return false;
+        }
+    });
     $('.choose-skin li').on('click', function () {
         let color = $(this).attr('data-theme');
         setCookie('colortheme', color, 7);

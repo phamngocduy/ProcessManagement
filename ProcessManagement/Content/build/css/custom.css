@@ -495,16 +495,19 @@ table.dataTable {
   transition: 0.25s all ease;
 }
 
-.choose-file, .choose-input {
-  display: none;
-}
-
 #addnewtask label {
   font-weight: normal;
   color: #5a5a59;
 }
 #addnewtask .switch-custom label {
   margin-right: 10px;
+}
+
+.process-list .process {
+  padding: 0 !important;
+}
+.process-list .process:hover .action {
+  display: block;
 }
 
 /* end of content */

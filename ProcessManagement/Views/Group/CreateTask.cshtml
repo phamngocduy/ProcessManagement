@@ -56,7 +56,7 @@
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <select class="form-control show-tick ms select2" data-placeholder="Select">
+                            <select class="form-control show-tick ms select2" data-placeholder="Select Role*">
                                 <option></option>
                                 <option>Designer</option>
                                 <option>Coder</option>
@@ -71,41 +71,33 @@
                             </div>
                         </div>
                         <div class="col-sm-12 ">
-                            <label class="fancy-radio"><input type="radio" name="input" value="input" checked /><span><i></i>input text</span></label>
-                            <label class="fancy-radio"><input type="radio" name="input" value="file" /><span><i></i>input file</span></label>
+                            <label class="fancy-checkbox"><input type="checkbox" name="input-type" value="input" checked /><span><i></i>input text</span></label>
+                            <label class="fancy-checkbox"><input type="checkbox" name="input-type" value="file" /><span><i></i>input file</span></label>
                         </div>
                         <div class="col-sm-12 ">
-                            <div class="choose-type row">
-                                <div class="choose-input">
-                                    <div class="col-sm-5">
+                            <div class="choose-type">
+                                <div class="choose-item hide row" id="choose-input">
+                                    <div class="col-sm-12 input-title">Input Text</div>
+                                    <div class="col-sm-12">
                                         <div class="form-group">
                                             <input type="text" class="form-control" placeholder="Label*">
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="value">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="min-length*">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-12">
                                         <div class="form-group">
                                             <input type="text" class="form-control" placeholder="max-length*">
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-12">
                                         <div class="form-group switch-custom">
                                             <label>required: <input type="checkbox" class="checkbox-switch" /></label>
-                                            <label>readonly: <input type="checkbox" class="checkbox-switch" /></label>
-                                            <label>disabled: <input type="checkbox" class="checkbox-switch" /></label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="choose-file">
+                                <div class="choose-item hide row" id="choose-file">
+                                    <div class="col-sm-12 input-title">
+                                        Input File
+                                    </div>
                                     <div class="col-sm-2">
                                         <div class="form-group">
                                             <input type="number" class="form-control" placeholder="Size(Mb)*">
@@ -121,6 +113,11 @@
                                             <option>video/* </option>
                                             <option>image/*</option>
                                         </select>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="form-group switch-custom">
+                                            <label>required: <input type="checkbox" class="checkbox-switch" /></label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -144,21 +141,32 @@
     <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
     <script>
         $(function () {
-            var inputConfig = $(".choose-type .choose-input").html();
-            var fileConfig = $(".choose-type .choose-file").html();
-            $(".choose-type").empty().html(inputConfig);
-            $("input[name='input']").on("click", function () {
-                var choose = $(this).val();
-                if (choose == "input") {
-                    $(".choose-type").empty().html(inputConfig);
-                    createSwitch();
-                } else {
-                    $(".choose-type").empty().html(fileConfig);
-                    createSelect2();
-                }
-            })
-            createSelect2();
+            var inputConfig = $(".choose-type #choose-input");
+            var inputRaw = $(".choose-type #choose-input")[0];
+            var fileConfig = $(".choose-type #choose-file");
+            var fileRaw = $(".choose-type #choose-file")[0]
+            inputConfig.hide("slow");
             createSwitch();
+            createSelect2();
+            var c = 0;
+            $("input[name='input-type']").on("click", function () {
+                var inputChoice = $("input[name='input-type'][value='input']").prop("checked");
+                var fileChoice = $("input[name='input-type'][value='file']").prop("checked");
+                if (inputChoice) {
+                    inputConfig.show("slow");
+                } else {
+                    inputConfig.hide("slow");
+                }
+                if (fileChoice) {
+                    fileConfig.show("slow");
+
+                } else {
+                    fileConfig.hide("slow");
+                }
+                
+                
+            })
+            
         });
         function createSwitch() {
             let el = $('.checkbox-switch');
