@@ -503,12 +503,12 @@ table.dataTable {
   margin-right: 10px;
 }
 
-.process-list .process {
+/* .process-list .process {
   padding: 0 !important;
 }
 .process-list .process:hover .action {
   display: block;
-}
+} */
 
 /* end of content */
 /* footer */

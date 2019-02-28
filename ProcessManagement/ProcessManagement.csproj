@@ -8418,6 +8418,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\group\" />
+    <Folder Include="Backup\Database\" />
+    <Folder Include="Backup\View\" />
     <Folder Include="Content\vendor\jquery.file.upload\cors\" />
     <Folder Include="Content\vendor\jquery.file.upload\css\" />
     <Folder Include="Content\vendor\jquery.file.upload\img\" />

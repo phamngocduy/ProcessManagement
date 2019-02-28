@@ -7,7 +7,7 @@
 @section CustomCss{
     <link rel="stylesheet" href="~/Content/vendor/dropify/css/dropify.min.css">
     <link rel="stylesheet" href="~/Content/vendor/select2/select2.css" />
-    <link rel="stylesheet" href="~/Content/vendor/switchery/dist/switchery.min.css"/>
+    <link rel="stylesheet" href="~/Content/vendor/switchery/dist/switchery.min.css" />
 }
 <div class="block-header">
     <div class="row">
@@ -141,33 +141,9 @@
     <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
     <script>
         $(function () {
-            var inputConfig = $(".choose-type #choose-input");
-            var inputRaw = $(".choose-type #choose-input")[0];
-            var fileConfig = $(".choose-type #choose-file");
-            var fileRaw = $(".choose-type #choose-file")[0]
-            inputConfig.hide("slow");
             createSwitch();
             createSelect2();
-            var c = 0;
-            $("input[name='input-type']").on("click", function () {
-                var inputChoice = $("input[name='input-type'][value='input']").prop("checked");
-                var fileChoice = $("input[name='input-type'][value='file']").prop("checked");
-                if (inputChoice) {
-                    inputConfig.show("slow");
-                } else {
-                    inputConfig.hide("slow");
-                }
-                if (fileChoice) {
-                    fileConfig.show("slow");
-
-                } else {
-                    fileConfig.hide("slow");
-                }
-                
-                
-            })
-            
-        });
+        })
         function createSwitch() {
             let el = $('.checkbox-switch');
             let switchArr = [];
@@ -181,9 +157,54 @@
             $("select.select2").select2({
                 allowClear: true
             });
-           
+
         }
     </script>
+    @*<script>
+            $(function () {
+                var inputConfig = $(".choose-type #choose-input");
+                var inputRaw = $(".choose-type #choose-input")[0];
+                var fileConfig = $(".choose-type #choose-file");
+                var fileRaw = $(".choose-type #choose-file")[0]
+                inputConfig.hide("slow");
+                createSwitch();
+                createSelect2();
+                var c = 0;
+                $("input[name='input-type']").on("click", function () {
+                    var inputChoice = $("input[name='input-type'][value='input']").prop("checked");
+                    var fileChoice = $("input[name='input-type'][value='file']").prop("checked");
+                    if (inputChoice) {
+                        inputConfig.show("slow");
+                    } else {
+                        inputConfig.hide("slow");
+                    }
+                    if (fileChoice) {
+                        fileConfig.show("slow");
+
+                    } else {
+                        fileConfig.hide("slow");
+                    }
+
+
+                })
+
+            });
+            function createSwitch() {
+                let el = $('.checkbox-switch');
+                let switchArr = [];
+                el.each(function (index, e) {
+                    switchArr[index] = new Switchery(e, {
+                        size: 'small',
+                    });
+                })
+            }
+            function createSelect2() {
+                $("select.select2").select2({
+                    allowClear: true
+                });
+
+            }
+        </script>*@
 
 }
 
