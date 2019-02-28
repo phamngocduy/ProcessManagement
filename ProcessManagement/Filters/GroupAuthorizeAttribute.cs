@@ -34,7 +34,8 @@ namespace ProcessManagement.Filters
              
            
             Group group = groupService.findGroup(groupid);
-            if (group == null) { 
+            if (group == null)
+            { 
                 filterContext.Result = new HttpStatusCodeResult(HttpStatusCode.NotFound);
                 return;
             }

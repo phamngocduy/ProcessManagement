@@ -1,8 +1,9 @@
 @{ 
     var avatar = User.Identity.GetAvatar();
     var avatardefault = User.Identity.GetDefaultAvatar();
-    var groupSlug = Session["group.slug"];
-    var groupId = Session["idgroup"];
+    var id = ViewContext.RouteData.Values["parameterName"];
+    var groupSlug = ViewContext.RouteData.Values["groupslug"];
+    var groupId = ViewContext.RouteData.Values["groupid"];
 }
 <div id="left-sidebar" class="sidebar">
     <div class="sidebar-scroll">
@@ -48,10 +49,12 @@
         </div>
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#project_menu">Group</a>
-            </li>
-            </li>
+            @if (groupId != null)
+            {
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#project_menu">Group</a>
+                </li>
+            }
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#setting">
                     <i class="icon-settings"></i>
@@ -60,22 +63,25 @@
         </ul>
         <!-- Tab panes -->
         <div class="tab-content p-l-0 p-r-0">
-            <div class="tab-pane animated fadeIn active" id="project_menu">
-                <nav class="sidebar-nav">
-                    <ul class="main-menu metismenu">
-                        <li class="active">
-                            <a href="#Projects" class="has-arrow">
-                                <i class="icon-list"></i><span>Process</span>
-                            </a>
-                            <ul>
-                                <li class="active"><a href="project-list.html">Process Management</a></li>
-                                <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "newprocess", groupslug = groupSlug, groupid = groupId})">Define Process</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-            <div class="tab-pane animated fadeIn" id="setting">
+            @if (groupId != null)
+            {
+                <div class="tab-pane animated fadeIn active" id="project_menu">
+                    <nav class="sidebar-nav">
+                        <ul class="main-menu metismenu">
+                            <li>
+                                <a href="#Projects" class="has-arrow">
+                                    <i class="icon-list"></i><span>Process</span>
+                                </a>
+                                <ul>
+                                    <li><a href="project-list.html">Process Management</a></li>
+                                    <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "newprocess", groupslug = groupSlug, groupid = groupId})">Define Process</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            }
+            <div class="tab-pane animated fadeIn @if (groupId == null) { WriteLiteral("active"); } " id="iftting">
                 <div class="p-l-15 p-r-15">
                     <h6>Choose Skin</h6>
                     <ul class="choose-skin list-unstyled">
