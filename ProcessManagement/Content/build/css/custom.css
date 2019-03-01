@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* font */
 @import url("https://fonts.googleapis.com/css?family=Poppins");
 /* end of font */
@@ -503,12 +504,78 @@ table.dataTable {
   margin-right: 10px;
 }
 
-/* .process-list .process {
+.process-list .process {
   padding: 0 !important;
 }
 .process-list .process:hover .action {
   display: block;
-} */
+}
+
+.step-list {
+  list-style: none;
+}
+.step-list .step {
+  position: relative;
+  padding: 0.75rem 1.25rem;
+  color: #004085;
+  background-color: #cce5ff;
+  border-color: #b8daff;
+  margin: 5px 0;
+  color: #fff;
+  line-height: 40px;
+  font-size: 15px;
+}
+.step-list .step .step-action {
+  position: absolute;
+  top: 12px;
+  right: 26px;
+}
+.step-list .step .step-action.dropdown .dropdown-toggle {
+  color: #fff;
+  padding: 5px 10px;
+}
+.step-list .step .step-action.dropdown .dropdown-toggle::after {
+  content: "";
+  font-family: "FontAwesome";
+  border: 0;
+  vertical-align: middle;
+  height: auto;
+  width: auto;
+}
+.step-list .step .step-action.dropdown .dropdown-menu {
+  border-radius: 0.55rem;
+  background: #17191c;
+  overflow: hidden;
+  transform: none !important;
+  left: auto !important;
+  right: 0;
+  padding: 10px;
+  box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.5);
+  border: 0;
+}
+.step-list .step .step-action.dropdown .dropdown-menu a {
+  color: #999;
+  font-size: 14px;
+  padding: 10px;
+  white-space: nowrap;
+}
+.step-list .step .step-action.dropdown .dropdown-menu a:hover {
+  color: #fff;
+}
+.step-list .task-list {
+  list-style: none;
+  display: none;
+}
+.step-list .task-list .task {
+  padding: 0.75rem 1.25rem;
+  color: #004085;
+  background-color: #cce5ff;
+  border-color: #b8daff;
+  margin: 5px 0;
+  color: #fff;
+  line-height: 20px;
+  font-size: 15px;
+}
 
 /* end of content */
 /* footer */
