@@ -1,7 +1,15 @@
-﻿@model ProcessManagement.Models.Group
+﻿@model ProcessManagement.Models.TaskProcess
 @{
-    ViewBag.Title = "New Task";
+    ViewBag.Title = "Showtask";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var requinputfile = ViewData["requinputfile"];
+    var selectfile = ViewData["selectfile"];
+    var requinputtext = ViewData["requinputtext"];
+    var size = ViewData["size"];
+    var maxlenght = ViewData["maxlenght"];
+    var jfile = ViewData["jfile"] as List<string>;
+    var inputtext = ViewData["inputtext"];
+
 }
 
 @section CustomCss{
@@ -48,26 +56,27 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="card">
             <div class="body">
-                <form action="@Url.RouteUrl("GroupLocalizedDefault",new { controller = "Group", action = "NewGroup"})" method="post" id="addnewtask" enctype="multipart/form-data">
+                <form @*action="@Url.RouteUrl(" GroupLocalizedDefault",new { controller="process" , action="addtaskprocess" })"*@ method="post" id="addnewtask" enctype="multipart/form-data">
                     <div class="row clearfix">
                         <div class="col-sm-8">
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Task name*">
+                                <input disabled required id="name" type="text" class="form-control" placeholder="Task name*" value="@Html.DisplayFor(m => m.Name)">
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <select class="form-control show-tick ms select2" data-placeholder="Select Role*">
-                                <option></option>
-                                <option>Designer</option>
-                                <option>Coder</option>
-                                <option>Tester</option>
+                            <select id="selectrole" class="form-control show-tick ms select2" data-placeholder="Select Role*" disabled>
+                                <option>@Html.DisplayFor(m => m.Role.Name)</option>
                             </select>
                         </div>
+                        @*<div class="col-sm-4">
+                                @Html.DropDownList("idRole", new SelectList(ViewBag.Listrole, "Id", "Name", Model.Role), new { @class = "form-control show-tick ms select2" })
+                                @Html.ValidationMessageFor(model => model.idRole, "", new { @class = "text-danger" })
+                            </div>*@
                     </div>
                     <div class="row clearfix">
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <textarea class="form-control" rows="8" placeholder="Write something about your group (optional)" id="editor"></textarea>
+                                <textarea disabled class="form-control" rows="8" placeholder="Write something about your group (optional)" id="editor">@Html.DisplayFor(m => m.Description)</textarea>
                             </div>
                         </div>
                         <div class="col-sm-12 ">
@@ -76,17 +85,17 @@
                                     <div class="col-sm-12 input-title">Input Text</div>
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="Label*">
+                                            <input disabled id="inputtext" type="text" class="form-control" placeholder="Label*" value="@inputtext">
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <input type="number" class="form-control" placeholder="max-length*">
+                                            <input disabled id="maxlength" type="number" class="form-control" placeholder="max-length*" value="@maxlenght">
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="form-group switch-custom">
-                                            <label>required: <input type="checkbox" class="checkbox-switch" /></label>
+                                            <label>required: <input disabled id="requinputtext" type="checkbox" class="checkbox-switch" /></label>
                                         </div>
                                     </div>
                                 </div>
@@ -96,11 +105,11 @@
                                     </div>
                                     <div class="col-sm-2">
                                         <div class="form-group">
-                                            <input type="number" class="form-control" placeholder="Size(Mb)*">
+                                            <input disabled id="size" type="number" class="form-control" placeholder="Size(Mb)*" value="@size">
                                         </div>
                                     </div>
                                     <div class="col-sm-10">
-                                        <select class="form-control show-tick ms select2" multiple data-placeholder="Select">
+                                        <select id="selectfile" class="form-control show-tick ms select2" multiple data-placeholder="Select" disabled>
                                             <option></option>
                                             <option>.jpg</option>
                                             <option>.pdf</option>
@@ -112,7 +121,7 @@
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="form-group switch-custom">
-                                            <label>required: <input type="checkbox" class="checkbox-switch" /></label>
+                                            <label>required: <input id="requinputfile" type="checkbox" class="checkbox-switch" /></label>
                                         </div>
                                     </div>
                                 </div>
@@ -120,8 +129,7 @@
                         </div>
                         <div class="col-sm-12">
                             <div class="mt-2">
-                                <button type="submit" class="btn btn-primary-theme">Create</button>
-                                <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "EditTask", idtask = Model.id })" class="btn btn-primary-theme">Edit task</a>
                             </div>
                         </div>
                     </div>
@@ -139,6 +147,12 @@
         $(function () {
             createSwitch();
             createSelect2();
+            var file = [];
+            @for (int i = 0; i < jfile.Count; i++)
+            {
+                @:file.push("@jfile[i]".trim());
+            }
+            $("#selectfile").select2('val',file);
         })
         function createSwitch() {
             let el = $('.checkbox-switch');
@@ -155,52 +169,6 @@
             });
 
         }
+
     </script>
-    @*<script>
-            $(function () {
-                var inputConfig = $(".choose-type #choose-input");
-                var inputRaw = $(".choose-type #choose-input")[0];
-                var fileConfig = $(".choose-type #choose-file");
-                var fileRaw = $(".choose-type #choose-file")[0]
-                inputConfig.hide("slow");
-                createSwitch();
-                createSelect2();
-                var c = 0;
-                $("input[name='input-type']").on("click", function () {
-                    var inputChoice = $("input[name='input-type'][value='input']").prop("checked");
-                    var fileChoice = $("input[name='input-type'][value='file']").prop("checked");
-                    if (inputChoice) {
-                        inputConfig.show("slow");
-                    } else {
-                        inputConfig.hide("slow");
-                    }
-                    if (fileChoice) {
-                        fileConfig.show("slow");
-
-                    } else {
-                        fileConfig.hide("slow");
-                    }
-
-
-                })
-
-            });
-            function createSwitch() {
-                let el = $('.checkbox-switch');
-                let switchArr = [];
-                el.each(function (index, e) {
-                    switchArr[index] = new Switchery(e, {
-                        size: 'small',
-                    });
-                })
-            }
-            function createSelect2() {
-                $("select.select2").select2({
-                    allowClear: true
-                });
-
-            }
-        </script>*@
-
 }
-

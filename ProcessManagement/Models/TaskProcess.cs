@@ -23,7 +23,8 @@ namespace ProcessManagement.Models
         public Nullable<System.DateTime> Updated_At { get; set; }
         public Nullable<bool> Status { get; set; }
         public Nullable<int> IdType { get; set; }
-        public string Value { get; set; }
+        public string ValueInputText { get; set; }
+        public string ValueInputFile { get; set; }
     
         public virtual Role Role { get; set; }
         public virtual Step Step { get; set; }

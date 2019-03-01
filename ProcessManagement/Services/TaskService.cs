@@ -11,11 +11,16 @@ namespace ProcessManagement.Services
         PMSEntities db = new PMSEntities();
         StepService stepService = new StepService();
 
-        public void addtaskprocess(int idStep, TaskProcess task)
+        public void addtaskprocess(int idStep, TaskProcess task, string valueinputtext, string valueinputfile, string nametask, int roletask, string editor)
         {
             task.idStep = idStep;
+            task.Name = nametask;
+            task.Description = editor;
+            task.idRole = roletask;
             task.Created_At = DateTime.Now;
             task.Updated_At = DateTime.Now;
+            task.ValueInputText = valueinputtext;
+            task.ValueInputFile = valueinputfile;
             db.TaskProcesses.Add(task);
             db.SaveChanges();
         }
@@ -32,12 +37,14 @@ namespace ProcessManagement.Services
             return task;
         }
 
-        public TaskProcess edittask(TaskProcess model)
+        public TaskProcess edittask(int taskid, string valueinputtext, string valueinputfile, string nametask, int roletask, string editor)
         {
-            TaskProcess task = findtask(model.id);
-            task.Name = model.Name;
-            task.Description = model.Description;
-            task.idRole = model.idRole;
+            TaskProcess task = findtask(taskid);
+            task.Name = nametask;
+            task.Description = editor;
+            task.idRole = roletask;
+            task.ValueInputText = valueinputtext;
+            task.ValueInputFile = valueinputfile;
             task.Updated_At = DateTime.Now;
             db.SaveChanges();
             return task;

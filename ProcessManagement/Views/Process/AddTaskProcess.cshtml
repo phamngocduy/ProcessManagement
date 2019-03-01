@@ -4,60 +4,211 @@
     ViewBag.Title = "AddTaskProcess";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var step = ViewData["step"] as ProcessManagement.Models.Step;
+    var group = ViewData["Group"] as ProcessManagement.Models.Group;
     Session["idstep"] = step.Id;
 }
 
-<h2>AddTaskProcess</h2>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-        <h4>TaskProcess</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
+@section CustomCss{
+    <link rel="stylesheet" href="~/Content/vendor/dropify/css/dropify.min.css">
+    <link rel="stylesheet" href="~/Content/vendor/select2/select2.css" />
+    <link rel="stylesheet" href="~/Content/vendor/switchery/dist/switchery.min.css" />
+}
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+            <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Create New Task</h2>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-2.html"><i class="icon-home"></i></a></li>
+                <li class="breadcrumb-item">Projects</li>
+                <li class="breadcrumb-item active">Add Task</li>
+            </ul>
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        @*<div class="form-group">
-                <label class="control-label col-md-3" for="last-name">
-                    Dung lượng tối đa <span class="required">*</span>
-                </label>
-                <div class="col-md-7">
-                    <input type="text" id="last-name2" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
+        <div class="col-lg-6 col-md-4 col-sm-12 text-right">
+            <div class="bh_chart hidden-xs">
+                <div class="float-left m-r-15">
+                    <small>Visitors</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-user"></i> 1,784</h6>
                 </div>
-            </div>*@
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.idRole, "idRole", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("idRole", new SelectList(ViewBag.Listrole, "Id", "Name", Model.Role), new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.idRole, "", new { @class = "text-danger" })
+                <span class="bh_visitors float-right">2,5,1,8,3,6,7,5</span>
             </div>
-        </div>
-
-
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+            <div class="bh_chart hidden-sm">
+                <div class="float-left m-r-15">
+                    <small>Visits</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-globe"></i> 325</h6>
+                </div>
+                <span class="bh_visits float-right">10,8,9,3,5,8,5</span>
+            </div>
+            <div class="bh_chart hidden-sm">
+                <div class="float-left m-r-15">
+                    <small>Chats</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-bubbles"></i> 13</h6>
+                </div>
+                <span class="bh_chats float-right">1,8,5,6,2,4,3,2</span>
             </div>
         </div>
     </div>
+</div>
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="body">
+                <form action="@Url.RouteUrl("GroupLocalizedDefault",new { controller = "process", action = "addtaskprocess"})" method="post" id="addnewtask" enctype="multipart/form-data">
+                    <div class="row clearfix">
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <input required id="name" type="text" class="form-control" placeholder="Task name*" name="@Html.NameFor(m => m.Name)">
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <select id="selectrole" class="form-control show-tick ms select2" data-placeholder="Select Role*">
+                                @foreach (var role in ViewBag.Listrole)
+                                {
+                                    <option value="@role.Id">@role.Name</option>
+                                }
+                            </select>
+                        </div>
+                        @*<div class="col-sm-4">
+                            @Html.DropDownList("idRole", new SelectList(ViewBag.Listrole, "Id", "Name", Model.Role), new { @class = "form-control show-tick ms select2" })
+                            @Html.ValidationMessageFor(model => model.idRole, "", new { @class = "text-danger" })
+                        </div>*@
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <textarea class="form-control" rows="8" placeholder="Write something about your group (optional)" id="editor" name="@Html.NameFor(m => m.Description)"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 ">
+                            <div class="choose-type">
+                                <div class="choose-item hide row" id="choose-input">
+                                    <div class="col-sm-12 input-title">Input Text</div>
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <input id="inputtext" type="text" class="form-control" placeholder="Label*">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <input id="maxlength" type="number" class="form-control" placeholder="max-length*">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="form-group switch-custom">
+                                            <label>required: <input id="requinputtext" type="checkbox" class="checkbox-switch" /></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="choose-item hide row" id="choose-file">
+                                    <div class="col-sm-12 input-title">
+                                        Input File
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <input id="size" type="number" class="form-control" placeholder="Size(Mb)*">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-10">
+                                        <select id="selectfile" class="form-control show-tick ms select2" multiple data-placeholder="Select">
+                                            <option></option>
+                                            <option>.jpg</option>
+                                            <option>.pdf</option>
+                                            <option>.doc</option>
+                                            <option>audio/*</option>
+                                            <option>video/* </option>
+                                            <option>image/*</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="form-group switch-custom">
+                                            <label>required: <input id="requinputfile" type="checkbox" class="checkbox-switch" /></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="mt-2">
+                                <button id="btn-save" type="submit" class="btn btn-primary-theme">Create</button>
+                                <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section CustomScripts{
+    <script src="~/Content/vendor/dropify/js/dropify.min.js"></script>
+    <script src="~/Content/build/js/pages/forms/dropify.js"></script>
+    <script src="~/Content/vendor/select2/select2.min.js"></script>
+    <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
+    <script>
+        $(function () {
+            createSwitch();
+            createSelect2();
+        })
+        function createSwitch() {
+            let el = $('.checkbox-switch');
+            let switchArr = [];
+            el.each(function (index, e) {
+                switchArr[index] = new Switchery(e, {
+                    size: 'small',
+                });
+            })
+        }
+        function createSelect2() {
+            $("select.select2").select2({
+                allowClear: true
+            });
+
+        }
+        
+    </script>
+    <script>
+        $(document).ready(function ($) {
+            $('#btn-save').on('click', function () {
+                var inputtext = $('#inputtext').val();
+                var maxlength = $('#maxlength').val();
+                var requinputtext = $('#requinputtext').val();
+                var size = $('#size').val();
+                var selectfile = $('#selectfile').val();
+                var requinputfile = $('#requinputfile').val();
+                var name = $('#name').val();
+                var selectrole = $('#selectrole').val();
+                var editor = $('#editor').val();
+                
+                let a = {
+                    inputtext: inputtext,
+                    maxlength: maxlength,
+                    requinputtext: requinputtext
+                };
+                let b = {
+                    size: size,
+                    selectfile: selectfile,
+                    requinputfile: requinputfile
+                };
+
+                let data = {
+                    nametask: name,
+                    roletask: selectrole,
+                    editor: editor,
+                    valueinputtext: JSON.stringify(a),
+                    valueinputfile: JSON.stringify(b)
+                }
+                
+                $.ajax({
+                        url: "@Url.RouteUrl("GroupLocalizedDefault", new { controller = "Process" , action = "addtaskprocess" })",
+                        type: "POST",
+                        data: data,
+                        dataType: "json",
+                        success: function (response) {
+                            //thanh cong thi no tra du lieu ve
+                            location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process" ,action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })' ;
+                        }
+                    })
+            }) 
+        })
+    </script>
 }

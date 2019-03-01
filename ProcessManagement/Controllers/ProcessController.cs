@@ -411,51 +411,112 @@ namespace ProcessManagement.Controllers
         public ActionResult AddTaskProcess(int stepid)
         {
             Step step = stepService.findStep(stepid);
+            Process ps = processService.findProcess(step.IdProcess);
+            Group group = groupService.findGroup(ps.IdGroup);
             TaskProcess pr = new TaskProcess();
             ViewData["step"] = step;
             List<Role> role = db.Roles.Where(x => x.IdProcess == step.IdProcess).ToList();
             ViewBag.Listrole = role;
+            ViewData["Group"] = group;
             return View(pr);
         }
 
         [Authorize]
         [HttpPost]
-        public ActionResult AddTaskProcess(TaskProcess task)
+        public JsonResult AddTaskProcess(TaskProcess task, string valueinputtext, string valueinputfile, string nametask, int roletask, string editor)
         {
             int idstep = (int)Session["idstep"];
             Step step = stepService.findStep(idstep);
-            taskService.addtaskprocess(step.Id, task);
+            Process ps = processService.findProcess(step.IdProcess); 
+            Group group = groupService.findGroup(ps.IdGroup);
+            taskService.addtaskprocess(step.Id, task, valueinputtext, valueinputfile, nametask, roletask, editor);
             SetFlash(FlashType.success, "Created Task Successfully");
-            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", processid = step.IdProcess });
+            return Json(new { id = ps.Id });
         }
-
-        [Authorize]
-        [GroupAuthorize]
-        public ActionResult ListTaskOfStep(int stepid)
-        {
-            return View(taskService.findtaskofstep(stepid));
-        }
-
+        
         [Authorize]
         [GroupAuthorize]
         public ActionResult EditTask(int idtask)
         {
             TaskProcess task = taskService.findtask(idtask);
+            ViewData["idtask"] = task.id;
             if (task == null) return HttpNotFound();
             Step step = stepService.findStep(task.idStep);
+            ViewData["step"] = step;
+            Process ps = processService.findProcess(step.IdProcess);
+            Group group = groupService.findGroup(ps.IdGroup);
+            ViewData["Group"] = group;
             List<Role> role = db.Roles.Where(x => x.IdProcess == step.IdProcess).ToList();
             ViewBag.Listrole = role;
+            if (task.ValueInputFile != null && task.ValueInputText != null)
+            {
+                JObject valueinputtext = JObject.Parse(task.ValueInputText);
+                JObject valueinputfile = JObject.Parse(task.ValueInputFile);
+                var inputtext = valueinputtext["inputtext"].ToString();
+                var maxlenght = valueinputtext["maxlength"].ToString();
+                var requinputtext = valueinputtext["requinputtext"].ToString();
+                var size = valueinputfile["size"].ToString();
+                var selectfile = valueinputfile["selectfile"].ToString();
+                JArray jfile = JArray.Parse(selectfile);
+                List<string> listFile = new List<string>();
+                for (int i = 0; i < jfile.Count; i++)
+                {
+                    listFile.Add(jfile[i].ToString());
+                }
+                var requinputfile = valueinputfile["requinputfile"].ToString();
+                ViewData["inputtext"] = inputtext;
+                ViewData["maxlenght"] = maxlenght;
+                ViewData["requinputtext"] = requinputtext;
+                ViewData["size"] = size;
+                ViewData["selectfile"] = selectfile;
+                ViewData["requinputfile"] = requinputfile;
+                ViewData["jfile"] = listFile;
+            }
             return View(task);
         }
 
         [Authorize]
         [HttpPost]
         [GroupAuthorize]
-        public ActionResult EditTask(TaskProcess model)
+        public JsonResult EditTask(int taskid, string valueinputtext, string valueinputfile, string nametask, int roletask, string editor)
         {
-            TaskProcess tasts = taskService.edittask(model);
-            SetFlash(FlashType.success, "Edited Task of " + model.Name + " Successfully");
-            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "ListTaskOfStep", stepid = tasts.idStep });
+            taskService.edittask(taskid, valueinputtext, valueinputfile, nametask, roletask, editor);
+            SetFlash(FlashType.success, "Edited Task of " + nametask + " Successfully");
+            return Json(new { id = taskid }); 
+        }
+
+        [Authorize]
+        [GroupAuthorize]
+        public ActionResult Showtask(int idtask)
+        {
+            TaskProcess task = taskService.findtask(idtask);
+            if (task == null) return HttpNotFound();
+            if (task.ValueInputFile != null && task.ValueInputText != null)
+            {
+                JObject valueinputtext = JObject.Parse(task.ValueInputText);
+                JObject valueinputfile = JObject.Parse(task.ValueInputFile);
+                var inputtext = valueinputtext["inputtext"].ToString();
+                var maxlenght = valueinputtext["maxlength"].ToString();
+                var requinputtext = valueinputtext["requinputtext"].ToString();
+                var size = valueinputfile["size"].ToString();
+                var selectfile = valueinputfile["selectfile"].ToString();
+                JArray jfile = JArray.Parse(selectfile);
+                List<string> listFile = new List<string>();
+                for (int i = 0; i < jfile.Count; i++)
+                {
+                    listFile.Add(jfile[i].ToString());
+                }
+                var requinputfile = valueinputfile["requinputfile"].ToString();
+                ViewData["inputtext"] = inputtext;
+                ViewData["maxlenght"] = maxlenght;
+                ViewData["requinputtext"] = requinputtext;
+                ViewData["size"] = size;
+                ViewData["selectfile"] = selectfile;
+                ViewData["requinputfile"] = requinputfile;
+                ViewData["jfile"] = listFile;
+            }
+                
+            return View(task);
         }
     }
 }
