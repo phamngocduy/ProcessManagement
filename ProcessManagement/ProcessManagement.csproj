@@ -361,13 +361,12 @@
     <Content Include="Content\build\fonts\simple-Line-Icons.svg" />
     <Content Include="Content\build\fonts\weathericons-regular-webfont.svg" />
     <Content Include="Content\build\js\common.js" />
-    <Content Include="Content\build\js\cookie.js" />
     <Content Include="Content\build\js\fixHeight.js" />
     <Content Include="Content\build\js\go.js" />
     <Content Include="Content\build\js\include.js" />
     <Content Include="Content\build\js\index.js" />
     <Content Include="Content\build\js\index2.js" />
-    <Content Include="Content\build\js\language.js" />
+    <Content Include="Content\build\js\custom.js" />
     <Content Include="Content\build\js\pages\blog.js" />
     <Content Include="Content\build\js\pages\calendar.js" />
     <Content Include="Content\build\js\pages\charts\chart-widgets.js" />
@@ -396,7 +395,6 @@
     <Content Include="Content\build\js\pages\ui\sortable-nestable.js" />
     <Content Include="Content\build\js\script.js" />
     <Content Include="Content\build\js\social.js" />
-    <Content Include="Content\build\js\theme.js" />
     <Content Include="Content\build\js\widgets\infobox\infobox-1.js" />
     <Content Include="Content\build\scripts\bootstrap.js" />
     <Content Include="Content\build\scripts\bootstrap.min.js" />
@@ -8419,6 +8417,7 @@
     <Content Include="Views\Group\NewGroup.cshtml" />
     <Content Include="Views\Group\CreateTask.cshtml" />
     <Content Include="Views\Group\ProcessManagement.cshtml" />
+    <Content Include="Views\Group\StepManagement.cshtml" />
     <Content Include="Views\Process\AddTaskProcess.cshtml" />
     <Content Include="Views\Process\ListTaskOfStep.cshtml" />
     <Content Include="Views\Process\EditTask.cshtml" />
