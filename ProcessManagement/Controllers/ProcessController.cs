@@ -18,6 +18,8 @@ namespace ProcessManagement.Controllers
         ParticipateService participateService = new ParticipateService();
         ProcessService processService = new ProcessService();
         StepService stepService = new StepService();
+        TaskService taskService = new TaskService();
+
         ///=============================================================================================
 
         [Authorize]
@@ -402,6 +404,58 @@ namespace ProcessManagement.Controllers
 
             db.SaveChanges();
             return Json(new { id = ps.IdGroup });
+        }
+
+        [Authorize]
+        [GroupAuthorize]
+        public ActionResult AddTaskProcess(int stepid)
+        {
+            Step step = stepService.findStep(stepid);
+            TaskProcess pr = new TaskProcess();
+            ViewData["step"] = step;
+            List<Role> role = db.Roles.Where(x => x.IdProcess == step.IdProcess).ToList();
+            ViewBag.Listrole = role;
+            return View(pr);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult AddTaskProcess(TaskProcess task)
+        {
+            int idstep = (int)Session["idstep"];
+            Step step = stepService.findStep(idstep);
+            taskService.addtaskprocess(step.Id, task);
+            SetFlash(FlashType.success, "Created Task Successfully");
+            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", processid = step.IdProcess });
+        }
+
+        [Authorize]
+        [GroupAuthorize]
+        public ActionResult ListTaskOfStep(int stepid)
+        {
+            return View(taskService.findtaskofstep(stepid));
+        }
+
+        [Authorize]
+        [GroupAuthorize]
+        public ActionResult EditTask(int idtask)
+        {
+            TaskProcess task = taskService.findtask(idtask);
+            if (task == null) return HttpNotFound();
+            Step step = stepService.findStep(task.idStep);
+            List<Role> role = db.Roles.Where(x => x.IdProcess == step.IdProcess).ToList();
+            ViewBag.Listrole = role;
+            return View(task);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [GroupAuthorize]
+        public ActionResult EditTask(TaskProcess model)
+        {
+            TaskProcess tasts = taskService.edittask(model);
+            SetFlash(FlashType.success, "Edited Task of " + model.Name + " Successfully");
+            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "ListTaskOfStep", stepid = tasts.idStep });
         }
     }
 }

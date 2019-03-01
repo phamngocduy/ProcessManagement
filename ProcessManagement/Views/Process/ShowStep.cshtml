@@ -17,13 +17,15 @@
     <tbody>
         @foreach (var step in Model)
         {
-            <tr>
-                <td><a>@step.Name</a></td>
-                <td>@step.Description</td>
-                <td>
-                    <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "editstep", groupslug = group.groupSlug, groupid = group.Id, stepid = step.Id })" class="btn btn-primary">Edit</a>
-                </td>
-            </tr>
+        <tr>
+            <td><a>@step.Name</a></td>
+            <td>@step.Description</td>
+            <td>
+                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "editstep", groupslug = group.groupSlug, groupid = group.Id, stepid = step.Id })" class="btn btn-primary">Edit step</a>
+                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "AddTaskProcess", stepid = step.Id })"><i class="fas fa-cog"></i> Add task</a>
+                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "ListTaskOfStep", stepid = step.Id })"><i class="fas fa-cog"></i> List task</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>

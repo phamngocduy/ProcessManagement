@@ -33,5 +33,6 @@ namespace ProcessManagement.Models
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Step> Steps { get; set; }
         public virtual DbSet<TaskProcess> TaskProcesses { get; set; }
+        public virtual DbSet<Type> Types { get; set; }
     }
 }

@@ -22,6 +22,8 @@
         <AssociationConnector Association="PMSModel.FK_Step_Process" />
         <AssociationConnector Association="PMSModel.FK_TaskProcess_Role" />
         <AssociationConnector Association="PMSModel.FK_TaskProcess_Step" />
+        <EntityTypeShape EntityType="PMSModel.Type" Width="1.5" PointX="3.375" PointY="0.875" />
+        <AssociationConnector Association="PMSModel.FK_TaskProcess_Type" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

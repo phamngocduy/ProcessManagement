@@ -114,7 +114,7 @@
     <div class="col-lg-6 col-md-12">
         <div class="card">
             <div class="header">
-                <h2>Group Name</h2>
+                <h2>@Model.Name</h2>
                 <ul class="header-dropdown">
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"></a>
@@ -128,7 +128,7 @@
             </div>
             <div class="body">
                 <p>
-                    this is description
+                    @Model.Description
                 </p>
             </div>
         </div>
@@ -199,33 +199,19 @@
             </div>
             <div class="body process-list">
                 <ul class="list-unstyled">
-                    <li class="media">
-                        <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
-                        <div class="media-body">
-                            <h5 class="mt-0 mb-1">List-based media object</h5>
-                            <p>This is description</p>
-                    </li>
-                    <li class="media">
-                        <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
-                        <div class="media-body">
-                            <h5 class="mt-0 mb-1">List-based media object</h5>
-                            <p>This is description</p>
-                        </div>
-                    </li>
-                    <li class="media">
-                        <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
-                        <div class="media-body">
-                            <h5 class="mt-0 mb-1">List-based media object</h5>
-                            <p>This is description</p>
-                        </div>
-                    </li>
-                    <li class="media" style="margin-bottom:10px;">
-                        <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
-                        <div class="media-body">
-                            <h5 class="mt-0 mb-1">List-based media object</h5>
-                            <p>This is description</p>
-                        </div>
-                    </li>
+                    @foreach (var pro in listprocess)
+                    {
+                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process", action = "ShowStep", groupslug = Model.groupSlug, groupid = Model.Id, processid = pro.Id })">
+                            <li class="media">
+
+                                <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
+                                <div class="media-body">
+                                    <h5 class="mt-0 mb-1">@pro.Name</h5>
+                                    <p>@pro.Description</p>
+                                </div>
+                            </li>
+                        </a>
+                    }
                     <li><a href="#" class="align-right displayblock">View more...</a></li>
                 </ul>
             </div>

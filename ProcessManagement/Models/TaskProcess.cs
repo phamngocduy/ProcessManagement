@@ -22,8 +22,11 @@ namespace ProcessManagement.Models
         public Nullable<System.DateTime> Created_At { get; set; }
         public Nullable<System.DateTime> Updated_At { get; set; }
         public Nullable<bool> Status { get; set; }
+        public Nullable<int> IdType { get; set; }
+        public string Value { get; set; }
     
         public virtual Role Role { get; set; }
         public virtual Step Step { get; set; }
+        public virtual Type Type { get; set; }
     }
 }
