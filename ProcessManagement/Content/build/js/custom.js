@@ -1,8 +1,9 @@
 ﻿$(function () {
     //var lang = CapstoneProject.Cookies.getCookie("LangFOrLangForProcessManagementSystem");
     //$('.setLang[data-lang="' + lang + '"]').addClass('active-lang');
-    var path = window.location.pathname;
-    path = path.replace("/vi", "").replace("/en", "");
+    var pathHaveLang = window.location.pathname;
+
+    var path = pathHaveLang.replace("/vi", "").replace("/en", "");
     console.log(path);
     $("#langen").attr("href", `/en${path}`);
     $("#langvi").attr("href", `/vi${path}`);
@@ -26,6 +27,19 @@
         setTheme();
     });
 
+    //set up active menu
+    var menuItem = $(".main-menu.metismenu li>a");
+    menuItem.each(function () {
+        var href = $(this).attr("href");
+        if (pathHaveLang == href) {
+            $(this).parent('li').addClass('active');
+            var parent = $(this).parents('ul');
+            if (parent.hasClass("collapse")) {
+                parent.addClass("in");
+                parent.parent("li").addClass("active");
+            }
+        }
+    });
 })
 
 
