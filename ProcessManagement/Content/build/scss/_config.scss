@@ -20,6 +20,9 @@ body, #wrapper{
         display: none;
     }
 }
+#content{
+    margin-bottom: 50px;
+}
 
 @each $themeClass, $color in  $color-themes{
     #{$themeClass} {

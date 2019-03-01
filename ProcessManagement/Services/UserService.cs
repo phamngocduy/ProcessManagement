@@ -35,5 +35,10 @@ namespace ProcessManagement.Services
             }
             return user.AvatarDefault;
         }
+        public AspNetUser findUser(string idUser)
+        {
+            var user = db.AspNetUsers.FirstOrDefault(x => x.Id == idUser);
+            return user;    
+        }
     }
 }

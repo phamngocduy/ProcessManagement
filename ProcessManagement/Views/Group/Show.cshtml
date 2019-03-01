@@ -5,11 +5,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var listprocess = ViewData["ListProcess"] as List<ProcessManagement.Models.Process>;
     var listuser = ViewData["ListParticipant"] as List<ProcessManagement.Models.Participate>;
+    var statistic = ViewData["statistic"] as dynamic;
 }
 @section CustomCss{
     <link rel="stylesheet" href="~/Content/vendor/chartist/css/chartist.min.css">
     <link rel="stylesheet" href="~/Content/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.css">
-    <link rel="stylesheet" href="~/Content/vendor/light-gallery/css/lightgallery.css">
+    <link rel="stylesheet" href="~/Content/vendor/select2/select2.css" />
 }
 <div class="block-header">
     <div class="row">
@@ -53,7 +54,7 @@
                 <div class="icon"><i class="fa fa-users"></i> </div>
                 <div class="content">
                     <div class="text">Member</div>
-                    <h5 class="number">22</h5>
+                    <h5 class="number">@statistic.totalmember</h5>
                 </div>
                 <hr>
                 <div class="icon">
@@ -63,7 +64,7 @@
                 </div>
                 <div class="content">
                     <div class="text">Total Process</div>
-                    <h5 class="number">425</h5>
+                    <h5 class="number">@statistic.totalprocess</h5>
                 </div>
             </div>
         </div>
@@ -224,52 +225,25 @@
     <div class="col-lg-8 col-md-7">
         <div class="card" style="padding-bottom:0">
             <div class="header">
-                <h2>Member of Group</h2>
+                <h2>Member of @Model.Name</h2>
             </div>
             <div class="body" style="padding-top:0">
                 <div class="table-responsive">
-                    <table class="table table-hover dataTable table-custom m-b-0" id="tablemember">
-                        <thead class="thead-dark">
+                    <table class="table table-hover dataTable table-custom m-b-0" id="table-member">
+                        <thead>
                             <tr>
-                                <th>Avatar</th>
-                                <th>Name</th>
-                                <th>Role</th>
-                                <th>Action</th>
+                                <th>Member of <strong>group 1</strong><span class="badge badge-pill badge-primary-color">0</span></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><img src="~/Content/images/xs/avatar1.jpg" class="rounded-circle width35" alt=""></td>
-                                <td>Marshall Nichols</td>
-                                <td><span>UI UX Designer</span></td>
-                                <td><span class="badge badge-success">Good</span></td>
-                            </tr>
-                            <tr>
-                                <td><img src="~/Content/images/xs/avatar2.jpg" class="rounded-circle width35" alt=""></td>
-                                <td>Susie Willis</td>
-                                <td><span>Designer</span></td>
-                                <td><span class="badge badge-warning">Average</span></td>
-                            </tr>
-                            <tr>
-                                <td><img src="~/Content/images/xs/avatar3.jpg" class="rounded-circle width35" alt=""></td>
-                                <td>Francisco Vasquez</td>
-                                <td><span>Team Leader</span></td>
-                                <td><span class="badge badge-primary">Excellent</span></td>
-                            </tr>
-                            <tr>
-                                <td><img src="~/Content/images/xs/avatar4.jpg" class="rounded-circle width35" alt=""></td>
-                                <td>Erin Gonzales</td>
-                                <td><span>Android Developer</span></td>
-                                <td><span class="badge badge-danger">Weak</span></td>
-                            </tr>
-                            <tr>
-                                <td><img src="~/Content/images/xs/avatar5.jpg" class="rounded-circle width35" alt=""></td>
-                                <td>Ava Alexander</td>
-                                <td><span>UI UX Designer</span></td>
-                                <td><span class="badge badge-success">Good</span></td>
-                            </tr>
+                            
                         </tbody>
                     </table>
+                    <div id="add-member-search">
+                        <input type="hidden" style="width:calc(100% - 112px);border: 1px solid #ced4da;padding:5px 10px;"/>
+                        <button class="btn btn-primary-theme" id="btn-add-member">Add member</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -292,21 +266,106 @@
 @section CustomScripts{
     <script src="~/Content/build/bundles/chartist.bundle.js"></script>
     <script src="~/Content/build/bundles/knob.bundle.js"></script>
-    <script src="~/Content//vendor/light-gallery/js/lightgallery-all.min.js"></script>
+    <script src="~/Content/vendor/select2/select2.min.js"></script>
     <script src="~/Content/build/js/index.js"></script>
     <script>
         $(function () {
-            $("#tablemember").DataTable({
+            var table = $("#table-member").DataTable({
                 "bLengthChange": false,
+                "ajax": {
+                    "type": "GET",
+                    "url": "@Url.Action("getmemberlist", "api")",
+                    "dataSrc": function (json) {
+                        json = json.data;
+                        var return_data = [];
+                        for (var i = 0; i < json.length; i++) {
+                            var name = json[i].name;
+                            var avatar;
+                            var jAvatar = json[i].avatar;
+                            if (jAvatar.avatar == null) {
+                                avatar = `<img src="~/Content/images/xs/avatar1.jpg" class="rounded-circle width35" alt="">`;
+                            } else {
+                                var avatardefault = JSON.parse(jAvatar.avatardefault);
+                                avatar = `<div class="width35 rounded owner-default" style="background-color:${avatardefault.background}">${avatardefault.name}</div>`
+                            }
+                            var member = `${avatar}${name}`;
+                            return_data.push({
+                                "member": member,
+                                "sort": name,
+                                "role": ""
+                            })
+                        }
+                        return return_data;
+                    }
+                },
                 "language": {
                     "emptyTable": "There aren't member in group yet",
                     "info": "Showing _START_ to _END_ of _TOTAL_ member",
+                },
+                "columns": [
+                    {
+                        "width": "40%",
+                        data: {
+                            _: "member",
+                            sort: "sort"
+                        }
+                    },
+                    {   data: "role" }
+                ],
+            });
+            //$('#aniimated-thumbnials').lightGallery({
+            //    thumbnail: true,
+            //    selector: 'a'
+            //});
+            $("#btn-add-member").on("click", function () {
+                var newMember = $("#add-member-search input").select2("data");
+                if (newMember == null) {
+                    showToastr("error", "Please input name to invite user", "toast-bottom-left");
+                } else {
+                    addMember(newMember)
                 }
             });
-            $('#aniimated-thumbnials').lightGallery({
-                thumbnail: true,
-                selector: 'a'
+            $("#add-member-search input").select2({
+                placeholder: "Search username, nickname, email...",
+                ajax: {
+                    url: "@Url.Action("getusernotingroup", "api")",
+
+                    dataType: 'json',
+                    data: function (params) {
+                        var query = {
+                            key: params,
+                            idGroup: @Model.Id
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        // Tranforms the top-level key of the response object from 'items' to 'results'
+                        return {
+                            results: data.results
+                        };
+                    }
+                }
             });
+            function addMember(newMember) {
+               $.ajax({
+                    url: "@Url.Action("addmember","api")",
+                    type: "POST",
+                    data: newMember,
+                    dataType: "json",
+                    success: function (response) {
+                        //thanh cong thi no tra du lieu ve
+                        console.log(response);
+                        if (response.status == 200) {
+                            showToastr("success", response.message, "toast-bottom-left");
+                            $(".select2-chosen").empty();
+                            table.ajax.reload();
+                        } else {
+                            showToastr("error", response.message, "toast-bottom-left")
+                            console.error(response)
+                        }
+                    }
+                })
+            }
         });
     </script>
 }

@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using ProcessManagement.Models;
 using ProcessManagement.Services;
 using ProcessManagement.Filters;
+using System.Dynamic;
+
 namespace ProcessManagement.Controllers
 {
     [LanguageFilter]
@@ -102,13 +104,18 @@ namespace ProcessManagement.Controllers
             Group group = groupService.findGroup(groupid);
             if (group == null) return HttpNotFound();
 
+            dynamic expando = new ExpandoObject();
+            var groupStatisticModel = expando as IDictionary<string, object>;
+            groupStatisticModel.Add("totalmember", participateService.countMemberInGroup(group.Id));
+            groupStatisticModel.Add("totalprocess", processService.countProcessOfGroup(group.Id));
+
             //Tìm tất cả member thuộc group đó
             var ListParticipant = participateService.findMembersInGroup(group.Id);
             ViewData["ListParticipant"] = ListParticipant;
             //Tìm tất cả các process thuộc group đó
             ViewData["ListProcess"] = processService.findListProcess(group.Id);
-            Session["idgroup"] = group.Id;
-            Session["group.slug"] = group.groupSlug;
+            //thống kê
+            ViewData["statistic"] = groupStatisticModel;
             return View(group);
         }
 

@@ -139,7 +139,7 @@
                         console.log(json);
                         var return_data = [];
                         for (var i = 0; i < json.length; i++) {
-                            var action = `${lang}/${json[i].slug}-${json[i].id}/group/show`;
+                            var action = `/${lang}/${json[i].slug}-${json[i].id}/group/show`;
                             var name = `<a href="${action}"><h6>${json[i].name}</h6></a><small>${json[i].time_ralitive}</small>`;
                             var sort = json[i].update_at.sort;
                             var owner = getOwnerAvatar(json[i].owner.name, json[i].owner.avatar);
@@ -237,90 +237,4 @@
             return `<div data-toggle="tooltip" data-placement="top" title="and ${memberleft} member more..." class="member-default member-left">${memberleft}+</div>`;
         }
     </script>
-    @*<script>
-            function setLoading() {
-                var loading = document.createElement('div');
-                loading.className = "loading";
-                var body = document.getElementById("main-body");
-                for (var i = 0; i < 4; i++) {
-                    var square = document.createElement('li');
-                    loading.appendChild(square);
-                }
-                body.appendChild(loading);
-            }
-        </script>
-        <script>
-            getGroupList();
-            function getGroupList() {
-                $.ajax({
-                    type: "GET",
-                    url: "/api/getgrouplist/",
-                    beforeSend: setLoading(),
-                    success: function (response) {
-                        //$("#main-body").html(viewHTML);
-                        console.log(response);
-                        if (response.status != 200) {
-                            alertify.error("Error");
-                        } else {
-                            var data = response.data;
-                            renderListGroupView(data);
-                        }
-                    },
-                    error: function (errorData) {
-                        console.error(errorData);
-                        alertify.error("Error");
-                    }
-                });
-            }
-            function renderListGroupView(groups) {
-                var lang = getCurrentLang();
-                var action = "group/newgroup";
-                var grouplist = "";
-                    groups.forEach((group) => {
-                        grouplist += renderGroupBox(group,lang);
-                    });
-                var html = `<div class="clearfix">
-                                <a href="${lang}/${action}" class="btn btn-success pull-right">Create Group</a>
-                            </div>
-                            <div class="group-list row display-flex">
-                                 ${grouplist}
-                            </div>`;
-
-                $("#main-body").html(html);
-            }
-            function renderGroupBox(group) {
-                var lang = getCurrentLang();
-                var avatar;
-                var action = `${lang}/${group["slug"]}-${group["id"]}/group/show`;
-                if (group.avatar != null) {
-                    avatar = `<img src="~/Content/images/workspace/${ group.avatar }" alt = "${group.name}" class="image-medium" />`;
-                } else {
-                    var temp = JSON.parse(group.default_avatar);
-                    avatar = `<div class="image-medium avatar-default" style="background-color:${temp.background}"'>
-                                ${ temp.name }
-                            </div>`;
-                };
-                var html =
-                    `<div class="col-sm-3">
-                        <div class="cw-card">
-                            <div class="cw-group-image">
-                                <a href="${ action }">
-                                    ${ avatar }
-                                </a>
-                            </div>
-                            <div class="cw-group-infor">
-                                <div class="cw-group-name"><a href="${ action }">${ group.name }</a></div>
-                                <div class="cw-group-author"><span class="cw-label">Author:</span>${ group.owner }</div>
-                                <div class="cw-group-date"><span class="cw-label">Update at:</span>${ group.time_ralitive }</div>
-                                <div class="cw-group-des" style="word-break:break-all">
-                                    <span class="cw-label">Description:</span>
-                                    ${ group.des }
-                                </div>
-                            </div>
-                        </div>
-                    </div>`;
-                return html;
-            }
-            //$("#main-body").load("/API/GetGroupList");
-        </script>*@
 }

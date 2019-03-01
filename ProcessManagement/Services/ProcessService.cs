@@ -71,5 +71,10 @@ namespace ProcessManagement.Services
 			db.Roles.Add(role);
 			db.SaveChanges();
 		}
+        public int countProcessOfGroup(int idGroup)
+        {
+            var count = db.Processes.Where(m => m.IdGroup == idGroup).Count();
+            return count;
+        }
 	}
 }

@@ -76,13 +76,13 @@ namespace ProcessManagement.Controllers
                 object jOwner = new
                 {
                     name = group.AspNetUser.UserName,
-                    avatar = new 
+                    avatar = new
                     {
                         avatar = group.AspNetUser.Avatar,
                         avatardefault = group.AspNetUser.AvatarDefault
                     },
                 };
-                
+
 
 
                 List<Participate> ListParticipate = participateService.findMembersNotOwnerInGroup(group.Id, 4);
@@ -138,6 +138,82 @@ namespace ProcessManagement.Controllers
 
             var response = new { data = groupList, status = HttpStatusCode.OK };
             return Json(response, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult getUserNotInGroup(string key, int idGroup)
+        {
+            List<object> jMember = new List<object>();
+            List<Participate> ListParticipant = participateService.findMembersInGroup(idGroup);
+            List<AspNetUser> memberNotInGroup = participateService.searchMembersNotInGroup(ListParticipant,key,5);
+            if (memberNotInGroup.Any())
+            {
+                foreach (var member in memberNotInGroup)
+                {
+                    object tempData = new
+                    {
+                        id = member.Id,
+                        text = member.NickName
+                    };
+                    jMember.Add(tempData);
+                }
+            }
+            var response = new { results = jMember, status = HttpStatusCode.OK };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult addMember(string id)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            int groupid = (int)Session["groupid"];
+            Group group = groupService.findGroup(groupid);
+            AspNetUser user = userService.findUser(id);
+            if (user == null)
+            {
+                status = HttpStatusCode.InternalServerError;
+                message = "User not found";
+            }
+            else
+            {
+                var checkExist = participateService.checkMemberExist(user.Id, group.Id);
+                if (checkExist != null)
+                {
+                    status = HttpStatusCode.InternalServerError;
+                    message = "User exist in group";
+                }
+                else
+                {
+                    participateService.addMember(user.Id, group.Id);
+                    message = "Add member sucess";
+                }
+            }
+            var response = new { message = message , status = status };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult getMemberList()
+        {
+            int groupid = (int)Session["groupid"];
+            Group group = groupService.findGroup(groupid);
+            List<Participate> participates = participateService.findMembersInGroup(group.Id);
+            List<object> jMember = new List<object>();
+            foreach (var user in participates)
+            {
+                object tempdata = new
+                {
+                    id = user.Id,
+                    name = user.AspNetUser.UserName,
+                    avatar = new
+                    {
+                        avatar = user.AspNetUser.Avatar,
+                        avatardefault = user.AspNetUser.AvatarDefault
+                    },
+                    isOwner = user.IsOwner,
+                    isAdmin = user.IsAdmin,
+                    isManager = user.IsManager
+                };
+                jMember.Add(tempdata);
+            }
+            var response = new { data = jMember, status = HttpStatusCode.OK };
+            return Json(response, JsonRequestBehavior.AllowGet);
+
         }
     }
 }   
