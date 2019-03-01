@@ -22,9 +22,7 @@ namespace ProcessManagement
                 "~/Content/build/bundles/mainscripts.bundle.js",
                 "~/Content/build/bundles/datatablescripts.bundle.js",
                 "~/Content/build/js/pages/ui/dialogs.js",
-                "~/Content/build/js/language.js",
-                "~/Content/build/js/cookie.js",
-                "~/Content/build/js/theme.js"
+                "~/Content/build/js/custom.js"
             ));
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Content/build/scripts/jquery.validate*"));

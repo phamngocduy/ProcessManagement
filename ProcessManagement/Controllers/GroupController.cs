@@ -307,6 +307,10 @@ namespace ProcessManagement.Controllers
         {
             return View();
         }
+        public ActionResult StepManagement()
+        {
+            return View();
+        }
         //[Authorize]
         ////[GroupAuthorize]
         //public ActionResult CreateProcess(int groupid)

@@ -130,3 +130,72 @@
         }
     }
 }
+.step-list{
+    list-style: none;
+    .step{
+        position: relative;
+        padding: .75rem 1.25rem;
+        color: #004085;
+        background-color: #cce5ff;
+        border-color: #b8daff;
+        margin: 5px 0;
+        color: #fff;
+        line-height: 40px;  
+        font-size: 15px;
+        .step-name{
+        }
+        .step-action{
+            position: absolute;
+            top: 12px;
+            right: 26px;
+            &.dropdown{
+                .dropdown-toggle{
+                    color: #fff;
+                    padding: 5px 10px;
+                    &::after{
+                        content: "\f142";
+                        font-family: 'FontAwesome';
+                        border: 0;
+                        vertical-align: middle;
+                        height: auto;
+                        width: auto;
+                    }
+                }
+                .dropdown-menu{
+                    border-radius: .55rem;
+                    background: #17191c;
+                    overflow: hidden;
+                    transform: none !important;
+                    left: auto !important;
+                    right: 0;
+                    padding: 10px;
+                    box-shadow: 0px 2px 20px 0px rgba(0,0,0,0.5);
+                    border: 0;
+                    a{
+                        color: #999;
+                        font-size: 14px;
+                        padding: 10px;
+                        white-space: nowrap;
+                        &:hover{
+                            color: #fff;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .task-list{
+        list-style: none;
+        display: none;
+        .task{
+            padding: .75rem 1.25rem;
+            color: #004085;
+            background-color: #cce5ff;
+            border-color: #b8daff;
+            margin: 5px 0;
+            color: #fff;
+            line-height: 20px;  
+            font-size: 15px;
+        }
+    }
+}
