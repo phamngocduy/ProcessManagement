@@ -615,6 +615,9 @@ table.dataTable {
 #table-member .owner-default {
   margin-right: 10px;
 }
+#table-member .multiselect.dropdown-toggle {
+  border: none;
+}
 
 /* end of content */
 /* footer */

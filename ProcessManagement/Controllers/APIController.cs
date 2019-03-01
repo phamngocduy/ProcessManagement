@@ -182,7 +182,7 @@ namespace ProcessManagement.Controllers
                 else
                 {
                     participateService.addMember(user.Id, group.Id);
-                    message = "Add member sucess";
+                    message = "Added member sucessfully";
                 }
             }
             var response = new { message = message , status = status };
@@ -214,6 +214,30 @@ namespace ProcessManagement.Controllers
             var response = new { data = jMember, status = HttpStatusCode.OK };
             return Json(response, JsonRequestBehavior.AllowGet);
 
+        }
+        public JsonResult editRole(int id,string roles)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            JObject jRoles = JObject.Parse(roles);
+            Participate user = participateService.findMemberInGroup(id);
+            if (user == null)
+            {
+                status = HttpStatusCode.InternalServerError;
+                message = "User not in group";
+            }
+            else
+            {
+                user.IsAdmin = bool.Parse(jRoles["isAdmin"].ToString());
+                user.IsManager = bool.Parse(jRoles["isManager"].ToString());
+                participateService.editRoleUser(user);
+
+                status = HttpStatusCode.OK;
+                message = "Updated role sucessfully";
+
+            }
+            var response = new { message = message, status = status };
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
     }
 }   

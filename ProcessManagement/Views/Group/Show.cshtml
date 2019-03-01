@@ -11,6 +11,15 @@
     <link rel="stylesheet" href="~/Content/vendor/chartist/css/chartist.min.css">
     <link rel="stylesheet" href="~/Content/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.css">
     <link rel="stylesheet" href="~/Content/vendor/select2/select2.css" />
+    <link rel="stylesheet" href="~/Content/vendor/bootstrap-multiselect/bootstrap-multiselect.css">
+    <style>
+        .dropdown-menu  a{
+            display:block;
+        }
+        .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
+            background-color: unset !important;
+        }
+    </style>
 }
 <div class="block-header">
     <div class="row">
@@ -225,23 +234,22 @@
     <div class="col-lg-8 col-md-7">
         <div class="card" style="padding-bottom:0">
             <div class="header">
-                <h2>Member of @Model.Name</h2>
+                <h2>Members of @Model.Name</h2>
             </div>
             <div class="body" style="padding-top:0">
                 <div class="table-responsive">
                     <table class="table table-hover dataTable table-custom m-b-0" id="table-member">
                         <thead>
                             <tr>
-                                <th>Member of <strong>group 1</strong><span class="badge badge-pill badge-primary-color">0</span></th>
+                                <th>Member</th>
+                                <th>Role</th>
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                     <div id="add-member-search">
-                        <input type="hidden" style="width:calc(100% - 112px);border: 1px solid #ced4da;padding:5px 10px;"/>
+                        <input type="hidden" style="width:calc(100% - 112px);border: 1px solid #ced4da;padding:5px 10px;" />
                         <button class="btn btn-primary-theme" id="btn-add-member">Add member</button>
                     </div>
                 </div>
@@ -267,6 +275,7 @@
     <script src="~/Content/build/bundles/chartist.bundle.js"></script>
     <script src="~/Content/build/bundles/knob.bundle.js"></script>
     <script src="~/Content/vendor/select2/select2.min.js"></script>
+    <script src="~/Content/vendor/bootstrap-multiselect/bootstrap-multiselect.js"></script>
     <script src="~/Content/build/js/index.js"></script>
     <script>
         $(function () {
@@ -276,6 +285,7 @@
                     "type": "GET",
                     "url": "@Url.Action("getmemberlist", "api")",
                     "dataSrc": function (json) {
+                        console.log(json);
                         json = json.data;
                         var return_data = [];
                         for (var i = 0; i < json.length; i++) {
@@ -289,10 +299,17 @@
                                 avatar = `<div class="width35 rounded owner-default" style="background-color:${avatardefault.background}">${avatardefault.name}</div>`
                             }
                             var member = `${avatar}${name}`;
+                            var isAdmin = json[i].isAdmin ? "selected" : "";
+                            var isManager = json[i].isManager ? "selected" : "";
+                            var role = `<select multiple="multiple" class="role multiselect" id="role-${i + 1}" data-id="${json[i].id}">
+                                            <option value="a" ${isAdmin}>admin</option>
+                                            <option value="m" ${isManager}>manager</option>
+                                        </select>`;
                             return_data.push({
                                 "member": member,
                                 "sort": name,
-                                "role": ""
+                                "role": role,
+                                "action":""
                             })
                         }
                         return return_data;
@@ -304,14 +321,46 @@
                 },
                 "columns": [
                     {
-                        "width": "40%",
+                        "width": "35%",
                         data: {
                             _: "member",
                             sort: "sort"
                         }
                     },
-                    {   data: "role" }
+                    { data: "role" },
+                    { data: "action"}
                 ],
+                "drawCallback": function (setting) {
+                    $(".role").multiselect({
+                        nonSelectedText: 'member',
+                        numberDisplayed: 4,
+                        allSelectedText: false,
+                        onDropdownHide: function (event) {
+                            var id = $(this)[0].$select.attr("id");
+                            var memberId = $(`#${id}`).attr("data-id");
+                            var brands = $(`#${id} option:selected`);
+                            let isAdmin = false, isManager = false;
+                            $(brands).each(function (index, brand) {
+                                var option = $(this).val();
+                                if (option == "a") {
+                                    isAdmin = true;
+                                }
+                                if (option == "m") {
+                                    isManager = true;
+                                }
+                            });
+                            var userRole = {
+                                id: memberId,
+                                roles: JSON.stringify({
+                                    isAdmin: isAdmin,
+                                    isManager: isManager
+                                })
+                            }
+                            console.log(userRole);
+                            editRole(userRole);
+                        }
+                    });
+                }
             });
             //$('#aniimated-thumbnials').lightGallery({
             //    thumbnail: true,
@@ -325,6 +374,7 @@
                     addMember(newMember)
                 }
             });
+            
             $("#add-member-search input").select2({
                 placeholder: "Search username, nickname, email...",
                 ajax: {
@@ -358,6 +408,25 @@
                         if (response.status == 200) {
                             showToastr("success", response.message, "toast-bottom-left");
                             $(".select2-chosen").empty();
+                            table.ajax.reload();
+                        } else {
+                            showToastr("error", response.message, "toast-bottom-left")
+                            console.error(response)
+                        }
+                    }
+                })
+            }
+            function editRole(role) {
+                $.ajax({
+                    url: "@Url.Action("editrole","api")",
+                    type: "POST",
+                    data: role,
+                    dataType: "json",
+                    success: function (response) {
+                        //thanh cong thi no tra du lieu ve
+                        console.log(response);
+                        if (response.status == 200) {
+                            showToastr("success", response.message, "toast-bottom-left");
                             table.ajax.reload();
                         } else {
                             showToastr("error", response.message, "toast-bottom-left")

@@ -233,4 +233,9 @@
     .owner-default{
         margin-right: 10px;
     }
+    .multiselect{
+        &.dropdown-toggle{
+            border: none;
+        }
+    }
 }
