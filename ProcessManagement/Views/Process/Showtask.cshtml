@@ -130,6 +130,8 @@
                         <div class="col-sm-12">
                             <div class="mt-2">
                                 <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "EditTask", idtask = Model.id })" class="btn btn-primary-theme">Edit task</a>
+                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process", action = "DeleteTask", idtask = Model.id })" onclick="return confirm('bạn muốn xóa task này không?')" class="btn btn-primary-theme">Delete task</a>
+
                             </div>
                         </div>
                     </div>
