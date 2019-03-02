@@ -8,32 +8,65 @@
 
 
 
-<body>
-    <div id="sample">
-        <div style="width: 100%; display: flex; justify-content: space-between">
-            <div id="myPaletteDiv" style="width: 105px; margin-right: 2px; background-color: whitesmoke; border: solid 1px black"></div>
-            <div id="myDiagramDiv" style="flex-grow: 1; height: 620px; border: solid 1px black"></div>
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+            <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Create New Task</h2>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-2.html"><i class="icon-home"></i></a></li>
+                <li class="breadcrumb-item">Projects</li>
+                <li class="breadcrumb-item active">Add Task</li>
+            </ul>
         </div>
-
-        <div>
-            <div>
-                <button id="SaveButton" onclick="save()">Save</button>@*button này để tạo dữ liệu*@
-                <button onclick="load()">Load</button>@*button này để load dữ liệu*@
-                <button id="btn-save" type="submit" class="btn btn-success"> save to db</button>@*button này để lưu dữ
-                    liệu*@
-                Diagram Model saved in JSON format:
+        <div class="col-lg-6 col-md-4 col-sm-12 text-right">
+            <div class="bh_chart hidden-xs">
+                <div class="float-left m-r-15">
+                    <small>Visitors</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-user"></i> 1,784</h6>
+                </div>
+                <span class="bh_visitors float-right">2,5,1,8,3,6,7,5</span>
             </div>
-            <textarea id="mySavedModel" style="width:100%;height:300px">
-{ 
-  "nodeDataArray": [
- ],
-  "linkDataArray": [
- ]}
-    </textarea>
-            <input type="hidden" id="stringJson" value="@link" />
+            <div class="bh_chart hidden-sm">
+                <div class="float-left m-r-15">
+                    <small>Visits</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-globe"></i> 325</h6>
+                </div>
+                <span class="bh_visits float-right">10,8,9,3,5,8,5</span>
+            </div>
+            <div class="bh_chart hidden-sm">
+                <div class="float-left m-r-15">
+                    <small>Chats</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-bubbles"></i> 13</h6>
+                </div>
+                <span class="bh_chats float-right">1,8,5,6,2,4,3,2</span>
+            </div>
         </div>
     </div>
-</body>
+</div>
+<div id="sample">
+    <div style="width: 100%; display: flex; justify-content: space-between">
+        <div id="myPaletteDiv" style="width: 105px; margin-right: 2px; background-color: whitesmoke; border: solid 1px black"></div>
+        <div id="myDiagramDiv" style="flex-grow: 1; height: 620px; border: solid 1px black"></div>
+    </div>
+
+    <div>
+        <div>
+            <button id="SaveButton" onclick="save()">Save</button>@*button này để tạo dữ liệu*@
+            <button onclick="load()">Load</button>@*button này để load dữ liệu*@
+            <button id="btn-save" type="submit" class="btn btn-success"> save to db</button>@*button này để lưu dữ
+                liệu*@
+            Diagram Model saved in JSON format:
+        </div>
+        <textarea id="mySavedModel" style="width:100%;height:300px">
+        { 
+        "nodeDataArray": [
+        ],
+        "linkDataArray": [
+        ]}
+        </textarea>
+        <input type="hidden" id="stringJson" value="@link" />
+    </div>
+</div>
 
 
 @section CustomScripts {

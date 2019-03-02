@@ -109,9 +109,9 @@ namespace ProcessManagement.Controllers
             groupStatisticModel.Add("totalmember", participateService.countMemberInGroup(group.Id));
             groupStatisticModel.Add("totalprocess", processService.countProcessOfGroup(group.Id));
 
-            //Tìm tất cả member thuộc group đó
-            var ListParticipant = participateService.findMembersInGroup(group.Id);
-            ViewData["ListParticipant"] = ListParticipant;
+            ////Tìm tất cả member thuộc group đó
+            //var ListParticipant = participateService.findMembersInGroup(group.Id);
+            //ViewData["ListParticipant"] = ListParticipant;
             //Tìm tất cả các process thuộc group đó
             ViewData["ListProcess"] = processService.findListProcess(group.Id);
             //thống kê

@@ -4,7 +4,7 @@
     Session["groupid"] = Model.Id;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var listprocess = ViewData["ListProcess"] as List<ProcessManagement.Models.Process>;
-    var listuser = ViewData["ListParticipant"] as List<ProcessManagement.Models.Participate>;
+    //var listuser = ViewData["ListParticipant"] as List<ProcessManagement.Models.Participate>;
     var statistic = ViewData["statistic"] as dynamic;
 }
 @section CustomCss{
@@ -18,6 +18,9 @@
         }
         .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
             background-color: unset !important;
+        }
+        .multiselect-container > li > a > label{
+            padding: 3px 40px;
         }
     </style>
 }
@@ -259,14 +262,18 @@
     <div class="col-lg-4 col-md-5">
         <div class="card">
             <div class="header">
-                <h2>Employee Structure</h2>
+                <h2>About Owner</h2>
+
             </div>
             <div class="body text-center">
-                <h6>Male</h6>
-                <input type="text" class="knob2" data-linecap="round" value="73" data-width="125" data-height="125" data-thickness="0.15" data-fgColor="#49a9e5" readonly>
-                <hr>
-                <h6>Female</h6>
-                <input type="text" class="knob2" data-linecap="round" value="27" data-width="125" data-height="125" data-thickness="0.15" data-fgColor="#b880e1" readonly>
+                <div class="profile-image m-b-15"> <img src="~/Content/images/user.png" class="rounded-circle" alt=""> </div>
+                <div>
+                    <h4 class="m-b-0">@Model.AspNetUser.UserName</h4>
+                </div>
+                <div class="m-t-15">
+                    <button class="btn btn-primary">Profile</button>
+                    <button class="btn btn-outline-secondary">Message</button>
+                </div>
             </div>
         </div>
     </div>
@@ -335,6 +342,10 @@
                         nonSelectedText: 'member',
                         numberDisplayed: 4,
                         allSelectedText: false,
+                        templates: { // Use the Awesome Bootstrap Checkbox structure
+                            li: '<li><a href="javascript:void(0);"><label class="fancy-checkbox"><span><i></i></span></label></a></li>'
+                        },
+
                         onDropdownHide: function (event) {
                             var id = $(this)[0].$select.attr("id");
                             var memberId = $(`#${id}`).attr("data-id");
@@ -359,6 +370,12 @@
                             console.log(userRole);
                             editRole(userRole);
                         }
+                    });
+                    $('.multiselect-container label.checkbox').each(function () {
+                        var input = $(this).find('input'),
+                            val = input.val();
+                        $(`<span><b><b></span>${val}`).insertAfter(input)
+
                     });
                 }
             });
@@ -396,7 +413,9 @@
                     }
                 }
             });
-            function addMember(newMember) {
+            
+        });
+        function addMember(newMember) {
                $.ajax({
                     url: "@Url.Action("addmember","api")",
                     type: "POST",
@@ -415,6 +434,7 @@
                         }
                     }
                 })
+
             }
             function editRole(role) {
                 $.ajax({
@@ -435,6 +455,5 @@
                     }
                 })
             }
-        });
     </script>
 }

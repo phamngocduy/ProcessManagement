@@ -60,7 +60,7 @@ namespace ProcessManagement.Filters
                     return;
                 }
             }
-            HttpContext.Current.Session["groupid"] = groupid;
+            HttpContext.Current.Session["idgroup"] = groupid;
             filterContext.Controller.ViewBag.currentGroup = group;
         }
         public override void  OnActionExecuted(ActionExecutedContext filterContext)

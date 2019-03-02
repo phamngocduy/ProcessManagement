@@ -82,7 +82,7 @@
                     </nav>
                 </div>
             }
-            <div class="tab-pane animated fadeIn" id="setting">
+            <div class="tab-pane animated fadeIn @if (groupId == null) { WriteLiteral("active"); } " id="setting">
                 <div class="p-l-15 p-r-15">
                     <h6>Choose Skin</h6>
                     <ul class="choose-skin list-unstyled">
