@@ -38,7 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vs8C48.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vs810B.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,7 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vs8C48.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vs810B.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -8306,6 +8306,20 @@
     <Content Include="Content\vendor\skycons\.gitignore" />
     <Content Include="Content\vendor\skycons\index.html" />
     <Content Include="Content\vendor\skycons\skycons.js" />
+    <Content Include="Content\vendor\sortable\.gitignore" />
+    <Content Include="Content\vendor\sortable\gulpfile.js" />
+    <Content Include="Content\vendor\sortable\index.html" />
+    <Content Include="Content\vendor\sortable\sortable.js" />
+    <Content Include="Content\vendor\sortable\sortable.min.js" />
+    <Content Include="Content\vendor\sortable\st\app.js" />
+    <Content Include="Content\vendor\sortable\st\iframe\frame.html" />
+    <Content Include="Content\vendor\sortable\st\iframe\index.html" />
+    <Content Include="Content\vendor\sortable\st\logo.png" />
+    <Content Include="Content\vendor\sortable\st\og-image.png" />
+    <Content Include="Content\vendor\sortable\st\prettify\prettify.css" />
+    <Content Include="Content\vendor\sortable\st\prettify\prettify.js" />
+    <Content Include="Content\vendor\sortable\st\prettify\run_prettify.js" />
+    <Content Include="Content\vendor\sortable\st\theme.css" />
     <Content Include="Content\vendor\starrr\dist\starrr.css" />
     <Content Include="Content\vendor\starrr\dist\starrr.js" />
     <Content Include="Content\vendor\starrr\index.html" />
@@ -9833,6 +9847,14 @@
     <Content Include="Content\vendor\ckeditor\samples\toolbarconfigurator\font\fontello.woff" />
     <Content Include="Content\vendor\ckeditor\samples\toolbarconfigurator\lib\codemirror\LICENSE" />
     <Content Include="Content\vendor\ckeditor\skins\moono-lisa\readme.md" />
+    <Content Include="Content\vendor\sortable\.editorconfig" />
+    <Content Include="Content\vendor\sortable\.jshintrc" />
+    <Content Include="Content\vendor\sortable\bower.json" />
+    <Content Include="Content\vendor\sortable\component.json" />
+    <Content Include="Content\vendor\sortable\CONTRIBUTING.md" />
+    <Content Include="Content\vendor\sortable\ISSUE_TEMPLATE.md" />
+    <Content Include="Content\vendor\sortable\package.json" />
+    <Content Include="Content\vendor\sortable\README.md" />
     <None Include="packages.config" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />

@@ -21,6 +21,8 @@
 
 
 @section CustomCss{
+    <link rel="stylesheet" href="~/Content/vendor/nestable/jquery-nestable.css" />
+    <link rel="stylesheet" href="~/Content/vendor/sortable/st/prettify/prettify.css" />
     <style>
         .highlight {
             background-color: #f8f9fa;
@@ -236,37 +238,46 @@
                 <h2>List Step</h2>
             </div>
             <div class="body">
-                <div class="dd dd4">
-                    <ul class="step-list">
-                        @foreach (var step in Model.Where(x => x.Figure == "Step"))
-                        {
-                            <li>
-                                <div class="step">
-                                    <div id="@step.Id" class="step-name" style="color: #17191c;">@step.Name</div>
-                                    <div class="step-action dropdown">
-                                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></a>
-                                        <ul class="dropdown-menu notifications animated fadeIn">
-                                            <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "editstep", groupslug = group.groupSlug, groupid = group.Id, stepid = step.Id })">Edit step</a></li>
-                                            <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "AddTaskProcess", stepid = step.Id })">Add task</a></li>
-                                            @*<li><a href="javascript:void(0);">Something else</a></li>*@
-                                        </ul>
-                                    </div>
+                <ul class="step-list">
+                    @foreach (var step in Model.Where(x => x.Figure == "Step"))
+                    {
+                        <li>
+                            <div class="step">
+                                <div class="step-name">
+                                    <span data-toggle="tooltip" data-placement="top" title="@step.Description">@step.Name</span>
                                 </div>
-                                <ul class="task-list">
-                                    @foreach (var listtask in db.TaskProcesses.Where(x => x.idStep == step.Id))
+                                <div class="step-action dropdown">
+                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></a>
+                                    <ul class="dropdown-menu notifications animated fadeIn">
+                                        <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "editstep", groupslug = group.groupSlug, groupid = group.Id, stepid = step.Id })">Edit step</a></li>
+                                        <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "AddTaskProcess", stepid = step.Id })">Add task</a></li>
+                                        @*<li><a href="javascript:void(0);">Something else</a></li>*@
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="task">
+                                <ul class="task-list" id="task-@step.Id">
+                                    @foreach (var task in db.TaskProcesses.Where(x => x.idStep == step.Id))
                                     {
-                                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "Showtask", idtask = listtask.id })"><li class="task" style="color: #17191c;">@listtask.Name</li></a>
+                                    <li class="task-item">
+                                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "Showtask", idtask = task.id })">@task.Name</a>
+                                        
+                                        <i class="fa fa-arrows-alt handle"></i>
+                                    </li>
                                     }
                                 </ul>
-                            </li>
-                        }
-                    </ul>
-                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
             </div>
         </div>
     </div>
 </div>
 @section CustomScripts{
+    <script src="~/Content/vendor/sortable/sortable.min.js"></script>
+    <script src="~/Content/vendor/sortable/st/prettify/prettify.js"></script>
+    <script src="~/Content/vendor/sortable/st/prettify/run_prettify.js"></script>
     <script>
         $(function () {
             $(".step-name").on("click", function () {
@@ -274,6 +285,15 @@
                 var task = step.next();
                 task.toggle("slow");
             });
+            var task = $(".task-list");
+            task.each(function () {
+                var element = $(this)[0];
+                Sortable.create(element, {
+                    handle: '.handle', // handle's class
+                    animation: 150,
+                    ghostClass: 'blue-background-class'
+                });
+            })
         });
     </script>
 }

@@ -529,10 +529,13 @@ table.dataTable {
   line-height: 40px;
   font-size: 15px;
 }
+.step-list .step .step-name {
+  cursor: pointer;
+}
 .step-list .step .step-action {
   position: absolute;
   top: 12px;
-  right: 26px;
+  right: 10px;
 }
 .step-list .step .step-action.dropdown .dropdown-toggle {
   color: #fff;
@@ -566,11 +569,13 @@ table.dataTable {
 .step-list .step .step-action.dropdown .dropdown-menu a:hover {
   color: #fff;
 }
-.step-list .task-list {
-  list-style: none;
+.step-list .task {
   display: none;
 }
-.step-list .task-list .task {
+.step-list .task .task-list {
+  list-style: none;
+}
+.step-list .task .task-list .task-item {
   padding: 0.75rem 1.25rem;
   color: #004085;
   background-color: #cce5ff;
@@ -579,6 +584,22 @@ table.dataTable {
   color: #fff;
   line-height: 20px;
   font-size: 15px;
+  position: relative;
+}
+.step-list .task .task-list .task-item a {
+  color: #fff;
+}
+.step-list .task .task-list .task-item a:hover {
+  color: #e6e6e6;
+}
+.step-list .task .task-list .task-item .handle {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  cursor: grab;
+}
+.step-list .task .task-list .task-item .handle:active {
+  cursor: grabbing;
 }
 
 #add-member-search {
