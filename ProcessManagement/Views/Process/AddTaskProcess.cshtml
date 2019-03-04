@@ -75,54 +75,57 @@
                     <div class="row clearfix">
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="task-description" class="required">Description</label>
+                                <label for="task-description">Description</label>
                                 <textarea class="form-control" rows="6" placeholder="Write something about your group (optional)" id="task-description" name="@Html.NameFor(m => m.Description)"></textarea>
                             </div>
                         </div>
                         <div class="col-sm-12 ">
                             <div class="choose-type row">
-                                <div class="choose-item col-sm-12" id="choose-input">
+                                <div class="choose-item col-sm-12 form-group" id="choose-input">
                                     <fieldset>
                                         <legend>Input Text</legend>
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <input id="inputtext" type="text" class="form-control" placeholder="Label*">
+                                        <div class="row" style="margin-left:0;margin-right:0;">
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="text-maxlength">Input Length (Char)</label>
+                                                    <input id="text-maxlength" type="number" class="form-control" placeholder="max-length*" min="0" value="10000">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <input id="maxlength" type="number" class="form-control" placeholder="max-length*">
+                                            <div class="col-sm-10">
+                                                <div class="form-group">
+                                                    <label for="text-label">Input Label</label>
+                                                    <input id="text-label" type="text" class="form-control">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="form-group switch-custom">
-                                                <label>required: <input id="requinputtext" type="checkbox" class="checkbox-switch" /></label>
+
+                                            <div class="col-sm-12">
+                                                <div class="form-group switch-custom">
+                                                    <label>required: <input type="checkbox" class="checkbox-switch" /></label>
+                                                </div>
                                             </div>
                                         </div>
                                     </fieldset>
                                 </div>
-                                <div class="choose-item col-sm-12" id="choose-file">
+                                <div class="choose-item col-sm-12 form-group" id="choose-file">
                                     <fieldset>
                                         <legend>Input File</legend>
-                                        <div class="col-sm-2">
-                                            <div class="form-group">
-                                                <input id="size" type="number" class="form-control" placeholder="Size(Mb)*">
+                                        <div class="row" style="margin-left:0;margin-right:0;">
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="file-maxsize">File Size (Mb)</label>
+                                                    <input id="file-maxsize" type="number" class="form-control" placeholder="max-length*" min="0" value="25">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-10">
-                                            <select id="selectfile" class="form-control show-tick ms select2" multiple data-placeholder="Select">
-                                                <option></option>
-                                                <option>.jpg</option>
-                                                <option>.pdf</option>
-                                                <option>.doc</option>
-                                                <option>audio/*</option>
-                                                <option>video/* </option>
-                                                <option>image/*</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="form-group switch-custom">
-                                                <label>required: <input id="requinputfile" type="checkbox" class="checkbox-switch" /></label>
+                                            <div class="col-sm-10">
+                                                <div class="form-group">
+                                                    <label for="file-label">File Label</label>
+                                                    <input id="file-label" type="text" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-group switch-custom">
+                                                    <label>required: <input id="requinputfile" type="checkbox" class="checkbox-switch" /></label>
+                                                </div>
                                             </div>
                                         </div>
                                     </fieldset>
@@ -132,7 +135,7 @@
                         <div class="col-sm-12">
                             <div class="mt-2">
                                 <button id="btn-save" type="submit" class="btn btn-primary-theme">Create</button>
-                                <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                                <a href="#" class="btn btn-outline-secondary">Go Back</a>
                             </div>
                         </div>
                     </div>

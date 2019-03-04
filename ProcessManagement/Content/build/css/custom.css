@@ -362,18 +362,28 @@ table.dataTable {
   border-collapse: collapse !important;
 }
 
+label {
+  font-weight: normal;
+  color: #5a5a59;
+  font-size: 16px;
+}
 label.required::after {
   content: "*";
-  color: red;
+  color: #ff0101;
   margin-left: 3px;
-}
-
-label, legend {
-  font-size: 15px;
 }
 
 fieldset {
   border: 1px solid #ced4da;
+}
+fieldset legend {
+  padding: 0.2em 0.5em;
+  border: 1px solid #5a5a59;
+  background-color: #5a5a59;
+  color: #fff;
+  font-size: 13px;
+  width: unset;
+  margin-left: 1em;
 }
 
 /* end of config */
@@ -457,67 +467,6 @@ fieldset {
   font-weight: 100;
 }
 
-.fancy-input {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  /* Checked */
-  /* Transition */
-}
-.fancy-input input[type=checkbox], .fancy-input input[type=radio] {
-  position: absolute;
-  opacity: 0;
-  z-index: -1;
-}
-.fancy-input label {
-  position: relative;
-  display: inline-block;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  padding-left: 30px;
-  padding-right: 10px;
-  line-height: 36px;
-  cursor: pointer;
-}
-.fancy-input label::before {
-  content: " ";
-  position: absolute;
-  top: 6px;
-  left: 0;
-  display: block;
-  width: 24px;
-  height: 24px;
-  border: 2px solid #8e44ad;
-  border-radius: 4px;
-  z-index: -1;
-}
-.fancy-input input[type=radio] + label::before {
-  border-radius: 18px;
-}
-.fancy-input input[type=checkbox]:checked + label,
-.fancy-input input[type=radio]:checked + label {
-  padding-left: 10px;
-  color: #fff;
-}
-.fancy-input input[type=checkbox]:checked + label::before,
-.fancy-input input[type=radio]:checked + label::before {
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: #8e44ad;
-}
-.fancy-input label,
-.fancy-input label::before {
-  -webkit-transition: 0.25s all ease;
-  -o-transition: 0.25s all ease;
-  transition: 0.25s all ease;
-}
-
-#addnewtask label {
-  font-weight: normal;
-  color: #5a5a59;
-}
 #addnewtask .switch-custom label {
   margin-right: 10px;
 }
