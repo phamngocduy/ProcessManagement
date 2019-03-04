@@ -52,10 +52,12 @@
                     <div class="row clearfix">
                         <div class="col-sm-8">
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Task name*">
+                                <label for="task-name" class="required">Task Name</label>
+                                <input type="text" class="form-control" placeholder="Task name*" id="task-name">
                             </div>
                         </div>
                         <div class="col-sm-4">
+                            <label for="task-role" class="required">Task Role</label>
                             <select class="form-control show-tick ms select2" data-placeholder="Select Role*">
                                 <option></option>
                                 <option>Designer</option>
@@ -67,7 +69,8 @@
                     <div class="row clearfix">
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <textarea class="form-control" rows="8" placeholder="Write something about your group (optional)" id="editor"></textarea>
+                                <label for="task-description" class="required">Description</label>
+                                <textarea class="form-control" rows="8" placeholder="Write something about your group (optional)" id="task-description"></textarea>
                             </div>
                         </div>
                         <div class="col-sm-12 ">

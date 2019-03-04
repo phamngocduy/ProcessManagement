@@ -291,7 +291,7 @@
     <script src="~/Content/build/js/index.js"></script>
     <script>
         $(function () {
-            var table = $("#table-member").DataTable({
+           $("#table-member").DataTable({
                 "bLengthChange": false,
                 "ajax": {
                     "type": "GET",
@@ -432,7 +432,7 @@
                         if (response.status == 200) {
                             showToastr("success", response.message, "toast-bottom-left");
                             $(".select2-chosen").empty();
-                            table.ajax.reload();
+                            $("#table-member").DataTable().ajax.reload();
                         } else {
                             showToastr("error", response.message, "toast-bottom-left")
                             console.error(response)

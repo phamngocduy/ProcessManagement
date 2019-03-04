@@ -362,6 +362,20 @@ table.dataTable {
   border-collapse: collapse !important;
 }
 
+label.required::after {
+  content: "*";
+  color: red;
+  margin-left: 3px;
+}
+
+label, legend {
+  font-size: 15px;
+}
+
+fieldset {
+  border: 1px solid #ced4da;
+}
+
 /* end of config */
 /* header */
 .navbar-nav .icon-menu {
