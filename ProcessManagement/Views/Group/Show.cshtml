@@ -27,10 +27,15 @@
 <div class="block-header">
     <div class="row">
         <div class="col-lg-6 col-md-8 col-sm-12">
-            <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Dashboard</h2>
+            <h2>
+                <a href="javascript:void(0);" class="btn btn-xs btn-link theme-color btn-toggle-fullwidth">
+                    <i class="fa fa-arrow-left"></i>
+                </a> @Model.Name
+            </h2>
             <ul class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index-2.html"><i class="icon-home"></i></a></li>
-                <li class="breadcrumb-item active">Dashboard</li>
+                <li class="breadcrumb-item"><a href="~/Home/Index" class="theme-color"><i class="icon-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="~/Group/Index">Groups</a></li>
+                <li class="breadcrumb-item"><a href="">@Model.Name</a></li>
             </ul>
         </div>
         <div class="col-lg-6 col-md-4 col-sm-12 text-right">

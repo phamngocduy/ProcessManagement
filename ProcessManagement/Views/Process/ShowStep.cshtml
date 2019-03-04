@@ -7,6 +7,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var group = ViewData["group"] as ProcessManagement.Models.Group;
     var process = ViewData["process"] as ProcessManagement.Models.Process;
+    var count = 0;
+    var count1 = 0;
+    for (int i = 0; i < Model.Where(x => x.Figure == "Step").Count(); i++)
+    {
+        count++;
+    }
+    for (int j = 0; j < process.Roles.Count; j++)
+    {
+        count1++;
+    }
 }
 
 
@@ -69,11 +79,16 @@
 <div class="block-header">
     <div class="row">
         <div class="col-lg-6 col-md-8 col-sm-12">
-            <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Project Details</h2>
+            <h2>
+                <a href="javascript:void(0);" class="btn btn-xs btn-link theme-color btn-toggle-fullwidth">
+                    <i class="fa fa-arrow-left"></i>
+                </a> @process.Name
+            </h2>
             <ul class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index-2.html"><i class="icon-home"></i></a></li>
-                <li class="breadcrumb-item">Projects</li>
-                <li class="breadcrumb-item active">Project Details</li>
+                <li class="breadcrumb-item"><a href="~/Home/Index" class="theme-color"><i class="icon-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="~/Group/Index">Groups</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = group.Id })">@group.Name</a></li>
+                <li class="breadcrumb-item"><a href="">@process.Name</a></li>
             </ul>
         </div>
         <div class="col-lg-6 col-md-4 col-sm-12 text-right">
@@ -123,8 +138,8 @@
                 <ul class=" list-unstyled basic-list">
                     <li>Create At:<span class="badge badge-primary">@process.Created_At</span></li>
                     <li>Update_at:<span class="badge-purple badge">@process.Updated_At</span></li>
-                    <li>Total Step:<span class="badge-purple badge">8 steps</span></li>
-                    <li>Total Role:<span class="badge-danger badge">4 roles</span></li>
+                    <li>Total Step:<span class="badge-purple badge">@count steps</span></li>
+                    <li>Total Role:<span class="badge-danger badge">@count1 roles</span></li>
                 </ul>
             </div>
         </div>

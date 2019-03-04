@@ -95,7 +95,7 @@
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="form-group switch-custom">
-                                            <label>required: <input id="requinputtext" type="checkbox" class="checkbox-switch" /></label>
+                                            <label>required: <input id="requinputtext" name="requinputtext" type="checkbox" class="checkbox-switch" /></label>
                                         </div>
                                     </div>
                                 </div>
@@ -108,20 +108,9 @@
                                             <input id="size" type="number" class="form-control" placeholder="Size(Mb)*">
                                         </div>
                                     </div>
-                                    <div class="col-sm-10">
-                                        <select id="selectfile" class="form-control show-tick ms select2" multiple data-placeholder="Select">
-                                            <option></option>
-                                            <option>.jpg</option>
-                                            <option>.pdf</option>
-                                            <option>.doc</option>
-                                            <option>audio/*</option>
-                                            <option>video/* </option>
-                                            <option>image/*</option>
-                                        </select>
-                                    </div>
                                     <div class="col-sm-12">
                                         <div class="form-group switch-custom">
-                                            <label>required: <input id="requinputfile" type="checkbox" class="checkbox-switch" /></label>
+                                            <label>required: <input id="requinputfile" name="requinputfile" type="checkbox" class="checkbox-switch" /></label>
                                         </div>
                                     </div>
                                 </div>
@@ -173,12 +162,24 @@
                 var maxlength = $('#maxlength').val();
                 var requinputtext = $('#requinputtext').val();
                 var size = $('#size').val();
-                var selectfile = $('#selectfile').val();
                 var requinputfile = $('#requinputfile').val();
                 var name = $('#name').val();
                 var selectrole = $('#selectrole').val();
                 var editor = $('#editor').val();
-                
+                var requinputfile = $('#requinputfile').val();
+                var requinputtext = $('#requinputtext').val();
+
+                if (document.getElementById("requinputtext").checked == true) {
+                    requinputtext = "true";
+                } else {
+                    requinputtext = "false";
+                }
+                if (document.getElementById("requinputfile").checked == true) {
+                    requinputfile = "true";
+                } else {
+                    requinputfile = "false";
+                }
+
                 let a = {
                     inputtext: inputtext,
                     maxlength: maxlength,
@@ -186,7 +187,6 @@
                 };
                 let b = {
                     size: size,
-                    selectfile: selectfile,
                     requinputfile: requinputfile
                 };
 

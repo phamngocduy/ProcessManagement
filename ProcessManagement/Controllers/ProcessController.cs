@@ -134,8 +134,31 @@ namespace ProcessManagement.Controllers
             var group = groupService.findGroup(process.IdGroup);
             ViewData["group"] = group;
             ViewData["process"] = process;
+            var step = stepService.findStepsOfProcess(processid);
+            List<Step> liststep = new List<Step>();
+            for (int i = 0; i < step.Count; i++)
+            {
+                if (step[i].StartStep == true)
+                {
+                    liststep.Add(step[i]);
+                }
+            }
+            int z = 0;
+            for (int j = 0; j < step.Count; j++)
+            {
+                do
+                {
+                    if (step[z].Key == liststep[j].NextStep1 && step[z].StartStep.ToString() == "False")
+                    {
+                        liststep.Add(step[z]);
+                        z = 0;
+                        break;
+                    }
+                    z++;
+                } while (z < step.Count);
 
-            return View(stepService.findStepsOfProcess(processid));
+            }
+            return View(liststep);
         }
         [GroupAuthorize]
         public ActionResult EditStep(int stepid)
@@ -208,7 +231,7 @@ namespace ProcessManagement.Controllers
             return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = role.IdProcess });
 
         }
-        
+
         [Authorize]
         [GroupAuthorize]
         public ActionResult EditProcess(int processid)
@@ -278,7 +301,7 @@ namespace ProcessManagement.Controllers
                 Step s = db.Steps.Where(p => p.Key == item && p.IdProcess == processId).FirstOrDefault();
                 keystepgiong.Add(s);
             }
-           
+
             for (int i = 0; i < nodeArray.Count; i++)
             {
                 var key = (int)nodeArray[i]["key"];
@@ -427,13 +450,13 @@ namespace ProcessManagement.Controllers
         {
             int idstep = (int)Session["idstep"];
             Step step = stepService.findStep(idstep);
-            Process ps = processService.findProcess(step.IdProcess); 
+            Process ps = processService.findProcess(step.IdProcess);
             Group group = groupService.findGroup(ps.IdGroup);
             taskService.addtaskprocess(step.Id, task, valueinputtext, valueinputfile, nametask, roletask, editor);
             SetFlash(FlashType.success, "Created Task Successfully");
             return Json(new { id = ps.Id });
         }
-        
+
         [Authorize]
         [GroupAuthorize]
         public ActionResult EditTask(int idtask)
@@ -456,21 +479,12 @@ namespace ProcessManagement.Controllers
                 var maxlenght = valueinputtext["maxlength"].ToString();
                 var requinputtext = valueinputtext["requinputtext"].ToString();
                 var size = valueinputfile["size"].ToString();
-                var selectfile = valueinputfile["selectfile"].ToString();
-                JArray jfile = JArray.Parse(selectfile);
-                List<string> listFile = new List<string>();
-                for (int i = 0; i < jfile.Count; i++)
-                {
-                    listFile.Add(jfile[i].ToString());
-                }
                 var requinputfile = valueinputfile["requinputfile"].ToString();
                 ViewData["inputtext"] = inputtext;
                 ViewData["maxlenght"] = maxlenght;
                 ViewData["requinputtext"] = requinputtext;
                 ViewData["size"] = size;
-                ViewData["selectfile"] = selectfile;
                 ViewData["requinputfile"] = requinputfile;
-                ViewData["jfile"] = listFile;
             }
             return View(task);
         }
@@ -482,7 +496,7 @@ namespace ProcessManagement.Controllers
         {
             taskService.edittask(taskid, valueinputtext, valueinputfile, nametask, roletask, editor);
             SetFlash(FlashType.success, "Edited Task of " + nametask + " Successfully");
-            return Json(new { id = taskid }); 
+            return Json(new { id = taskid });
         }
 
         [Authorize]
@@ -499,23 +513,14 @@ namespace ProcessManagement.Controllers
                 var maxlenght = valueinputtext["maxlength"].ToString();
                 var requinputtext = valueinputtext["requinputtext"].ToString();
                 var size = valueinputfile["size"].ToString();
-                var selectfile = valueinputfile["selectfile"].ToString();
-                JArray jfile = JArray.Parse(selectfile);
-                List<string> listFile = new List<string>();
-                for (int i = 0; i < jfile.Count; i++)
-                {
-                    listFile.Add(jfile[i].ToString());
-                }
                 var requinputfile = valueinputfile["requinputfile"].ToString();
                 ViewData["inputtext"] = inputtext;
                 ViewData["maxlenght"] = maxlenght;
                 ViewData["requinputtext"] = requinputtext;
                 ViewData["size"] = size;
-                ViewData["selectfile"] = selectfile;
                 ViewData["requinputfile"] = requinputfile;
-                ViewData["jfile"] = listFile;
             }
-                
+
             return View(task);
         }
 
