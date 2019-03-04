@@ -49,5 +49,11 @@ namespace ProcessManagement.Services
             db.SaveChanges();
             return task;
         }
+        public void deletetask(int idtask)
+        {
+            TaskProcess task = findtask(idtask);
+            db.TaskProcesses.Remove(task);
+            db.SaveChanges();
+        }
     }
 }

@@ -518,5 +518,18 @@ namespace ProcessManagement.Controllers
                 
             return View(task);
         }
+
+        [Authorize]
+        [GroupAuthorize]
+        public ActionResult DeleteTask(int idtask)
+        {
+            taskService.deletetask(idtask);
+            TaskProcess task = taskService.findtask(idtask);
+            Step step = stepService.findStep(idtask);
+            Process ps = processService.findProcess(step.IdProcess);
+            Group group = groupService.findGroup(ps.IdGroup);
+            SetFlash(FlashType.success, "Delete Successfully");
+            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "Process", action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess });
+        }
     }
 }
