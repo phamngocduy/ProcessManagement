@@ -143,11 +143,12 @@
         line-height: 40px;  
         font-size: 15px;
         .step-name{
+            cursor: pointer;
         }
         .step-action{
             position: absolute;
             top: 12px;
-            right: 26px;
+            right: 10px;
             &.dropdown{
                 .dropdown-toggle{
                     color: #fff;
@@ -184,18 +185,36 @@
             }
         }
     }
-    .task-list{
-        list-style: none;
+    .task{
         display: none;
-        .task{
-            padding: .75rem 1.25rem;
-            color: #004085;
-            background-color: #cce5ff;
-            border-color: #b8daff;
-            margin: 5px 0;
-            color: #fff;
-            line-height: 20px;  
-            font-size: 15px;
+        .task-list{
+            list-style: none;
+            .task-item{
+                padding: .75rem 1.25rem;
+                color: #004085;
+                background-color: #cce5ff;
+                border-color: #b8daff;
+                margin: 5px 0;
+                color: #fff;
+                line-height: 20px;  
+                font-size: 15px;
+                position: relative;
+                a{
+                    color: #fff;
+                    &:hover{
+                        color: darken(#fff,10%);
+                    }
+                }
+                .handle{
+                    position: absolute;
+                    right: 15px;
+                    top: 15px;
+                    cursor: grab;
+                    &:active{
+                        cursor: grabbing;
+                    }
+                }
+            }
         }
     }
 }
