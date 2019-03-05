@@ -38,7 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vsF232.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vsFDC5.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,7 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vsF232.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vsFDC5.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -335,6 +335,7 @@
     <Compile Include="Services\GroupService.cs" />
     <Compile Include="Services\ParticipateService.cs" />
     <Compile Include="Services\ProcessService.cs" />
+    <Compile Include="Services\RoleService.cs" />
     <Compile Include="Services\StepService.cs" />
     <Compile Include="Services\TaskService.cs" />
     <Compile Include="Services\UserService.cs" />
@@ -8435,9 +8436,8 @@
     <Content Include="Views\API\GroupList.cshtml" />
     <Content Include="Views\Shared\Common\_Loader.cshtml" />
     <Content Include="Views\Group\NewGroup.cshtml" />
-    <Content Include="Views\Group\CreateTask.cshtml" />
     <Content Include="Views\Group\ProcessManagement.cshtml" />
-    <Content Include="Views\Process\AddTaskProcess.cshtml" />
+    <Content Include="Views\Process\AddTask.cshtml" />
     <Content Include="Views\Process\EditTask.cshtml" />
     <Content Include="Views\Process\Showtask.cshtml" />
   </ItemGroup>

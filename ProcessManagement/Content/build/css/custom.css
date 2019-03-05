@@ -445,6 +445,62 @@ label.required::after {
   margin-left: 3px;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0;
+  /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+  /* Firefox */
+}
+
+.input-has-prefix {
+  position: relative;
+}
+.input-has-prefix label::after {
+  opacity: 0;
+  color: #5a5a59;
+  transition: all 1s ease-in-out;
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -ms-transition: all 1s ease-in-out;
+  -o-transition: all 1s ease-in-out;
+}
+.input-has-prefix::after {
+  position: absolute;
+  top: 39px;
+  right: 0.5em;
+  color: #6c757d;
+  opacity: 1;
+  transition: all 0.5s ease-in-out;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+}
+.input-has-prefix.mb label::after {
+  content: "(Mb)";
+}
+.input-has-prefix.mb::after {
+  content: "Megabyte";
+}
+.input-has-prefix.char label::after {
+  content: "(Char)";
+}
+.input-has-prefix.char::after {
+  content: "Character";
+}
+.input-has-prefix.hide-prefix label::after {
+  opacity: 1;
+}
+.input-has-prefix.hide-prefix::after {
+  opacity: 0;
+}
+
 /* end of config */
 /* header */
 .navbar-nav .icon-menu {

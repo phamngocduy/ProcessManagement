@@ -7,6 +7,8 @@ using Microsoft.AspNet.Identity;
 using ProcessManagement.Models;
 using ProcessManagement.Services;
 using ProcessManagement.Filters;
+using System.Net;
+
 namespace ProcessManagement.Controllers
 {
     public class ProcessController : BaseController
@@ -19,7 +21,7 @@ namespace ProcessManagement.Controllers
         ProcessService processService = new ProcessService();
         StepService stepService = new StepService();
         TaskService taskService = new TaskService();
-
+        RoleService roleService = new RoleService();
         ///=============================================================================================
 
         [Authorize]
@@ -432,7 +434,7 @@ namespace ProcessManagement.Controllers
 
         [Authorize]
         [GroupAuthorize]
-        public ActionResult AddTaskProcess(int stepid)
+        public ActionResult AddTask(int stepid)
         {
             Step step = stepService.findStep(stepid);
             Process ps = processService.findProcess(step.IdProcess);
@@ -447,13 +449,43 @@ namespace ProcessManagement.Controllers
 
         [Authorize]
         [HttpPost]
-        public JsonResult AddTaskProcess(TaskProcess task, string valueinputtext, string valueinputfile, string nametask, int roletask, string editor)
+        public JsonResult AddTask(string name, int ? idRole, string description, string inputConfig, string fileConfig)
         {
+            var status = HttpStatusCode.OK;
+            string message;
+
             int idstep = (int)Session["idstep"];
             Step step = stepService.findStep(idstep);
-            taskService.addtaskprocess(step.Id, task, valueinputtext, valueinputfile, nametask, roletask, editor);
-            SetFlash(FlashType.success, "Created Task Successfully");
-            return Json(new { id = step.Id });
+
+            if (idRole != null)
+            {
+                int idR = idRole.GetValueOrDefault();
+                var role = roleService.findRoleOfProcess(idR, step.Process.Id);
+                if (role == null)
+                {
+                    //role not exist
+                    status = HttpStatusCode.InternalServerError;
+                    message = "Role not exist";
+
+
+                }
+                else
+                {
+
+                    taskService.addtask(step.Id, name, role.Id, description, inputConfig, fileConfig);
+                    SetFlash(FlashType.success, "Created Task Successfully");
+                    message = "Created Task Successfully";
+                }
+            }
+            else
+            {
+                taskService.addtask(step.Id, name, null, description, inputConfig, fileConfig);
+                SetFlash(FlashType.success, "Created Task Successfully");
+                message = "Created Task Successfully";
+            }
+
+            var response = new { message = message, status = HttpStatusCode.OK };
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         [Authorize]
