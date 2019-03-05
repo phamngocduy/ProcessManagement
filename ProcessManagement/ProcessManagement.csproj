@@ -281,7 +281,16 @@
     </Compile>
     <Compile Include="Helpers\GlobalHelper.cs" />
     <Compile Include="Helpers\MultiLanguageViewEngine.cs" />
+    <Compile Include="Models\AspNetRole.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\AspNetUser.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetUserClaim.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetUserLogin.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Group.cs">
@@ -289,9 +298,6 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\Input.cs">
-      <DependentUpon>PMS.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Participate.cs">
       <DependentUpon>PMS.tt</DependentUpon>

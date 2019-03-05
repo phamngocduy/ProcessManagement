@@ -4,14 +4,20 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="e433c0bab1ea45d682be887da5d82725" Name="Diagram1" ZoomLevel="84">
-        <EntityTypeShape EntityType="PMSModel.AspNetUser" Width="1.5" PointX="0.75" PointY="4.625" />
-        <EntityTypeShape EntityType="PMSModel.Group" Width="1.5" PointX="3" PointY="5.375" />
-        <EntityTypeShape EntityType="PMSModel.Input" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="PMSModel.Participate" Width="1.5" PointX="8.25" PointY="5.5" />
-        <EntityTypeShape EntityType="PMSModel.Process" Width="1.5" PointX="5.25" PointY="5.25" />
-        <EntityTypeShape EntityType="PMSModel.Role" Width="1.5" PointX="7.5" PointY="1.5" />
-        <EntityTypeShape EntityType="PMSModel.Step" Width="1.5" PointX="7.5" PointY="9.625" />
+      <Diagram DiagramId="e433c0bab1ea45d682be887da5d82725" Name="Diagram1" ZoomLevel="63">
+        <EntityTypeShape EntityType="PMSModel.AspNetRole" Width="1.5" PointX="0.75" PointY="9.625" />
+        <EntityTypeShape EntityType="PMSModel.AspNetUserClaim" Width="1.5" PointX="5.25" PointY="10.125" />
+        <EntityTypeShape EntityType="PMSModel.AspNetUserLogin" Width="1.5" PointX="5.25" PointY="12.875" />
+        <EntityTypeShape EntityType="PMSModel.AspNetUser" Width="1.5" PointX="3" PointY="7.875" />
+        <EntityTypeShape EntityType="PMSModel.Group" Width="1.5" PointX="5.25" PointY="6.25" />
+        <EntityTypeShape EntityType="PMSModel.Participate" Width="1.5" PointX="7.5" PointY="8.125" />
+        <EntityTypeShape EntityType="PMSModel.Process" Width="1.5" PointX="10.5" PointY="8" />
+        <EntityTypeShape EntityType="PMSModel.Role" Width="1.5" PointX="12.75" PointY="10.625" />
+        <EntityTypeShape EntityType="PMSModel.Step" Width="1.5" PointX="12.75" PointY="5.875" />
+        <EntityTypeShape EntityType="PMSModel.TaskProcess" Width="1.5" PointX="15" PointY="7.625" />
+        <EntityTypeShape EntityType="PMSModel.Type" Width="1.5" PointX="12.75" PointY="2.875" />
+        <AssociationConnector Association="PMSModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="PMSModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="PMSModel.FK_Group_AspNetUsers" />
         <AssociationConnector Association="PMSModel.FK_Participate_AspNetUsers" />
         <AssociationConnector Association="PMSModel.FK_Process_AspNetUsers" />
@@ -19,11 +25,10 @@
         <AssociationConnector Association="PMSModel.FK_Process_Group" />
         <AssociationConnector Association="PMSModel.FK_Role_Process" />
         <AssociationConnector Association="PMSModel.FK_Step_Process" />
-        <EntityTypeShape EntityType="PMSModel.Type" Width="1.5" PointX="3.375" PointY="0.875" />
-        <EntityTypeShape EntityType="PMSModel.TaskProcess" Width="1.5" PointX="10.75" PointY="4.25" />
         <AssociationConnector Association="PMSModel.FK_TaskProcess_Role" />
         <AssociationConnector Association="PMSModel.FK_TaskProcess_Step" />
         <AssociationConnector Association="PMSModel.FK_TaskProcess_Type" />
+        <AssociationConnector Association="PMSModel.AspNetUserRoles" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

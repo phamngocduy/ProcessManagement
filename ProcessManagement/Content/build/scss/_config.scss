@@ -120,6 +120,19 @@ body, #wrapper{
                 }
             }
         }
+        fieldset{
+            border: 1px solid #ced4da;
+            legend{
+                padding: 0.2em 0.5em;
+                border:1px solid $color;
+                background-color: $color;
+                color:#fff;
+                // font-size:90%;
+                font-size: 13px;
+                width: unset;
+                margin-left: 1em;
+            }
+        }
     }    
 }
 .row{
@@ -163,16 +176,3 @@ label{
     }
 }
 
-fieldset{
-    border: 1px solid #ced4da;
-    legend{
-        padding: 0.2em 0.5em;
-        border:1px solid #5a5a59;
-        background-color: #5a5a59;
-        color:#fff;
-        // font-size:90%;
-        font-size: 13px;
-        width: unset;
-        margin-left: 1em;
-    }
-}

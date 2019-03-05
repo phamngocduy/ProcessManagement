@@ -8,9 +8,11 @@ namespace ProcessManagement.Services
 {
     public class TaskService
     {
+        ///=============================================================================================
         PMSEntities db = new PMSEntities();
         StepService stepService = new StepService();
-
+        CommonService commonService = new CommonService();
+        ///=============================================================================================
         public void addtaskprocess(int idStep, TaskProcess task, string valueinputtext, string valueinputfile, string nametask, int roletask, string editor)
         {
             task.idStep = idStep;
@@ -21,6 +23,7 @@ namespace ProcessManagement.Services
             task.Updated_At = DateTime.Now;
             task.ValueInputText = valueinputtext;
             task.ValueInputFile = valueinputfile;
+            task.Color = commonService.getRandomColor();
             db.TaskProcesses.Add(task);
             db.SaveChanges();
         }

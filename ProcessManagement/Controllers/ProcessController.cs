@@ -450,11 +450,9 @@ namespace ProcessManagement.Controllers
         {
             int idstep = (int)Session["idstep"];
             Step step = stepService.findStep(idstep);
-            Process ps = processService.findProcess(step.IdProcess);
-            Group group = groupService.findGroup(ps.IdGroup);
             taskService.addtaskprocess(step.Id, task, valueinputtext, valueinputfile, nametask, roletask, editor);
             SetFlash(FlashType.success, "Created Task Successfully");
-            return Json(new { id = ps.Id });
+            return Json(new { id = step.Process.Id });
         }
 
         [Authorize]
