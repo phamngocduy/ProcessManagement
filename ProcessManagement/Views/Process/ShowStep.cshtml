@@ -242,12 +242,12 @@
                     @foreach (var step in Model.Where(x => x.Figure == "Step"))
                     {
                         <li>
-                            <div class="step">
+                            <div class="step" style="border: 2px solid @step.Color; border-left:7px solid @step.Color; color:@step.Color">
                                 <div class="step-name">
                                     <span data-toggle="tooltip" data-placement="top" title="@step.Description">@step.Name</span>
                                 </div>
                                 <div class="step-action dropdown">
-                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></a>
+                                    <a style="color: @step.Color" href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></a>
                                     <ul class="dropdown-menu notifications animated fadeIn">
                                         <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "editstep", groupslug = group.groupSlug, groupid = group.Id, stepid = step.Id })">Edit step</a></li>
                                         <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "AddTaskProcess", stepid = step.Id })">Add task</a></li>
@@ -259,11 +259,11 @@
                                 <ul class="task-list" id="task-@step.Id">
                                     @foreach (var task in db.TaskProcesses.Where(x => x.idStep == step.Id))
                                     {
-                                    <li class="task-item">
-                                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "Showtask", idtask = task.id })">@task.Name</a>
+                                        <li class="task-item" style="background-color:@task.Color">
+                                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "Showtask", idtask = task.id })">@task.Name</a>
                                         
-                                        <i class="fa fa-arrows-alt handle"></i>
-                                    </li>
+                                            <i class="fa fa-arrows-alt handle"></i>
+                                        </li>
                                     }
                                 </ul>
                             </div>

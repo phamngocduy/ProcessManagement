@@ -115,7 +115,7 @@ namespace ProcessManagement.Controllers
                 step.Name = nodeArray[i]["text"].ToString();
                 step.Key = key;
                 step.StartStep = (int)idfirstStep["to"] == (int)nodeArray[i]["key"] ? true : false;
-
+                step.Color = commonService.getRandomColor();
                 step.Figure = nodeArray[i]["figure"] == null ? "Step" : nodeArray[i]["figure"].ToString();
                 step.Created_At = DateTime.Now;
                 step.Updated_At = DateTime.Now;
@@ -373,6 +373,7 @@ namespace ProcessManagement.Controllers
                 step.Updated_At = item3.Updated_At;
                 step.NextStep1 = item3.NextStep1;
                 step.NextStep2 = item3.NextStep2;
+                step.Color = commonService.getRandomColor();
                 if (step.Figure != "Circle")
                 {
                     db.Steps.Add(step);

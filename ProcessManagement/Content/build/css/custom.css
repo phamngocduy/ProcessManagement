@@ -543,11 +543,7 @@ label.required::after {
 .step-list .step {
   position: relative;
   padding: 0.75rem 1.25rem;
-  color: #004085;
-  background-color: #cce5ff;
-  border-color: #b8daff;
   margin: 5px 0;
-  color: #fff;
   line-height: 40px;
   font-size: 15px;
 }
@@ -560,7 +556,6 @@ label.required::after {
   right: 10px;
 }
 .step-list .step .step-action.dropdown .dropdown-toggle {
-  color: #fff;
   padding: 5px 10px;
 }
 .step-list .step .step-action.dropdown .dropdown-toggle::after {
@@ -610,7 +605,7 @@ label.required::after {
   color: #fff;
 }
 .step-list .task .task-list .task-item a:hover {
-  color: #e6e6e6;
+  color: white;
 }
 .step-list .task .task-list .task-item .handle {
   position: absolute;
