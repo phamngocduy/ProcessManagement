@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'D:\workspaces\asp_workspace\ProcessManagement\ProcessManagement\Models\PMS.edmx'. 
+﻿// T4 code generation is enabled for model 'D:\capstone_project\cap_pnd_1.9\ProcessManagement\ProcessManagement\Models\PMS.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

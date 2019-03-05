@@ -63,6 +63,10 @@ namespace ProcessManagement.Controllers
             var idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();
             List<int> b = new List<int>();
             string circle = "Circle";
+            Role role = new Role();
+            role.Name = "No Role";
+            role.IdProcess = ps.Id;
+            db.Roles.Add(role);
             for (int i = 0; i < nodeArray.Count; i++)
             {
                 if (nodeArray[i]["figure"] != null)
@@ -453,7 +457,7 @@ namespace ProcessManagement.Controllers
             Step step = stepService.findStep(idstep);
             taskService.addtaskprocess(step.Id, task, valueinputtext, valueinputfile, nametask, roletask, editor);
             SetFlash(FlashType.success, "Created Task Successfully");
-            return Json(new { id = step.Process.Id });
+            return Json(new { id = step.Id });
         }
 
         [Authorize]

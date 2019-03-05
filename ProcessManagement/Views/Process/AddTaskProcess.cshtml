@@ -19,9 +19,12 @@
         <div class="col-lg-6 col-md-8 col-sm-12">
             <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Create New Task</h2>
             <ul class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index-2.html"><i class="icon-home"></i></a></li>
-                <li class="breadcrumb-item">Projects</li>
-                <li class="breadcrumb-item active">Add Task</li>
+                <li class="breadcrumb-item"><a href="~/Home/Index" class="theme-color"><i class="icon-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="~/Group/Index">Groups</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = group.Id })">@group.Name</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "ShowStep", processid = step.IdProcess })">@step.Process.Name</a></li>
+                <li class="breadcrumb-item"><a href="">@step.Name</a></li>
+                <li class="breadcrumb-item"><a href=""> Create New Task</a></li>
             </ul>
         </div>
         <div class="col-lg-6 col-md-4 col-sm-12 text-right">
@@ -63,10 +66,12 @@
                     <div class="col-sm-4">
                         <label for="task-role" class="required">Select Role</label>
                         <select id="task-role" class="form-control show-tick ms select2">
-                            <option></option>
-                            @foreach (var role in ViewBag.Listrole)
+                            @if (ViewBag.Listrole != null)
                             {
-                                <option value="@role.Id">@role.Name</option>
+                                foreach (var role in ViewBag.Listrole)
+                                {
+                                    <option value="@role.Id">@role.Name</option>
+                                }
                             }
                         </select>
                     </div>
@@ -86,7 +91,7 @@
                                     <div class="row" style="margin-left:0;margin-right:0;">
                                         <div class="col-sm-2">
                                             <div class="form-group">
-                                                <label for="text-maxlength">Input Length (Char)</label>
+                                                <label for="text-maxlength">Input Length</label>
                                                 <input id="text-maxlength" type="number" class="form-control" placeholder="max-length*" min="0" value="10000">
                                             </div>
                                         </div>
