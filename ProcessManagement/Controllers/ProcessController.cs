@@ -63,10 +63,6 @@ namespace ProcessManagement.Controllers
             var idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();
             List<int> b = new List<int>();
             string circle = "Circle";
-            Role role = new Role();
-            role.Name = "No Role";
-            role.IdProcess = ps.Id;
-            db.Roles.Add(role);
             for (int i = 0; i < nodeArray.Count; i++)
             {
                 if (nodeArray[i]["figure"] != null)
