@@ -216,12 +216,12 @@
                     inputConfig: JSON.stringify(inputConfig),
                     fileConfig: JSON.stringify(fileConfig)
                  }
-                 if (name == "") {
-                     showToastr("error", "Task name not null", "toast-bottom-left");
-                     toggleLoading($this);
-                 }
-                 addTask(data);
-                
+                if (name == "") {
+                    showToastr("error", "Task name not null", "toast-bottom-left");
+                    toggleLoading($this);
+                } else {
+                    addTask(data);
+                }
             }) 
         }); 
         function createSwitch() {
