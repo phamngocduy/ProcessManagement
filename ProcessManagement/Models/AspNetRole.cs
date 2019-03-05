@@ -12,30 +12,18 @@ namespace ProcessManagement.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Step
+    public partial class AspNetRole
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Step()
+        public AspNetRole()
         {
-            this.TaskProcesses = new HashSet<TaskProcess>();
+            this.AspNetUsers = new HashSet<AspNetUser>();
         }
     
-        public int Id { get; set; }
-        public int IdProcess { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
-        public bool StartStep { get; set; }
-        public Nullable<int> NextStep1 { get; set; }
-        public Nullable<int> NextStep2 { get; set; }
-        public int Key { get; set; }
-        public string Figure { get; set; }
-        public Nullable<bool> Status { get; set; }
-        public string Color { get; set; }
-        public System.DateTime Created_At { get; set; }
-        public System.DateTime Updated_At { get; set; }
     
-        public virtual Process Process { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TaskProcess> TaskProcesses { get; set; }
+        public virtual ICollection<AspNetUser> AspNetUsers { get; set; }
     }
 }

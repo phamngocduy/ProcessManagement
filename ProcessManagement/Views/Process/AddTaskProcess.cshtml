@@ -53,93 +53,91 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="card">
             <div class="body">
-                <form action="@Url.RouteUrl("GroupLocalizedDefault",new { controller = "process", action = "addtaskprocess"})" method="post" id="addnewtask" enctype="multipart/form-data">
-                    <div class="row clearfix">
-                        <div class="col-sm-8">
-                            <div class="form-group">
-                                <label for="task-name" class="required">Task Name</label>
-                                <input type="text" class="form-control" id="task-name" name="@Html.NameFor(m => m.Name)">
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <label for="task-role" class="required">Select Role</label>
-                            <select id="task-role" class="form-control show-tick ms select2">
-                                <option></option>
-                                @foreach (var role in ViewBag.Listrole)
-                                {
-                                    <option value="@role.Id">@role.Name</option>
-                                }
-                            </select>
+                <div class="row clearfix">
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <label for="task-name" class="required">Task Name</label>
+                            <input type="text" class="form-control" id="task-name" name="@Html.NameFor(m => m.Name)">
                         </div>
                     </div>
-                    <div class="row clearfix">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for="task-description">Description</label>
-                                <textarea class="form-control" rows="6" placeholder="Write something about your group (optional)" id="task-description" name="@Html.NameFor(m => m.Description)"></textarea>
-                            </div>
+                    <div class="col-sm-4">
+                        <label for="task-role" class="required">Select Role</label>
+                        <select id="task-role" class="form-control show-tick ms select2">
+                            <option></option>
+                            @foreach (var role in ViewBag.Listrole)
+                            {
+                                <option value="@role.Id">@role.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="task-description">Description</label>
+                            <textarea class="form-control" rows="6" placeholder="Write something about your group (optional)" id="task-description" name="@Html.NameFor(m => m.Description)"></textarea>
                         </div>
-                        <div class="col-sm-12 ">
-                            <div class="choose-type row">
-                                <div class="choose-item col-sm-12 form-group" id="choose-input">
-                                    <fieldset>
-                                        <legend>Input Text</legend>
-                                        <div class="row" style="margin-left:0;margin-right:0;">
-                                            <div class="col-sm-2">
-                                                <div class="form-group">
-                                                    <label for="text-maxlength">Input Length (Char)</label>
-                                                    <input id="text-maxlength" type="number" class="form-control" placeholder="max-length*" min="0" value="10000">
-                                                </div>
+                    </div>
+                    <div class="col-sm-12 ">
+                        <div class="choose-type row">
+                            <div class="choose-item col-sm-12 form-group" id="choose-input">
+                                <fieldset>
+                                    <legend>Input Text</legend>
+                                    <div class="row" style="margin-left:0;margin-right:0;">
+                                        <div class="col-sm-2">
+                                            <div class="form-group">
+                                                <label for="text-maxlength">Input Length (Char)</label>
+                                                <input id="text-maxlength" type="number" class="form-control" placeholder="max-length*" min="0" value="10000">
                                             </div>
-                                            <div class="col-sm-10">
-                                                <div class="form-group">
-                                                    <label for="text-label">Input Label</label>
-                                                    <input id="text-label" type="text" class="form-control">
-                                                </div>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <div class="form-group">
+                                                <label for="text-label">Input Label</label>
+                                                <input id="text-label" type="text" class="form-control">
                                             </div>
+                                        </div>
 
-                                            <div class="col-sm-12">
-                                                <div class="form-group switch-custom">
-                                                    <label>required: <input type="checkbox" class="checkbox-switch" /></label>
-                                                </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group switch-custom">
+                                                <label>Required: <input type="checkbox" class="checkbox-switch" id="text-required"/></label>
                                             </div>
                                         </div>
-                                    </fieldset>
-                                </div>
-                                <div class="choose-item col-sm-12 form-group" id="choose-file">
-                                    <fieldset>
-                                        <legend>Input File</legend>
-                                        <div class="row" style="margin-left:0;margin-right:0;">
-                                            <div class="col-sm-2">
-                                                <div class="form-group">
-                                                    <label for="file-maxsize">File Size (Mb)</label>
-                                                    <input id="file-maxsize" type="number" class="form-control" placeholder="max-length*" min="0" value="25">
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-10">
-                                                <div class="form-group">
-                                                    <label for="file-label">File Label</label>
-                                                    <input id="file-label" type="text" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-12">
-                                                <div class="form-group switch-custom">
-                                                    <label>required: <input id="requinputfile" type="checkbox" class="checkbox-switch" /></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                </div>
+                                    </div>
+                                </fieldset>
                             </div>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="mt-2">
-                                <button id="btn-save" type="submit" class="btn btn-primary-theme">Create</button>
-                                <a href="#" class="btn btn-outline-secondary">Go Back</a>
+                            <div class="choose-item col-sm-12 form-group" id="choose-file">
+                                <fieldset>
+                                    <legend>Input File</legend>
+                                    <div class="row" style="margin-left:0;margin-right:0;">
+                                        <div class="col-sm-2">
+                                            <div class="form-group">
+                                                <label for="file-maxsize">File Size (Mb)</label>
+                                                <input id="file-maxsize" type="number" class="form-control" min="0">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <div class="form-group">
+                                                <label for="file-label">File Label</label>
+                                                <input id="file-label" type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group switch-custom">
+                                                <label>Required: <input id="file-required" type="checkbox" class="checkbox-switch" /></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
                             </div>
                         </div>
                     </div>
-                </form>
+                    <div class="col-sm-12">
+                        <div class="mt-2">
+                            <button id="btn-save" class="btn btn-primary-theme">Create</button>
+                            <a href="#" class="btn btn-outline-secondary">Go Back</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -174,23 +172,25 @@
     <script>
         $(document).ready(function ($) {
             $('#btn-save').on('click', function () {
-                var inputtext = $('#inputtext').val();
-                var maxlength = $('#maxlength').val();
-                var requinputtext = $('#requinputtext').val();
-                var size = $('#size').val();
-                var requinputfile = $('#requinputfile').val();
-                var name = $('#name').val();
-                var selectrole = $('#selectrole').val();
-                var editor = $('#editor').val();
-                var requinputfile = $('#requinputfile').val();
-                var requinputtext = $('#requinputtext').val();
+                var name = $('#task-name').val();
+                var selectrole = $('#task-role').val();
+                var editor = $('#task-description').val();
 
-                if (document.getElementById("requinputtext").checked == true) {
+                //text
+                var inputtext = $('#text-label').val();
+                var maxlength = $('#text-maxlength').val();
+                var requinputtext = $('#text-required').val();
+                //file
+                var size = $('#file-maxsize').val();
+
+                var requinputfile = $('#file-required').val();
+
+                if (document.getElementById("text-required").checked == true) {
                     requinputtext = "true";
                 } else {
                     requinputtext = "false";
                 }
-                if (document.getElementById("requinputfile").checked == true) {
+                if (document.getElementById("file-required").checked == true) {
                     requinputfile = "true";
                 } else {
                     requinputfile = "false";

@@ -29,8 +29,6 @@ namespace ProcessManagement.Models
         public string groupSlug { get; set; }
         public System.DateTime Created_At { get; set; }
         public System.DateTime Updated_At { get; set; }
-        public string Avatar { get; set; }
-        public string AvatarDefault { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

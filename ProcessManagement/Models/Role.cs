@@ -25,6 +25,8 @@ namespace ProcessManagement.Models
         public int IdProcess { get; set; }
         public string Description { get; set; }
         public string Color { get; set; }
+        public Nullable<System.DateTime> Create_At { get; set; }
+        public Nullable<System.DateTime> Update_At { get; set; }
     
         public virtual Process Process { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -71,6 +71,18 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-purple .sidebar .tab-content .sidebar-nav .metismenu > li a:hover > i {
   color: #ffffff !important;
 }
+.theme-purple fieldset {
+  border: 1px solid #ced4da;
+}
+.theme-purple fieldset legend {
+  padding: 0.2em 0.5em;
+  border: 1px solid #a27ce6;
+  background-color: #a27ce6;
+  color: #fff;
+  font-size: 13px;
+  width: unset;
+  margin-left: 1em;
+}
 
 .theme-cyan .theme-color {
   color: #2eacb3;
@@ -123,6 +135,18 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 }
 .theme-cyan .sidebar .tab-content .sidebar-nav .metismenu > li a:hover > i {
   color: #ffffff !important;
+}
+.theme-cyan fieldset {
+  border: 1px solid #ced4da;
+}
+.theme-cyan fieldset legend {
+  padding: 0.2em 0.5em;
+  border: 1px solid #2eacb3;
+  background-color: #2eacb3;
+  color: #fff;
+  font-size: 13px;
+  width: unset;
+  margin-left: 1em;
 }
 
 .theme-blue .theme-color {
@@ -177,6 +201,18 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-blue .sidebar .tab-content .sidebar-nav .metismenu > li a:hover > i {
   color: #ffffff !important;
 }
+.theme-blue fieldset {
+  border: 1px solid #ced4da;
+}
+.theme-blue fieldset legend {
+  padding: 0.2em 0.5em;
+  border: 1px solid #449cff;
+  background-color: #449cff;
+  color: #fff;
+  font-size: 13px;
+  width: unset;
+  margin-left: 1em;
+}
 
 .theme-green .theme-color {
   color: #31b96f;
@@ -229,6 +265,18 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 }
 .theme-green .sidebar .tab-content .sidebar-nav .metismenu > li a:hover > i {
   color: #ffffff !important;
+}
+.theme-green fieldset {
+  border: 1px solid #ced4da;
+}
+.theme-green fieldset legend {
+  padding: 0.2em 0.5em;
+  border: 1px solid #31b96f;
+  background-color: #31b96f;
+  color: #fff;
+  font-size: 13px;
+  width: unset;
+  margin-left: 1em;
 }
 
 .theme-orange .theme-color {
@@ -283,6 +331,18 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-orange .sidebar .tab-content .sidebar-nav .metismenu > li a:hover > i {
   color: #ffffff !important;
 }
+.theme-orange fieldset {
+  border: 1px solid #ced4da;
+}
+.theme-orange fieldset legend {
+  padding: 0.2em 0.5em;
+  border: 1px solid #ff613c;
+  background-color: #ff613c;
+  color: #fff;
+  font-size: 13px;
+  width: unset;
+  margin-left: 1em;
+}
 
 .theme-blush .theme-color {
   color: #e84f5e;
@@ -336,6 +396,18 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-blush .sidebar .tab-content .sidebar-nav .metismenu > li a:hover > i {
   color: #ffffff !important;
 }
+.theme-blush fieldset {
+  border: 1px solid #ced4da;
+}
+.theme-blush fieldset legend {
+  padding: 0.2em 0.5em;
+  border: 1px solid #e84f5e;
+  background-color: #e84f5e;
+  color: #fff;
+  font-size: 13px;
+  width: unset;
+  margin-left: 1em;
+}
 
 .row.display-flex {
   display: -webkit-box;
@@ -371,19 +443,6 @@ label.required::after {
   content: "*";
   color: #ff0101;
   margin-left: 3px;
-}
-
-fieldset {
-  border: 1px solid #ced4da;
-}
-fieldset legend {
-  padding: 0.2em 0.5em;
-  border: 1px solid #5a5a59;
-  background-color: #5a5a59;
-  color: #fff;
-  font-size: 13px;
-  width: unset;
-  margin-left: 1em;
 }
 
 /* end of config */
@@ -484,11 +543,7 @@ fieldset legend {
 .step-list .step {
   position: relative;
   padding: 0.75rem 1.25rem;
-  color: #004085;
-  background-color: #cce5ff;
-  border-color: #b8daff;
   margin: 5px 0;
-  color: #fff;
   line-height: 40px;
   font-size: 15px;
 }
@@ -501,7 +556,6 @@ fieldset legend {
   right: 10px;
 }
 .step-list .step .step-action.dropdown .dropdown-toggle {
-  color: #fff;
   padding: 5px 10px;
 }
 .step-list .step .step-action.dropdown .dropdown-toggle::after {
@@ -541,8 +595,6 @@ fieldset legend {
 .step-list .task .task-list .task-item {
   padding: 0.75rem 1.25rem;
   color: #004085;
-  background-color: #cce5ff;
-  border-color: #b8daff;
   margin: 5px 0;
   color: #fff;
   line-height: 20px;
@@ -553,7 +605,7 @@ fieldset legend {
   color: #fff;
 }
 .step-list .task .task-list .task-item a:hover {
-  color: #e6e6e6;
+  color: white;
 }
 .step-list .task .task-list .task-item .handle {
   position: absolute;
