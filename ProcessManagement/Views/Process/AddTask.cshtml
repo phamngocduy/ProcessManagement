@@ -186,17 +186,17 @@
 
                 var name = $('#task-name').val();
                 var role = $('#task-role').val();
-                var description = $('#task-description').checked == true ? "true" : "false";
+                var description = $('#task-description').val();
 
                 //text
                 var inputLabel = $('#text-label').val();
                 var inputmaxLength = $('#text-maxlength').val();
-                var inputRequire = $('#text-required').checked == true ? "true" : "false";
+                var inputRequire = $('#text-required').prop('checked') == true ? "true" : "false";
                 //file
 
                 var fileLabel = $("#file-label").val();
                 var fileSize = $('#file-maxsize').val();
-                var fileRequire = $('#file-required').val();
+                var fileRequire = $('#file-required').prop('checked') == true ? "true" : "false";
 
                 var inputConfig = {
                     label: inputLabel,
