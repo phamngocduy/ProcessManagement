@@ -68,7 +68,7 @@
                     </div>
                     <div class="col-sm-4">
                         <label for="task-role">Select Role</label>
-                        <select id="task-role" class="form-control show-tick ms select2 disabled">
+                        <select id="task-role" class="form-control show-tick ms select2" disabled>
                             <option></option>
                             @foreach (var role in roles)
                             {
@@ -81,7 +81,7 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label for="task-description">Description</label>
-                            <textarea class="form-control" rows="6" placeholder="Write something about your task (optional)" id="task-description" name="@Html.NameFor(m => m.Description)">@Model.Description</textarea>
+                            <textarea class="form-control" rows="6" placeholder="Write something about your task (optional)" id="task-description" name="@Html.NameFor(m => m.Description)" disabled>@Model.Description</textarea>
                         </div>
                     </div>
                     <div class="col-sm-12 ">
@@ -93,13 +93,13 @@
                                         <div class="col-sm-2">
                                             <div class="form-group input-has-prefix char">
                                                 <label for="text-maxlength">Max Length</label>
-                                                <input id="text-maxlength" type="number" maxlength="17" class="form-control limit-length" value="@inputConfig["maxlength"]">
+                                                <input id="text-maxlength" type="number" maxlength="17" class="form-control limit-length" value="@inputConfig["maxlength"]" disabled>
                                             </div>
                                         </div>
                                         <div class="col-sm-10">
                                             <div class="form-group">
                                                 <label for="text-label">Response Label</label>
-                                                <input id="text-label" type="text" class="form-control" value="@inputConfig["label"]">
+                                                <input id="text-label" type="text" class="form-control" value="@inputConfig["label"]" disabled>
                                             </div>
                                         </div>
 
@@ -118,13 +118,13 @@
                                         <div class="col-sm-2">
                                             <div class="form-group input-has-prefix mb">
                                                 <label for="file-maxsize">File Size</label>
-                                                <input id="file-maxsize" type="number" maxlength="17" class="form-control limit-length" value="@fileConfig["size"]">
+                                                <input id="file-maxsize" type="number" maxlength="17" class="form-control limit-length" value="@fileConfig["size"]" disabled>
                                             </div>
                                         </div>
                                         <div class="col-sm-10">
                                             <div class="form-group">
                                                 <label for="file-label">Response Label</label>
-                                                <input id="file-label" type="text" class="form-control" value="@fileConfig["label"]">
+                                                <input id="file-label" type="text" class="form-control" value="@fileConfig["label"]" disabled>
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
@@ -138,9 +138,9 @@
                         </div>
                     </div>
                     <div class="col-sm-12">
-                        <div class="mt-2">
-                            <button id="btn-save" class="btn btn-primary-theme" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing Create">Create</button>
-                            <a href="#" class="btn btn-outline-secondary">Go Back</a>
+                        <div class="mt-2" id="button-action">
+                            <button id="btn-edit" class="btn btn-primary-theme">Edit</button>
+                            <a href="#" class="btn btn-outline-danger">Delete</a>
                         </div>
                     </div>
                 </div>
@@ -155,73 +155,26 @@
     <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
     <script>
         $(function () {
-
+            var bAction = `<button id="btn-save" class="btn btn-primary-theme">Save</button>
+                            <button id="btn-back" class="btn btn-outline-secondary">Back</button>`;
             createSwitch();
             $("select#task-role").select2({
                 placeholder: "Select Role",
-                allowClear: true
+                allowClear: true,
+            }).select2('val', @Model.idRole);
+            $("body").on("click", "#btn-edit,#btn-back",function () {
+                var temp = bAction;
+                var $this = $(this);
+                var actionButton = $this.parents("#button-action");
+                bAction = actionButton.html();
+                actionButton.html(temp);
+                $("input,select,textarea").prop("disabled", function () {
+                    return !$(this).prop("disabled");
+                });
             });
-            $('#btn-save').on('click', function () {
-                $this = $(this);
-                toggleLoading($this);
 
-                var name = $('#task-name').val();
-                var role = $('#task-role').val();
-                var description = $('#task-description').val();
-
-                //text
-                var inputLabel = $('#text-label').val();
-                var inputmaxLength = $('#text-maxlength').val();
-                var inputRequire = $('#text-required').prop('checked') == true ? "true" : "false";
-                //file
-
-                var fileLabel = $("#file-label").val();
-                var fileSize = $('#file-maxsize').val();
-                var fileRequire = $('#file-required').prop('checked') == true ? "true" : "false";
-
-                var inputConfig = {
-                    label: inputLabel,
-                    maxlength: inputmaxLength,
-                    required: inputRequire
-                };
-                let fileConfig = {
-                    label: fileLabel,
-                    size: fileSize,
-                    require: fileRequire
-                };
-
-                let data = {
-                    name: name,
-                    idRole: role,
-                    description: description,
-                    inputConfig: JSON.stringify(inputConfig),
-                    fileConfig: JSON.stringify(fileConfig)
-                 }
-                if (name == "") {
-                    showToastr("error", "Task name not null", "toast-bottom-left");
-                    toggleLoading($this);
-                } else {
-                    addTask(data);
-                }
-            })
         });
-        function addTask(data) {
-            $.ajax({
-                url: "@Url.RouteUrl("GroupLocalizedDefault", new { controller = "Process" , action = "addtask" })",
-                type: "POST",
-                data: data,
-                dataType: "json",
-                success: function (response) {
-                    console.log(response);
-                    if (response.status == 200) {
-                        location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process" ,action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })';
-                    } else {
-                        showToastr("error", response.message, "toast-bottom-left")
-                        console.error(response)
-                    }
-                }
-            });
-        }
+        
     </script>
 
 }
