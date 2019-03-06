@@ -3,9 +3,9 @@
 @{
     ViewBag.Title = "AddTaskProcess";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var step = ViewData["step"] as ProcessManagement.Models.Step;
+    var step = ViewData["Step"] as ProcessManagement.Models.Step;
     var group = ViewData["Group"] as ProcessManagement.Models.Group;
-    Session["idstep"] = step.Id;
+    var roles = ViewData["ListRole"] as List<ProcessManagement.Models.Role>;
 }
 
 
@@ -67,12 +67,9 @@
                         <label for="task-role">Select Role</label>
                         <select id="task-role" class="form-control show-tick ms select2">
                             <option></option>
-                            @if (ViewBag.Listrole != null)
+                            @foreach (var role in roles)
                             {
-                                foreach (var role in ViewBag.Listrole)
-                                {
-                                    <option value="@role.Id">@role.Name</option>
-                                }
+                                <option value="@role.Id">@role.Name</option>
                             }
                         </select>
                     </div>
@@ -155,26 +152,7 @@
     <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
     <script>
         $(function () {
-            $(".input-has-prefix input").on("change paste keyup", function () {
-                var val = $(this).val();
-                var parent = $(this).parents(".input-has-prefix");
-                if (val == "") {
-                    parent.removeClass("hide-prefix");
-                } else {
-                    parent.addClass("hide-prefix");
-                }
-            })
-            $(".limit-length").on("keypress", function (e) {
-                var maxlengthNumber = parseInt($(this).attr('maxlength'));
-                var inputValueLength = $(this).val().length + 1;
-                if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-
-                    return false;
-                }
-                if (maxlengthNumber < inputValueLength) {
-                    return false;
-                }
-            })
+           
             createSwitch();
             $("select#task-role").select2({
                 placeholder: "Select Role",
@@ -191,12 +169,12 @@
                 //text
                 var inputLabel = $('#text-label').val();
                 var inputmaxLength = $('#text-maxlength').val();
-                var inputRequire = $('#text-required').prop('checked') == true ? "true" : "false";
+                var inputRequire = $('#text-required').prop('checked') == true ? true : false;
                 //file
 
                 var fileLabel = $("#file-label").val();
                 var fileSize = $('#file-maxsize').val();
-                var fileRequire = $('#file-required').prop('checked') == true ? "true" : "false";
+                var fileRequire = $('#file-required').prop('checked') == true ? true : false;
 
                 var inputConfig = {
                     label: inputLabel,
@@ -224,21 +202,6 @@
                 }
             }) 
         }); 
-        function createSwitch() {
-            let el = $('.checkbox-switch');
-            let switchArr = [];
-            el.each(function (index, e) {
-                switchArr[index] = new Switchery(e, {
-                    size: 'small',
-                });
-            })
-        }
-        function createSelect2() {
-            $("select.select2").select2({
-                allowClear: true
-            });
-
-        }
         function addTask(data) {
             $.ajax({
                 url: "@Url.RouteUrl("GroupLocalizedDefault", new { controller = "Process" , action = "addtask" })",
@@ -255,11 +218,6 @@
                     }
                 }
             });
-        }
-        function toggleLoading(element) {
-            var text = element.text();
-            var loadingConfig = element.attr("data-loading-text");
-            element.html(loadingConfig).attr("data-loading-text", text);
         }
     </script>
   

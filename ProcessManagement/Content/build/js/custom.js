@@ -40,6 +40,29 @@
             }
         }
     });
+
+
+    $(".input-has-prefix input").on("change paste keyup", function () {
+        var val = $(this).val();
+        var parent = $(this).parents(".input-has-prefix");
+        if (val == "") {
+            parent.removeClass("hide-prefix");
+        } else {
+            parent.addClass("hide-prefix");
+        }
+    })
+    //limit length input
+    $(".limit-length").on("keypress", function (e) {
+        var maxlengthNumber = parseInt($(this).attr('maxlength'));
+        var inputValueLength = $(this).val().length + 1;
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+
+            return false;
+        }
+        if (maxlengthNumber < inputValueLength) {
+            return false;
+        }
+    })
 })
 
 
@@ -113,4 +136,24 @@ function setTheme() {
             theme += defaultColor;
     }
     $('body').removeClass().addClass(theme);
+}
+function createSwitch() {
+    let el = $('.checkbox-switch');
+    let switchArr = [];
+    el.each(function (index, e) {
+        switchArr[index] = new Switchery(e, {
+            size: 'small',
+        });
+    })
+}
+function createSelect2() {
+    $("select.select2").select2({
+        allowClear: true
+    });
+
+}
+function toggleLoading(element) {
+    var text = element.text();
+    var loadingConfig = element.attr("data-loading-text");
+    element.html(loadingConfig).attr("data-loading-text", text);
 }
