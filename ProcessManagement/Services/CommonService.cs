@@ -55,6 +55,7 @@ namespace ProcessManagement.Services
             int green = rnd.Next(0, 255);
             double opacity = rnd.Next(50, 100);
             opacity = opacity / 100;
+            opacity = 1;
             string color = String.Format("rgba({0},{1},{2},{3})",red,green,blue,opacity);
             return color;
         }
