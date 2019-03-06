@@ -257,8 +257,8 @@
                         <tbody></tbody>
                     </table>
                     <div id="add-member-search">
-                        <input type="hidden" style="width:calc(100% - 112px);border: 1px solid #ced4da;padding:5px 10px;" />
-                        <button class="btn btn-primary-theme" id="btn-add-member">Add member</button>
+                        <input type="hidden" style="width:calc(100% - 116px);border: 1px solid #ced4da;padding:5px 10px;" />
+                        <button class="btn btn-primary-theme" id="btn-add-member" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing">Add member</button>
                     </div>
                 </div>
             </div>
@@ -389,9 +389,12 @@
             //    selector: 'a'
             //});
             $("#btn-add-member").on("click", function () {
+                var $this = $(this);
+                toggleLoading($this);
                 var newMember = $("#add-member-search input").select2("data");
                 if (newMember == null) {
                     showToastr("error", "Please input name to invite user", "toast-bottom-left");
+                    toggleLoading($this);
                 } else {
                     addMember(newMember)
                 }
@@ -421,44 +424,46 @@
             
         });
         function addMember(newMember) {
-               $.ajax({
-                    url: "@Url.Action("addmember","api")",
-                    type: "POST",
-                    data: newMember,
-                    dataType: "json",
-                    success: function (response) {
-                        //thanh cong thi no tra du lieu ve
-                        console.log(response);
-                        if (response.status == 200) {
-                            showToastr("success", response.message, "toast-bottom-left");
-                            $(".select2-chosen").empty();
-                            $("#table-member").DataTable().ajax.reload();
-                        } else {
-                            showToastr("error", response.message, "toast-bottom-left")
-                            console.error(response)
-                        }
+            $.ajax({
+                url: "@Url.Action("addmember","api")",
+                type: "POST",
+                data: newMember,
+                dataType: "json",
+                success: function (response) {
+                    //thanh cong thi no tra du lieu ve
+                    console.log(response);
+                    if (response.status == 200) {
+                        showToastr("success", response.message, "toast-bottom-left");
+                        var addButton = $("#btn-add-member");
+                        toggleLoading(addButton);
+                        $(".select2-chosen").empty();
+                        $("#table-member").DataTable().ajax.reload();
+                    } else {
+                        showToastr("error", response.message, "toast-bottom-left")
+                        console.error(response)
                     }
-                })
+                }
+            })
 
-            }
-            function editRole(role) {
-                $.ajax({
-                    url: "@Url.Action("editrole","api")",
-                    type: "POST",
-                    data: role,
-                    dataType: "json",
-                    success: function (response) {
-                        //thanh cong thi no tra du lieu ve
-                        console.log(response);
-                        if (response.status == 200) {
-                            showToastr("success", response.message, "toast-bottom-left");
-                            table.ajax.reload();
-                        } else {
-                            showToastr("error", response.message, "toast-bottom-left")
-                            console.error(response)
-                        }
+        }
+        function editRole(role) {
+            $.ajax({
+                url: "@Url.Action("editrole","api")",
+                type: "POST",
+                data: role,
+                dataType: "json",
+                success: function (response) {
+                    //thanh cong thi no tra du lieu ve
+                    console.log(response);
+                    if (response.status == 200) {
+                        showToastr("success", response.message, "toast-bottom-left");
+                        table.ajax.reload();
+                    } else {
+                        showToastr("error", response.message, "toast-bottom-left")
+                        console.error(response)
                     }
-                })
-            }
+                }
+            })
+        }
     </script>
 }

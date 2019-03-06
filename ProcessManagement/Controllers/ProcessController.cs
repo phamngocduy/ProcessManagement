@@ -440,10 +440,11 @@ namespace ProcessManagement.Controllers
             Process ps = processService.findProcess(step.IdProcess);
             Group group = groupService.findGroup(ps.IdGroup);
             TaskProcess pr = new TaskProcess();
-            ViewData["step"] = step;
             List<Role> role = db.Roles.Where(x => x.IdProcess == step.IdProcess).ToList();
-            ViewBag.Listrole = role;
+            ViewData["Step"] = step;
+            ViewData["ListRole"] = role;
             ViewData["Group"] = group;
+            Session["idStep"] = step.Id;
             return View(pr);
         }
 
@@ -453,9 +454,18 @@ namespace ProcessManagement.Controllers
         {
             var status = HttpStatusCode.OK;
             string message;
-
-            int idstep = (int)Session["idstep"];
+            object response;
+            int idstep = (int)Session["idStep"];
             Step step = stepService.findStep(idstep);
+
+
+            if (name == "")
+            {
+                status = HttpStatusCode.InternalServerError;
+                message = "Created Task Successfully";
+                response = new { message = message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
 
             if (idRole != null)
             {
@@ -484,7 +494,7 @@ namespace ProcessManagement.Controllers
                 message = "Created Task Successfully";
             }
 
-            var response = new { message = message, status = HttpStatusCode.OK };
+            response = new { message = message, status = status };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
@@ -536,22 +546,14 @@ namespace ProcessManagement.Controllers
         {
             TaskProcess task = taskService.findtask(idtask);
             if (task == null) return HttpNotFound();
-            if (task.ValueInputFile != null && task.ValueInputText != null)
-            {
-                JObject valueinputtext = JObject.Parse(task.ValueInputText);
-                JObject valueinputfile = JObject.Parse(task.ValueInputFile);
-                var inputtext = valueinputtext["inputtext"].ToString();
-                var maxlenght = valueinputtext["maxlength"].ToString();
-                var requinputtext = valueinputtext["requinputtext"].ToString();
-                var size = valueinputfile["size"].ToString();
-                var requinputfile = valueinputfile["requinputfile"].ToString();
-                ViewData["inputtext"] = inputtext;
-                ViewData["maxlenght"] = maxlenght;
-                ViewData["requinputtext"] = requinputtext;
-                ViewData["size"] = size;
-                ViewData["requinputfile"] = requinputfile;
-            }
+            Step step = stepService.findStep(task.idStep);
+            Group group = groupService.findGroup(step.Process.Group.Id);
+            List<Role> role = db.Roles.Where(x => x.IdProcess == task.Step.Process.Id).ToList();
 
+            ViewData["Step"] = step;
+            ViewData["ListRole"] = role;
+            ViewData["Group"] = group;
+            
             return View(task);
         }
 

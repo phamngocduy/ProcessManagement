@@ -79,7 +79,8 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   border: 1px solid #a27ce6;
   background-color: #a27ce6;
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
   width: unset;
   margin-left: 1em;
 }
@@ -144,7 +145,8 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   border: 1px solid #2eacb3;
   background-color: #2eacb3;
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
   width: unset;
   margin-left: 1em;
 }
@@ -209,7 +211,8 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   border: 1px solid #449cff;
   background-color: #449cff;
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
   width: unset;
   margin-left: 1em;
 }
@@ -274,7 +277,8 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   border: 1px solid #31b96f;
   background-color: #31b96f;
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
   width: unset;
   margin-left: 1em;
 }
@@ -339,7 +343,8 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   border: 1px solid #ff613c;
   background-color: #ff613c;
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
   width: unset;
   margin-left: 1em;
 }
@@ -404,7 +409,8 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   border: 1px solid #e84f5e;
   background-color: #e84f5e;
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
   width: unset;
   margin-left: 1em;
 }
