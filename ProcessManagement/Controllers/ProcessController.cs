@@ -114,7 +114,7 @@ namespace ProcessManagement.Controllers
                 }
 
                 step.IdProcess = processId;
-                step.Name = nodeArray[i]["text"].ToString();
+                step.Name = nodeArray[i]["text"].ToString().Trim();
                 step.Key = key;
                 step.StartStep = (int)idfirstStep["to"] == (int)nodeArray[i]["key"] ? true : false;
                 step.Color = commonService.getRandomColor();

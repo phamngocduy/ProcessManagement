@@ -38,7 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vs1248.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vs9327.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,7 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vs1248.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vs9327.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -477,16 +477,7 @@
     <Content Include="Content\images\sm\avatar4.jpg" />
     <Content Include="Content\images\sm\avatar5.jpg" />
     <Content Include="Content\images\sm\avatar6.jpg" />
-    <Content Include="Content\images\svg-icon\step.svg" />
     <Content Include="Content\images\user\avatar1.jpg" />
-    <Content Include="Content\images\workspace\0bd9c5b4aaaf830d4653e160305f0aa7.jpg" />
-    <Content Include="Content\images\workspace\32832791_197409661073223_4603152253417684992_n.jpg" />
-    <Content Include="Content\images\workspace\avatar1.jpg" />
-    <Content Include="Content\images\workspace\default.jpg" />
-    <Content Include="Content\images\workspace\dieu_thu_vi_ve_dau_tay_2.jpg" />
-    <Content Include="Content\images\workspace\foody-vuon-dau-tay-hue-shop-online-130-6362596235595512991.jpg" />
-    <Content Include="Content\images\workspace\iphone-6s-64gb-hong-1-10.jpg" />
-    <Content Include="Content\images\workspace\mountains_sky_clouds_mountain_range_stones_99500_1920x1080.jpg" />
     <Content Include="Content\images\xs\avatar1.jpg" />
     <Content Include="Content\images\xs\avatar10.jpg" />
     <Content Include="Content\images\xs\avatar2.jpg" />
@@ -8440,6 +8431,9 @@
     <Content Include="Views\Process\AddTask.cshtml" />
     <Content Include="Views\Process\EditTask.cshtml" />
     <Content Include="Views\Process\Showtask.cshtml" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\group\" />
