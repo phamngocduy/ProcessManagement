@@ -7,6 +7,8 @@ using Microsoft.AspNet.Identity;
 using ProcessManagement.Models;
 using ProcessManagement.Services;
 using ProcessManagement.Filters;
+using System.Net;
+
 namespace ProcessManagement.Controllers
 {
     public class ProcessController : BaseController
@@ -19,7 +21,7 @@ namespace ProcessManagement.Controllers
         ProcessService processService = new ProcessService();
         StepService stepService = new StepService();
         TaskService taskService = new TaskService();
-
+        RoleService roleService = new RoleService();
         ///=============================================================================================
 
         [Authorize]
@@ -440,28 +442,68 @@ namespace ProcessManagement.Controllers
 
         [Authorize]
         [GroupAuthorize]
-        public ActionResult AddTaskProcess(int stepid)
+        public ActionResult AddTask(int stepid)
         {
             Step step = stepService.findStep(stepid);
             Process ps = processService.findProcess(step.IdProcess);
             Group group = groupService.findGroup(ps.IdGroup);
             TaskProcess pr = new TaskProcess();
-            ViewData["step"] = step;
             List<Role> role = db.Roles.Where(x => x.IdProcess == step.IdProcess).ToList();
-            ViewBag.Listrole = role;
+            ViewData["Step"] = step;
+            ViewData["ListRole"] = role;
             ViewData["Group"] = group;
+            Session["idStep"] = step.Id;
             return View(pr);
         }
 
         [Authorize]
         [HttpPost]
-        public JsonResult AddTaskProcess(TaskProcess task, string valueinputtext, string valueinputfile, string nametask, int roletask, string editor)
+        public JsonResult AddTask(string name, int ? idRole, string description, string inputConfig, string fileConfig)
         {
-            int idstep = (int)Session["idstep"];
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+            int idstep = (int)Session["idStep"];
             Step step = stepService.findStep(idstep);
-            taskService.addtaskprocess(step.Id, task, valueinputtext, valueinputfile, nametask, roletask, editor);
-            SetFlash(FlashType.success, "Created Task Successfully");
-            return Json(new { id = step.Process.Id });
+
+
+            if (name == "")
+            {
+                status = HttpStatusCode.InternalServerError;
+                message = "Created Task Successfully";
+                response = new { message = message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+
+            if (idRole != null)
+            {
+                int idR = idRole.GetValueOrDefault();
+                var role = roleService.findRoleOfProcess(idR, step.Process.Id);
+                if (role == null)
+                {
+                    //role not exist
+                    status = HttpStatusCode.InternalServerError;
+                    message = "Role not exist";
+
+
+                }
+                else
+                {
+
+                    taskService.addtask(step.Id, name, role.Id, description, inputConfig, fileConfig);
+                    SetFlash(FlashType.success, "Created Task Successfully");
+                    message = "Created Task Successfully";
+                }
+            }
+            else
+            {
+                taskService.addtask(step.Id, name, null, description, inputConfig, fileConfig);
+                SetFlash(FlashType.success, "Created Task Successfully");
+                message = "Created Task Successfully";
+            }
+
+            response = new { message = message, status = status };
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         [Authorize]
@@ -512,22 +554,14 @@ namespace ProcessManagement.Controllers
         {
             TaskProcess task = taskService.findtask(idtask);
             if (task == null) return HttpNotFound();
-            if (task.ValueInputFile != null && task.ValueInputText != null)
-            {
-                JObject valueinputtext = JObject.Parse(task.ValueInputText);
-                JObject valueinputfile = JObject.Parse(task.ValueInputFile);
-                var inputtext = valueinputtext["inputtext"].ToString();
-                var maxlenght = valueinputtext["maxlength"].ToString();
-                var requinputtext = valueinputtext["requinputtext"].ToString();
-                var size = valueinputfile["size"].ToString();
-                var requinputfile = valueinputfile["requinputfile"].ToString();
-                ViewData["inputtext"] = inputtext;
-                ViewData["maxlenght"] = maxlenght;
-                ViewData["requinputtext"] = requinputtext;
-                ViewData["size"] = size;
-                ViewData["requinputfile"] = requinputfile;
-            }
+            Step step = stepService.findStep(task.idStep);
+            Group group = groupService.findGroup(step.Process.Group.Id);
+            List<Role> role = db.Roles.Where(x => x.IdProcess == task.Step.Process.Id).ToList();
 
+            ViewData["Step"] = step;
+            ViewData["ListRole"] = role;
+            ViewData["Group"] = group;
+            
             return View(task);
         }
 

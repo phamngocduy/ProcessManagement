@@ -128,7 +128,8 @@ body, #wrapper{
                 background-color: $color;
                 color:#fff;
                 // font-size:90%;
-                font-size: 13px;
+                font-size: 14px;
+                font-weight: 500;
                 width: unset;
                 margin-left: 1em;
             }
@@ -175,4 +176,72 @@ label{
         }
     }
 }
+//hide input number arrows
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
 
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}
+//add prefix to input number
+
+.input-has-prefix{
+    position: relative;
+    label{
+        &::after{
+            opacity: 0;
+            color: #5a5a59;
+            transition: all 1s ease-in-out;
+            -webkit-transition: all 1s ease-in-out;
+            -moz-transition: all 1s ease-in-out;
+            -ms-transition: all 1s ease-in-out;
+            -o-transition: all 1s ease-in-out;
+}
+    }
+    &::after{
+        position: absolute;
+        top: 39px;
+        right: .5em;
+        color: #6c757d;
+        opacity: 1;
+        transition: all 0.5s ease-in-out;
+        -webkit-transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -ms-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+    }
+    &.mb{
+        label{
+            &::after{
+                content: '(Mb)';
+            }
+        }
+        &::after{
+            content: 'Megabyte';
+        }
+    }
+    &.char{
+        label{
+            &::after{
+                content: '(Char)';
+            }
+        }
+        &::after{
+            content: 'Character';
+        }
+    }
+    &.hide-prefix{
+        label{
+            &::after{
+                opacity: 1;
+            }
+        }
+        &::after{
+            opacity: 0;
+        }
+    }
+}

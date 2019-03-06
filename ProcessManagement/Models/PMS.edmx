@@ -71,6 +71,8 @@
           <Property Name="groupSlug" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="Created_At" Type="datetime" Nullable="false" />
           <Property Name="Updated_At" Type="datetime" Nullable="false" />
+          <Property Name="Avatar" Type="nvarchar" MaxLength="255" />
+          <Property Name="AvatarDefault" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="Participate">
           <Key>
@@ -137,7 +139,7 @@
           <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="Description" Type="varchar" MaxLength="255" />
           <Property Name="idStep" Type="int" Nullable="false" />
-          <Property Name="idRole" Type="int" Nullable="false" />
+          <Property Name="idRole" Type="int" />
           <Property Name="Status" Type="bit" />
           <Property Name="IdType" Type="int" />
           <Property Name="ValueInputText" Type="nvarchar(max)" />
@@ -294,7 +296,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_TaskProcess_Role">
-          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="Role" Type="Self.Role" Multiplicity="0..1" />
           <End Role="TaskProcess" Type="Self.TaskProcess" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Role">
@@ -413,7 +415,6 @@
           <EntitySet Name="Processes" EntityType="PMSModel.Process" />
           <EntitySet Name="Roles" EntityType="PMSModel.Role" />
           <EntitySet Name="Steps" EntityType="PMSModel.Step" />
-          <EntitySet Name="TaskProcesses" EntityType="PMSModel.TaskProcess" />
           <EntitySet Name="Types" EntityType="PMSModel.Type" />
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="PMSModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
@@ -451,6 +452,11 @@
             <End Role="Process" EntitySet="Processes" />
             <End Role="Step" EntitySet="Steps" />
           </AssociationSet>
+          <AssociationSet Name="AspNetUserRoles" Association="PMSModel.AspNetUserRoles">
+            <End Role="AspNetRole" EntitySet="AspNetRoles" />
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <EntitySet Name="TaskProcesses" EntityType="PMSModel.TaskProcess" />
           <AssociationSet Name="FK_TaskProcess_Role" Association="PMSModel.FK_TaskProcess_Role">
             <End Role="Role" EntitySet="Roles" />
             <End Role="TaskProcess" EntitySet="TaskProcesses" />
@@ -462,10 +468,6 @@
           <AssociationSet Name="FK_TaskProcess_Type" Association="PMSModel.FK_TaskProcess_Type">
             <End Role="Type" EntitySet="Types" />
             <End Role="TaskProcess" EntitySet="TaskProcesses" />
-          </AssociationSet>
-          <AssociationSet Name="AspNetUserRoles" Association="PMSModel.AspNetUserRoles">
-            <End Role="AspNetRole" EntitySet="AspNetRoles" />
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="AspNetRole">
@@ -538,6 +540,8 @@
           <NavigationProperty Name="AspNetUser" Relationship="PMSModel.FK_Group_AspNetUsers" FromRole="Group" ToRole="AspNetUser" />
           <NavigationProperty Name="Participates" Relationship="PMSModel.FK_Participate_Group" FromRole="Group" ToRole="Participate" />
           <NavigationProperty Name="Processes" Relationship="PMSModel.FK_Process_Group" FromRole="Group" ToRole="Process" />
+          <Property Name="Avatar" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="AvatarDefault" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Participate">
           <Key>
@@ -605,26 +609,6 @@
           <Property Name="Updated_At" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Process" Relationship="PMSModel.FK_Step_Process" FromRole="Step" ToRole="Process" />
           <NavigationProperty Name="TaskProcesses" Relationship="PMSModel.FK_TaskProcess_Step" FromRole="Step" ToRole="TaskProcess" />
-        </EntityType>
-        <EntityType Name="TaskProcess">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="idStep" Type="Int32" Nullable="false" />
-          <Property Name="idRole" Type="Int32" Nullable="false" />
-          <Property Name="Status" Type="Boolean" />
-          <Property Name="IdType" Type="Int32" />
-          <Property Name="ValueInputText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ValueInputFile" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Color" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Created_At" Type="DateTime" Precision="3" />
-          <Property Name="Updated_At" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Role" Relationship="PMSModel.FK_TaskProcess_Role" FromRole="TaskProcess" ToRole="Role" />
-          <NavigationProperty Name="Step" Relationship="PMSModel.FK_TaskProcess_Step" FromRole="TaskProcess" ToRole="Step" />
-          <NavigationProperty Name="Type" Relationship="PMSModel.FK_TaskProcess_Type" FromRole="TaskProcess" ToRole="Type" />
         </EntityType>
         <EntityType Name="Type">
           <Key>
@@ -746,8 +730,32 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="AspNetUserRoles">
+          <End Type="PMSModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
+          <End Type="PMSModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
+        </Association>
+        <EntityType Name="TaskProcess">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="idStep" Type="Int32" Nullable="false" />
+          <Property Name="idRole" Type="Int32" />
+          <Property Name="Status" Type="Boolean" />
+          <Property Name="IdType" Type="Int32" />
+          <Property Name="ValueInputText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ValueInputFile" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Color" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Created_At" Type="DateTime" Precision="3" />
+          <Property Name="Updated_At" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Role" Relationship="PMSModel.FK_TaskProcess_Role" FromRole="TaskProcess" ToRole="Role" />
+          <NavigationProperty Name="Step" Relationship="PMSModel.FK_TaskProcess_Step" FromRole="TaskProcess" ToRole="Step" />
+          <NavigationProperty Name="Type" Relationship="PMSModel.FK_TaskProcess_Type" FromRole="TaskProcess" ToRole="Type" />
+        </EntityType>
         <Association Name="FK_TaskProcess_Role">
-          <End Type="PMSModel.Role" Role="Role" Multiplicity="1" />
+          <End Type="PMSModel.Role" Role="Role" Multiplicity="0..1" />
           <End Type="PMSModel.TaskProcess" Role="TaskProcess" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Role">
@@ -781,10 +789,6 @@
               <PropertyRef Name="IdType" />
             </Dependent>
           </ReferentialConstraint>
-        </Association>
-        <Association Name="AspNetUserRoles">
-          <End Type="PMSModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
-          <End Type="PMSModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -843,6 +847,8 @@
           <EntitySetMapping Name="Groups">
             <EntityTypeMapping TypeName="PMSModel.Group">
               <MappingFragment StoreEntitySet="Group">
+                <ScalarProperty Name="AvatarDefault" ColumnName="AvatarDefault" />
+                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
                 <ScalarProperty Name="Updated_At" ColumnName="Updated_At" />
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
                 <ScalarProperty Name="groupSlug" ColumnName="groupSlug" />
@@ -914,6 +920,22 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Types">
+            <EntityTypeMapping TypeName="PMSModel.Type">
+              <MappingFragment StoreEntitySet="Type">
+                <ScalarProperty Name="NameType" ColumnName="NameType" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="AspNetUserRoles" TypeName="PMSModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+            <EndProperty Name="AspNetUser">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
+            <EndProperty Name="AspNetRole">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+          </AssociationSetMapping>
           <EntitySetMapping Name="TaskProcesses">
             <EntityTypeMapping TypeName="PMSModel.TaskProcess">
               <MappingFragment StoreEntitySet="TaskProcess">
@@ -932,22 +954,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Types">
-            <EntityTypeMapping TypeName="PMSModel.Type">
-              <MappingFragment StoreEntitySet="Type">
-                <ScalarProperty Name="NameType" ColumnName="NameType" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <AssociationSetMapping Name="AspNetUserRoles" TypeName="PMSModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
-            <EndProperty Name="AspNetUser">
-              <ScalarProperty Name="Id" ColumnName="UserId" />
-            </EndProperty>
-            <EndProperty Name="AspNetRole">
-              <ScalarProperty Name="Id" ColumnName="RoleId" />
-            </EndProperty>
-          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

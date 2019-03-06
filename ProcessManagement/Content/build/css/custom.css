@@ -79,7 +79,8 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   border: 1px solid #a27ce6;
   background-color: #a27ce6;
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
   width: unset;
   margin-left: 1em;
 }
@@ -144,7 +145,8 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   border: 1px solid #2eacb3;
   background-color: #2eacb3;
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
   width: unset;
   margin-left: 1em;
 }
@@ -209,7 +211,8 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   border: 1px solid #449cff;
   background-color: #449cff;
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
   width: unset;
   margin-left: 1em;
 }
@@ -274,7 +277,8 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   border: 1px solid #31b96f;
   background-color: #31b96f;
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
   width: unset;
   margin-left: 1em;
 }
@@ -339,7 +343,8 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   border: 1px solid #ff613c;
   background-color: #ff613c;
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
   width: unset;
   margin-left: 1em;
 }
@@ -404,7 +409,8 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   border: 1px solid #e84f5e;
   background-color: #e84f5e;
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
   width: unset;
   margin-left: 1em;
 }
@@ -443,6 +449,62 @@ label.required::after {
   content: "*";
   color: #ff0101;
   margin-left: 3px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0;
+  /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+  /* Firefox */
+}
+
+.input-has-prefix {
+  position: relative;
+}
+.input-has-prefix label::after {
+  opacity: 0;
+  color: #5a5a59;
+  transition: all 1s ease-in-out;
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -ms-transition: all 1s ease-in-out;
+  -o-transition: all 1s ease-in-out;
+}
+.input-has-prefix::after {
+  position: absolute;
+  top: 39px;
+  right: 0.5em;
+  color: #6c757d;
+  opacity: 1;
+  transition: all 0.5s ease-in-out;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+}
+.input-has-prefix.mb label::after {
+  content: "(Mb)";
+}
+.input-has-prefix.mb::after {
+  content: "Megabyte";
+}
+.input-has-prefix.char label::after {
+  content: "(Char)";
+}
+.input-has-prefix.char::after {
+  content: "Character";
+}
+.input-has-prefix.hide-prefix label::after {
+  opacity: 1;
+}
+.input-has-prefix.hide-prefix::after {
+  opacity: 0;
 }
 
 /* end of config */

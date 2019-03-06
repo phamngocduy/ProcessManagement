@@ -13,17 +13,18 @@ namespace ProcessManagement.Services
         StepService stepService = new StepService();
         CommonService commonService = new CommonService();
         ///=============================================================================================
-        public void addtaskprocess(int idStep, TaskProcess task, string valueinputtext, string valueinputfile, string nametask, int roletask, string editor)
+        public void addtask(int idStep, string name, int ? role, string description, string inputConfig, string fileConfig)
         {
+            TaskProcess task = new TaskProcess();
             task.idStep = idStep;
-            task.Name = nametask;
-            task.Description = editor;
-            task.idRole = roletask;
+            task.Name = name;
+            task.idRole = role;
+            task.Description = description;
+            task.ValueInputText = inputConfig;
+            task.ValueInputFile = fileConfig;
+            task.Color = commonService.getRandomColor();
             task.Created_At = DateTime.Now;
             task.Updated_At = DateTime.Now;
-            task.ValueInputText = valueinputtext;
-            task.ValueInputFile = valueinputfile;
-            task.Color = commonService.getRandomColor();
             db.TaskProcesses.Add(task);
             db.SaveChanges();
         }

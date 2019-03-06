@@ -3,9 +3,9 @@
 @{
     ViewBag.Title = "AddTaskProcess";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var step = ViewData["step"] as ProcessManagement.Models.Step;
+    var step = ViewData["Step"] as ProcessManagement.Models.Step;
     var group = ViewData["Group"] as ProcessManagement.Models.Group;
-    Session["idstep"] = step.Id;
+    var roles = ViewData["ListRole"] as List<ProcessManagement.Models.Role>;
 }
 
 
@@ -19,9 +19,12 @@
         <div class="col-lg-6 col-md-8 col-sm-12">
             <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Create New Task</h2>
             <ul class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index-2.html"><i class="icon-home"></i></a></li>
-                <li class="breadcrumb-item">Projects</li>
-                <li class="breadcrumb-item active">Add Task</li>
+                <li class="breadcrumb-item"><a href="~/Home/Index" class="theme-color"><i class="icon-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="~/Group/Index">Groups</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = group.Id })">@group.Name</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "ShowStep", processid = step.IdProcess })">@step.Process.Name</a></li>
+                <li class="breadcrumb-item"><a href="">@step.Name</a></li>
+                <li class="breadcrumb-item"><a href=""> Create New Task</a></li>
             </ul>
         </div>
         <div class="col-lg-6 col-md-4 col-sm-12 text-right">
@@ -61,10 +64,10 @@
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <label for="task-role" class="required">Select Role</label>
+                        <label for="task-role">Select Role</label>
                         <select id="task-role" class="form-control show-tick ms select2">
                             <option></option>
-                            @foreach (var role in ViewBag.Listrole)
+                            @foreach (var role in roles)
                             {
                                 <option value="@role.Id">@role.Name</option>
                             }
@@ -75,29 +78,29 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label for="task-description">Description</label>
-                            <textarea class="form-control" rows="6" placeholder="Write something about your group (optional)" id="task-description" name="@Html.NameFor(m => m.Description)"></textarea>
+                            <textarea class="form-control" rows="6" placeholder="Write something about your task (optional)" id="task-description" name="@Html.NameFor(m => m.Description)"></textarea>
                         </div>
                     </div>
                     <div class="col-sm-12 ">
                         <div class="choose-type row">
                             <div class="choose-item col-sm-12 form-group" id="choose-input">
                                 <fieldset>
-                                    <legend>Input Text</legend>
+                                    <legend>Response Text</legend>
                                     <div class="row" style="margin-left:0;margin-right:0;">
-                                        <div class="col-sm-2">
-                                            <div class="form-group">
-                                                <label for="text-maxlength">Input Length (Char)</label>
-                                                <input id="text-maxlength" type="number" class="form-control" placeholder="max-length*" min="0" value="10000">
+                                        <div class="col-md-3 col-sm-4">
+                                            <div class="form-group input-has-prefix char">
+                                                <label for="text-maxlength">Max Length</label>
+                                                <input id="text-maxlength" type="number" maxlength="17" class="form-control limit-length">
                                             </div>
                                         </div>
-                                        <div class="col-sm-10">
+                                        <div class="col-md-9 col-sm-8">
                                             <div class="form-group">
-                                                <label for="text-label">Input Label</label>
+                                                <label for="text-label">Response Label</label>
                                                 <input id="text-label" type="text" class="form-control">
                                             </div>
                                         </div>
 
-                                        <div class="col-sm-12">
+                                        <div class="col-md-12">
                                             <div class="form-group switch-custom">
                                                 <label>Required: <input type="checkbox" class="checkbox-switch" id="text-required"/></label>
                                             </div>
@@ -107,21 +110,21 @@
                             </div>
                             <div class="choose-item col-sm-12 form-group" id="choose-file">
                                 <fieldset>
-                                    <legend>Input File</legend>
+                                    <legend>Response File</legend>
                                     <div class="row" style="margin-left:0;margin-right:0;">
-                                        <div class="col-sm-2">
-                                            <div class="form-group">
-                                                <label for="file-maxsize">File Size (Mb)</label>
-                                                <input id="file-maxsize" type="number" class="form-control" min="0">
+                                        <div class="col-md-3 col-sm-4">
+                                            <div class="form-group input-has-prefix mb">
+                                                <label for="file-maxsize">File Size</label>
+                                                <input id="file-maxsize" type="number" maxlength="17" class="form-control limit-length">
                                             </div>
                                         </div>
-                                        <div class="col-sm-10">
+                                        <div class="col-md-9 col-sm-8">
                                             <div class="form-group">
-                                                <label for="file-label">File Label</label>
+                                                <label for="file-label">Response Label</label>
                                                 <input id="file-label" type="text" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-sm-12">
+                                        <div class="col-md-12">
                                             <div class="form-group switch-custom">
                                                 <label>Required: <input id="file-required" type="checkbox" class="checkbox-switch" /></label>
                                             </div>
@@ -133,7 +136,7 @@
                     </div>
                     <div class="col-sm-12">
                         <div class="mt-2">
-                            <button id="btn-save" class="btn btn-primary-theme">Create</button>
+                            <button id="btn-save" class="btn btn-primary-theme" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing Create">Create</button>
                             <a href="#" class="btn btn-outline-secondary">Go Back</a>
                         </div>
                     </div>
@@ -149,82 +152,73 @@
     <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
     <script>
         $(function () {
+           
             createSwitch();
-            createSelect2();
-        })
-        function createSwitch() {
-            let el = $('.checkbox-switch');
-            let switchArr = [];
-            el.each(function (index, e) {
-                switchArr[index] = new Switchery(e, {
-                    size: 'small',
-                });
-            })
-        }
-        function createSelect2() {
-            $("select.select2").select2({
+            $("select#task-role").select2({
+                placeholder: "Select Role",
                 allowClear: true
             });
-
-        }
-        
-    </script>
-    <script>
-        $(document).ready(function ($) {
             $('#btn-save').on('click', function () {
+                $this = $(this);
+                toggleLoading($this);
+
                 var name = $('#task-name').val();
-                var selectrole = $('#task-role').val();
-                var editor = $('#task-description').val();
+                var role = $('#task-role').val();
+                var description = $('#task-description').val();
 
                 //text
-                var inputtext = $('#text-label').val();
-                var maxlength = $('#text-maxlength').val();
-                var requinputtext = $('#text-required').val();
+                var inputLabel = $('#text-label').val();
+                var inputmaxLength = $('#text-maxlength').val();
+                var inputRequire = $('#text-required').prop('checked') == true ? true : false;
                 //file
-                var size = $('#file-maxsize').val();
 
-                var requinputfile = $('#file-required').val();
+                var fileLabel = $("#file-label").val();
+                var fileSize = $('#file-maxsize').val();
+                var fileRequire = $('#file-required').prop('checked') == true ? true : false;
 
-                if (document.getElementById("text-required").checked == true) {
-                    requinputtext = "true";
-                } else {
-                    requinputtext = "false";
-                }
-                if (document.getElementById("file-required").checked == true) {
-                    requinputfile = "true";
-                } else {
-                    requinputfile = "false";
-                }
-
-                let a = {
-                    inputtext: inputtext,
-                    maxlength: maxlength,
-                    requinputtext: requinputtext
+                var inputConfig = {
+                    label: inputLabel,
+                    maxlength: inputmaxLength,
+                    required: inputRequire
                 };
-                let b = {
-                    size: size,
-                    requinputfile: requinputfile
+                let fileConfig = {
+                    label: fileLabel,
+                    size: fileSize,
+                    required: fileRequire
                 };
 
                 let data = {
-                    nametask: name,
-                    roletask: selectrole,
-                    editor: editor,
-                    valueinputtext: JSON.stringify(a),
-                    valueinputfile: JSON.stringify(b)
+                    name: name,
+                    idRole: role,
+                    description: description,
+                    inputConfig: JSON.stringify(inputConfig),
+                    fileConfig: JSON.stringify(fileConfig)
+                 }
+                if (name == "") {
+                    showToastr("error", "Task name not null", "toast-bottom-left");
+                    toggleLoading($this);
+                } else {
+                    addTask(data);
                 }
-                
-                $.ajax({
-                        url: "@Url.RouteUrl("GroupLocalizedDefault", new { controller = "Process" , action = "addtaskprocess" })",
-                        type: "POST",
-                        data: data,
-                        dataType: "json",
-                        success: function (response) {
-                            //thanh cong thi no tra du lieu ve
-                            location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process" ,action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })' ;
-                        }
-                    })
             }) 
-        })
+        }); 
+        function addTask(data) {
+            $.ajax({
+                url: "@Url.RouteUrl("GroupLocalizedDefault", new { controller = "Process" , action = "addtask" })",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process" ,action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })';
+                    } else {
+                        showToastr("error", response.message, "toast-bottom-left")
+                        console.error(response)
+                    }
+                }
+            });
+        }
     </script>
+  
 }

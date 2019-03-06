@@ -1,14 +1,16 @@
 ﻿@model ProcessManagement.Models.TaskProcess
+
 @{
-    ViewBag.Title = "Showtask";
+    ViewBag.Title = "AddTaskProcess";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var requinputfile = ViewData["requinputfile"];
-    var requinputtext = ViewData["requinputtext"];
-    var size = ViewData["size"];
-    var maxlenght = ViewData["maxlenght"];
-    var inputtext = ViewData["inputtext"];
+    var step = ViewData["Step"] as ProcessManagement.Models.Step;
+    var group = ViewData["Group"] as ProcessManagement.Models.Group;
+    var roles = ViewData["ListRole"] as List<ProcessManagement.Models.Role>;
+    JObject inputConfig = JObject.Parse(Model.ValueInputText);
+    JObject fileConfig = JObject.Parse(Model.ValueInputFile);
 
 }
+
 
 @section CustomCss{
     <link rel="stylesheet" href="~/Content/vendor/dropify/css/dropify.min.css">
@@ -18,18 +20,14 @@
 <div class="block-header">
     <div class="row">
         <div class="col-lg-6 col-md-8 col-sm-12">
-            <h2>
-                <a href="javascript:void(0);" class="btn btn-xs btn-link theme-color btn-toggle-fullwidth">
-                    <i class="fa fa-arrow-left"></i>
-                </a> @Model.Name
-            </h2>
+            <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Create New Task</h2>
             <ul class="breadcrumb">
                 <li class="breadcrumb-item"><a href="~/Home/Index" class="theme-color"><i class="icon-home"></i></a></li>
                 <li class="breadcrumb-item"><a href="~/Group/Index">Groups</a></li>
-                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = Model.Step.Process.Group.Id })">@Model.Step.Process.Group.Name</a></li>
-                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "ShowStep", processid = Model.Step.Process.Id })">@Model.Step.Process.Name</a></li>
-                <li class="breadcrumb-item"><a href="">@Model.Step.Name</a></li>
-                <li class="breadcrumb-item"><a href="">@Model.Name</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = group.Id })">@group.Name</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "ShowStep", processid = step.IdProcess })">@step.Process.Name</a></li>
+                <li class="breadcrumb-item"><a href="">@step.Name</a></li>
+                <li class="breadcrumb-item"><a href=""> Create New Task</a></li>
             </ul>
         </div>
         <div class="col-lg-6 col-md-4 col-sm-12 text-right">
@@ -61,75 +59,91 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="card">
             <div class="body">
-                <form @*action="@Url.RouteUrl(" GroupLocalizedDefault",new { controller="process" , action="addtaskprocess" })"*@ method="post" id="addnewtask" enctype="multipart/form-data">
-                    <div class="row clearfix">
-                        <div class="col-sm-8">
-                            <div class="form-group">
-                                <input disabled required id="name" type="text" class="form-control" placeholder="Task name*" value="@Html.DisplayFor(m => m.Name)">
-                            </div>
+                <div class="row clearfix">
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <label for="task-name" class="required">Task Name</label>
+                            <input type="text" class="form-control" id="task-name" name="@Html.NameFor(m => m.Name)" value="@Model.Name" disabled>
                         </div>
-                        <div class="col-sm-4">
-                            <select id="selectrole" class="form-control show-tick ms select2" data-placeholder="Select Role*" disabled>
-                                <option>@Html.DisplayFor(m => m.Role.Name)</option>
-                            </select>
-                        </div>
-                        @*<div class="col-sm-4">
-                                @Html.DropDownList("idRole", new SelectList(ViewBag.Listrole, "Id", "Name", Model.Role), new { @class = "form-control show-tick ms select2" })
-                                @Html.ValidationMessageFor(model => model.idRole, "", new { @class = "text-danger" })
-                            </div>*@
                     </div>
-                    <div class="row clearfix">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <textarea disabled class="form-control" rows="8" placeholder="Write something about your group (optional)" id="editor">@Html.DisplayFor(m => m.Description)</textarea>
-                            </div>
+                    <div class="col-sm-4">
+                        <label for="task-role">Select Role</label>
+                        <select id="task-role" class="form-control show-tick ms select2 disabled">
+                            <option></option>
+                            @foreach (var role in roles)
+                            {
+                                <option value="@role.Id" @if (role.Id == Model.id) { WriteLiteral("selected"); }>@role.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="task-description">Description</label>
+                            <textarea class="form-control" rows="6" placeholder="Write something about your task (optional)" id="task-description" name="@Html.NameFor(m => m.Description)">@Model.Description</textarea>
                         </div>
-                        <div class="col-sm-12 ">
-                            <div class="choose-type">
-                                <div class="choose-item hide row" id="choose-input">
-                                    <div class="col-sm-12 input-title">Input Text</div>
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <input disabled id="inputtext" type="text" class="form-control" placeholder="Label*" value="@inputtext">
+                    </div>
+                    <div class="col-sm-12 ">
+                        <div class="choose-type row">
+                            <div class="choose-item col-sm-12 form-group" id="choose-input">
+                                <fieldset>
+                                    <legend>Response Text</legend>
+                                    <div class="row" style="margin-left:0;margin-right:0;">
+                                        <div class="col-sm-2">
+                                            <div class="form-group input-has-prefix char">
+                                                <label for="text-maxlength">Max Length</label>
+                                                <input id="text-maxlength" type="number" maxlength="17" class="form-control limit-length" value="@inputConfig["maxlength"]">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <input disabled id="maxlength" type="number" class="form-control" placeholder="max-length*" value="@maxlenght">
+                                        <div class="col-sm-10">
+                                            <div class="form-group">
+                                                <label for="text-label">Response Label</label>
+                                                <input id="text-label" type="text" class="form-control" value="@inputConfig["label"]">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="form-group switch-custom">
-                                            <label>required: <input disabled id="requinputtext" name="requinputtext" type="checkbox" class="checkbox-switch" /></label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="choose-item hide row" id="choose-file">
-                                    <div class="col-sm-12 input-title">
-                                        Input File
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <div class="form-group">
-                                            <input disabled id="size" type="number" class="form-control" placeholder="Size(Mb)*" value="@size">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="form-group switch-custom">
-                                            <label>required: <input disabled id="requinputfile" name="requinputfile" type="checkbox" class="checkbox-switch" /></label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="mt-2">
-                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "EditTask", idtask = Model.id })" class="btn btn-primary-theme">Edit task</a>
-                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process", action = "DeleteTask", idtask = Model.id })" onclick="return confirm('bạn muốn xóa task này không?')" class="btn btn-primary-theme">Delete task</a>
 
+                                        <div class="col-sm-12">
+                                            <div class="form-group switch-custom">
+                                                <label>Required: <input type="checkbox" class="checkbox-switch" id="text-required" @if (bool.Parse(inputConfig["required"].ToString())) { WriteLiteral("checked"); } disabled/></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="choose-item col-sm-12 form-group" id="choose-file">
+                                <fieldset>
+                                    <legend>Response File</legend>
+                                    <div class="row" style="margin-left:0;margin-right:0;">
+                                        <div class="col-sm-2">
+                                            <div class="form-group input-has-prefix mb">
+                                                <label for="file-maxsize">File Size</label>
+                                                <input id="file-maxsize" type="number" maxlength="17" class="form-control limit-length" value="@fileConfig["size"]">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <div class="form-group">
+                                                <label for="file-label">Response Label</label>
+                                                <input id="file-label" type="text" class="form-control" value="@fileConfig["label"]">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group switch-custom">
+                                                <label>Required: <input id="file-required" type="checkbox" class="checkbox-switch" @if (bool.Parse(fileConfig["required"].ToString())) { WriteLiteral("checked"); } disabled/></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
                             </div>
                         </div>
                     </div>
-                </form>
+                    <div class="col-sm-12">
+                        <div class="mt-2">
+                            <button id="btn-save" class="btn btn-primary-theme" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing Create">Create</button>
+                            <a href="#" class="btn btn-outline-secondary">Go Back</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -141,30 +155,73 @@
     <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
     <script>
         $(function () {
+
             createSwitch();
-            createSelect2();
-        })
-        function createSwitch() {
-            let el = $('.checkbox-switch');
-            let switchArr = [];
-            el.each(function (index, e) {
-                switchArr[index] = new Switchery(e, {
-                    size: 'small',
-                });
-            })
-        }
-        function createSelect2() {
-            $("select.select2").select2({
+            $("select#task-role").select2({
+                placeholder: "Select Role",
                 allowClear: true
             });
+            $('#btn-save').on('click', function () {
+                $this = $(this);
+                toggleLoading($this);
 
+                var name = $('#task-name').val();
+                var role = $('#task-role').val();
+                var description = $('#task-description').val();
+
+                //text
+                var inputLabel = $('#text-label').val();
+                var inputmaxLength = $('#text-maxlength').val();
+                var inputRequire = $('#text-required').prop('checked') == true ? "true" : "false";
+                //file
+
+                var fileLabel = $("#file-label").val();
+                var fileSize = $('#file-maxsize').val();
+                var fileRequire = $('#file-required').prop('checked') == true ? "true" : "false";
+
+                var inputConfig = {
+                    label: inputLabel,
+                    maxlength: inputmaxLength,
+                    required: inputRequire
+                };
+                let fileConfig = {
+                    label: fileLabel,
+                    size: fileSize,
+                    require: fileRequire
+                };
+
+                let data = {
+                    name: name,
+                    idRole: role,
+                    description: description,
+                    inputConfig: JSON.stringify(inputConfig),
+                    fileConfig: JSON.stringify(fileConfig)
+                 }
+                if (name == "") {
+                    showToastr("error", "Task name not null", "toast-bottom-left");
+                    toggleLoading($this);
+                } else {
+                    addTask(data);
+                }
+            })
+        });
+        function addTask(data) {
+            $.ajax({
+                url: "@Url.RouteUrl("GroupLocalizedDefault", new { controller = "Process" , action = "addtask" })",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process" ,action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })';
+                    } else {
+                        showToastr("error", response.message, "toast-bottom-left")
+                        console.error(response)
+                    }
+                }
+            });
         }
-        if (@requinputtext == true) {
-            $("#requinputtext").attr('checked', true);
-        }
-        if (@requinputfile == true) {
-            $("#requinputfile").attr('checked', true);
-        }
-        
     </script>
+
 }
