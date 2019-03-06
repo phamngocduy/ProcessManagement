@@ -238,7 +238,7 @@ namespace ProcessManagement.Controllers
             if (role == null) return HttpNotFound();
             participateService.editRole(model);
             SetFlash(FlashType.success, "Edited Role of " + role.Name + " Successfully");
-            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = role.IdProcess });
+            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = role.IdProcess });
 
         }
 

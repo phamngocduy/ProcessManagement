@@ -176,10 +176,10 @@
                                         <span class="name">@role.Name</span>
                                         <span class="message">
                                             @role.Description
-                                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "EditRole", roleid = role.Id})">
+                                            <a style="float: right" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "EditRole", roleid = role.Id})">
                                                 <img src="~/Content/images/icons-edit.png" />
                                             </a>
-                                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "DeleteRole", roleid = role.Id})">
+                                            <a style="float: right" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "DeleteRole", roleid = role.Id})">
                                                 <img src="~/Content/images/icons-remove.png" />
                                             </a>
                                         </span>

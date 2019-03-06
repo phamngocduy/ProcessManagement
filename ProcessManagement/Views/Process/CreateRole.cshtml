@@ -12,7 +12,7 @@
             <form action="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "process", action = "createrole"})" method="POST">
                 <input type="hidden" name="IdProcess" value="@Model.Id" />
                 <div class="form-group">
-                    <label for="cw-members-name" class="cw-required">Role</label>
+                    <label for="cw-members-name" class="cw-required">Role Name</label>
                     <span class="cw-input-icon">
                         <input type="text" name="name" class="form-control cw-input-has-icon" id="rolename">
                     </span>
