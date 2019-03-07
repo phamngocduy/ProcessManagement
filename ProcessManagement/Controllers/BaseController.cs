@@ -93,9 +93,5 @@ namespace ProcessManagement.Controllers
             TempData["FlashMessage.Text"] = flashMessage;
             TempData["FlashMessage.Position"] = flashPosition;
         }
-        public void SetTab(TabType tabType)
-        {
-            TempData[tabType.ToString()] = "ABC";
-        }
     }
 }

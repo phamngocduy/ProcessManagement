@@ -14,11 +14,11 @@ namespace ProcessManagement.Models
     
     public partial class TaskProcess
     {
-        public int id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public int idStep { get; set; }
-        public Nullable<int> idRole { get; set; }
+        public int IdStep { get; set; }
+        public Nullable<int> IdRole { get; set; }
         public Nullable<bool> Status { get; set; }
         public Nullable<int> IdType { get; set; }
         public string ValueInputText { get; set; }

@@ -257,10 +257,10 @@
                             </div>
                             <div class="task">
                                 <ul class="task-list" id="task-@step.Id">
-                                    @foreach (var task in db.TaskProcesses.Where(x => x.idStep == step.Id))
+                                    @foreach (var task in db.TaskProcesses.Where(x => x.IdStep == step.Id))
                                     {
                                         <li class="task-item" style="background-color:@task.Color">
-                                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showtask", idtask = task.id })">@task.Name</a>
+                                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showtask", idtask = task.Id })">@task.Name</a>
                                         
                                             <i class="fa fa-arrows-alt handle"></i>
                                         </li>

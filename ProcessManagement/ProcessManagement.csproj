@@ -281,16 +281,7 @@
     </Compile>
     <Compile Include="Helpers\GlobalHelper.cs" />
     <Compile Include="Helpers\MultiLanguageViewEngine.cs" />
-    <Compile Include="Models\AspNetRole.cs">
-      <DependentUpon>PMS.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\AspNetUser.cs">
-      <DependentUpon>PMS.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetUserClaim.cs">
-      <DependentUpon>PMS.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetUserLogin.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Group.cs">
@@ -8430,7 +8421,7 @@
     <Content Include="Views\Group\ProcessManagement.cshtml" />
     <Content Include="Views\Process\AddTask.cshtml" />
     <Content Include="Views\Process\EditTask.cshtml" />
-    <Content Include="Views\Process\Showtask.cshtml" />
+    <Content Include="Views\Process\ShowTask.cshtml" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml">
       <SubType>Designer</SubType>
     </None>

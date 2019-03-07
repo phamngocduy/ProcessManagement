@@ -138,13 +138,14 @@ function setTheme() {
     $('body').removeClass().addClass(theme);
 }
 function createSwitch() {
+    var switchArr = [];
     let el = $('.checkbox-switch');
-    let switchArr = [];
     el.each(function (index, e) {
         switchArr[index] = new Switchery(e, {
             size: 'small',
         });
     })
+    return switchArr;
 }
 function createSelect2() {
     $("select.select2").select2({

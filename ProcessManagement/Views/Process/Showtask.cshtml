@@ -58,7 +58,7 @@
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="card">
-            <div class="body">
+            <div class="body" id="show-task">
                 <div class="row clearfix">
                     <div class="col-sm-8">
                         <div class="form-group">
@@ -72,7 +72,7 @@
                             <option></option>
                             @foreach (var role in roles)
                             {
-                                <option value="@role.Id" @if (role.Id == Model.id) { WriteLiteral("selected"); }>@role.Name</option>
+                                <option value="@role.Id">@role.Name</option>
                             }
                         </select>
                     </div>
@@ -105,7 +105,7 @@
 
                                         <div class="col-sm-12">
                                             <div class="form-group switch-custom">
-                                                <label>Required: <input type="checkbox" class="checkbox-switch" id="text-required" @if (bool.Parse(inputConfig["required"].ToString())) { WriteLiteral("checked"); } disabled/></label>
+                                                <label>Required: <input type="checkbox" class="checkbox-switch" id="text-required" @if (bool.Parse(inputConfig["required"].ToString())) { WriteLiteral("checked"); }/></label>
                                             </div>
                                         </div>
                                     </div>
@@ -129,7 +129,7 @@
                                         </div>
                                         <div class="col-sm-12">
                                             <div class="form-group switch-custom">
-                                                <label>Required: <input id="file-required" type="checkbox" class="checkbox-switch" @if (bool.Parse(fileConfig["required"].ToString())) { WriteLiteral("checked"); } disabled/></label>
+                                                <label>Required: <input id="file-required" type="checkbox" class="checkbox-switch" @if (bool.Parse(fileConfig["required"].ToString())) { WriteLiteral("checked"); }/></label>
                                             </div>
                                         </div>
                                     </div>
@@ -140,7 +140,7 @@
                     <div class="col-sm-12">
                         <div class="mt-2" id="button-action">
                             <button id="btn-edit" class="btn btn-primary-theme">Edit</button>
-                            <a href="#" class="btn btn-outline-danger">Delete</a>
+                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "deletetask", idtask = Model.Id })" onclick="return confirm('bạn muốn xóa task này không?')" class="btn btn-outline-danger">Delete</a>
                         </div>
                     </div>
                 </div>
@@ -157,24 +157,90 @@
         $(function () {
             var bAction = `<button id="btn-save" class="btn btn-primary-theme">Save</button>
                             <button id="btn-back" class="btn btn-outline-secondary">Back</button>`;
-            createSwitch();
+            var showForm = $("#show-task").html();
+            var switchArr = createSwitch();
+            switchArr.forEach(item => item.disable());
             $("select#task-role").select2({
                 placeholder: "Select Role",
                 allowClear: true,
-            }).select2('val', @Model.idRole);
-            $("body").on("click", "#btn-edit,#btn-back",function () {
+            }).select2('val', @Model.IdRole);
+
+            //Button edit
+            $("body").on("click", "#btn-edit",function () {
                 var temp = bAction;
                 var $this = $(this);
                 var actionButton = $this.parents("#button-action");
-                bAction = actionButton.html();
                 actionButton.html(temp);
-                $("input,select,textarea").prop("disabled", function () {
+                $("#show-task").find("input[type!='checkbox'], select#task-role, textarea").prop("disabled", function () {
                     return !$(this).prop("disabled");
                 });
+                switchArr.forEach(item => item.enable());
             });
+            //Button back
+            $("body").on("click", "#btn-back", function () {
+                $("#show-task").html(showForm);
+                switchArr = createSwitch();
+            });
+            $("body").on("click", "#btn-save", function () {
+                $this = $(this);
+                toggleLoading($this);
 
+                var name = $('#task-name').val();
+                var role = $('#task-role').val();
+                var description = $('#task-description').val();
+
+                //text
+                var inputLabel = $('#text-label').val();
+                var inputmaxLength = $('#text-maxlength').val();
+                var inputRequire = $('#text-required').prop('checked') == true ? true : false;
+                //file
+
+                var fileLabel = $("#file-label").val();
+                var fileSize = $('#file-maxsize').val();
+                var fileRequire = $('#file-required').prop('checked') == true ? true : false;
+
+                var inputConfig = {
+                    label: inputLabel,
+                    maxlength: inputmaxLength,
+                    required: inputRequire
+                };
+                let fileConfig = {
+                    label: fileLabel,
+                    size: fileSize,
+                    required: fileRequire
+                };
+
+                let data = {
+                    name: name,
+                    idRole: role,
+                    description: description,
+                    inputConfig: JSON.stringify(inputConfig),
+                    fileConfig: JSON.stringify(fileConfig)
+                }
+                if (name == "") {
+                    showToastr("error", "Task name not null", "toast-bottom-left");
+                    toggleLoading($this);
+                } else {
+                    editTask(data);
+                }
+            });
         });
-        
+        function editTask(data) {
+             $.ajax({
+                url: "@Url.Action("edittask","api")",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })';
+                    } else {
+                        console.error(response)
+                    }
+                }
+            });
+        }
     </script>
 
 }

@@ -7,7 +7,6 @@ using Microsoft.AspNet.Identity;
 using ProcessManagement.Models;
 using ProcessManagement.Services;
 using ProcessManagement.Filters;
-using System.Net;
 
 namespace ProcessManagement.Controllers
 {
@@ -437,6 +436,7 @@ namespace ProcessManagement.Controllers
         public ActionResult AddTask(int stepid)
         {
             Step step = stepService.findStep(stepid);
+            if (step == null) return HttpNotFound();
             Process ps = processService.findProcess(step.IdProcess);
             Group group = groupService.findGroup(ps.IdGroup);
             TaskProcess pr = new TaskProcess();
@@ -447,125 +447,42 @@ namespace ProcessManagement.Controllers
             Session["idStep"] = step.Id;
             return View(pr);
         }
-
-        [Authorize]
-        [HttpPost]
-        public JsonResult AddTask(string name, int ? idRole, string description, string inputConfig, string fileConfig)
-        {
-            var status = HttpStatusCode.OK;
-            string message;
-            object response;
-            int idstep = (int)Session["idStep"];
-            Step step = stepService.findStep(idstep);
-
-
-            if (name == "")
-            {
-                status = HttpStatusCode.InternalServerError;
-                message = "Created Task Successfully";
-                response = new { message = message, status = status };
-                return Json(response, JsonRequestBehavior.AllowGet);
-            }
-
-            if (idRole != null)
-            {
-                int idR = idRole.GetValueOrDefault();
-                var role = roleService.findRoleOfProcess(idR, step.Process.Id);
-                if (role == null)
-                {
-                    //role not exist
-                    status = HttpStatusCode.InternalServerError;
-                    message = "Role not exist";
-
-
-                }
-                else
-                {
-
-                    taskService.addtask(step.Id, name, role.Id, description, inputConfig, fileConfig);
-                    SetFlash(FlashType.success, "Created Task Successfully");
-                    message = "Created Task Successfully";
-                }
-            }
-            else
-            {
-                taskService.addtask(step.Id, name, null, description, inputConfig, fileConfig);
-                SetFlash(FlashType.success, "Created Task Successfully");
-                message = "Created Task Successfully";
-            }
-
-            response = new { message = message, status = status };
-            return Json(response, JsonRequestBehavior.AllowGet);
-        }
-
+       
         [Authorize]
         [GroupAuthorize]
-        public ActionResult EditTask(int idtask)
+        public ActionResult ShowTask(int idtask)
         {
-            TaskProcess task = taskService.findtask(idtask);
-            ViewData["idtask"] = task.id;
+            TaskProcess task = taskService.findTask(idtask);
             if (task == null) return HttpNotFound();
-            Step step = stepService.findStep(task.idStep);
-            ViewData["step"] = step;
-            Process ps = processService.findProcess(step.IdProcess);
-            Group group = groupService.findGroup(ps.IdGroup);
-            ViewData["Group"] = group;
-            List<Role> role = db.Roles.Where(x => x.IdProcess == step.IdProcess).ToList();
-            ViewBag.Listrole = role;
-            if (task.ValueInputFile != null && task.ValueInputText != null)
-            {
-                JObject valueinputtext = JObject.Parse(task.ValueInputText);
-                JObject valueinputfile = JObject.Parse(task.ValueInputFile);
-                var inputtext = valueinputtext["inputtext"].ToString();
-                var maxlenght = valueinputtext["maxlength"].ToString();
-                var requinputtext = valueinputtext["requinputtext"].ToString();
-                var size = valueinputfile["size"].ToString();
-                var requinputfile = valueinputfile["requinputfile"].ToString();
-                ViewData["inputtext"] = inputtext;
-                ViewData["maxlenght"] = maxlenght;
-                ViewData["requinputtext"] = requinputtext;
-                ViewData["size"] = size;
-                ViewData["requinputfile"] = requinputfile;
-            }
-            return View(task);
-        }
-
-        [Authorize]
-        [HttpPost]
-        [GroupAuthorize]
-        public JsonResult EditTask(int taskid, string valueinputtext, string valueinputfile, string nametask, int roletask, string editor)
-        {
-            taskService.edittask(taskid, valueinputtext, valueinputfile, nametask, roletask, editor);
-            SetFlash(FlashType.success, "Edited Task of " + nametask + " Successfully");
-            return Json(new { id = taskid });
-        }
-
-        [Authorize]
-        [GroupAuthorize]
-        public ActionResult Showtask(int idtask)
-        {
-            TaskProcess task = taskService.findtask(idtask);
-            if (task == null) return HttpNotFound();
-            Step step = stepService.findStep(task.idStep);
+            Step step = stepService.findStep(task.IdStep);
             Group group = groupService.findGroup(step.Process.Group.Id);
             List<Role> role = db.Roles.Where(x => x.IdProcess == task.Step.Process.Id).ToList();
 
             ViewData["Step"] = step;
             ViewData["ListRole"] = role;
             ViewData["Group"] = group;
-            
+            Session["idTask"] = task.Id;
+
             return View(task);
         }
 
         [Authorize]
         [GroupAuthorize]
-        public ActionResult DeleteTask(int idtask)
+        public ActionResult DeleteTask(int idTask)
         {
-            taskService.deletetask(idtask);
-            TaskProcess task = taskService.findtask(idtask);
-            Step step = stepService.findStep(idtask);
-            Process ps = processService.findProcess(step.IdProcess);
-            Group group = groupService.findGroup(ps.IdGroup);
+            TaskProcess task = taskService.findTask(idTask);
+            if (task == null) return HttpNotFound();
+            Step step = stepService.findStep(task.Step.Id);
+            //lấy group thuộc process
+            int idGroup = task.Step.Process.Group.Id;
+            string idUser = User.Identity.GetUserId();
+            Group group = groupService.findGroup(idGroup);
+
+            //check xem có thuộc process trong group
+            Participate user = participateService.findMemberInGroup(idUser, idGroup);
+            if (user == null) return HttpNotFound();
+            taskService.deletetask(task);
+            
             SetFlash(FlashType.success, "Delete Successfully");
             return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "Process", action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess });
         }

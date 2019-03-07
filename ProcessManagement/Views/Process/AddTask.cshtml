@@ -196,22 +196,22 @@
                  }
                 if (name == "") {
                     showToastr("error", "Task name not null", "toast-bottom-left");
-                    toggleLoading($this);
                 } else {
                     addTask(data);
                 }
+                toggleLoading($this);
             }) 
         }); 
         function addTask(data) {
             $.ajax({
-                url: "@Url.RouteUrl("GroupLocalizedDefault", new { controller = "Process" , action = "addtask" })",
+                url: "@Url.Action("edittask","api")",
                 type: "POST",
                 data: data,
                 dataType: "json",
                 success: function (response) {
                     console.log(response);
                     if (response.status == 200) {
-                        location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process" ,action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })';
+                        location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })';
                     } else {
                         showToastr("error", response.message, "toast-bottom-left")
                         console.error(response)

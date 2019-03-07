@@ -13,7 +13,7 @@ using System.Dynamic;
 
 namespace ProcessManagement.Controllers
 {
-    public class APIController : Controller
+    public class APIController : BaseController
     {
         ///=============================================================================================
         GroupService groupService = new GroupService();
@@ -22,6 +22,8 @@ namespace ProcessManagement.Controllers
         ProcessService processService = new ProcessService();
         StepService stepService = new StepService();
         UserService userService = new UserService();
+        RoleService roleService = new RoleService();
+        TaskService taskService = new TaskService();
         ///=============================================================================================
         // GET: API
         //public PartialViewResult GetGroupList()
@@ -239,5 +241,117 @@ namespace ProcessManagement.Controllers
             var response = new { message = message, status = status };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
+
+        [Authorize]
+        [HttpPost]
+        public JsonResult AddTask(string name, int? idRole, string description, string inputConfig, string fileConfig)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+            int idstep = (int)Session["idStep"];
+            Step step = stepService.findStep(idstep);
+
+
+            if (name == "")
+            {
+                status = HttpStatusCode.InternalServerError;
+                message = "Created Task Successfully";
+                response = new { message = message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+
+            if (idRole != null)
+            {
+                int idR = idRole.GetValueOrDefault();
+                var role = roleService.findRoleOfProcess(idR, step.Process.Id);
+                if (role == null)
+                {
+                    //role not exist
+                    status = HttpStatusCode.InternalServerError;
+                    message = "Role not exist";
+                    response = new { message = message, status = status };
+                    return Json(response, JsonRequestBehavior.AllowGet);
+
+                }
+                
+            }
+
+            taskService.addtask(step.Id, name, idRole, description, inputConfig, fileConfig);
+            SetFlash(FlashType.success, "Created Task Successfully");
+            message = "Created Task Successfully";
+            response = new { message = message, status = status };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult editTask(string name, int? idRole, string description, string inputConfig, string fileConfig)
+        {
+            ///////////////////////////
+            /// chỉ được edit task thuộc process mà mình quản lý
+            ///////////////////////////
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+            int idTask = int.Parse(Session["idTask"].ToString());
+            var task = taskService.findTask(idTask);
+            
+
+            if (task == null)
+            {
+                message = "Task not exit";
+                status = HttpStatusCode.InternalServerError;
+                response = new { message = message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+
+            Step step = stepService.findStep(task.Step.Id);
+            //lấy group thuộc process
+            int idGroup = task.Step.Process.Group.Id;
+            string idUser = User.Identity.GetUserId();
+
+            //check xem có thuộc process trong group
+            Participate user = participateService.findMemberInGroup(idUser, idGroup);
+            if (user == null)
+            {
+                message = "Task not found";
+                status = HttpStatusCode.Forbidden;
+                response = new { message = message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+            if (name == "")
+            {
+                status = HttpStatusCode.InternalServerError;
+                message = "Created Task Successfully";
+                response = new { message = message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+            if (idRole != null)
+            {
+                int idR = idRole.GetValueOrDefault();
+                var role = roleService.findRoleOfProcess(idR, step.Process.Id);
+                if (role == null)
+                {
+                    //role not exist
+                    status = HttpStatusCode.InternalServerError;
+                    message = "Role not exist";
+                    response = new { message = message, status = status };
+                    return Json(response, JsonRequestBehavior.AllowGet);
+
+                }
+
+            }
+
+            taskService.editTask(task.Id, name, idRole, description, inputConfig, fileConfig);
+            SetFlash(FlashType.success, "Created Task Successfully");
+            message = "Created Task Successfully";
+            response = new { message = message, status = status };
+            return Json(response, JsonRequestBehavior.AllowGet);
+
+
+        }
+
     }
 }   

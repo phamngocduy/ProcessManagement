@@ -149,7 +149,6 @@ namespace ProcessManagement.Controllers
 
             //Add members
             participateService.addMembers(group, adduser);
-            SetTab(TabType.UserSetting);
             SetFlash(FlashType.success, "Added Members Successfully");
             return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
         }
@@ -166,7 +165,6 @@ namespace ProcessManagement.Controllers
             //edit
             
             groupService.editGroup(group);
-            SetTab(TabType.GeneralSetting);
             return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
         }
         [Authorize]
@@ -178,7 +176,6 @@ namespace ProcessManagement.Controllers
             Group group = groupService.findGroup(groupid);
             if (group == null) return HttpNotFound();
             groupService.removeAvatar(group);
-            SetTab(TabType.GeneralSetting);
             SetFlash(FlashType.success, "Removed Avatar Successfully");
             return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
         }
@@ -222,7 +219,6 @@ namespace ProcessManagement.Controllers
                 SetFlash(FlashType.success, "Removed " + userName + " Successfully");
             }
 
-            SetTab(TabType.UserSetting);
             return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
         }
         [Authorize]
@@ -249,7 +245,6 @@ namespace ProcessManagement.Controllers
             if (user.IsOwner)
             {
                 SetFlash(FlashType.fail, "Owner cant change their role");
-                SetTab(TabType.UserSetting);
                 return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
             }
             return View(user);
@@ -275,7 +270,6 @@ namespace ProcessManagement.Controllers
             else
                 SetFlash(FlashType.fail, "Owner cant change their role");
 
-            SetTab(TabType.UserSetting);
             return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
         }
         [Authorize]
@@ -301,7 +295,6 @@ namespace ProcessManagement.Controllers
             else
             {
                 SetFlash(FlashType.fail, "Left Group " + groupName + " Failed");
-                SetTab(TabType.AdvancedSetting);
                 return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = user.Group.groupSlug, groupid = user.Group.Id });
             }
 

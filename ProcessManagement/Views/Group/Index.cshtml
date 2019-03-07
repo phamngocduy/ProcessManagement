@@ -138,7 +138,7 @@
                         console.log(json);
                         var return_data = [];
                         for (var i = 0; i < json.length; i++) {
-                            var action = `/cap21t8/${lang}/${json[i].slug}-${json[i].id}/group/show`;
+                            var action = `${json[i].slug}-${json[i].id}/group/show`;
                             var name = `<a href="${action}"><h6>${json[i].name}</h6></a><small>${json[i].time_ralitive}</small>`;
                             var sort = json[i].update_at.sort;
                             var owner = getOwnerAvatar(json[i].owner.name, json[i].owner.avatar);

@@ -77,7 +77,18 @@ namespace ProcessManagement.Services
 			Participate user = db.Participates.SingleOrDefault(x => x.Id == idParticipant);
 			return user;
 		}
-		public int countMemberInGroup(int IdGroup)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="idUser"></param>
+        /// <param name="idGroup"></param>
+        /// <returns></returns>
+        public Participate findMemberInGroup(string idUser, int idGroup)
+        {
+            Participate user = db.Participates.SingleOrDefault(x => x.IdUser == idUser && x.IdGroup == idGroup);
+            return user;
+        }
+        public int countMemberInGroup(int IdGroup)
         {
             int count = db.Participates.Where(x => x.IdGroup == IdGroup).Count();
             return count;

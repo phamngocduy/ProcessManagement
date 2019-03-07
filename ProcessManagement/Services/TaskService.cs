@@ -16,9 +16,9 @@ namespace ProcessManagement.Services
         public void addtask(int idStep, string name, int ? role, string description, string inputConfig, string fileConfig)
         {
             TaskProcess task = new TaskProcess();
-            task.idStep = idStep;
+            task.IdStep = idStep;
             task.Name = name;
-            task.idRole = role;
+            task.IdRole = role;
             task.Description = description;
             task.ValueInputText = inputConfig;
             task.ValueInputFile = fileConfig;
@@ -31,31 +31,29 @@ namespace ProcessManagement.Services
 
         public List<TaskProcess> findtaskofstep(int idStep)
         {
-            List<TaskProcess> task = db.TaskProcesses.Where(x => x.idStep == idStep).ToList();
+            List<TaskProcess> task = db.TaskProcesses.Where(x => x.IdStep == idStep).ToList();
             return task;
         }
 
-        public TaskProcess findtask(int id)
+        public TaskProcess findTask(int idTask)
         {
-            TaskProcess task = db.TaskProcesses.Find(id);
+            TaskProcess task = db.TaskProcesses.Find(idTask);
             return task;
         }
 
-        public TaskProcess edittask(int taskid, string valueinputtext, string valueinputfile, string nametask, int roletask, string editor)
+        public void editTask(int idTask, string name, int? role, string description, string inputConfig, string fileConfig)
         {
-            TaskProcess task = findtask(taskid);
-            task.Name = nametask;
-            task.Description = editor;
-            task.idRole = roletask;
-            task.ValueInputText = valueinputtext;
-            task.ValueInputFile = valueinputfile;
+            TaskProcess task = findTask(idTask);
+            task.Name = name;
+            task.Description = description;
+            task.IdRole = role;
+            task.ValueInputText = inputConfig;
+            task.ValueInputFile = fileConfig;
             task.Updated_At = DateTime.Now;
             db.SaveChanges();
-            return task;
         }
-        public void deletetask(int idtask)
+        public void deletetask(TaskProcess task)
         {
-            TaskProcess task = findtask(idtask);
             db.TaskProcesses.Remove(task);
             db.SaveChanges();
         }
