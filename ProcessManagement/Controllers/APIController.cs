@@ -352,6 +352,12 @@ namespace ProcessManagement.Controllers
 
 
         }
+        public JsonResult changeTaskPosition(string position)
+        {
+            taskService.changePosition(position);
+            var response = new { message = "Change position sucess", status = HttpStatusCode.OK };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
 
     }
 }   

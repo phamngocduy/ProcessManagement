@@ -22,7 +22,6 @@
 
 
 @section CustomCss{
-    <link rel="stylesheet" href="~/Content/vendor/nestable/jquery-nestable.css" />
     <link rel="stylesheet" href="~/Content/vendor/sortable/st/prettify/prettify.css" />
     <style>
         .highlight {
@@ -242,10 +241,10 @@
                                 </div>
                             </div>
                             <div class="task">
-                                <ul class="task-list" id="task-@step.Id">
-                                    @foreach (var task in db.TaskProcesses.Where(x => x.IdStep == step.Id))
+                                <ul class="task-list" id="task-of-step-@step.Id">
+                                    @foreach (var task in db.TaskProcesses.Where(x => x.IdStep == step.Id).OrderBy(x => x.Position))
                                     {
-                                        <li class="task-item" style="background-color:@task.Color">
+                                        <li class="task-item" style="background-color:@task.Color" data-id="@task.Id">
                                             <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showtask", idtask = task.Id })">@task.Name</a>
                                         
                                             <i class="fa fa-arrows-alt handle"></i>
@@ -277,9 +276,66 @@
                 Sortable.create(element, {
                     handle: '.handle', // handle's class
                     animation: 150,
-                    ghostClass: 'blue-background-class'
+                    dataIdAttr: 'data-id',
+                    onUpdate: function (evt) {
+                        ////get item
+                        //var fromItem = evt.item;
+                        //var toItem = evt.item.previousElementSibling;
+                        ////get id
+                        //var fromId = fromItem.attributes["data-id"].value;
+                        //var toId = toItem.attributes["data-id"].value;
+                        //var position = {
+                        //    from: fromId,
+                        //    to: toId
+                        //}
+                        //position = JSON.stringify(position);
+                        //changePosition(position);
+
+
+
+
+
+                        //var formList = evt.from.children;
+                        //var formID = [];
+                        //for (var task of formList) {
+                        //    formID.push(task.dataset.id);
+                        //}
+                        //var toList = evt.to.children;
+                        //var toID = [];
+                        //for (var task of toList) {
+                        //    toID.push(task.dataset.id);
+                        //}
+                        //console.log(evt.from, evt.to);
+
+                        var newTaskOrder = evt.from.children;
+                        var newPositionList = [];
+                        for (var i = 0; i < newTaskOrder.length; i++) {
+                            var temp = {
+                                idTask : newTaskOrder[i].dataset.id,
+                                position: (i + 1)
+                            }
+                            newPositionList.push(temp);
+                        }
+                        console.log(newPositionList);
+                        changePosition(JSON.stringify(newPositionList));
+                    }
                 });
             })
         });
+        function changePosition(position) {
+            $.ajax({
+                url: "@Url.Action("changetaskposition","api")",
+                type: "POST",
+                data: { position : position },
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status != 200) {
+                        showToastr("error", "Error!!", "toast-bottom-left")
+                        console.error(response)
+                    }
+                }
+            });
+        }
     </script>
 }

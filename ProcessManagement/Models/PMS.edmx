@@ -111,6 +111,7 @@
           <Property Name="Color" Type="nvarchar" MaxLength="255" />
           <Property Name="Created_At" Type="datetime" />
           <Property Name="Updated_At" Type="datetime" />
+          <Property Name="Position" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Type">
           <Key>
@@ -465,6 +466,7 @@
           <Property Name="Color" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Created_At" Type="DateTime" Precision="3" />
           <Property Name="Updated_At" Type="DateTime" Precision="3" />
+          <Property Name="Position" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Role" Relationship="PMSModel.FK_TaskProcess_Role" FromRole="TaskProcess" ToRole="Role" />
           <NavigationProperty Name="Step" Relationship="PMSModel.FK_TaskProcess_Step" FromRole="TaskProcess" ToRole="Step" />
           <NavigationProperty Name="Type" Relationship="PMSModel.FK_TaskProcess_Type" FromRole="TaskProcess" ToRole="Type" />
@@ -701,6 +703,7 @@
           <EntitySetMapping Name="TaskProcesses">
             <EntityTypeMapping TypeName="PMSModel.TaskProcess">
               <MappingFragment StoreEntitySet="TaskProcess">
+                <ScalarProperty Name="Position" ColumnName="Position" />
                 <ScalarProperty Name="Updated_At" ColumnName="Updated_At" />
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
                 <ScalarProperty Name="Color" ColumnName="Color" />

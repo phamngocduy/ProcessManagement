@@ -9,11 +9,11 @@ namespace ProcessManagement
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                   "~/Content/vendor/bootstrap/css/bootstrap.min.css",
-                   "~/Content/vendor/font-awesome/css/font-awesome.min.css",
-                   "~/Content/vendor/toastr/toastr.min.css",
-                   "~/Content/vendor/jquery-datatable/dataTables.bootstrap4.min.css",
-                   "~/Content/build/css/color_skins.css"
+                "~/Content/vendor/bootstrap/css/bootstrap.min.css",
+                "~/Content/vendor/font-awesome/css/font-awesome.min.css",
+                "~/Content/vendor/toastr/toastr.min.css",
+                "~/Content/vendor/jquery-datatable/dataTables.bootstrap4.min.css",
+                "~/Content/build/css/color_skins.css"
                ));
             bundles.Add(new ScriptBundle("~/Content/js").Include(
                 "~/Content/build/bundles/libscripts.bundle.js",

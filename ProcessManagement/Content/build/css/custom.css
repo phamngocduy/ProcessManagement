@@ -717,6 +717,10 @@ input[type=number] {
   border: none;
 }
 
+#table-member_wrapper .row:nth-child(2) {
+  height: 358px;
+}
+
 /* end of content */
 /* footer */
 #footer {

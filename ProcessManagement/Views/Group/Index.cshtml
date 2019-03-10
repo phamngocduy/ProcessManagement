@@ -129,6 +129,11 @@
             $(".js-grouplist-table").DataTable({
                 "processing": true,
                 "serverSide": false,
+                "bLengthChange": false,
+                "language": {
+                    "emptyTable": "You doesn't have any group yet",
+                    "info": "Showing _START_ to _END_ of _TOTAL_ group",
+                },
                 "ajax": {
                     "type": "GET",
                     "url": "@Url.Action("getgrouplist", "api")",

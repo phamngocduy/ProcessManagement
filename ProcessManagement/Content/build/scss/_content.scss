@@ -194,3 +194,10 @@
         }
     }
 }
+#table-member_wrapper{
+    .row{
+        &:nth-child(2){
+            height: 358px;
+        }
+    }
+}
