@@ -341,6 +341,7 @@ namespace ProcessManagement.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    Session["user.email"] = loginInfo.Email;
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -390,6 +391,7 @@ namespace ProcessManagement.Controllers
                     if (result.Succeeded)
                     {
                         Session.Remove("loginInfor");
+                        Session["user.email"] = user.Email;
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                         return RedirectToLocal(returnUrl);
                     }
@@ -461,9 +463,10 @@ namespace ProcessManagement.Controllers
 
         private ActionResult RedirectToLocal(string returnUrl)
         {
+            string email = Session["user.email"].ToString();
+            ApplicationUser user =  UserManager.FindByEmail(email);
 
-            Session["UserId"] = User.Identity.GetUserId();
-            string sayHello = String.Format("Welcome back {0} !!", System.Web.HttpContext.Current.User.Identity.Name);
+            string sayHello = String.Format("Welcome back {0} !!", user.UserName);
             SetFlash(FlashType.info, sayHello, FlashPosition.TopRight);
 
             if (Url.IsLocalUrl(returnUrl))

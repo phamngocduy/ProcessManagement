@@ -245,7 +245,7 @@
                                     @foreach (var task in db.TaskProcesses.Where(x => x.IdStep == step.Id).OrderBy(x => x.Position))
                                     {
                                         <li class="task-item" style="background-color:@task.Color" data-id="@task.Id">
-                                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showtask", idtask = task.Id })">@task.Name</a>
+                                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showtask", taskid = task.Id })">@task.Name</a>
                                         
                                             <i class="fa fa-arrows-alt handle"></i>
                                         </li>
@@ -324,7 +324,7 @@
         });
         function changePosition(position) {
             $.ajax({
-                url: "@Url.Action("changetaskposition","api")",
+                url: "@Url.Action("changetaskposition","process",new { area = "api"})",
                 type: "POST",
                 data: { position : position },
                 dataType: "json",

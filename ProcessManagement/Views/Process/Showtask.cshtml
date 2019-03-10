@@ -140,7 +140,7 @@
                     <div class="col-sm-12">
                         <div class="mt-2" id="button-action">
                             <button id="btn-edit" class="btn btn-primary-theme">Edit</button>
-                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "deletetask", idtask = Model.Id })" onclick="return confirm('bạn muốn xóa task này không?')" class="btn btn-outline-danger">Delete</a>
+                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "deletetask", taskid = Model.Id })" onclick="return confirm('bạn muốn xóa task này không?')" class="btn btn-outline-danger">Delete</a>
                         </div>
                     </div>
                 </div>
@@ -227,7 +227,7 @@
         });
         function editTask(data) {
              $.ajax({
-                url: "@Url.Action("edittask","api")",
+                url: "@Url.Action("edittask","process",new {area = "api"})",
                 type: "POST",
                 data: data,
                 dataType: "json",

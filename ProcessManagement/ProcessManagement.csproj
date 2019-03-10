@@ -189,6 +189,9 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\API\APIAreaRegistration.cs" />
+    <Compile Include="Areas\API\Controllers\GroupController.cs" />
+    <Compile Include="Areas\API\Controllers\ProcessController.cs" />
     <Compile Include="Content\resources\CWcommon.vi.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -265,7 +268,6 @@
       <DependentUpon>CWregister.vi.resx</DependentUpon>
     </Compile>
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\APIController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
@@ -404,6 +406,7 @@
     <Content Include="Content\build\fonts\weathericons-regular-webfont.ttf" />
     <Content Include="Content\build\fonts\weathericons-regular-webfont.woff" />
     <Content Include="Content\build\fonts\weathericons-regular-webfontd41d.eot" />
+    <Content Include="Areas\API\Views\web.config" />
     <None Include="Content\build\scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Content\build\scripts\jquery-3.3.1.js" />
     <Content Include="Content\build\scripts\jquery-3.3.1.min.js" />
@@ -8415,7 +8418,7 @@
     <Content Include="Views\Process\EditStep.cshtml" />
     <Content Include="Views\Group\FileManager.cshtml" />
     <Content Include="Views\Process\EditProcess.cshtml" />
-    <Content Include="Views\API\GroupList.cshtml" />
+    <Content Include="Areas\API\Views\Group\GroupList.cshtml" />
     <Content Include="Views\Shared\Common\_Loader.cshtml" />
     <Content Include="Views\Group\NewGroup.cshtml" />
     <Content Include="Views\Group\ProcessManagement.cshtml" />
@@ -8428,6 +8431,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\group\" />
+    <Folder Include="Areas\API\Models\" />
+    <Folder Include="Areas\API\Views\Process\" />
+    <Folder Include="Areas\API\Views\Shared\" />
     <Folder Include="Backup\Database\" />
     <Folder Include="Backup\View\" />
     <Folder Include="Content\vendor\jquery.file.upload\cors\" />

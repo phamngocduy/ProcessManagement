@@ -21,27 +21,31 @@ namespace ProcessManagement
                 name: "LocalizedDefault",
                 url: "{lang}/{controller}/{action}/{id}",
                 defaults: new { controller = "group", action = "index", id = UrlParameter.Optional },
-                constraints: new { lang = "en|vi", controller = "home|account|error|api" }
+                constraints: new { lang = "en|vi", controller = "home|account|error|api" },
+                namespaces: new[] { "ProcessManagement.Controllers" }
             );
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "group", action = "index", lang = "en", id = UrlParameter.Optional },
-                constraints: new { lang = "en|vi", controller = "home|account|error|api" }
+                constraints: new { lang = "en|vi", controller = "home|account|error|api" },
+                namespaces: new[] { "ProcessManagement.Controllers" }
             );
             
             //group control
             routes.MapRoute(
                name: "GroupControlLocalizedDefault",
-               url: "{lang}/{groupslug}-{groupid}/{controller}/{action}/{stepid}/{taskid}",
-               defaults: new { controller = "group", stepid = UrlParameter.Optional, taskid = UrlParameter.Optional },
-               constraints: new { lang = "en|vi", controller = "group|process" }
+               url: "{lang}/{groupslug}-{groupid}/{controller}/{action}",
+               defaults: new { controller = "group", action = "show"},
+               constraints: new { lang = "en|vi", controller = "group|process" },
+               namespaces: new[] { "ProcessManagement.Controllers" }
             );
             routes.MapRoute(
                name: "GroupControlDefault",
-               url: "{groupslug}-{groupid}/{controller}/{action}/{stepid}/{taskid}",
-               defaults: new { controller = "group", lang = "en", stepid = UrlParameter.Optional, taskid = UrlParameter.Optional },
-               constraints: new { lang = "en|vi", controller = "group|process" }
+               url: "{groupslug}-{groupid}/{controller}/{action}",
+               defaults: new { controller = "group", lang = "en", action = "show"},
+               constraints: new { lang = "en|vi", controller = "group|process" },
+               namespaces: new[] { "ProcessManagement.Controllers" }
             );
 
             //group default
@@ -49,13 +53,15 @@ namespace ProcessManagement
                name: "GroupLocalizedDefault",
                url: "{lang}/{controller}/{action}/{groupid}",
                defaults: new { controller = "group", action = "index", groupid = UrlParameter.Optional },
-               constraints: new { lang = "en|vi", controller = "group|process" }
+               constraints: new { lang = "en|vi", controller = "group|process" },
+               namespaces: new[] { "ProcessManagement.Controllers" }
             );
             routes.MapRoute(
                name: "GroupDefault",
                url: "{controller}/{action}/{groupid}",
                defaults: new { controller = "group", action = "index", lang = "en", groupid = UrlParameter.Optional },
-               constraints: new { lang = "en|vi", controller = "group|process" }
+               constraints: new { lang = "en|vi", controller = "group|process" },
+               namespaces: new[] { "ProcessManagement.Controllers" }
             );
 
 

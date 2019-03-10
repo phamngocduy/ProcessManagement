@@ -37,6 +37,7 @@ namespace ProcessManagement.Controllers
         AdvancedSetting,
         VisibilitySetting
     }
+
     public class BaseController : Controller
     {
         private static string _cookieLangName = "LangForProcessManagementSystem";
@@ -66,6 +67,8 @@ namespace ProcessManagement.Controllers
         //    SetCurrentCultureOnThread(culture);
         //    base.OnActionExecuting(filterContext);
         //}
+        
+        
 
         private static void SetCurrentCultureOnThread(string lang)
         {

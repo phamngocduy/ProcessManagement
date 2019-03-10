@@ -296,7 +296,7 @@
                 "bLengthChange": false,
                 "ajax": {
                     "type": "GET",
-                    "url": "@Url.Action("getmemberlist", "api")",
+                    "url": "@Url.Action("getmemberlist", "group", new { area = "api"})",
                     "dataSrc": function (json) {
                         console.log(json);
                         json = json.data;
@@ -404,7 +404,7 @@
             $("#add-member-search input").select2({
                 placeholder: "Search username, nickname, email...",
                 ajax: {
-                    url: "@Url.Action("getusernotingroup", "api")",
+                    url: "@Url.Action("getusernotingroup", "group", new { area ="api"})",
 
                     dataType: 'json',
                     data: function (params) {
@@ -426,7 +426,7 @@
         });
         function addMember(newMember) {
             $.ajax({
-                url: "@Url.Action("addmember","api")",
+                url: "@Url.Action("addmember", "group", new { area ="api"})",
                 type: "POST",
                 data: newMember,
                 dataType: "json",
@@ -449,7 +449,7 @@
         }
         function editRole(role) {
             $.ajax({
-                url: "@Url.Action("editrole","api")",
+                url: "@Url.Action("editrole", "group", new { area = "api"})",
                 type: "POST",
                 data: role,
                 dataType: "json",

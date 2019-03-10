@@ -204,7 +204,7 @@
         }); 
         function addTask(data) {
             $.ajax({
-                url: "@Url.Action("addtask","api")",
+                url: "@Url.Action("addtask","process", new { area = "api"})",
                 type: "POST",
                 data: data,
                 dataType: "json",

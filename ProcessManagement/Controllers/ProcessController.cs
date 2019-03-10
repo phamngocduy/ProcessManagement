@@ -458,9 +458,9 @@ namespace ProcessManagement.Controllers
        
         [Authorize]
         [GroupAuthorize]
-        public ActionResult ShowTask(int idtask)
+        public ActionResult ShowTask(int taskid)
         {
-            TaskProcess task = taskService.findTask(idtask);
+            TaskProcess task = taskService.findTask(taskid);
             if (task == null) return HttpNotFound();
             Step step = stepService.findStep(task.IdStep);
             Group group = groupService.findGroup(step.Process.Group.Id);
@@ -476,9 +476,9 @@ namespace ProcessManagement.Controllers
 
         [Authorize]
         [GroupAuthorize]
-        public ActionResult DeleteTask(int idTask)
+        public ActionResult DeleteTask(int taskid)
         {
-            TaskProcess task = taskService.findTask(idTask);
+            TaskProcess task = taskService.findTask(taskid);
             if (task == null) return HttpNotFound();
             Step step = stepService.findStep(task.Step.Id);
             //lấy group thuộc process
