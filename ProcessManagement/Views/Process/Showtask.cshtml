@@ -20,14 +20,14 @@
 <div class="block-header">
     <div class="row">
         <div class="col-lg-6 col-md-8 col-sm-12">
-            <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Create New Task</h2>
+            <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth primary-theme"><i class="fa fa-arrow-left"></i></a> Create New Task</h2>
             <ul class="breadcrumb">
-                <li class="breadcrumb-item"><a href="~/Home/Index" class="theme-color"><i class="icon-home"></i></a></li>
-                <li class="breadcrumb-item"><a href="~/Group/Index">Groups</a></li>
-                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = group.Id })">@group.Name</a></li>
-                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "ShowStep", processid = step.IdProcess })">@step.Process.Name</a></li>
-                <li class="breadcrumb-item"><a href="">@step.Name</a></li>
-                <li class="breadcrumb-item"><a href=""> Create New Task</a></li>
+                <li class="breadcrumb-item"><a href="~/Home/Index" class="primary-theme"><i class="icon-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="~/Group/Index" class="primary-theme">Groups</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = group.Id })" class="primary-theme">@group.Name</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "ShowStep", processid = step.IdProcess })" class="primary-theme">@step.Process.Name</a></li>
+                <li class="breadcrumb-item"><a href="" class="primary-theme">@step.Name</a></li>
+                <li class="breadcrumb-item"><a href="" class="primary-theme"> Create New Task</a></li>
             </ul>
         </div>
         <div class="col-lg-6 col-md-4 col-sm-12 text-right">
@@ -140,7 +140,7 @@
                     <div class="col-sm-12">
                         <div class="mt-2" id="button-action">
                             <button id="btn-edit" class="btn btn-primary-theme">Edit</button>
-                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "deletetask", taskid = Model.Id })" onclick="return confirm('bạn muốn xóa task này không?')" class="btn btn-outline-danger">Delete</a>
+                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "deletetask", taskid = Model.Id })" class="btn btn-outline-danger" id="btn-remove-task">Delete</a>
                         </div>
                     </div>
                 </div>
@@ -224,6 +224,13 @@
                     editTask(data);
                 }
             });
+            $("body").on("click", "#btn-remove-task", function () {
+                var con = confirm("bạn muốn xóa task này không?");
+                if (con) {
+                    localStorage.setItem("showStep", @step.Id);
+                }
+                return con;
+            })
         });
         function editTask(data) {
              $.ajax({
@@ -234,6 +241,7 @@
                 success: function (response) {
                     console.log(response);
                     if (response.status == 200) {
+                        localStorage.setItem("showStep", @step.Id);
                         location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })';
                     } else {
                         console.error(response)

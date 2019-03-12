@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using ProcessManagement.Models;
 using ProcessManagement.Services;
 using ProcessManagement.Filters;
+using System.Dynamic;
 
 namespace ProcessManagement.Controllers
 {
@@ -133,33 +134,38 @@ namespace ProcessManagement.Controllers
         {
             var process = processService.findProcess(processid);
             var group = groupService.findGroup(process.IdGroup);
-            ViewData["group"] = group;
-            ViewData["process"] = process;
-			ViewData["ListRole"] = processService.findListRole(process.Id);
-			var step = stepService.findStepsOfProcess(processid);
+            var listStep = stepService.findStepsOfProcess(processid);
+            var listRole = processService.findListRole(process.Id);
+            //statics
+            dynamic expando = new ExpandoObject();
+            var processStatisticModel = expando as IDictionary<string, object>;
+            processStatisticModel.Add("totalstep", listStep.Count);
+            processStatisticModel.Add("totalrole", listRole.Count);
+
             List<Step> liststep = new List<Step>();
-            for (int i = 0; i < step.Count; i++)
-            {
-                if (step[i].StartStep == true)
-                {
-                    liststep.Add(step[i]);
-                }
-            }
+            Step start = listStep.Where(x => x.StartStep == true).FirstOrDefault();
+            liststep.Add(start);
             int z = 0;
-            for (int j = 0; j < step.Count; j++)
+            for (int j = 0; j < listStep.Count; j++)
             {
                 do
                 {
-                    if (step[z].Key == liststep[j].NextStep1 && step[z].StartStep.ToString() == "False")
+                    if (listStep[z].Key == liststep[j].NextStep1 && listStep[z].StartStep == false)
                     {
-                        liststep.Add(step[z]);
+                        liststep.Add(listStep[z]);
                         z = 0;
                         break;
                     }
                     z++;
-                } while (z < step.Count);
+                } while (z < listStep.Count);
 
             }
+
+
+            ViewData["group"] = group;
+            ViewData["process"] = process;
+            ViewData["listRole"] = listRole;
+            ViewData["statistic"] = processStatisticModel;
             return View(liststep);
         }
         [GroupAuthorize]

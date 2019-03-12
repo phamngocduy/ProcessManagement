@@ -1,4 +1,9 @@
 ﻿$(function () {
+    //tooltip
+    $('body').tooltip({
+        selector: '[data-toggle=tooltip]'
+    });
+
     //var lang = CapstoneProject.Cookies.getCookie("LangFOrLangForProcessManagementSystem");
     //$('.setLang[data-lang="' + lang + '"]').addClass('active-lang');
     var pathHaveLang = window.location.pathname;

@@ -38,7 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vs5C95.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vs3ACC.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,7 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vs5C95.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vs3ACC.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -275,6 +275,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProcessController.cs" />
     <Compile Include="Extensions\IdentityExtensions.cs" />
+    <Compile Include="Filters\AjaxAuthorizeAttribute.cs" />
     <Compile Include="Filters\GroupAuthorizeAttribute.cs" />
     <Compile Include="Filters\LanguageFilterAttribute.cs" />
     <Compile Include="Filters\RoleAuthorizeAttribute.cs" />
@@ -8445,7 +8446,6 @@
     <Folder Include="Content\vendor\jquery.file.upload\server\gae-python\static\" />
     <Folder Include="Content\vendor\jquery.file.upload\server\php\files\" />
     <Folder Include="Content\vendor\jquery.file.upload\test\" />
-    <Folder Include="Files\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\build\scripts\jquery-3.3.1.min.map" />

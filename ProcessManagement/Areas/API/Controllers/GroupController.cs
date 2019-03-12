@@ -8,9 +8,11 @@ using Microsoft.AspNet.Identity;
 using Newtonsoft.Json.Linq;
 using ProcessManagement.Models;
 using ProcessManagement.Services;
+using ProcessManagement.Filters;
 
 namespace ProcessManagement.Areas.API.Controllers
 {
+    [AjaxAuthorize]
     public class GroupController : Controller
     {
         ///=============================================================================================

@@ -9,9 +9,10 @@ using Newtonsoft.Json.Linq;
 using ProcessManagement.Models;
 using ProcessManagement.Services;
 using ProcessManagement.Controllers;
-
+using ProcessManagement.Filters;
 namespace ProcessManagement.Areas.API.Controllers
 {
+    [AjaxAuthorize]
     public class ProcessController : ProcessManagement.Controllers.BaseController
     {
         ///=============================================================================================
@@ -21,8 +22,9 @@ namespace ProcessManagement.Areas.API.Controllers
         TaskService taskService = new TaskService();
         ParticipateService participateService = new ParticipateService();
         ///=============================================================================================
-        // GET: API/Process
+
         [HttpPost]
+        [GroupAuthorize(Role = new UserRole[] { UserRole.Manager })]
         public JsonResult addTask(string name, int? idRole, string description, string inputConfig, string fileConfig)
         {
             var status = HttpStatusCode.OK;

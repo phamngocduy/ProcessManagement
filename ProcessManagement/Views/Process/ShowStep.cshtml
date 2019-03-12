@@ -7,90 +7,27 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var group = ViewData["group"] as ProcessManagement.Models.Group;
     var process = ViewData["process"] as ProcessManagement.Models.Process;
-    var count = 0;
-    var count1 = 0;
-    for (int i = 0; i < Model.Where(x => x.Figure == "Step").Count(); i++)
-    {
-        count++;
-    }
-    for (int j = 0; j < process.Roles.Count; j++)
-    {
-        count1++;
-    }
-    var listRole = ViewData["ListRole"] as List<ProcessManagement.Models.Role>;
+    var statistic = ViewData["statistic"] as dynamic;
+    var listRole = ViewData["listRole"] as List<ProcessManagement.Models.Role>;
 }
 
 
 @section CustomCss{
     <link rel="stylesheet" href="~/Content/vendor/sortable/st/prettify/prettify.css" />
-    <style>
-        .highlight {
-            background-color: #f8f9fa;
-            padding: 20px;
-        }
-
-            .highlight pre code {
-                font-size: inherit;
-                color: #212529;
-            }
-
-        .nt {
-            color: #2f6f9f;
-        }
-
-        .na {
-            color: #4f9fcf;
-        }
-
-        .s {
-            color: #d44950;
-        }
-
-        pre.prettyprint {
-            background-color: #eee;
-            border: 0px;
-            margin: 0;
-            padding: 20px;
-            text-align: left;
-        }
-
-        .atv,
-        .str {
-            color: #05AE0E;
-        }
-
-        .tag,
-        .pln,
-        .kwd {
-            color: #3472F7;
-        }
-
-        .atn {
-            color: #2C93FF;
-        }
-
-        .pln {
-            color: #333;
-        }
-
-        .com {
-            color: #999;
-        }
-    </style>
 }
 <div class="block-header">
     <div class="row">
         <div class="col-lg-6 col-md-8 col-sm-12">
             <h2>
-                <a href="javascript:void(0);" class="btn btn-xs btn-link theme-color btn-toggle-fullwidth">
+                <a href="javascript:void(0);" class="btn btn-xs btn-link primary-theme btn-toggle-fullwidth">
                     <i class="fa fa-arrow-left"></i>
                 </a> @process.Name
             </h2>
             <ul class="breadcrumb">
-                <li class="breadcrumb-item"><a href="~/Home/Index" class="theme-color"><i class="icon-home"></i></a></li>
-                <li class="breadcrumb-item"><a href="~/Group/Index">Groups</a></li>
-                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = group.Id })">@group.Name</a></li>
-                <li class="breadcrumb-item"><a href="">@process.Name</a></li>
+                <li class="breadcrumb-item"><a href="~/Home/Index" class="primary-theme"><i class="icon-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="~/Group/Index" class="primary-theme">Groups</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = group.Id })" class="primary-theme">@group.Name</a></li>
+                <li class="breadcrumb-item"><a href="" class="primary-theme">@process.Name</a></li>
             </ul>
         </div>
         <div class="col-lg-6 col-md-4 col-sm-12 text-right">
@@ -139,9 +76,9 @@
             <div class="body">
                 <ul class=" list-unstyled basic-list">
                     <li>Create At:<span class="badge badge-primary">@process.Created_At</span></li>
-                    <li>Update_at:<span class="badge-purple badge">@process.Updated_At</span></li>
-                    <li>Total Step:<span class="badge-purple badge">@count steps</span></li>
-                    <li>Total Role:<span class="badge-danger badge">@count1 roles</span></li>
+                    <li>Update_at:<span class="badge badge-info">@process.Updated_At</span></li>
+                    <li>Total Step:<span class="badge badge-danger">@statistic.totalstep steps</span></li>
+                    <li>Total Role:<span class="badge badge-warning">@statistic.totalrole roles</span></li>
                 </ul>
             </div>
         </div>
@@ -168,27 +105,23 @@
                     @foreach (var role in listRole)
                     {
                         <li class="online">
-                            <a href="javascript:void(0);">
-                                <div class="media">
-                                    <img class="media-object " src="~/Content/images/xs/avatar4.jpg" alt="">
-                                    <div class="media-body">
-                                        <span class="name">@role.Name</span>
-                                        <span class="message">
-                                            @role.Description
-                                            <a style="float: right" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "EditRole", roleid = role.Id})">
-                                                <img src="~/Content/images/icons-edit.png" />
-                                            </a>
-                                            <a style="float: right" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "DeleteRole", roleid = role.Id})">
-                                                <img src="~/Content/images/icons-remove.png" />
-                                            </a>
-                                        </span>
-                                    </div>
+                            <div class="media">
+                                <img class="media-object " src="~/Content/images/xs/avatar4.jpg" alt="">
+                                <div class="media-body">
+                                    <span class="name">@role.Name</span>
+                                    <span class="message">
+                                        @role.Description
+                                        <a style="float: right" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "EditRole", roleid = role.Id})">
+                                            <img src="~/Content/images/icons-edit.png" />
+                                        </a>
+                                        <a style="float: right" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "DeleteRole", roleid = role.Id})">
+                                            <img src="~/Content/images/icons-remove.png" />
+                                        </a>
+                                    </span>
                                 </div>
-                            </a>
+                            </div>
                         </li>
                     }
-
-
                 </ul>
             </div>
         </div>
@@ -224,12 +157,13 @@
             </div>
             <div class="body">
                 <ul class="step-list">
-                    @foreach (var step in Model.Where(x => x.Figure == "Step"))
+                    @foreach (var step in Model)
                     {
+                        List<TaskProcess> taskList = db.TaskProcesses.Where(x => x.IdStep == step.Id).OrderBy(x => x.Position).ToList();
                         <li>
-                            <div class="step" style="border: 2px solid @step.Color; border-left:7px solid @step.Color; color:@step.Color">
+                            <div class="step @if (taskList.Any()) { WriteLiteral("step-has-task"); }" style="border: 2px solid @step.Color; border-left:7px solid @step.Color; color:@step.Color">
                                 <div class="step-name">
-                                    <span data-toggle="tooltip" data-placement="top" title="@step.Description">@step.Name</span>
+                                    <span data-toggle="tooltip" data-placement="top" title="@step.Description">@step.Name (@taskList.Count)</span>
                                 </div>
                                 <div class="step-action dropdown">
                                     <a style="color: @step.Color" href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></a>
@@ -242,7 +176,7 @@
                             </div>
                             <div class="task">
                                 <ul class="task-list" id="task-of-step-@step.Id">
-                                    @foreach (var task in db.TaskProcesses.Where(x => x.IdStep == step.Id).OrderBy(x => x.Position))
+                                    @foreach (var task in taskList)
                                     {
                                         <li class="task-item" style="background-color:@task.Color" data-id="@task.Id">
                                             <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showtask", taskid = task.Id })">@task.Name</a>
@@ -265,11 +199,16 @@
     <script src="~/Content/vendor/sortable/st/prettify/run_prettify.js"></script>
     <script>
         $(function () {
-            $(".step-name").on("click", function () {
+            $(".step-has-task .step-name").on("click", function () {
                 var step = $(this).parent(".step");
                 var task = step.next();
                 task.toggle("slow");
             });
+            var showStep = localStorage.getItem("showStep");
+            if (showStep) {
+                localStorage.removeItem("showStep");
+                $(`#task-of-step-${showStep}`).parents(".task").show("slow");
+            }
             var task = $(".task-list");
             task.each(function () {
                 var element = $(this)[0];

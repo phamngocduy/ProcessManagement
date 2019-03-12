@@ -26,21 +26,41 @@ body, #wrapper{
 
 @each $themeClass, $color in  $color-themes{
     #{$themeClass} {
-        .theme-color {
-            color: $color;
+        a{
+            &.primary-theme{
+                color: $color;
+                &:hover{
+                    color: darken($color, 10%);
+                }
+            }
         }
-
         .pagination {
-            & .active {
-                .page-link {
-                    background-color: $color;
-                    border-color: $color;
-
-                    &:hover {
-                        background-color: darken($color,10%);
+            .page-item{
+                a{
+                    color: $color;
+                    &:hover{
+                        color: #fff;
+                        background: darken($color, 10%);    
+                    }
+                }
+                &.disabled{
+                    cursor: not-allowed;
+                    a{
+                        color: rgb(148, 148, 148);
+                    }
+                }
+                &.active {
+                    a{
+                        color: #fff;
+                        background-color: $color;
+                        border-color: $color;
+                        &:hover {
+                            background: $color; 
+                        }
                     }
                 }
             }
+            
         }
         .navbar-nav {
             .icon-menu {
@@ -134,6 +154,40 @@ body, #wrapper{
                 margin-left: 1em;
             }
         }
+        table{
+            &.dataTable{
+                border-collapse:collapse !important;
+                tbody{
+                    tr{
+                        &.child {
+                            ul{
+                                &.dtr-details{
+                                    width: 100%;
+                                }
+                            }
+                        }
+                    }
+                }
+                &.dtr-inline{
+                    &.collapsed{
+                        tbody{
+                            tr[role="row"]{
+                                td:first-child:before,th:first-child:before{
+                                    background: $color;
+                                    margin-top: 5px;
+                                }
+                                &.parent{
+                                    td:first-child:before,th:first-child:before{
+                                        background: red;
+                                        margin-top: 5px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }    
 }
 .row{
@@ -159,11 +213,7 @@ body, #wrapper{
     }
     
 }
-table{
-    &.dataTable{
-        border-collapse:collapse !important;
-    }
-}
+// table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>td:first-child:before, table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>th:first-child:before
 label{
     font-weight: normal;
     color: #5a5a59;

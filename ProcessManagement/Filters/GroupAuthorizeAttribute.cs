@@ -17,13 +17,36 @@ namespace ProcessManagement.Filters
         CommonService commonService = new CommonService();
         ///=============================================================================================
         public UserRole[] Role { get; set; }
+        private Participate user {get;set;}
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            int groupid;
+            if (!isAjaxRequest(filterContext))
+            {
+                //form request
+                BaseAuthorize(filterContext);
+            }
+            else
+            {
+                //ajax request
+                AjaxAuthorize(filterContext);
+            }
+
+        }
+        public override void  OnActionExecuted(ActionExecutedContext filterContext)
+        {
             
-            string idUser = HttpContext.Current.User.Identity.GetUserId();
-            if (HttpContext.Current.Request.RequestContext.RouteData.Values["groupid"] != null)
-                groupid = int.Parse(HttpContext.Current.Request.RequestContext.RouteData.Values["groupid"].ToString());
+        }
+        private bool isAjaxRequest(ControllerContext controllerContext)
+        {
+            var request = controllerContext.RequestContext.HttpContext.Request;
+            return request.IsAjaxRequest();
+        }
+        public void BaseAuthorize(ActionExecutingContext filterContext)
+        {
+            int groupid;
+
+            if (filterContext.RouteData.Values["groupid"] != null)
+                groupid = int.Parse(filterContext.RouteData.Values["groupid"].ToString());
             else if (HttpContext.Current.Session["groupid"] != null)
                 groupid = (int)HttpContext.Current.Session["groupid"];
             else
@@ -31,14 +54,15 @@ namespace ProcessManagement.Filters
                 filterContext.Result = new HttpStatusCodeResult(HttpStatusCode.NotFound);
                 return;
             }
-             
-           
+            
             Group group = groupService.findGroup(groupid);
             if (group == null)
-            { 
+            {
                 filterContext.Result = new HttpStatusCodeResult(HttpStatusCode.NotFound);
                 return;
             }
+
+            string idUser = HttpContext.Current.User.Identity.GetUserId();
             var user = db.Participates.Where(x => x.IdUser == idUser && x.IdGroup == group.Id).FirstOrDefault();
             if (user == null)
             {
@@ -61,16 +85,111 @@ namespace ProcessManagement.Filters
                 }
             }
             HttpContext.Current.Session["idgroup"] = groupid;
-            filterContext.Controller.ViewBag.currentGroup = group;
         }
-        public override void  OnActionExecuted(ActionExecutedContext filterContext)
+        public void AjaxAuthorize(ActionExecutingContext filterContext)
         {
-            //if(HttpContext.Current.Session["groupid"] != null)
-            //    HttpContext.Current.Session.Remove("groupid");
+            string idUser = HttpContext.Current.User.Identity.GetUserId();
+            int groupid;
+
+            if (filterContext.Controller.ValueProvider.GetValue("groupid") != null)
+                groupid = int.Parse(filterContext.Controller.ValueProvider.GetValue("groupid").AttemptedValue);
+            //else if (HttpContext.Current.Session["groupid"] != null)
+            //    groupid = (int)HttpContext.Current.Session["groupid"];
+            else if (filterContext.Controller.ValueProvider.GetValue("processid") != null)
+            {
+                int processId = int.Parse(filterContext.Controller.ValueProvider.GetValue("processid").AttemptedValue);
+                Process process = db.Processes.Find(processId);
+                if (process == null)
+                {
+                    filterContext.Result = new JsonResult
+                    {
+                        Data = new { message = "Process Not Found", status = HttpStatusCode.NotFound },
+                        JsonRequestBehavior = JsonRequestBehavior.AllowGet
+                    };
+                    return;
+                }
+                groupid = process.IdGroup;
+            }
+            else if (filterContext.Controller.ValueProvider.GetValue("stepid") != null)
+            {
+                int stepId = int.Parse(filterContext.Controller.ValueProvider.GetValue("stepid").AttemptedValue);
+                Step step = db.Steps.Find(stepId);
+                if (step == null)
+                {
+                    filterContext.Result = new JsonResult
+                    {
+                        Data = new { message = "Step Not Found", status = HttpStatusCode.NotFound },
+                        JsonRequestBehavior = JsonRequestBehavior.AllowGet
+                    };
+                    return;
+                }
+                groupid = step.Process.IdGroup;
+            }
+            else if (filterContext.Controller.ValueProvider.GetValue("taskid") != null)
+            {
+                int taskId = int.Parse(filterContext.Controller.ValueProvider.GetValue("taskid").AttemptedValue);
+                TaskProcess task = db.TaskProcesses.Find(taskId);
+                if (task == null)
+                {
+                    filterContext.Result = new JsonResult
+                    {
+                        Data = new { message = "Task Not Found", status = HttpStatusCode.NotFound },
+                        JsonRequestBehavior = JsonRequestBehavior.AllowGet
+                    };
+                    return;
+                }
+                groupid = task.Step.Process.IdGroup;
+            }
+            else
+            {
+                filterContext.Result = new JsonResult
+                {
+                    Data = new { message = "Group Not Found", status = HttpStatusCode.NotFound },
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+                };
+                return;
+            }
+
+
+            Group group = groupService.findGroup(groupid);
+            if (group == null)
+            {
+                filterContext.Result = new JsonResult
+                {
+                    Data = new { message = "Group Not Found", status = HttpStatusCode.NotFound },
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+                };
+                return; 
+            }
+            user = db.Participates.Where(x => x.IdUser == idUser && x.IdGroup == group.Id).FirstOrDefault();
+            if (user == null)
+            {
+                filterContext.Result = new JsonResult
+                {
+                    Data = new { message = "You not belong to this group", status = HttpStatusCode.NotFound },
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+                };
+                return;
+            }
+            if (Role != null)
+            {
+                var isOwner = group.IdOwner == idUser ? true : false;
+                UserRole[] userRoles = new UserRole[3];
+                if (isOwner) userRoles[0] = UserRole.Owner;
+                if (user.IsAdmin) userRoles[1] = UserRole.Admin;
+                if (user.IsManager) userRoles[2] = UserRole.Manager;
+                var checkrole = userRoles.Intersect(this.Role).Any();
+                if (!checkrole)
+                {
+                    filterContext.Result = new JsonResult
+                    {
+                        Data = new { message = "You dont have permission", status = HttpStatusCode.Forbidden },
+                        JsonRequestBehavior = JsonRequestBehavior.AllowGet
+                    };
+                    return;
+                }
+            }
+            HttpContext.Current.Session["idgroup"] = groupid;
         }
-        //protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
-        //{
-        //    filterContext.Result = new HttpUnauthorizedResult();
-        //}
     }
 }

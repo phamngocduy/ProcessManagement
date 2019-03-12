@@ -16,8 +16,7 @@ namespace ProcessManagement.Areas.API
         {
             context.MapRoute(
                 "API_default",
-                "API/{controller}/{action}/{id}",
-                new { action = "Index", id = UrlParameter.Optional },
+                "API/{controller}/{action}",
                 namespaces: new[] { "ProcessManagement.Areas.API.Controllers" }
             );
         }
