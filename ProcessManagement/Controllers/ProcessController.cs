@@ -46,6 +46,10 @@ namespace ProcessManagement.Controllers
             return RedirectToAction("Draw", new { groupslug = group.groupSlug, groupid = group.Id, processid = pro.Id });
             //return RedirectToRoute("GroupControlLocalizedDefault", new { action = "DrawProcess", groupslug = group.groupSlug, groupid = group.Id, id = pro.Id });
         }
+        public ActionResult NewStartProcess()
+        {
+            return View();
+        }
         [Authorize]
         [GroupAuthorize]
         public ActionResult Draw(int processid)
@@ -190,27 +194,32 @@ namespace ProcessManagement.Controllers
             Process process = processService.findProcess(processid);
             //Tìm tất cả các role thuộc quy trình đó
             ViewData["ListRole"] = processService.findListRole(process.Id);
+            Session["processid"] = process.Id;
             return View(process);
         }
         [GroupAuthorize]
         [HttpPost]
-        public ActionResult CreateRole(int IdProcess, Role role)
+        public ActionResult CreateRole(Role role)
         {
-			//if(role.Name != null) {
-			role.IdProcess = IdProcess;
+            int processId = (int)Session["processid"];
+            Process process = processService.findProcess(processId);
+            if (role.Name == null)
+            {
+			    SetFlash(FlashType.error, "Name is required");
+
+                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id });
+            }
+            var check = db.Roles.Where(x => x.Name.ToLower() == role.Name.ToLower().Trim() && x.IdProcess == processId).FirstOrDefault();
+            if (check != null)
+            {
+                SetFlash(FlashType.error, "Name is exist in db");
+                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id });
+            }
+
+            role.IdProcess = process.Id;
             processService.createRole(role);
-            Process process = processService.findProcess(IdProcess);
-            Group group = groupService.findGroup(process.IdGroup);
-			//}
-			//else
-			//{
-			//	return View();
-		//	}
-			//set flash
 			SetFlash(FlashType.success, "Created Role Successfully");
-			//return View();
-			return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
-			//return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
+			return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id });
 		}
         [GroupAuthorize]
         public ActionResult DeleteRole(int roleid)

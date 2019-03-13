@@ -18,7 +18,7 @@ namespace ProcessManagement.Controllers
     {
         info,
         success,
-        fail,
+        error,
         warning
     }
     public enum FlashPosition

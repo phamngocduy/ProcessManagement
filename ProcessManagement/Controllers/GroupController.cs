@@ -212,7 +212,7 @@ namespace ProcessManagement.Controllers
             //Không được xóa đi owner,không được xóa thành viên khác group
             ///////////////////////////////////////////////////////////////////////////
             if (user.IsOwner)
-                SetFlash(FlashType.fail, "You cant remove owner");
+                SetFlash(FlashType.error, "You cant remove owner");
             else
             {
                 participateService.removeUserInGroup(user);
@@ -244,7 +244,7 @@ namespace ProcessManagement.Controllers
             ///////////////////////////////////////////////////////////////////////////
             if (user.IsOwner)
             {
-                SetFlash(FlashType.fail, "Owner cant change their role");
+                SetFlash(FlashType.error, "Owner cant change their role");
                 return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
             }
             return View(user);
@@ -268,7 +268,7 @@ namespace ProcessManagement.Controllers
                 SetFlash(FlashType.success, "Edited Role of " + user.AspNetUser.UserName + " Successfully");
             }
             else
-                SetFlash(FlashType.fail, "Owner cant change their role");
+                SetFlash(FlashType.error, "Owner cant change their role");
 
             return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = group.groupSlug, groupid = group.Id });
         }
@@ -294,7 +294,7 @@ namespace ProcessManagement.Controllers
             }
             else
             {
-                SetFlash(FlashType.fail, "Left Group " + groupName + " Failed");
+                SetFlash(FlashType.error, "Left Group " + groupName + " Failed");
                 return RedirectToRoute("GroupControlLocalizedDefault", new { action = "setting", groupslug = user.Group.groupSlug, groupid = user.Group.Id });
             }
 

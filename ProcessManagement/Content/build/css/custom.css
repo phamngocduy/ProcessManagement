@@ -3,7 +3,8 @@
 @import url("https://fonts.googleapis.com/css?family=Poppins");
 /* end of font */
 /* config */
-.team-info li .member-default, .owner-default {
+.team-info li .member-default,
+.owner-default {
   font-family: "Poppins", sans-serif;
   font-weight: bold;
   font-size: 22px;
@@ -11,7 +12,10 @@
   display: inline-block;
 }
 
-body::before, body::after, #wrapper::before, #wrapper::after {
+body::before,
+body::after,
+#wrapper::before,
+#wrapper::after {
   display: none;
 }
 
@@ -61,16 +65,18 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-purple .navbar-nav .icon-menu:hover i {
   color: #ffffff;
 }
-.theme-purple .card .header .header-dropdown .tab_btn.active, .theme-purple .card .header .header-dropdown .tab_btn:hover {
+.theme-purple .card .header .header-dropdown .tab_btn.active,
+.theme-purple .card .header .header-dropdown .tab_btn:hover {
   background-color: #a27ce6;
 }
-.theme-purple .card .header .header-dropdown .tab_btn.active i, .theme-purple .card .header .header-dropdown .tab_btn:hover i {
+.theme-purple .card .header .header-dropdown .tab_btn.active i,
+.theme-purple .card .header .header-dropdown .tab_btn:hover i {
   color: #ffffff;
 }
 .theme-purple .card .header .header-dropdown .dropdown-toggle::after {
   color: #a27ce6;
 }
-.theme-purple .fancy-radio input[type=radio]:checked + span i::after {
+.theme-purple .fancy-radio input[type="radio"]:checked + span i::after {
   background-color: #a27ce6;
 }
 .theme-purple .btn-primary-theme {
@@ -107,13 +113,47 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-purple table.dataTable tbody tr.child ul.dtr-details {
   width: 100%;
 }
-.theme-purple table.dataTable.dtr-inline.collapsed tbody tr[role=row] td:first-child:before, .theme-purple table.dataTable.dtr-inline.collapsed tbody tr[role=row] th:first-child:before {
+.theme-purple
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"]
+  td:first-child:before,
+.theme-purple
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"]
+  th:first-child:before {
   background: #a27ce6;
   margin-top: 5px;
 }
-.theme-purple table.dataTable.dtr-inline.collapsed tbody tr[role=row].parent td:first-child:before, .theme-purple table.dataTable.dtr-inline.collapsed tbody tr[role=row].parent th:first-child:before {
+.theme-purple
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"].parent
+  td:first-child:before,
+.theme-purple
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"].parent
+  th:first-child:before {
   background: red;
   margin-top: 5px;
+}
+.theme-purple .wizard .steps .current a {
+  background: #a27ce6;
+}
+.theme-purple .wizard .steps .done a {
+  cursor: pointer;
+  background: #c0a7ee;
+}
+.theme-purple .wizard .steps .disabled a {
+  cursor: not-allowed;
+}
+.theme-purple .wizard .actions li:not([class="disabled"]) a {
+  background: #a27ce6;
+}
+.theme-purple .wizard .actions li.disabled a {
+  cursor: not-allowed;
 }
 
 .theme-cyan a.primary-theme {
@@ -158,16 +198,18 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-cyan .navbar-nav .icon-menu:hover i {
   color: #ffffff;
 }
-.theme-cyan .card .header .header-dropdown .tab_btn.active, .theme-cyan .card .header .header-dropdown .tab_btn:hover {
+.theme-cyan .card .header .header-dropdown .tab_btn.active,
+.theme-cyan .card .header .header-dropdown .tab_btn:hover {
   background-color: #2eacb3;
 }
-.theme-cyan .card .header .header-dropdown .tab_btn.active i, .theme-cyan .card .header .header-dropdown .tab_btn:hover i {
+.theme-cyan .card .header .header-dropdown .tab_btn.active i,
+.theme-cyan .card .header .header-dropdown .tab_btn:hover i {
   color: #ffffff;
 }
 .theme-cyan .card .header .header-dropdown .dropdown-toggle::after {
   color: #2eacb3;
 }
-.theme-cyan .fancy-radio input[type=radio]:checked + span i::after {
+.theme-cyan .fancy-radio input[type="radio"]:checked + span i::after {
   background-color: #2eacb3;
 }
 .theme-cyan .btn-primary-theme {
@@ -204,13 +246,47 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-cyan table.dataTable tbody tr.child ul.dtr-details {
   width: 100%;
 }
-.theme-cyan table.dataTable.dtr-inline.collapsed tbody tr[role=row] td:first-child:before, .theme-cyan table.dataTable.dtr-inline.collapsed tbody tr[role=row] th:first-child:before {
+.theme-cyan
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"]
+  td:first-child:before,
+.theme-cyan
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"]
+  th:first-child:before {
   background: #2eacb3;
   margin-top: 5px;
 }
-.theme-cyan table.dataTable.dtr-inline.collapsed tbody tr[role=row].parent td:first-child:before, .theme-cyan table.dataTable.dtr-inline.collapsed tbody tr[role=row].parent th:first-child:before {
+.theme-cyan
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"].parent
+  td:first-child:before,
+.theme-cyan
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"].parent
+  th:first-child:before {
   background: red;
   margin-top: 5px;
+}
+.theme-cyan .wizard .steps .current a {
+  background: #2eacb3;
+}
+.theme-cyan .wizard .steps .done a {
+  cursor: pointer;
+  background: #45c8cf;
+}
+.theme-cyan .wizard .steps .disabled a {
+  cursor: not-allowed;
+}
+.theme-cyan .wizard .actions li:not([class="disabled"]) a {
+  background: #2eacb3;
+}
+.theme-cyan .wizard .actions li.disabled a {
+  cursor: not-allowed;
 }
 
 .theme-blue a.primary-theme {
@@ -255,16 +331,18 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-blue .navbar-nav .icon-menu:hover i {
   color: #ffffff;
 }
-.theme-blue .card .header .header-dropdown .tab_btn.active, .theme-blue .card .header .header-dropdown .tab_btn:hover {
+.theme-blue .card .header .header-dropdown .tab_btn.active,
+.theme-blue .card .header .header-dropdown .tab_btn:hover {
   background-color: #449cff;
 }
-.theme-blue .card .header .header-dropdown .tab_btn.active i, .theme-blue .card .header .header-dropdown .tab_btn:hover i {
+.theme-blue .card .header .header-dropdown .tab_btn.active i,
+.theme-blue .card .header .header-dropdown .tab_btn:hover i {
   color: #ffffff;
 }
 .theme-blue .card .header .header-dropdown .dropdown-toggle::after {
   color: #449cff;
 }
-.theme-blue .fancy-radio input[type=radio]:checked + span i::after {
+.theme-blue .fancy-radio input[type="radio"]:checked + span i::after {
   background-color: #449cff;
 }
 .theme-blue .btn-primary-theme {
@@ -301,13 +379,47 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-blue table.dataTable tbody tr.child ul.dtr-details {
   width: 100%;
 }
-.theme-blue table.dataTable.dtr-inline.collapsed tbody tr[role=row] td:first-child:before, .theme-blue table.dataTable.dtr-inline.collapsed tbody tr[role=row] th:first-child:before {
+.theme-blue
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"]
+  td:first-child:before,
+.theme-blue
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"]
+  th:first-child:before {
   background: #449cff;
   margin-top: 5px;
 }
-.theme-blue table.dataTable.dtr-inline.collapsed tbody tr[role=row].parent td:first-child:before, .theme-blue table.dataTable.dtr-inline.collapsed tbody tr[role=row].parent th:first-child:before {
+.theme-blue
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"].parent
+  td:first-child:before,
+.theme-blue
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"].parent
+  th:first-child:before {
   background: red;
   margin-top: 5px;
+}
+.theme-blue .wizard .steps .current a {
+  background: #449cff;
+}
+.theme-blue .wizard .steps .done a {
+  cursor: pointer;
+  background: #77b7ff;
+}
+.theme-blue .wizard .steps .disabled a {
+  cursor: not-allowed;
+}
+.theme-blue .wizard .actions li:not([class="disabled"]) a {
+  background: #449cff;
+}
+.theme-blue .wizard .actions li.disabled a {
+  cursor: not-allowed;
 }
 
 .theme-green a.primary-theme {
@@ -352,16 +464,18 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-green .navbar-nav .icon-menu:hover i {
   color: #ffffff;
 }
-.theme-green .card .header .header-dropdown .tab_btn.active, .theme-green .card .header .header-dropdown .tab_btn:hover {
+.theme-green .card .header .header-dropdown .tab_btn.active,
+.theme-green .card .header .header-dropdown .tab_btn:hover {
   background-color: #31b96f;
 }
-.theme-green .card .header .header-dropdown .tab_btn.active i, .theme-green .card .header .header-dropdown .tab_btn:hover i {
+.theme-green .card .header .header-dropdown .tab_btn.active i,
+.theme-green .card .header .header-dropdown .tab_btn:hover i {
   color: #ffffff;
 }
 .theme-green .card .header .header-dropdown .dropdown-toggle::after {
   color: #31b96f;
 }
-.theme-green .fancy-radio input[type=radio]:checked + span i::after {
+.theme-green .fancy-radio input[type="radio"]:checked + span i::after {
   background-color: #31b96f;
 }
 .theme-green .btn-primary-theme {
@@ -398,13 +512,47 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-green table.dataTable tbody tr.child ul.dtr-details {
   width: 100%;
 }
-.theme-green table.dataTable.dtr-inline.collapsed tbody tr[role=row] td:first-child:before, .theme-green table.dataTable.dtr-inline.collapsed tbody tr[role=row] th:first-child:before {
+.theme-green
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"]
+  td:first-child:before,
+.theme-green
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"]
+  th:first-child:before {
   background: #31b96f;
   margin-top: 5px;
 }
-.theme-green table.dataTable.dtr-inline.collapsed tbody tr[role=row].parent td:first-child:before, .theme-green table.dataTable.dtr-inline.collapsed tbody tr[role=row].parent th:first-child:before {
+.theme-green
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"].parent
+  td:first-child:before,
+.theme-green
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"].parent
+  th:first-child:before {
   background: red;
   margin-top: 5px;
+}
+.theme-green .wizard .steps .current a {
+  background: #31b96f;
+}
+.theme-green .wizard .steps .done a {
+  cursor: pointer;
+  background: #4dd089;
+}
+.theme-green .wizard .steps .disabled a {
+  cursor: not-allowed;
+}
+.theme-green .wizard .actions li:not([class="disabled"]) a {
+  background: #31b96f;
+}
+.theme-green .wizard .actions li.disabled a {
+  cursor: not-allowed;
 }
 
 .theme-orange a.primary-theme {
@@ -449,16 +597,18 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-orange .navbar-nav .icon-menu:hover i {
   color: #ffffff;
 }
-.theme-orange .card .header .header-dropdown .tab_btn.active, .theme-orange .card .header .header-dropdown .tab_btn:hover {
+.theme-orange .card .header .header-dropdown .tab_btn.active,
+.theme-orange .card .header .header-dropdown .tab_btn:hover {
   background-color: #ff613c;
 }
-.theme-orange .card .header .header-dropdown .tab_btn.active i, .theme-orange .card .header .header-dropdown .tab_btn:hover i {
+.theme-orange .card .header .header-dropdown .tab_btn.active i,
+.theme-orange .card .header .header-dropdown .tab_btn:hover i {
   color: #ffffff;
 }
 .theme-orange .card .header .header-dropdown .dropdown-toggle::after {
   color: #ff613c;
 }
-.theme-orange .fancy-radio input[type=radio]:checked + span i::after {
+.theme-orange .fancy-radio input[type="radio"]:checked + span i::after {
   background-color: #ff613c;
 }
 .theme-orange .btn-primary-theme {
@@ -495,13 +645,47 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-orange table.dataTable tbody tr.child ul.dtr-details {
   width: 100%;
 }
-.theme-orange table.dataTable.dtr-inline.collapsed tbody tr[role=row] td:first-child:before, .theme-orange table.dataTable.dtr-inline.collapsed tbody tr[role=row] th:first-child:before {
+.theme-orange
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"]
+  td:first-child:before,
+.theme-orange
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"]
+  th:first-child:before {
   background: #ff613c;
   margin-top: 5px;
 }
-.theme-orange table.dataTable.dtr-inline.collapsed tbody tr[role=row].parent td:first-child:before, .theme-orange table.dataTable.dtr-inline.collapsed tbody tr[role=row].parent th:first-child:before {
+.theme-orange
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"].parent
+  td:first-child:before,
+.theme-orange
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"].parent
+  th:first-child:before {
   background: red;
   margin-top: 5px;
+}
+.theme-orange .wizard .steps .current a {
+  background: #ff613c;
+}
+.theme-orange .wizard .steps .done a {
+  cursor: pointer;
+  background: #ff8a6f;
+}
+.theme-orange .wizard .steps .disabled a {
+  cursor: not-allowed;
+}
+.theme-orange .wizard .actions li:not([class="disabled"]) a {
+  background: #ff613c;
+}
+.theme-orange .wizard .actions li.disabled a {
+  cursor: not-allowed;
 }
 
 .theme-blush a.primary-theme {
@@ -546,16 +730,18 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-blush .navbar-nav .icon-menu:hover i {
   color: #ffffff;
 }
-.theme-blush .card .header .header-dropdown .tab_btn.active, .theme-blush .card .header .header-dropdown .tab_btn:hover {
+.theme-blush .card .header .header-dropdown .tab_btn.active,
+.theme-blush .card .header .header-dropdown .tab_btn:hover {
   background-color: #e84f5e;
 }
-.theme-blush .card .header .header-dropdown .tab_btn.active i, .theme-blush .card .header .header-dropdown .tab_btn:hover i {
+.theme-blush .card .header .header-dropdown .tab_btn.active i,
+.theme-blush .card .header .header-dropdown .tab_btn:hover i {
   color: #ffffff;
 }
 .theme-blush .card .header .header-dropdown .dropdown-toggle::after {
   color: #e84f5e;
 }
-.theme-blush .fancy-radio input[type=radio]:checked + span i::after {
+.theme-blush .fancy-radio input[type="radio"]:checked + span i::after {
   background-color: #e84f5e;
 }
 .theme-blush .btn-primary-theme {
@@ -592,13 +778,47 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-blush table.dataTable tbody tr.child ul.dtr-details {
   width: 100%;
 }
-.theme-blush table.dataTable.dtr-inline.collapsed tbody tr[role=row] td:first-child:before, .theme-blush table.dataTable.dtr-inline.collapsed tbody tr[role=row] th:first-child:before {
+.theme-blush
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"]
+  td:first-child:before,
+.theme-blush
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"]
+  th:first-child:before {
   background: #e84f5e;
   margin-top: 5px;
 }
-.theme-blush table.dataTable.dtr-inline.collapsed tbody tr[role=row].parent td:first-child:before, .theme-blush table.dataTable.dtr-inline.collapsed tbody tr[role=row].parent th:first-child:before {
+.theme-blush
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"].parent
+  td:first-child:before,
+.theme-blush
+  table.dataTable.dtr-inline.collapsed
+  tbody
+  tr[role="row"].parent
+  th:first-child:before {
   background: red;
   margin-top: 5px;
+}
+.theme-blush .wizard .steps .current a {
+  background: #e84f5e;
+}
+.theme-blush .wizard .steps .done a {
+  cursor: pointer;
+  background: #ee7c87;
+}
+.theme-blush .wizard .steps .disabled a {
+  cursor: not-allowed;
+}
+.theme-blush .wizard .actions li:not([class="disabled"]) a {
+  background: #e84f5e;
+}
+.theme-blush .wizard .actions li.disabled a {
+  cursor: not-allowed;
 }
 
 .row.display-flex {
@@ -610,7 +830,7 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
-.row.display-flex > [class*=col-] {
+.row.display-flex > [class*="col-"] {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -641,7 +861,7 @@ input::-webkit-inner-spin-button {
   /* <-- Apparently some margin are still there even though it's hidden */
 }
 
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
   /* Firefox */
 }
@@ -883,7 +1103,8 @@ input[type=number] {
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  -webkit-transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  -webkit-transition: border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
   -moz-transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   -ms-transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   -o-transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;

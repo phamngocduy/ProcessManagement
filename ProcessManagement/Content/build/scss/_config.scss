@@ -188,6 +188,40 @@ body, #wrapper{
                 }
             }
         }
+        .wizard{
+            .steps{
+                .current{
+                    a{
+                        background: $color;
+                    }
+                }
+                .done{
+                    a{
+                        cursor: pointer;
+                        background: lighten($color, 10%);
+                    }
+                }
+                .disabled{
+                    a{
+                        cursor: not-allowed;
+                    }
+                }
+            }
+            .actions{
+                li{
+                    &:not([class="disabled"]){
+                        a{
+                            background: $color;
+                        }
+                    }
+                    &.disabled{
+                        a{
+                            cursor: not-allowed;
+                        }
+                    }
+                }
+            }
+        }
     }    
 }
 .row{

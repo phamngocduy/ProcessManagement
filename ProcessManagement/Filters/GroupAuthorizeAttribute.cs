@@ -12,25 +12,25 @@ namespace ProcessManagement.Filters
     public class GroupAuthorizeAttribute : ActionFilterAttribute
     {
         ///=============================================================================================
-        PMSEntities db = new PMSEntities();
+        ProcessManagement.Models.PMSEntities db = new Models.PMSEntities();
         GroupService groupService = new GroupService();
         CommonService commonService = new CommonService();
+        ParticipateService participateService = new ParticipateService();
         ///=============================================================================================
         public UserRole[] Role { get; set; }
-        private Participate user {get;set;}
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            Participate user = new Participate();
             if (!isAjaxRequest(filterContext))
             {
                 //form request
-                BaseAuthorize(filterContext);
+                BaseAuthorize(filterContext, user);
             }
             else
             {
                 //ajax request
-                AjaxAuthorize(filterContext);
+                AjaxAuthorize(filterContext, user);
             }
-
         }
         public override void  OnActionExecuted(ActionExecutedContext filterContext)
         {
@@ -41,10 +41,9 @@ namespace ProcessManagement.Filters
             var request = controllerContext.RequestContext.HttpContext.Request;
             return request.IsAjaxRequest();
         }
-        public void BaseAuthorize(ActionExecutingContext filterContext)
+        public void BaseAuthorize(ActionExecutingContext filterContext, Participate user)
         {
             int groupid;
-
             if (filterContext.RouteData.Values["groupid"] != null)
                 groupid = int.Parse(filterContext.RouteData.Values["groupid"].ToString());
             else if (HttpContext.Current.Session["groupid"] != null)
@@ -63,7 +62,7 @@ namespace ProcessManagement.Filters
             }
 
             string idUser = HttpContext.Current.User.Identity.GetUserId();
-            var user = db.Participates.Where(x => x.IdUser == idUser && x.IdGroup == group.Id).FirstOrDefault();
+            user = db.Participates.Where(x => x.IdUser == idUser && x.IdGroup == group.Id).FirstOrDefault();
             if (user == null)
             {
                 filterContext.Result = new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
@@ -86,7 +85,7 @@ namespace ProcessManagement.Filters
             }
             HttpContext.Current.Session["idgroup"] = groupid;
         }
-        public void AjaxAuthorize(ActionExecutingContext filterContext)
+        public void AjaxAuthorize(ActionExecutingContext filterContext, Participate user)
         {
             string idUser = HttpContext.Current.User.Identity.GetUserId();
             int groupid;
@@ -161,7 +160,7 @@ namespace ProcessManagement.Filters
                 };
                 return; 
             }
-            user = db.Participates.Where(x => x.IdUser == idUser && x.IdGroup == group.Id).FirstOrDefault();
+            user = participateService.findMemberInGroup(idUser,groupid);
             if (user == null)
             {
                 filterContext.Result = new JsonResult

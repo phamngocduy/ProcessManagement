@@ -7,7 +7,6 @@
     //var lang = CapstoneProject.Cookies.getCookie("LangFOrLangForProcessManagementSystem");
     //$('.setLang[data-lang="' + lang + '"]').addClass('active-lang');
     var pathHaveLang = window.location.pathname;
-
     var path = pathHaveLang.replace("/vi", "").replace("/en", "");
     console.log(path);
     $("#langen").attr("href", `/en${path}`);
