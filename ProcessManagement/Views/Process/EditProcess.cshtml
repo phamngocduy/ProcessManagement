@@ -568,6 +568,13 @@
                 }
             }
             let data = $("#mySavedModel").val();
+            let img = myDiagram.makeImage({
+                position: new go.Point(doc.x - 100, doc.y - 100),
+                size: new go.Size(doc.width + 200, doc.heigh + 200),
+                scale: 1,
+                background: "AntiqueWhite",
+                type: "image/jpeg"
+            });
             //saveDiagramProperties();
             let idProcess = @Model.Id;
             let b = []
@@ -584,7 +591,8 @@
                 data: myDiagram.model.toJson(),
                 processId: idProcess,
                 nodeData: JSON.stringify(myDiagram.model.nodeDataArray),
-                linkData: JSON.stringify(b)
+                linkData: JSON.stringify(b),
+                imageprocess: JSON.stringify(img)
             }
             //truyen qua controller
             $.ajax({

@@ -60,10 +60,10 @@ namespace ProcessManagement.Controllers
         }
         [Authorize]
         [HttpPost]
-        public JsonResult Draw(int processId, string data, string nodeData, string linkData)
+        public JsonResult Draw(int processId, string data, string nodeData, string linkData, string imageprocess)
         {
             Process ps = processService.findProcess(processId);
-            processService.insertDataJson(ps, data);
+            processService.insertDataJson(ps, data, imageprocess);
             JArray nodeArray = JArray.Parse(nodeData);
             JArray linkArray = JArray.Parse(linkData);
             var idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();
@@ -273,10 +273,10 @@ namespace ProcessManagement.Controllers
 
         [Authorize]
         [HttpPost]
-        public JsonResult EditProcess(int processId, string data, string nodeData, string linkData)
+        public JsonResult EditProcess(int processId, string data, string nodeData, string linkData, string imageprocess)
         {
             Process ps = processService.findProcess(processId);
-            processService.insertDataJson(ps, data);
+            processService.insertDataJson(ps, data, imageprocess);
             JArray nodeArray = JArray.Parse(nodeData);
             JArray linkArray = JArray.Parse(linkData);
             var idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();

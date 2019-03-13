@@ -64,6 +64,7 @@
           <Property Name="DataJson" Type="nvarchar(max)" />
           <Property Name="Created_At" Type="datetime" />
           <Property Name="Updated_At" Type="datetime" />
+          <Property Name="Avatar" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -415,6 +416,7 @@
           <NavigationProperty Name="Group" Relationship="PMSModel.FK_Process_Group" FromRole="Process" ToRole="Group" />
           <NavigationProperty Name="Roles" Relationship="PMSModel.FK_Role_Process" FromRole="Process" ToRole="Role" />
           <NavigationProperty Name="Steps" Relationship="PMSModel.FK_Step_Process" FromRole="Process" ToRole="Step" />
+          <Property Name="Avatar" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -657,6 +659,7 @@
           <EntitySetMapping Name="Processes">
             <EntityTypeMapping TypeName="PMSModel.Process">
               <MappingFragment StoreEntitySet="Process">
+                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
                 <ScalarProperty Name="Updated_At" ColumnName="Updated_At" />
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
                 <ScalarProperty Name="DataJson" ColumnName="DataJson" />

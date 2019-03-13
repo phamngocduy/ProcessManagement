@@ -61,10 +61,11 @@ namespace ProcessManagement.Services
 			db.Processes.RemoveRange(processes);
 			db.SaveChanges();
 		}
-		public void insertDataJson(Process ps, string data)
+		public void insertDataJson(Process ps, string data, string imageprocess)
 		{
 			ps.DataJson = data;
-			db.SaveChanges();
+            ps.Avatar = imageprocess;
+            db.SaveChanges();
 		}
 		public void createRole(Role role)
 		{

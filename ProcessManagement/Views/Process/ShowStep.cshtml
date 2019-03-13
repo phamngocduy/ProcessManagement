@@ -62,13 +62,8 @@
             <div class="body">
                 <h5>@process.Name</h5>
                 <p>@process.Description</p>
-                <div class="progress-container progress-info m-b-25">
-                    <span class="progress-badge">Project Status</span>
-                    <div class="progress">
-                        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 78%;">
-                            <span class="progress-value">78%</span>
-                        </div>
-                    </div>
+                <div class="progress-container progress-info m-b-25 clearfix" style="margin: 0">
+                    <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "EditProcess", processid = process.Id })" style="float: right" class="btn btn-success btn-sm">Edit Process</a>
                 </div>
             </div>
         </div>
