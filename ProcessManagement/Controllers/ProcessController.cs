@@ -509,5 +509,22 @@ namespace ProcessManagement.Controllers
             SetFlash(FlashType.success, "Delete Successfully");
             return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "Process", action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess });
         }
+
+        [Authorize]
+        [GroupAuthorize]
+        public ActionResult AddFormTask(int stepid)
+        {
+            Step step = stepService.findStep(stepid);
+            if (step == null) return HttpNotFound();
+            Process ps = processService.findProcess(step.IdProcess);
+            Group group = groupService.findGroup(ps.IdGroup);
+            TaskProcess pr = new TaskProcess();
+            List<Role> role = db.Roles.Where(x => x.IdProcess == step.IdProcess).ToList();
+            ViewData["Step"] = step;
+            ViewData["ListRole"] = role;
+            ViewData["Group"] = group;
+            Session["idStep"] = step.Id;
+            return View(pr);
+        }
     }
 }

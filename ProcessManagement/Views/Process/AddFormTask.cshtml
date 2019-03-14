@@ -1,14 +1,11 @@
 ﻿@model ProcessManagement.Models.TaskProcess
 
 @{
-    ViewBag.Title = "AddTaskProcess";
+    ViewBag.Title = "AddFormTask";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var step = ViewData["Step"] as ProcessManagement.Models.Step;
     var group = ViewData["Group"] as ProcessManagement.Models.Group;
     var roles = ViewData["ListRole"] as List<ProcessManagement.Models.Role>;
-    JObject inputConfig = JObject.Parse(Model.ValueInputText);
-    JObject fileConfig = JObject.Parse(Model.ValueInputFile);
-
 }
 
 
@@ -16,6 +13,14 @@
     <link rel="stylesheet" href="~/Content/vendor/dropify/css/dropify.min.css">
     <link rel="stylesheet" href="~/Content/vendor/select2/select2.css" />
     <link rel="stylesheet" href="~/Content/vendor/switchery/dist/switchery.min.css" />
+    <link rel="stylesheet" href="~/Content/formBiulder/css/site.css" />
+    <style>
+        body {
+            padding: 0;
+            margin: 10px 0;
+            background: #f2f2f2 url('http://formbuilder.readthedocs.io/en/latest/img/noise.png');
+        }
+    </style>
 }
 <div class="block-header">
     <div class="row">
@@ -58,17 +63,17 @@
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="card">
-            <div class="body" id="show-task">
+            <div class="body">
                 <div class="row clearfix">
                     <div class="col-sm-8">
                         <div class="form-group">
                             <label for="task-name" class="required">Task Name</label>
-                            <input type="text" class="form-control" id="task-name" name="@Html.NameFor(m => m.Name)" value="@Model.Name" disabled>
+                            <input required type="text" class="form-control" id="task-name" name="@Html.NameFor(m => m.Name)">
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <label for="task-role">Select Role</label>
-                        <select id="task-role" class="form-control show-tick ms select2" disabled>
+                        <select id="task-role" class="form-control show-tick ms select2">
                             <option></option>
                             @foreach (var role in roles)
                             {
@@ -81,66 +86,14 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label for="task-description">Description</label>
-                            <textarea class="form-control" rows="6" placeholder="Write something about your task (optional)" id="task-description" name="@Html.NameFor(m => m.Description)" disabled>@Model.Description</textarea>
+                            <textarea class="form-control" rows="6" placeholder="Write something about your task (optional)" id="task-description" name="@Html.NameFor(m => m.Description)"></textarea>
                         </div>
                     </div>
-                    <div class="col-sm-12 ">
-                        <div class="choose-type row">
-                            <div class="choose-item col-sm-12 form-group" id="choose-input">
-                                <fieldset>
-                                    <legend>Response Text</legend>
-                                    <div class="row" style="margin-left:0;margin-right:0;">
-                                        <div class="col-sm-2">
-                                            <div class="form-group input-has-prefix char">
-                                                <label for="text-maxlength">Max Length</label>
-                                                <input id="text-maxlength" type="number" maxlength="17" class="form-control limit-length" value="@inputConfig["maxlength"]" disabled>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-10">
-                                            <div class="form-group">
-                                                <label for="text-label">Response Label</label>
-                                                <input id="text-label" type="text" class="form-control" value="@inputConfig["label"]" disabled>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-12">
-                                            <div class="form-group switch-custom">
-                                                <label>Required: <input type="checkbox" class="checkbox-switch" id="text-required" @if (bool.Parse(inputConfig["required"].ToString())) { WriteLiteral("checked"); }/></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                            </div>
-                            <div class="choose-item col-sm-12 form-group" id="choose-file">
-                                <fieldset>
-                                    <legend>Response File</legend>
-                                    <div class="row" style="margin-left:0;margin-right:0;">
-                                        <div class="col-sm-2">
-                                            <div class="form-group input-has-prefix mb">
-                                                <label for="file-maxsize">File Size</label>
-                                                <input id="file-maxsize" type="number" maxlength="17" class="form-control limit-length" value="@fileConfig["size"]" disabled>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-10">
-                                            <div class="form-group">
-                                                <label for="file-label">Response Label</label>
-                                                <input id="file-label" type="text" class="form-control" value="@fileConfig["label"]" disabled>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="form-group switch-custom">
-                                                <label>Required: <input id="file-required" type="checkbox" class="checkbox-switch" @if (bool.Parse(fileConfig["required"].ToString())) { WriteLiteral("checked"); }/></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="col-sm-12" id="build-wrap"></div>
                     <div class="col-sm-12">
-                        <div class="mt-2" id="button-action">
-                            <button id="btn-edit" class="btn btn-primary-theme">Edit</button>
-                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "deletetask", taskid = Model.Id })" class="btn btn-outline-danger" id="btn-remove-task">Delete</a>
+                        <div class="mt-2">
+                            <button id="btn-save" class="btn btn-primary-theme" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing Create">Create</button>
+                            <a href="#" class="btn btn-outline-secondary">Go Back</a>
                         </div>
                     </div>
                 </div>
@@ -153,35 +106,23 @@
     <script src="~/Content/build/js/pages/forms/dropify.js"></script>
     <script src="~/Content/vendor/select2/select2.min.js"></script>
     <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
+    <script src="~/Content/formBiulder/js/scripts.js"></script>
+    <script>
+        $(document).ready(function () {
+            ($ => {
+                $('.build-wrap').formBuilder()
+            });
+        });
+    </script>
     <script>
         $(function () {
-            var bAction = `<button id="btn-save" class="btn btn-primary-theme">Save</button>
-                            <button id="btn-back" class="btn btn-outline-secondary">Back</button>`;
-            var showForm = $("#show-task").html();
-            var switchArr = createSwitch();
-            switchArr.forEach(item => item.disable());
+
+            createSwitch();
             $("select#task-role").select2({
                 placeholder: "Select Role",
-                allowClear: true,
-            }).select2('val', @Model.IdRole);
-
-            //Button edit
-            $("body").on("click", "#btn-edit",function () {
-                var temp = bAction;
-                var $this = $(this);
-                var actionButton = $this.parents("#button-action");
-                actionButton.html(temp);
-                $("#show-task").find("input[type!='checkbox'], select#task-role, textarea").prop("disabled", function () {
-                    return !$(this).prop("disabled");
-                });
-                switchArr.forEach(item => item.enable());
+                allowClear: true
             });
-            //Button back
-            $("body").on("click", "#btn-back", function () {
-                $("#show-task").html(showForm);
-                switchArr = createSwitch();
-            });
-            $("body").on("click", "#btn-save", function () {
+            $('#btn-save').on('click', function () {
                 $this = $(this);
                 toggleLoading($this);
 
@@ -212,29 +153,23 @@
 
                 let data = {
                     name: name,
+                    stepid : @step.Id,
                     idRole: role,
                     description: description,
                     inputConfig: JSON.stringify(inputConfig),
                     fileConfig: JSON.stringify(fileConfig)
-                }
+                 }
                 if (name == "") {
                     showToastr("error", "Task name not null", "toast-bottom-left");
-                    toggleLoading($this);
                 } else {
-                    editTask(data);
+                    addTask(data);
                 }
-            });
-            $("body").on("click", "#btn-remove-task", function () {
-                var con = confirm("bạn muốn xóa task này không?");
-                if (con) {
-                    localStorage.setItem("showStep", @step.Id);
-                }
-                return con;
+                toggleLoading($this);
             })
         });
-        function editTask(data) {
-             $.ajax({
-                url: "@Url.Action("edittask","process",new {area = "api"})",
+        function addTask(data) {
+            $.ajax({
+                url: "@Url.Action("addtask", "process", new { area = "api" })",
                 type: "POST",
                 data: data,
                 dataType: "json",
@@ -244,6 +179,7 @@
                         localStorage.setItem("showStep", @step.Id);
                         location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })';
                     } else {
+                        showToastr("error", response.message, "toast-bottom-left")
                         console.error(response)
                     }
                 }

@@ -20,7 +20,7 @@
             <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth primary-theme"><i class="fa fa-arrow-left"></i></a> Create New Task</h2>
             <ul class="breadcrumb">
                 <li class="breadcrumb-item"><a href="~/Home/Index" class="primary-theme"><i class="icon-home"></i></a></li>
-                <li class="breadcrumb-item"><a href="~/Group/Index" class="primary-theme">Groups</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "index"})" class="primary-theme">Groups</a></li>
                 <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = group.Id })" class="primary-theme">@group.Name</a></li>
                 <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "ShowStep", processid = step.IdProcess })" class="primary-theme">@step.Process.Name</a></li>
                 <li class="breadcrumb-item"><a href="" class="primary-theme">@step.Name</a></li>

@@ -25,7 +25,7 @@
             </h2>
             <ul class="breadcrumb">
                 <li class="breadcrumb-item"><a href="~/Home/Index" class="primary-theme"><i class="icon-home"></i></a></li>
-                <li class="breadcrumb-item"><a href="~/Group/Index" class="primary-theme">Groups</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "index"})" class="primary-theme">Groups</a></li>
                 <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = group.Id })" class="primary-theme">@group.Name</a></li>
                 <li class="breadcrumb-item"><a href="" class="primary-theme">@process.Name</a></li>
             </ul>
@@ -165,7 +165,7 @@
                                     <ul class="dropdown-menu notifications animated fadeIn">
                                         <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "editstep", groupslug = group.groupSlug, groupid = group.Id, stepid = step.Id })">Edit step</a></li>
                                         <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "addtask", stepid = step.Id })">Add task</a></li>
-                                        @*<li><a href="javascript:void(0);">Something else</a></li>*@
+                                        <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "addformtask", stepid = step.Id })">Add form task</a></li>
                                     </ul>
                                 </div>
                             </div>
