@@ -419,8 +419,8 @@
     <Content Include="Content\build\scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Content\build\scripts\modernizr-2.8.3.js" />
     <None Include="Content\build\scss\_header.scss" />
-    <Content Include="Content\formBiulder\css\site.css" />
-    <Content Include="Content\formBiulder\js\scripts.js" />
+    <Content Include="Content\build\js\form-builder.min.js" />
+    <Content Include="Content\build\js\form-render.min.js" />
     <Content Include="Content\images\auth_bg.jpg" />
     <Content Include="Content\images\avatar.png" />
     <Content Include="Content\images\back_disabled.png" />
@@ -8427,6 +8427,7 @@
     <Content Include="Views\Process\AddTask.cshtml" />
     <Content Include="Views\Process\EditTask.cshtml" />
     <Content Include="Views\Process\ShowTask.cshtml" />
+    <Content Include="package-lock.json" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml">
       <SubType>Designer</SubType>
     </None>

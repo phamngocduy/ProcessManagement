@@ -64,6 +64,48 @@ namespace ProcessManagement.Areas.API.Controllers
             response = new { message = message, status = status };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public JsonResult AddFormTask(string name, int? idRole, string description, string formBuilder)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+            int idstep = (int)Session["idStep"];
+            Step step = stepService.findStep(idstep);
+
+
+            if (name == "")
+            {
+                status = HttpStatusCode.InternalServerError;
+                message = "Created Task Successfully";
+                response = new { message = message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+
+            if (idRole != null)
+            {
+                int idR = idRole.GetValueOrDefault();
+                var role = roleService.findRoleOfProcess(idR, step.Process.Id);
+                if (role == null)
+                {
+                    //role not exist
+                    status = HttpStatusCode.InternalServerError;
+                    message = "Role not exist";
+                    response = new { message = message, status = status };
+                    return Json(response, JsonRequestBehavior.AllowGet);
+
+                }
+
+            }
+
+            taskService.AddFormTask(step.Id, name, idRole, description, formBuilder);
+            SetFlash(FlashType.success, "Created Task Successfully");
+            message = "Created Task Successfully";
+            response = new { message = message, status = status };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public JsonResult editTask(string name, int? idRole, string description, string inputConfig, string fileConfig)
         {

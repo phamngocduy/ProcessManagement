@@ -42,6 +42,22 @@ namespace ProcessManagement.Services
             db.SaveChanges();
         }
 
+        public void AddFormTask(int idStep, string name, int? role, string description, string formBuilder)
+        {
+            TaskProcess task = new TaskProcess();
+            task.IdStep = idStep;
+            task.Name = name;
+            task.IdRole = role;
+            task.Description = description;
+            task.ValueFormJson = formBuilder;
+            task.Color = commonService.getRandomColor();
+            task.Position = getLastPosition(idStep) + 1;
+            task.Created_At = DateTime.Now;
+            task.Updated_At = DateTime.Now;
+            db.TaskProcesses.Add(task);
+            db.SaveChanges();
+        }
+
         public void editTask(int idTask, string name, int? role, string description, string inputConfig, string fileConfig)
         {
             TaskProcess task = findTask(idTask);

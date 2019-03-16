@@ -27,7 +27,7 @@
             </h2>
             <ul class="breadcrumb">
                 <li class="breadcrumb-item"><a href="~/Home/Index" class="theme-color"><i class="icon-home"></i></a></li>
-                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "index"})">Groups</a></li>
+                <li class="breadcrumb-item"><a href="/">Groups</a></li>
                 <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = Model.Step.Process.Group.Id })">@Model.Step.Process.Group.Name</a></li>
                 <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "ShowStep", processid = Model.Step.Process.Id })">@Model.Step.Process.Name</a></li>
                 <li class="breadcrumb-item"><a href="">@Model.Step.Name</a></li>

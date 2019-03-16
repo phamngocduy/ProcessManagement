@@ -27,6 +27,7 @@ namespace ProcessManagement.Models
         public Nullable<System.DateTime> Created_At { get; set; }
         public Nullable<System.DateTime> Updated_At { get; set; }
         public int Position { get; set; }
+        public string ValueFormJson { get; set; }
     
         public virtual Role Role { get; set; }
         public virtual Step Step { get; set; }

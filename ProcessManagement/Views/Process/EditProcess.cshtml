@@ -15,7 +15,7 @@
                 <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Edit Process</h2>
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="~/Home/Index" class="theme-color"><i class="icon-home"></i></a></li>
-                    <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "index"})">Groups List</a></li>
+                    <li class="breadcrumb-item"><a href="/">Groups List</a></li>
                     <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = Model.Group.Id })">Group: @Model.Group.Name</a></li>
                     <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "ShowStep", processid = Model.Id })">@Model.Name </a></li>
 
