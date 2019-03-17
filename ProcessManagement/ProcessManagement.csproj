@@ -37,7 +37,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vs42F4.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vsC7EF.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,7 +47,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vs42F4.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vsC7EF.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -445,6 +445,9 @@
     <Content Include="Content\images\forward_disabled.png" />
     <Content Include="Content\images\forward_enabled.png" />
     <Content Include="Content\images\forward_enabled_hover.png" />
+    <Content Include="Content\images\icons-edit.png" />
+    <Content Include="Content\images\icons-plus.png" />
+    <Content Include="Content\images\icons-remove.png" />
     <Content Include="Content\images\image-gallery\1.jpg" />
     <Content Include="Content\images\image-gallery\10.jpg" />
     <Content Include="Content\images\image-gallery\11.jpg" />
@@ -467,13 +470,27 @@
     <Content Include="Content\images\logo-vlu-text.png" />
     <Content Include="Content\images\logo-vlu.png" />
     <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\mastercard.png" />
+    <Content Include="Content\images\model1.jpg" />
+    <Content Include="Content\images\model2.jpg" />
+    <Content Include="Content\images\model3.jpg" />
+    <Content Include="Content\images\paper-plane.png" />
+    <Content Include="Content\images\paypal.png" />
+    <Content Include="Content\images\plane.png" />
     <Content Include="Content\images\sm\avatar1.jpg" />
     <Content Include="Content\images\sm\avatar2.jpg" />
     <Content Include="Content\images\sm\avatar3.jpg" />
     <Content Include="Content\images\sm\avatar4.jpg" />
     <Content Include="Content\images\sm\avatar5.jpg" />
     <Content Include="Content\images\sm\avatar6.jpg" />
+    <Content Include="Content\images\space-ship.png" />
+    <Content Include="Content\images\svg\process.svg" />
+    <Content Include="Content\images\usa-flag.png" />
+    <Content Include="Content\images\user-small.png" />
+    <Content Include="Content\images\user.png" />
     <Content Include="Content\images\user\avatar1.jpg" />
+    <Content Include="Content\images\visa-card.png" />
+    <Content Include="Content\images\vn-flag.png" />
     <Content Include="Content\images\xs\avatar1.jpg" />
     <Content Include="Content\images\xs\avatar10.jpg" />
     <Content Include="Content\images\xs\avatar2.jpg" />
@@ -7263,6 +7280,26 @@
     <Content Include="Content\vendor\light-gallery\img\vimeo-play.png" />
     <Content Include="Content\vendor\light-gallery\img\youtube-play.png" />
     <Content Include="Content\vendor\light-gallery\js\lightgallery-all.min.js" />
+    <Content Include="Content\vendor\lightbox-gallery\css\lightboxgallery.css" />
+    <Content Include="Content\vendor\lightbox-gallery\js\lightboxgallery.js" />
+    <Content Include="Content\vendor\lightbox2\dist\css\lightbox.css" />
+    <Content Include="Content\vendor\lightbox2\dist\css\lightbox.min.css" />
+    <Content Include="Content\vendor\lightbox2\dist\images\close.png" />
+    <Content Include="Content\vendor\lightbox2\dist\images\loading.gif" />
+    <Content Include="Content\vendor\lightbox2\dist\images\next.png" />
+    <Content Include="Content\vendor\lightbox2\dist\images\prev.png" />
+    <Content Include="Content\vendor\lightbox2\dist\js\lightbox-plus-jquery.js" />
+    <Content Include="Content\vendor\lightbox2\dist\js\lightbox-plus-jquery.min.js" />
+    <Content Include="Content\vendor\lightbox2\dist\js\lightbox.js" />
+    <Content Include="Content\vendor\lightbox2\dist\js\lightbox.min.js" />
+    <Content Include="Content\vendor\lightbox2\examples\index.html" />
+    <Content Include="Content\vendor\lightbox2\Gruntfile.js" />
+    <Content Include="Content\vendor\lightbox2\src\css\lightbox.css" />
+    <Content Include="Content\vendor\lightbox2\src\images\close.png" />
+    <Content Include="Content\vendor\lightbox2\src\images\loading.gif" />
+    <Content Include="Content\vendor\lightbox2\src\images\next.png" />
+    <Content Include="Content\vendor\lightbox2\src\images\prev.png" />
+    <Content Include="Content\vendor\lightbox2\src\js\lightbox.js" />
     <Content Include="Content\vendor\LightboxGallery\mauGallery.min.js" />
     <Content Include="Content\vendor\LightboxGallery\scripts.js" />
     <Content Include="Content\vendor\malihu-custom-scrollbar-plugin\jquery.mCustomScrollbar.concat.min.js" />
@@ -8428,10 +8465,24 @@
     <Content Include="Views\Process\EditTask.cshtml" />
     <Content Include="Views\Process\ShowTask.cshtml" />
     <Content Include="package-lock.json" />
+    <Content Include="Content\vendor\lightbox2\.editorconfig" />
+    <Content Include="Content\vendor\lightbox2\.github\ISSUE_TEMPLATE.md" />
+    <Content Include="Content\vendor\lightbox2\.github\PULL_REQUEST_TEMPLATE.md" />
+    <Content Include="Content\vendor\lightbox2\.gitignore" />
+    <Content Include="Content\vendor\lightbox2\.jscsrc" />
+    <Content Include="Content\vendor\lightbox2\.jshintrc" />
+    <Content Include="Content\vendor\lightbox2\bower.json" />
+    <Content Include="Content\vendor\lightbox2\DEPLOY.md" />
+    <Content Include="Content\vendor\lightbox2\dist\js\lightbox-plus-jquery.min.map" />
+    <Content Include="Content\vendor\lightbox2\dist\js\lightbox.min.map" />
+    <Content Include="Content\vendor\lightbox2\LICENSE" />
+    <Content Include="Content\vendor\lightbox2\package.json" />
+    <Content Include="Content\vendor\lightbox2\README.md" />
+    <Content Include="Content\vendor\lightbox2\ROADMAP.md" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="Views\Process\NewStartProcess.cshtml" />
+    <Content Include="Views\Process\NewProcessRun.cshtml" />
     <Content Include="Views\Process\AddFormTask.cshtml" />
     <Content Include="Views\Process\ShowFormTask.cshtml" />
   </ItemGroup>

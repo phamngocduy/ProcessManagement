@@ -1,7 +1,7 @@
 ﻿@model ProcessManagement.Models.TaskProcess
 
 @{
-    ViewBag.Title = "AddTaskProcess";
+    ViewBag.Title = "AddTask";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var step = ViewData["Step"] as ProcessManagement.Models.Step;
     var group = ViewData["Group"] as ProcessManagement.Models.Group;
@@ -136,8 +136,8 @@
                     </div>
                     <div class="col-sm-12">
                         <div class="mt-2">
-                            <button id="btn-save" class="btn btn-primary-theme" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing Create">Create</button>
-                            <a href="#" class="btn btn-outline-secondary">Go Back</a>
+                            <button id="btn-save" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing Create">Create</button>
+                            <a href="#" class="btn btn-default waves-effect">Go Back</a>
                         </div>
                     </div>
                 </div>

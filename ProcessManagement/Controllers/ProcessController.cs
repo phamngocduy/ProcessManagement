@@ -46,9 +46,10 @@ namespace ProcessManagement.Controllers
             return RedirectToAction("Draw", new { groupslug = group.groupSlug, groupid = group.Id, processid = pro.Id });
             //return RedirectToRoute("GroupControlLocalizedDefault", new { action = "DrawProcess", groupslug = group.groupSlug, groupid = group.Id, id = pro.Id });
         }
-        public ActionResult NewStartProcess()
+        public ActionResult NewProcessRun(int groupid)
         {
-            return View();
+            var ListProcess = db.Processes.Where(x => x.IdGroup == groupid).OrderByDescending(x => x.Updated_At).ToList();
+            return View(ListProcess);
         }
         [Authorize]
         [GroupAuthorize]

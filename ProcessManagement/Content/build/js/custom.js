@@ -158,7 +158,10 @@ function createSelect2() {
 
 }
 function toggleLoading(element) {
-    var text = element.text();
+    var text = element.html();
+    //tooggle disable
+    //see more: https://stackoverflow.com/a/9489400
+    element.prop('disabled', function (i, v) { return !v; });
     var loadingConfig = element.attr("data-loading-text");
     element.html(loadingConfig).attr("data-loading-text", text);
 }
