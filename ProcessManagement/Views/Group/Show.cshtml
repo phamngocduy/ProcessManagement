@@ -157,8 +157,9 @@
     <div class="col-lg-8 col-md-12">
         <div class="card">
             <div class="header">
-                <h2>Processes in group</h2>
+                <h2>List Process Run</h2>
                 <ul class="header-dropdown">
+                    <li><a class="tab_btn" href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "newprocess", groupslug = Model.groupSlug, groupid = Model.Id})" data-toggle="tooltip" data-placement="top" title="Create New Process"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
                     <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Previous"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></li>
                     <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Next"><i class="fa fa-arrow-right" aria-hidden="true"></i></a></li>
                     <li class="dropdown">
@@ -171,7 +172,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="body process-list">
+            <div class="body process-list" style="height: 387px">
                 <ul class="list-unstyled">
                     <li class="media">
                         <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
@@ -203,7 +204,7 @@
             <div class="header">
                 <h2>Processes in group</h2>
                 <ul class="header-dropdown">
-                    <li><a class="tab_btn" href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "newprocess", groupslug = Model.groupSlug, groupid = Model.Id})" data-toggle="tooltip" data-placement="top" title="Create New Process"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
+                    <li><a class="tab_btn" href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "newprocessrun", groupslug = Model.groupSlug, groupid = Model.Id})" data-toggle="tooltip" data-placement="top" title="Create New Process"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
                     <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Previous"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></li>
                     <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Next"><i class="fa fa-arrow-right" aria-hidden="true"></i></a></li>
                     <li class="dropdown">
@@ -259,7 +260,7 @@
                 </div>
                 <div id="add-member-search">
                     <input type="hidden" style="width:calc(100% - 116px);border: 1px solid #ced4da;padding:5px 10px;" />
-                    <button class="btn btn-primary-theme" id="btn-add-member" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing">Add member</button>
+                    <button class="btn btn-primary-theme waves-effect" id="btn-add-member" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing">Add member</button>
                 </div>
             </div>
         </div>
@@ -344,6 +345,7 @@
                     { data: "action"}
                 ],
                 "drawCallback": function (setting) {
+                    //TODO: Event update luôn fire khi ẩn thanh chọn, cần phải kiểm tra nếu thanh đổi thì mới chạy event update,không thay đổi thì thôi
                     $(".role").multiselect({
                         nonSelectedText: 'member',
                         numberDisplayed: 4,
@@ -351,7 +353,6 @@
                         templates: { // Use the Awesome Bootstrap Checkbox structure
                             li: '<li><a href="javascript:void(0);"><label class="fancy-checkbox"><span><i></i></span></label></a></li>'
                         },
-
                         onDropdownHide: function (event) {
                             var id = $(this)[0].$select.attr("id");
                             var memberId = $(`#${id}`).attr("data-id");
@@ -383,6 +384,8 @@
                         $(`<span><b><b></span>${val}`).insertAfter(input)
 
                     });
+                    $(".page-item:not(.previous):not(.next) a").addClass("waves-effect");
+                    $(".multiselect").addClass("waves-effect").css("box-shadow", "none");
                 }
             });
             //$('#aniimated-thumbnials').lightGallery({

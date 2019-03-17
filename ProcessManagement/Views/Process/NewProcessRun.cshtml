@@ -1,0 +1,283 @@
+﻿@model  IEnumerable<ProcessManagement.Models.Process>
+@{
+    ViewBag.Title = "Create Start Process";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section CustomCss{
+    <link rel="stylesheet" href="~/Content/vendor/select2/select2.css" />
+    <link rel="stylesheet" href="~/Content/vendor/jquery-steps/jquery.steps.css">
+    <link rel="stylesheet" href="~/Content/vendor/lightbox2/dist/css/lightbox.min.css"/>
+    <style>
+        .process-img {
+            -o-object-fit: cover;
+            object-fit: cover;
+            max-width: 100%;
+        }
+    </style>
+
+}
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+            <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth primary-theme"><i class="fa fa-arrow-left"></i></a> Create New Process Start</h2>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-2.html" class="primary-theme"><i class="icon-home"></i></a></li>
+                <li class="breadcrumb-item pr"><a href="#" class="primary-theme">Group</a></li>
+                <li class="breadcrumb-item active"><a href="#" class="primary-theme">Process Start</a></li>
+            </ul>
+        </div>
+        <div class="col-lg-6 col-md-4 col-sm-12 text-right">
+            <div class="bh_chart hidden-xs">
+                <div class="float-left m-r-15">
+                    <small>Visitors</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-user"></i> 1,784</h6>
+                </div>
+                <span class="bh_visitors float-right">2,5,1,8,3,6,7,5</span>
+            </div>
+            <div class="bh_chart hidden-sm">
+                <div class="float-left m-r-15">
+                    <small>Visits</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-globe"></i> 325</h6>
+                </div>
+                <span class="bh_visits float-right">10,8,9,3,5,8,5</span>
+            </div>
+            <div class="bh_chart hidden-sm">
+                <div class="float-left m-r-15">
+                    <small>Chats</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-bubbles"></i> 13</h6>
+                </div>
+                <span class="bh_chats float-right">1,8,5,6,2,4,3,2</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="body">
+                <form id="js-wizard-process-run" method="POST">
+                    <h3>Choose Process To Start</h3>
+                    <fieldset>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6 offset-md-6 search">
+                                <input type="search" class="form-control" name="name" placeholder="Search here..." />
+                                <button type="button" class="btn btn-default waves-effect"><i class="icon-magnifier"></i></button>
+                            </div>
+                        </div>
+                        <div class="row process-list display-flex clearfix">
+                            @{ Random rd = new Random(); }
+                            @foreach (var process in Model)
+                            {
+                                int temp = rd.Next(1, 15);
+
+                                <div class="col-lg-3 col-md-4 col-sm-12">
+                                    <div class="card">
+                                        <div class="process">
+                                            <div class="process-avatar">
+                                                <label class="fancy-checkbox">
+                                                    <input type="checkbox" class="process-check" name="process-choose">
+                                                    <span></span>
+                                                </label>
+                                                <a href="~/Content/images/image-gallery/@(temp).jpg" data-lightbox="gallery" data-title="@process.Name" data-description="@process.Description">
+                                                    <div class="img-container">
+                                                        <img class='img-responsive' src='~/Content/images/image-gallery/@(temp).jpg' alt="@process.Name" />
+                                                    </div>
+                                                </a>
+                                                @*<img src="~/Content/images/image-gallery/@(count).jpg" alt="@process.Name" class="img-responsive" />*@
+                                            </div>
+                                            <div class="process-name">
+                                                <p class="m-b-5 text-muted">@process.Name</p>
+                                                <small><span class="date text-muted">Nov 02, 2017</span></small>
+                                                <button class="btn btn-outline-theme btn-detail waves-effect" type="button"><i class="icon-eye"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-sm-12 col-md-6 process-choose">
+                                <input type="text" name="name" class="form-control" value="process1" readonly />
+                            </div>
+                            <div class="col-sm-12 col-md-6 pagging">
+                                <ul class="pagination">
+                                    <li class="page-item previous"><a class="page-link waves-effect" href="#">Previous</a></li>
+                                    <li class="page-item active"><a class="page-link waves-effect" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link waves-effect" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link waves-effect" href="#">3</a></li>
+                                    <li class="page-item next"><a class="page-link waves-effect" href="#">Next</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <h3>Process Start Information</h3>
+                    <fieldset>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12">
+                                <div class="form-group form-float">
+                                    <label for="description">Description</label>
+                                    <textarea class="form-control" rows="6" placeholder="Write something about your process (optional)" id="description"  name="description"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <h3>Confirm - Finish</h3>
+                    <fieldset>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12">
+                                <div class="form-group form-float">
+                                    <label for="process">You choose process to run</label>
+                                    <input type="text" name="name" id="process" class="form-control" value="Process Abc" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12">
+                                <div class="form-group form-float">
+                                    <label for="description">Description</label>
+                                    <textarea class="form-control" rows="6" name="description" readonly>abcabcabcabcabcabcabc</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+                <!-- TODO: Modal nên chỉnh ở giữa màn hình (reference: https://stackoverflow.com/a/24829651) -->
+                <!--modal-->
+                <div class="modal fade" id="js-modal-process-detail" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-extra-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="title" id="largeModalLabel">Process Detail</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-5 col-sm-12">
+                                        <img class='img-responsive process-img' src='~/Content/images/image-gallery/1.jpg' alt="sadsa" />
+                                    </div>
+                                    <div class="col-md-7 col-sm-12">
+                                        <h5>Demo</h5>
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                    </div>
+                                    <div class="col-md-12 col-sm-12" style="padding: 10px 40px;">
+                                        <ul class="nav nav-tabs-new2">
+                                            <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#step-tab">Step</a></li>
+                                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#role-tab">Role</a></li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane show active" id="step-tab">
+                                                <h6>Home</h6>
+                                                <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
+                                            </div>
+                                            <div class="tab-pane" id="role-tab">
+                                                <h6>Profile</h6>
+                                                <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success waves-effect" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end of modal-->
+            </div>
+        </div>
+
+    </div>
+</div>
+@section CustomScripts{
+    <script src="~/Content/vendor/select2/select2.min.js"></script>
+    <script src="~/Content/vendor/jquery-validation/jquery.validate.js"></script>
+    <script src="~/Content/vendor/jquery-steps/jquery.steps.js"></script>
+    <script src="~/Content/vendor/lightbox2/dist/js/lightbox.js"></script>
+    <script>
+        $(function () {
+            var form = $('#js-wizard-process-run');
+            form.steps({
+                headerTag: 'h3',
+                bodyTag: 'fieldset',
+                transitionEffect: 'fade',
+                labels:
+                {
+                    previous: "Previous",
+                    next: "Next",
+                    finish: "Active",
+                },
+                onInit: function (event, currentIndex) {
+                    //$.AdminInfiniO.input.activate();
+
+                    //Set tab width
+                    var $tab = $(event.currentTarget).find('ul[role="tablist"] li');
+                    var tabCount = $tab.length;
+                    $tab.css('width', (100 / tabCount) + '%');
+                    //set button waves effect
+                    setButtonWavesEffect(event);
+                    $tab.find('a').addClass("waves-effect");
+                    //TODO: Có nên hiện detail của process cho người dùng xem hông
+                    $(".btn-detail").on("click", function () {
+                        var detailModal = $("#js-modal-process-detail");
+                        detailModal.modal("show");
+                    });
+                    //Chuyển checkbox thành radio (reference: https://stackoverflow.com/a/5839924)
+                    var checkbox = $(".process-check");
+                    checkbox.on("change", function () {
+                        checkbox.prop("checked", false);
+                        $(this).prop("checked", true);
+                    })
+                },
+                onStepChanging: function (event, currentIndex, newIndex) {
+                    if (currentIndex > newIndex) { return true; }
+
+                    if (currentIndex < newIndex) {
+                        form.find('.body:eq(' + newIndex + ') label.error').remove();
+                        form.find('.body:eq(' + newIndex + ') .error').removeClass('error');
+                    }
+
+                    form.validate().settings.ignore = ':disabled,:hidden';
+                    return form.valid();
+                },
+                onStepChanged: function (event, currentIndex, priorIndex) {
+                    setButtonWavesEffect(event);
+                },
+                onFinishing: function (event, currentIndex) {
+                    form.validate().settings.ignore = ':disabled';
+                    return form.valid();
+                },
+                onFinished: function (event, currentIndex) {
+                    swal("Good job!", "Submitted!", "success");
+                }
+            });
+
+            form.validate({
+                highlight: function (input) {
+                    $(input).parents('.form-line').addClass('error');
+                },
+                unhighlight: function (input) {
+                    $(input).parents('.form-line').removeClass('error');
+                },
+                errorPlacement: function (error, element) {
+                    $(element).parents('.form-group').append(error);
+                },
+                rules: {
+                    'confirm': {
+                        equalTo: '#password'
+                    }
+                }
+            });
+            lightbox.option({
+                'resizeDuration': 200,
+                'wrapAround': true,
+                'showImageNumberLabel': false
+            })
+        });
+
+        function setButtonWavesEffect(event) {
+            //$(event.currentTarget).find('[role="menu"] li a').removeClass('waves-effect');
+            //$(event.currentTarget).find('[role="menu"] li:not(.disabled) a').addClass('waves-effect');
+            $(event.currentTarget).find('[role="menu"] li a').addClass('waves-effect');
+        }
+    </script>
+}
+

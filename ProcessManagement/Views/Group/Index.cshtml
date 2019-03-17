@@ -223,6 +223,7 @@
                 "order": [[0, "desc"]],
                 "initComplete": function () {
                     $(".btn-newgroup").html('<a href="#" class="btn btn-success">New Group</a>');
+                    $(".page-item:not(.previous):not(.next) a").addClass("waves-effect");
                 },
                 "drawCallback": function (setting) {
                     //$('[data-toggle="tooltip"]').tooltip();

@@ -873,7 +873,9 @@ function refreshStepNavigation(wizard, options, state, oldIndex)
     currentOrNewStepAnchor.prepend(currentInfo).parent()._selectAria().removeClass("done")._enableAria();
     stepTitles.eq(state.currentIndex).addClass("current").next(".body").addClass("current");
 }
-
+function resizeJquerySteps() {
+    $('.wizard .content').animate({ height: $('.body.current').outerHeight() }, "slow");
+}
 /**
  * Refreshes step buttons and their related titles beyond a certain position.
  *

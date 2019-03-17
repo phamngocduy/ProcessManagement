@@ -7,14 +7,6 @@ $color-themes: (
   '.theme-blush':#e84f5e
 );
 
-%default-avatar{
-    font-family: 'Poppins', sans-serif;
-    font-weight:bold;
-    font-size:22px;
-    text-align:center;
-    display:inline-block; 
-}
-
 body, #wrapper{
     &::before,&::after{
         display: none;
@@ -26,6 +18,32 @@ body, #wrapper{
 
 @each $themeClass, $color in  $color-themes{
     #{$themeClass} {
+        #toast-container{
+            .toast-info{
+                background-color: $color;
+            }
+        }
+        .sidebar-nav {
+            .metismenu{
+                li {
+                    a{
+                        i{
+                            color: inherit;
+                        }
+                        &:hover{
+                            color: $color;
+                        }
+                    }
+                    &.active{
+                        a{
+                            i{
+                                color: $color;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         a{
             &.primary-theme{
                 color: $color;
@@ -36,13 +54,29 @@ body, #wrapper{
         }
         .pagination {
             .page-item{
-                a{
-                    color: $color;
-                    &:hover{
-                        color: #fff;
-                        background: darken($color, 10%);    
+                display: unset !important;
+                &:not(.previous):not(.next){
+                    a{
+                        border-radius: 50%;
+                        color: $color;
+                        margin-right: 5px;
+                        &:hover, &:focus{
+                            color: #fff;
+                            background: darken($color, 10%);    
+                        }
                     }
                 }
+                &.previous,&.next{
+                    a{
+                        color: $color;
+                        margin-left: 5px;
+                        border:none;
+                        &:hover,&:focus{
+                            background: none;
+                            box-shadow: none;
+                        }
+                    }
+                } 
                 &.disabled{
                     cursor: not-allowed;
                     a{
@@ -51,7 +85,7 @@ body, #wrapper{
                 }
                 &.active {
                     a{
-                        color: #fff;
+                        color: #fff !important;
                         background-color: $color;
                         border-color: $color;
                         &:hover {
@@ -71,7 +105,8 @@ body, #wrapper{
                 -o-border-radius: 50%;
                 background: none;
                 &:hover {
-                    box-shadow: 1px 6px 29px rgba(67, 57, 107, 0.4);
+                    -webkit-box-shadow: 1px 6px 29px rgba(67, 57, 107, 0.4);
+                            box-shadow: 1px 6px 29px rgba(67, 57, 107, 0.4);
                     background-color: $color;
                     i {
                         color: #ffffff;
@@ -114,30 +149,20 @@ body, #wrapper{
             }
         }
         .btn-primary-theme{
-            background:$color;
+            background-color: $color;
             color: #ffffff;
-            &:hover{
-                background: darken($color, 10%);    
+            &:hover,&:focus{
+                background-color: darken($color, 10%);    
+                border: 1px solid $color;
             }
         }
-        .sidebar{
-            .tab-content{
-                .sidebar-nav{
-                    .metismenu{
-                        &>li{
-                            a{
-                                &:hover{
-                                    background-color: $color;
-                                    border-left-color: darken($color, 10%);
-                                    color:#ffffff;
-                                    &>i{
-                                        color:#ffffff !important;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+        .btn-outline-theme{
+            border: 1px solid $color;
+            color: $color;
+            &:hover,&:focus{
+                background-color: $color !important;
+                color: #ffffff;
+                border: 1px solid $color;
             }
         }
         fieldset{
@@ -207,16 +232,50 @@ body, #wrapper{
                     }
                 }
             }
-            .actions{
-                li{
-                    &:not([class="disabled"]){
-                        a{
-                            background: $color;
+            .content{
+                background:unset;
+                .body{
+                    label{
+                        font-weight: normal;
+                        color: #5a5a59;
+                        font-size: 16px;
+                        display: inline-block;
+                        margin-bottom: .5rem;
+                    }
+                    .search{
+                        text-align: right;
+                        margin-bottom: 20px;
+                        input{
+                            width: 300px;
+                            display: inline-block;
                         }
                     }
-                    &.disabled{
-                        a{
-                            cursor: not-allowed;
+                    .pagging{
+                        .pagination{
+                            float: right;
+                        }
+                    }
+                    .process-choose{
+                        input{
+                            width: 300px;
+                            display: inline-block;
+                        }
+                    }
+                }
+            }
+            .actions{
+                ul{
+                    li{
+                        margin: 0;
+                        &:not([class="disabled"]){
+                            a{
+                                background: $color;
+                            }
+                        }
+                        &.disabled{
+                            a{
+                                cursor: not-allowed;
+                            }
                         }
                     }
                 }
@@ -227,20 +286,16 @@ body, #wrapper{
 .row{
     &.display-flex{
         display: -webkit-box;
-        display: -webkit-flex;
         display: -ms-flexbox;
         display: flex;
-        -webkit-flex-wrap: wrap;
         -ms-flex-wrap: wrap;
         flex-wrap: wrap;
         &>[class*='col-']{
             display: -webkit-box;
-            display: -webkit-flex;
             display: -ms-flexbox;
             display: flex;
             -webkit-box-orient: vertical;
             -webkit-box-direction: normal;
-            -webkit-flex-direction: column;
             -ms-flex-direction: column;
             flex-direction: column;  
         }
@@ -271,6 +326,12 @@ input::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance:textfield; /* Firefox */
 }
+.form-control:disabled, .form-control[readonly] {
+    &[readonly]{
+        background-color: #ffffff;
+        opacity: 1;
+    }
+}
 //add prefix to input number
 
 .input-has-prefix{
@@ -284,7 +345,7 @@ input[type=number] {
             -moz-transition: all 1s ease-in-out;
             -ms-transition: all 1s ease-in-out;
             -o-transition: all 1s ease-in-out;
-}
+        }
     }
     &::after{
         position: absolute;
@@ -326,6 +387,39 @@ input[type=number] {
         }
         &::after{
             opacity: 0;
+        }
+    }
+}
+
+//modal
+.modal{
+    .vertical-alignment-helper {
+        display:table;
+        height: 100%;
+        width: 100%;
+        pointer-events:none; /* This makes sure that we can still click outside of the modal to close it */
+        .vertical-align-center {
+            /* To center vertically */
+            display: table-cell;
+            vertical-align: middle;
+            pointer-events:none;
+            .modal-content {
+                /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+                width:inherit;
+                max-width:inherit; /* For Bootstrap 4 - to avoid the modal window stretching full width */
+                height:inherit;
+                /* To center horizontally */
+                margin: 0 auto;
+                pointer-events: all;
+            }
+        }
+    }
+}
+
+@include respond-to-screen-size(992px,-1){
+    .modal{
+        .modal-extra-lg{
+            max-width: 800px;
         }
     }
 }

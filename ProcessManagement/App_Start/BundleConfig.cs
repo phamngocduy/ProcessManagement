@@ -10,6 +10,7 @@ namespace ProcessManagement
         {
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/vendor/bootstrap/css/bootstrap.min.css",
+                "~/Content/vendor/font-awesome-5/css/all.css",
                 "~/Content/vendor/font-awesome/css/font-awesome.min.css",
                 "~/Content/vendor/toastr/toastr.min.css",
                 "~/Content/vendor/jquery-datatable/dataTables.bootstrap4.min.css",
@@ -22,6 +23,7 @@ namespace ProcessManagement
                 "~/Content/build/bundles/mainscripts.bundle.js",
                 "~/Content/build/bundles/datatablescripts.bundle.js",
                 "~/Content/build/js/pages/ui/dialogs.js",
+                "~/Content/build/js/button-ripple.js",
                 "~/Content/build/js/custom.js"
             ));
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
