@@ -94,5 +94,16 @@ namespace ProcessManagement.Services
             }
             db.SaveChanges();
         }
+
+        public void editFromTask(int idTask, string name, int? role, string description, string formBuilder)
+        {
+            TaskProcess task = findTask(idTask);
+            task.Name = name;
+            task.Description = description;
+            task.ValueFormJson = formBuilder;
+            task.IdRole = role;
+            task.Updated_At = DateTime.Now;
+            db.SaveChanges();
+        }
     }
 }

@@ -8433,6 +8433,7 @@
     </None>
     <Content Include="Views\Process\NewStartProcess.cshtml" />
     <Content Include="Views\Process\AddFormTask.cshtml" />
+    <Content Include="Views\Process\ShowFormTask.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\group\" />

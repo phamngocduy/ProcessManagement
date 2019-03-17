@@ -480,7 +480,7 @@ namespace ProcessManagement.Controllers
             Step step = stepService.findStep(task.IdStep);
             Group group = groupService.findGroup(step.Process.Group.Id);
             List<Role> role = db.Roles.Where(x => x.IdProcess == task.Step.Process.Id).ToList();
-
+            
             ViewData["Step"] = step;
             ViewData["ListRole"] = role;
             ViewData["Group"] = group;
@@ -525,6 +525,24 @@ namespace ProcessManagement.Controllers
             ViewData["Group"] = group;
             Session["idStep"] = step.Id;
             return View(pr);
+        }
+
+        [Authorize]
+        [GroupAuthorize]
+        public ActionResult ShowFormTask(int taskid)
+        {
+            TaskProcess task = taskService.findTask(taskid);
+            if (task == null) return HttpNotFound();
+            Step step = stepService.findStep(task.IdStep);
+            Group group = groupService.findGroup(step.Process.Group.Id);
+            List<Role> role = db.Roles.Where(x => x.IdProcess == task.Step.Process.Id).ToList();
+
+            ViewData["Step"] = step;
+            ViewData["ListRole"] = role;
+            ViewData["Group"] = group;
+            Session["idTask"] = task.Id;
+
+            return View(task);
         }
     }
 }

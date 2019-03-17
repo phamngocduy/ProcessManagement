@@ -1,7 +1,7 @@
 ﻿@model ProcessManagement.Models.TaskProcess
 
 @{
-    ViewBag.Title = "AddFormTask";
+    ViewBag.Title = "AddTaskFormProcess";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var step = ViewData["Step"] as ProcessManagement.Models.Step;
     var group = ViewData["Group"] as ProcessManagement.Models.Group;
@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="~/Content/vendor/dropify/css/dropify.min.css">
     <link rel="stylesheet" href="~/Content/vendor/select2/select2.css" />
     <link rel="stylesheet" href="~/Content/vendor/switchery/dist/switchery.min.css" />
-    
 }
 <div class="block-header">
     <div class="row">
@@ -25,48 +24,26 @@
                 <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = group.Id })" class="primary-theme">@group.Name</a></li>
                 <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "ShowStep", processid = step.IdProcess })" class="primary-theme">@step.Process.Name</a></li>
                 <li class="breadcrumb-item"><a href="" class="primary-theme">@step.Name</a></li>
-                <li class="breadcrumb-item"><a href="" class="primary-theme"> Create New Task</a></li>
+                <li class="breadcrumb-item"><a href="" class="primary-theme"> @Model.Name</a></li>
             </ul>
         </div>
-        <div class="col-lg-6 col-md-4 col-sm-12 text-right">
-            <div class="bh_chart hidden-xs">
-                <div class="float-left m-r-15">
-                    <small>Visitors</small>
-                    <h6 class="mb-0 mt-1"><i class="icon-user"></i> 1,784</h6>
-                </div>
-                <span class="bh_visitors float-right">2,5,1,8,3,6,7,5</span>
-            </div>
-            <div class="bh_chart hidden-sm">
-                <div class="float-left m-r-15">
-                    <small>Visits</small>
-                    <h6 class="mb-0 mt-1"><i class="icon-globe"></i> 325</h6>
-                </div>
-                <span class="bh_visits float-right">10,8,9,3,5,8,5</span>
-            </div>
-            <div class="bh_chart hidden-sm">
-                <div class="float-left m-r-15">
-                    <small>Chats</small>
-                    <h6 class="mb-0 mt-1"><i class="icon-bubbles"></i> 13</h6>
-                </div>
-                <span class="bh_chats float-right">1,8,5,6,2,4,3,2</span>
-            </div>
-        </div>
+        
     </div>
 </div>
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="card">
-            <div class="body">
+            <div class="body" id="show-task">
                 <div class="row clearfix">
                     <div class="col-sm-8">
                         <div class="form-group">
                             <label for="task-name" class="required">Task Name</label>
-                            <input required type="text" class="form-control" id="task-name" name="@Html.NameFor(m => m.Name)">
+                            <input type="text" class="form-control" id="task-name" name="@Html.NameFor(m => m.Name)" value="@Model.Name" disabled>
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <label for="task-role">Select Role</label>
-                        <select id="task-role" class="form-control show-tick ms select2">
+                        <select id="task-role" class="form-control show-tick ms select2" disabled>
                             <option></option>
                             @foreach (var role in roles)
                             {
@@ -79,14 +56,17 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label for="task-description">Description</label>
-                            <textarea class="form-control" rows="6" placeholder="Write something about your task (optional)" id="task-description" name="@Html.NameFor(m => m.Description)"></textarea>
+                            <textarea class="form-control" rows="6" placeholder="Write something about your task (optional)" id="task-description" name="@Html.NameFor(m => m.Description)" disabled>@Model.Description</textarea>
                         </div>
                     </div>
-                    <div class="col-sm-12" id="build-wrap"></div>
+                    <div class="col-sm-12 setDataWrap">
+                        <div id="build-wrap"></div>
+                    </div>
+
                     <div class="col-sm-12">
-                        <div class="mt-2">
-                            <button id="btn-save" class="btn btn-primary-theme" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing Create">Create</button>
-                            <a href="#" class="btn btn-outline-secondary">Go Back</a>
+                        <div class="mt-2" id="button-action">
+                            <button id="btn-edit" class="btn btn-primary-theme">Edit</button>
+                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "deletetask", taskid = Model.Id })" class="btn btn-outline-danger" id="btn-remove-task">Delete</a>
                         </div>
                     </div>
                 </div>
@@ -101,43 +81,81 @@
     <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
     <script src="~/Content/build/js/form-builder.min.js"></script>
-    
+
     <script>
         $(function () {
-            var formB = $("#build-wrap").formBuilder();
-            createSwitch();
+            var taskform = '[{"type":"text","label":"Full Name","subtype":"text","className":"form-control","name":"text-1476748004559"},{"type":"select","label":"Occupation","className":"form-control","name":"select-1476748006618","values":[{"label":"Street Sweeper","value":"option-1","selected":true},{"label":"Moth Man","value":"option-2"},{"label":"Chemist","value":"option-3"}]},{"type":"textarea","label":"Short Bio","rows":"5","className":"form-control","name":"textarea-1476748007461"}]';
+            if (taskform != null) {
+                var formB = $("#build-wrap").formBuilder();
+                var formData = taskform;
+                window.onload = function () {
+                    formB.actions.setData(formData);
+                };
+            }
+            var bAction = `<button id="btn-save" class="btn btn-primary-theme">Save</button>
+                            <button id="btn-back" class="btn btn-outline-secondary">Back</button>`;
+            var showForm = $("#show-task").html();
+            var switchArr = createSwitch();
+            switchArr.forEach(item => item.disable());
             $("select#task-role").select2({
                 placeholder: "Select Role",
-                allowClear: true
+                allowClear: true,
+            }).select2('val', @Model.IdRole);
+
+            //Button edit
+            $("body").on("click", "#btn-edit",function () {
+                var temp = bAction;
+                var $this = $(this);
+                var actionButton = $this.parents("#button-action");
+                actionButton.html(temp);
+                $("#show-task").find("input[type!='checkbox'], select#task-role, textarea").prop("disabled", function () {
+                    return !$(this).prop("disabled");
+                });
+                switchArr.forEach(item => item.enable());
             });
-            $('#btn-save').on('click', function () {
+            //Button back
+            $("body").on("click", "#btn-back", function () {
+                $("#show-task").html(showForm);
+                switchArr = createSwitch();
+            });
+            $("body").on("click", "#btn-save", function () {
                 $this = $(this);
                 toggleLoading($this);
 
                 var name = $('#task-name').val();
                 var role = $('#task-role').val();
                 var description = $('#task-description').val();
+               
+                if (taskform != null) {
+                    var formBuilder = formB.actions.getData('json', true).replace(/\r?\n|\r/g, '');
+                } else {
+                    formBuilder = null;
+                }
 
-                var formBuilder = formB.actions.getData('json', true).replace(/\r?\n|\r/g, '');
-                
                 let data = {
                     name: name,
-                    stepid : @step.Id,
                     idRole: role,
                     description: description,
                     formBuilder: formBuilder
-                 }
+                }
                 if (name == "") {
                     showToastr("error", "Task name not null", "toast-bottom-left");
+                    toggleLoading($this);
                 } else {
-                    AddFormTask(data);
+                    editTask(data);
                 }
-                toggleLoading($this);
+            });
+            $("body").on("click", "#btn-remove-task", function () {
+                var con = confirm("bạn muốn xóa task này không?");
+                if (con) {
+                    localStorage.setItem("showStep", @step.Id);
+                }
+                return con;
             })
         });
-        function AddFormTask(data) {
-            $.ajax({
-                url: "@Url.Action("AddFormTask", "process", new { area = "api" })",
+        function editTask(data) {
+             $.ajax({
+                url: "@Url.Action("edittask","process",new {area = "api"})",
                 type: "POST",
                 data: data,
                 dataType: "json",
@@ -147,7 +165,6 @@
                         localStorage.setItem("showStep", @step.Id);
                         location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })';
                     } else {
-                        showToastr("error", response.message, "toast-bottom-left")
                         console.error(response)
                     }
                 }

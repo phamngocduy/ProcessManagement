@@ -6,9 +6,16 @@
     var step = ViewData["Step"] as ProcessManagement.Models.Step;
     var group = ViewData["Group"] as ProcessManagement.Models.Group;
     var roles = ViewData["ListRole"] as List<ProcessManagement.Models.Role>;
-    JObject inputConfig = JObject.Parse(Model.ValueInputText);
-    JObject fileConfig = JObject.Parse(Model.ValueInputFile);
-
+    JObject inputConfig = new JObject();
+    if (Model.ValueInputText != null)
+    {
+        inputConfig = JObject.Parse(Model.ValueInputText);
+    }
+    JObject fileConfig = new JObject();
+    if (Model.ValueInputFile != null)
+    {
+        fileConfig = JObject.Parse(Model.ValueInputFile);
+    }
 }
 
 
@@ -27,7 +34,7 @@
                 <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = group.Id })" class="primary-theme">@group.Name</a></li>
                 <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "ShowStep", processid = step.IdProcess })" class="primary-theme">@step.Process.Name</a></li>
                 <li class="breadcrumb-item"><a href="" class="primary-theme">@step.Name</a></li>
-                <li class="breadcrumb-item"><a href="" class="primary-theme"> Create New Task</a></li>
+                <li class="breadcrumb-item"><a href="" class="primary-theme"> @Model.Name</a></li>
             </ul>
         </div>
         <div class="col-lg-6 col-md-4 col-sm-12 text-right">
@@ -105,7 +112,7 @@
 
                                         <div class="col-sm-12">
                                             <div class="form-group switch-custom">
-                                                <label>Required: <input type="checkbox" class="checkbox-switch" id="text-required" @if (bool.Parse(inputConfig["required"].ToString())) { WriteLiteral("checked"); }/></label>
+                                                <label>Required: <input type="checkbox" class="checkbox-switch" id="text-required" @if (bool.Parse(inputConfig["required"].ToString())) { WriteLiteral("checked"); } /></label>
                                             </div>
                                         </div>
                                     </div>
@@ -129,7 +136,7 @@
                                         </div>
                                         <div class="col-sm-12">
                                             <div class="form-group switch-custom">
-                                                <label>Required: <input id="file-required" type="checkbox" class="checkbox-switch" @if (bool.Parse(fileConfig["required"].ToString())) { WriteLiteral("checked"); }/></label>
+                                                <label>Required: <input id="file-required" type="checkbox" class="checkbox-switch" @if (bool.Parse(fileConfig["required"].ToString())) { WriteLiteral("checked"); } /></label>
                                             </div>
                                         </div>
                                     </div>
@@ -153,8 +160,10 @@
     <script src="~/Content/build/js/pages/forms/dropify.js"></script>
     <script src="~/Content/vendor/select2/select2.min.js"></script>
     <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
+
     <script>
         $(function () {
+
             var bAction = `<button id="btn-save" class="btn btn-primary-theme">Save</button>
                             <button id="btn-back" class="btn btn-outline-secondary">Back</button>`;
             var showForm = $("#show-task").html();
@@ -199,23 +208,25 @@
                 var fileSize = $('#file-maxsize').val();
                 var fileRequire = $('#file-required').prop('checked') == true ? true : false;
 
-                var inputConfig = {
+                var inputConfig1 = {
                     label: inputLabel,
                     maxlength: inputmaxLength,
                     required: inputRequire
                 };
-                let fileConfig = {
+
+                var fileConfig1 = {
                     label: fileLabel,
                     size: fileSize,
                     required: fileRequire
                 };
 
+
                 let data = {
                     name: name,
                     idRole: role,
                     description: description,
-                    inputConfig: JSON.stringify(inputConfig),
-                    fileConfig: JSON.stringify(fileConfig)
+                    inputConfig: JSON.stringify(inputConfig1),
+                    fileConfig: JSON.stringify(fileConfig1)
                 }
                 if (name == "") {
                     showToastr("error", "Task name not null", "toast-bottom-left");

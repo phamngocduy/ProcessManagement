@@ -173,11 +173,18 @@
                                 <ul class="task-list" id="task-of-step-@step.Id">
                                     @foreach (var task in taskList)
                                     {
-                                        <li class="task-item" style="background-color:@task.Color" data-id="@task.Id">
+                                    <li class="task-item" style="background-color:@task.Color" data-id="@task.Id">
+                                        @if (task.ValueFormJson == null)
+                                        {
                                             <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showtask", taskid = task.Id })">@task.Name</a>
-                                        
-                                            <i class="fa fa-arrows-alt handle"></i>
-                                        </li>
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showformtask", taskid = task.Id })">@task.Name</a>
+                                        }
+
+                                        <i class="fa fa-arrows-alt handle"></i>
+                                    </li>
                                     }
                                 </ul>
                             </div>

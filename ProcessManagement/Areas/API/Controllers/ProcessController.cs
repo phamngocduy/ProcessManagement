@@ -148,10 +148,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 response = new { message = message, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
-
-
-
-
+            
             if (idRole != null)
             {
                 int idR = idRole.GetValueOrDefault();
@@ -173,8 +170,7 @@ namespace ProcessManagement.Areas.API.Controllers
             message = "Created Task Successfully";
             response = new { message = message, status = status };
             return Json(response, JsonRequestBehavior.AllowGet);
-
-
+            
         }
         [HttpPost]
         public JsonResult changeTaskPosition(string position)
@@ -182,6 +178,77 @@ namespace ProcessManagement.Areas.API.Controllers
             taskService.changePosition(position);
             var response = new { message = "Change position sucess", status = HttpStatusCode.OK };
             return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult editFormTask(string name, int? idRole, string description, string formBuilder)
+        {
+            ///////////////////////////
+            /// chỉ được edit task thuộc process mà mình quản lý
+            ///////////////////////////
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+            int idTask = int.Parse(Session["idTask"].ToString());
+            var task = taskService.findTask(idTask);
+
+
+            if (task == null)
+            {
+                message = "Task not exit";
+                status = HttpStatusCode.InternalServerError;
+                response = new { message = message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+
+            Step step = stepService.findStep(task.Step.Id);
+            //lấy group thuộc process
+            int idGroup = task.Step.Process.Group.Id;
+            string idUser = User.Identity.GetUserId();
+
+            //check xem có thuộc process trong group
+            Participate user = participateService.findMemberInGroup(idUser, idGroup);
+            if (user == null)
+            {
+                message = "Task not found";
+                status = HttpStatusCode.Forbidden;
+                response = new { message = message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+            if (name == "")
+            {
+                status = HttpStatusCode.InternalServerError;
+                message = "Created Task Successfully";
+                response = new { message = message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+            if (idRole != null)
+            {
+                int idR = idRole.GetValueOrDefault();
+                var role = roleService.findRoleOfProcess(idR, step.Process.Id);
+                if (role == null)
+                {
+                    //role not exist
+                    status = HttpStatusCode.InternalServerError;
+                    message = "Role not exist";
+                    response = new { message = message, status = status };
+                    return Json(response, JsonRequestBehavior.AllowGet);
+
+                }
+
+            }
+
+            taskService.editFromTask(task.Id, name, idRole, description, formBuilder);
+            SetFlash(FlashType.success, "Created Task Successfully");
+            message = "Created Task Successfully";
+            response = new { message = message, status = status };
+            return Json(response, JsonRequestBehavior.AllowGet);
+
+
         }
     }
 }
