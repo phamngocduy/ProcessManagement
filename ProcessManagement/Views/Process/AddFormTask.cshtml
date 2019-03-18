@@ -119,13 +119,17 @@
                 var description = $('#task-description').val();
 
                 var formBuilder = formB.actions.getData('json', true).replace(/\r?\n|\r/g, '');
-                
+                formBuilder = JSON.parse(formBuilder);
+                var tempArr =[]
+                for (var i = 0; i < formBuilder.length; i++) {
+                    tempArr.push(formBuilder[i]);
+                }
                 let data = {
                     name: name,
                     stepid : @step.Id,
                     idRole: role,
                     description: description,
-                    formBuilder: formBuilder
+                    formBuilder: JSON.stringify(tempArr)
                  }
                 if (name == "") {
                     showToastr("error", "Task name not null", "toast-bottom-left");

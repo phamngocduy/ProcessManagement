@@ -84,7 +84,8 @@
 
     <script>
         $(function () {
-            var taskform = '[{"type":"text","label":"Full Name","subtype":"text","className":"form-control","name":"text-1476748004559"},{"type":"select","label":"Occupation","className":"form-control","name":"select-1476748006618","values":[{"label":"Street Sweeper","value":"option-1","selected":true},{"label":"Moth Man","value":"option-2"},{"label":"Chemist","value":"option-3"}]},{"type":"textarea","label":"Short Bio","rows":"5","className":"form-control","name":"textarea-1476748007461"}]';
+            var taskform = '@Model.ValueFormJson'.replace(/&quot;/g , "\"");
+            //var taskform = '[{"type":"text","label":"Full Name","subtype":"text","className":"form-control","name":"text-1476748004559"},{"type":"select","label":"Occupation","className":"form-control","name":"select-1476748006618","values":[{"label":"Street Sweeper","value":"option-1","selected":true},{"label":"Moth Man","value":"option-2"},{"label":"Chemist","value":"option-3"}]},{"type":"textarea","label":"Short Bio","rows":"5","className":"form-control","name":"textarea-1476748007461"}]';
             if (taskform != null) {
                 var formB = $("#build-wrap").formBuilder();
                 var formData = taskform;
@@ -126,23 +127,24 @@
                 var role = $('#task-role').val();
                 var description = $('#task-description').val();
                
-                if (taskform != null) {
-                    var formBuilder = formB.actions.getData('json', true).replace(/\r?\n|\r/g, '');
-                } else {
-                    formBuilder = null;
+                var formBuilder = formB.actions.getData('json', true).replace(/\r?\n|\r/g, '');
+                formBuilder = JSON.parse(formBuilder);
+                var tempArr = []
+                for (var i = 0; i < formBuilder.length; i++) {
+                    tempArr.push(formBuilder[i]);
                 }
 
                 let data = {
                     name: name,
                     idRole: role,
                     description: description,
-                    formBuilder: formBuilder
+                    formBuilder: JSON.stringify(tempArr)
                 }
                 if (name == "") {
                     showToastr("error", "Task name not null", "toast-bottom-left");
                     toggleLoading($this);
                 } else {
-                    editTask(data);
+                    editFormTask(data);
                 }
             });
             $("body").on("click", "#btn-remove-task", function () {
@@ -153,9 +155,9 @@
                 return con;
             })
         });
-        function editTask(data) {
+        function editFormTask(data) {
              $.ajax({
-                url: "@Url.Action("edittask","process",new {area = "api"})",
+                url: "@Url.Action("editFormTask", "process",new {area = "api"})",
                 type: "POST",
                 data: data,
                 dataType: "json",
