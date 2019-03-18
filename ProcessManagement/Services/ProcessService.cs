@@ -77,5 +77,10 @@ namespace ProcessManagement.Services
             var count = db.Processes.Where(m => m.IdGroup == idGroup).Count();
             return count;
         }
+        public List<Process> getProcess(int idGroup)
+        {
+            List<Process> processes = db.Processes.Where(x => x.IdGroup == idGroup).OrderByDescending(x => x.Updated_At).ToList();
+            return processes;
+        }
 	}
 }

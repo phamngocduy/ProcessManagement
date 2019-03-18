@@ -27,8 +27,8 @@ namespace ProcessManagement.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public string DataJson { get; set; }
-        public Nullable<System.DateTime> Created_At { get; set; }
-        public Nullable<System.DateTime> Updated_At { get; set; }
+        public System.DateTime Created_At { get; set; }
+        public System.DateTime Updated_At { get; set; }
         public string Avatar { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }

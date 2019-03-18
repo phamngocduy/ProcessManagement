@@ -12,10 +12,11 @@ using ProcessManagement.Controllers;
 using ProcessManagement.Filters;
 namespace ProcessManagement.Areas.API.Controllers
 {
-    [AjaxAuthorize]
+    
     public class ProcessController : ProcessManagement.Controllers.BaseController
     {
         ///=============================================================================================
+        CommonService commonService = new CommonService();
         ProcessService processService = new ProcessService();
         StepService stepService = new StepService();
         RoleService roleService = new RoleService();

@@ -313,10 +313,19 @@
     <Compile Include="Models\Process.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProcessRun.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Role.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\StepRun.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\TaskProcess.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TaskProcessRun.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Type.cs">
