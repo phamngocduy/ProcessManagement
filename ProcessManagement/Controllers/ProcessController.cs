@@ -48,8 +48,8 @@ namespace ProcessManagement.Controllers
         }
         public ActionResult NewProcessRun(int groupid)
         {
-            var ListProcess = db.Processes.Where(x => x.IdGroup == groupid).OrderByDescending(x => x.Updated_At).ToList();
-            return View(ListProcess);
+            var group = groupService.findGroup(groupid);
+            return View(group);
         }
         [Authorize]
         [GroupAuthorize]

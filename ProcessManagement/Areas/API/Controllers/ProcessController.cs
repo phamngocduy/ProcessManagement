@@ -12,10 +12,11 @@ using ProcessManagement.Controllers;
 using ProcessManagement.Filters;
 namespace ProcessManagement.Areas.API.Controllers
 {
-    [AjaxAuthorize]
+    
     public class ProcessController : ProcessManagement.Controllers.BaseController
     {
         ///=============================================================================================
+        CommonService commonService = new CommonService();
         ProcessService processService = new ProcessService();
         StepService stepService = new StepService();
         RoleService roleService = new RoleService();
@@ -181,6 +182,33 @@ namespace ProcessManagement.Areas.API.Controllers
         {
             taskService.changePosition(position);
             var response = new { message = "Change position sucess", status = HttpStatusCode.OK };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult getProcessList(int groupid)
+        {
+            List<Process> processes = processService.getProcess(groupid);
+            List<object> jProcesses = new List<object>();
+            foreach (var process in processes)
+            {
+                object jProcess = new
+                {
+                    id = process.Id,
+                    name = process.Name,
+                    des = process.Description,
+                    owner = new {
+                        name = process.AspNetUser.UserName,
+                        avatar = process.AspNetUser.Avatar,
+                        avatardefault = process.AspNetUser.AvatarDefault
+                    },
+                    avatar = process.Avatar,
+                    selected = false,
+                    update_at = process.Updated_At,
+                    time_ralitive = commonService.TimeAgo(process.Updated_At)
+                };
+                jProcesses.Add(jProcess);
+            }
+            
+            var response = new { data = jProcesses, status = HttpStatusCode.OK };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
     }

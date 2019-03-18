@@ -1,4 +1,4 @@
-﻿@model  IEnumerable<ProcessManagement.Models.Process>
+﻿@model ProcessManagement.Models.Group
 @{
     ViewBag.Title = "Create Start Process";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -59,56 +59,56 @@
                 <form id="js-wizard-process-run" method="POST">
                     <h3>Choose Process To Start</h3>
                     <fieldset>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-6 offset-md-6 search">
-                                <input type="search" class="form-control" name="name" placeholder="Search here..." />
-                                <button type="button" class="btn btn-default waves-effect"><i class="icon-magnifier"></i></button>
-                            </div>
-                        </div>
-                        <div class="row process-list display-flex clearfix">
-                            @{ Random rd = new Random(); }
-                            @foreach (var process in Model)
-                            {
-                                int temp = rd.Next(1, 15);
-
-                                <div class="col-lg-3 col-md-4 col-sm-12">
-                                    <div class="card">
-                                        <div class="process">
-                                            <div class="process-avatar">
-                                                <label class="fancy-checkbox">
-                                                    <input type="checkbox" class="process-check" name="process-choose">
-                                                    <span></span>
-                                                </label>
-                                                <a href="~/Content/images/image-gallery/@(temp).jpg" data-lightbox="gallery" data-title="@process.Name" data-description="@process.Description">
-                                                    <div class="img-container">
-                                                        <img class='img-responsive' src='~/Content/images/image-gallery/@(temp).jpg' alt="@process.Name" />
-                                                    </div>
-                                                </a>
-                                                @*<img src="~/Content/images/image-gallery/@(count).jpg" alt="@process.Name" class="img-responsive" />*@
-                                            </div>
-                                            <div class="process-name">
-                                                <p class="m-b-5 text-muted">@process.Name</p>
-                                                <small><span class="date text-muted">Nov 02, 2017</span></small>
-                                                <button class="btn btn-outline-theme btn-detail waves-effect" type="button"><i class="icon-eye"></i></button>
+                        <div class="choose-content">
+                            @*<div class="row">
+                                <div class="col-sm-12 col-md-6 offset-md-6 search">
+                                    <input type="search" class="form-control" name="name" placeholder="Search here..." />
+                                    <button type="button" class="btn btn-default waves-effect"><i class="icon-magnifier"></i></button>
+                                </div>
+                            </div>*@
+                            @*<div class="row process-list display-flex clearfix">
+                                @{ Random rd = new Random(); }
+                                @foreach (var process in Model)
+                                {
+                                    int temp = rd.Next(1, 15);
+                                    <div class="col-lg-3 col-md-4 col-sm-12">
+                                        <div class="card">
+                                            <div class="process">
+                                                <div class="process-avatar">
+                                                    <label class="fancy-checkbox">
+                                                        <input type="checkbox" class="process-check" name="process-choose">
+                                                        <span></span>
+                                                    </label>
+                                                    <a href="~/Content/images/image-gallery/@(temp).jpg" data-lightbox="gallery" data-title="@process.Name" data-description="@process.Description">
+                                                        <div class="img-container">
+                                                            <img class='img-responsive' src='~/Content/images/image-gallery/@(temp).jpg' alt="@process.Name" />
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div class="process-name">
+                                                    <p class="m-b-5 text-muted">@process.Name</p>
+                                                    <small><span class="date text-muted">Nov 02, 2017</span></small>
+                                                    <button class="btn btn-outline-theme btn-detail waves-effect" type="button"><i class="icon-eye"></i></button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                }
+                            </div>*@
+                             @*<div class="row clearfix">
+                                <div class="col-sm-12 col-md-6 process-choose">
+                                    <input type="text" name="name" class="form-control" value="process1" readonly />
                                 </div>
-                            }
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-sm-12 col-md-6 process-choose">
-                                <input type="text" name="name" class="form-control" value="process1" readonly />
-                            </div>
-                            <div class="col-sm-12 col-md-6 pagging">
-                                <ul class="pagination">
-                                    <li class="page-item previous"><a class="page-link waves-effect" href="#">Previous</a></li>
-                                    <li class="page-item active"><a class="page-link waves-effect" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link waves-effect" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link waves-effect" href="#">3</a></li>
-                                    <li class="page-item next"><a class="page-link waves-effect" href="#">Next</a></li>
-                                </ul>
-                            </div>
+                                <div class="col-sm-12 col-md-6 pagging">
+                                    <ul class="pagination">
+                                        <li class="page-item previous"><a class="page-link waves-effect" href="#">Previous</a></li>
+                                        <li class="page-item active"><a class="page-link waves-effect" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link waves-effect" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link waves-effect" href="#">3</a></li>
+                                        <li class="page-item next"><a class="page-link waves-effect" href="#">Next</a></li>
+                                    </ul>
+                                </div>
+                            </div>*@ 
                         </div>
                     </fieldset>
                     <h3>Process Start Information</h3>
@@ -215,17 +215,14 @@
                     //set button waves effect
                     setButtonWavesEffect(event);
                     $tab.find('a').addClass("waves-effect");
+
+                    //getprocess
+                    getProcessList();
                     //TODO: Có nên hiện detail của process cho người dùng xem hông
                     $(".btn-detail").on("click", function () {
                         var detailModal = $("#js-modal-process-detail");
                         detailModal.modal("show");
                     });
-                    //Chuyển checkbox thành radio (reference: https://stackoverflow.com/a/5839924)
-                    var checkbox = $(".process-check");
-                    checkbox.on("change", function () {
-                        checkbox.prop("checked", false);
-                        $(this).prop("checked", true);
-                    })
                 },
                 onStepChanging: function (event, currentIndex, newIndex) {
                     if (currentIndex > newIndex) { return true; }
@@ -270,7 +267,7 @@
                 'resizeDuration': 200,
                 'wrapAround': true,
                 'showImageNumberLabel': false
-            })
+            });
         });
 
         function setButtonWavesEffect(event) {
@@ -278,6 +275,125 @@
             //$(event.currentTarget).find('[role="menu"] li:not(.disabled) a').addClass('waves-effect');
             $(event.currentTarget).find('[role="menu"] li a').addClass('waves-effect');
         }
+        function getProcessList() {
+                $.ajax({
+                    url: "@Url.Action("getprocesslist", "process", new { area = "api"})",
+                    type: "GET",
+                    data: { groupid : @Model.Id },
+                    dataType: "json",
+                    success: function (response) {
+                        //thanh cong thi no tra du lieu ve
+                        if (response.status != 200) {
+                             showToastr("error", response.message, "toast-bottom-left")
+                            console.error(response)
+                        }else {
+                            var processes = response.data;
+                                
+                            renderProcessLayout();
+                            renderProcessList(1, processes);
+
+                            //Chuyển checkbox thành radio (reference: https://stackoverflow.com/a/5839924)
+                            var checkbox = $(".process-check");
+                            checkbox.on("change", function () {
+                                checkbox.prop("checked", false);
+                                $(this).prop("checked", true);
+                            })
+                        }
+                    }
+                })
+        }
+        function renderProcessLayout() {
+            var search = `<div class="row">
+                                <div class="col-sm-12 col-md-6 offset-md-6 search">
+                                    <input type="search" class="form-control" name="name" placeholder="Search here..." />
+                                    <button type="button" class="btn btn-default waves-effect"><i class="icon-magnifier"></i></button>
+                                </div>
+                            </div>`;
+            var processlist = `<div class="row process-list display-flex clearfix"></div>`;
+            var footer = ` <div class="row clearfix">
+                                <div class="col-sm-12 col-md-6 process-choose">
+                                    <input type="text" name="name" class="form-control" value="process1" readonly />
+                                </div>
+                                <div class="col-sm-12 col-md-6 pagging">
+                                    <ul class="pagination">
+                                        
+                                    </ul>
+                                </div>
+                            </div>`;
+            $(".choose-content").html(search + processlist + footer);
+        }
+        function renderProcessList(page, processes, key = null) {
+            //search first
+            if (key != null) {
+                var pattern = new RegExp("^.*" + key + ".*$")
+                processes = processes.filter(process => process.name.match(pattern);
+            }
+
+            var pageSize = 4,
+                totalItem = processes.length,
+                totalPage =  Math.ceil(totalItem / pageSize),
+                position = (page - 1) * pageSize,
+                pagging = {},
+                j = 0, k = 1;
+            for (var i = 1; i < totalPage; i++) {
+
+            }
+            while (processes[j] != null) {
+                
+            }
+
+                //<li class="page-item previous"><a class="page-link waves-effect" href="#">Previous</a></li>
+                //<li class="page-item active"><a class="page-link waves-effect" href="#">1</a></li>
+                //<li class="page-item"><a class="page-link waves-effect" href="#">2</a></li>
+                //<li class="page-item"><a class="page-link waves-effect" href="#">3</a></li>
+                //<li class="page-item next"><a class="page-link waves-effect" href="#">Next</a></li>
+            var processlist = ``;
+            for (var i = position; i < position; i++){
+                processlist += renderProcess(processes[i]);
+            }
+            processlist += `</div>`;
+            var footer = ` <div class="row clearfix">
+                                <div class="col-sm-12 col-md-6 process-choose">
+                                    <input type="text" name="name" class="form-control" value="process1" readonly />
+                                </div>
+                                <div class="col-sm-12 col-md-6 pagging">
+                                    <ul class="pagination">
+                                        <li class="page-item previous"><a class="page-link waves-effect" href="#">Previous</a></li>
+                                        <li class="page-item active"><a class="page-link waves-effect" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link waves-effect" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link waves-effect" href="#">3</a></li>
+                                        <li class="page-item next"><a class="page-link waves-effect" href="#">Next</a></li>
+                                    </ul>
+                                </div>
+                            </div>`;
+            
+            
+        }
+        function renderProcess(process) {
+            return `<div class="col-lg-3 col-md-4 col-sm-12">
+                        <div class="card">
+                            <div class="process">
+                                <div class="process-avatar">
+                                    <label class="fancy-checkbox">
+                                        <input type="checkbox" class="process-check" name="process-choose" data-id=${process.id}>
+                                        <span></span>
+                                    </label>
+                                    <a href="/Content/images/image-gallery/1.jpg" data-lightbox="gallery" data-title="${process.name}" data-description="${process.des}">
+                                        <div class="img-container">
+                                            <img class='img-responsive' src='/Content/images/image-gallery/1.jpg' alt="${process.name}" />
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="process-name">
+                                    <p class="m-b-5 text-muted">${process.name}</p>
+                                    <small><span class="date text-muted">${process.time_ralitive}</span></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+        }
+        
+
     </script>
 }
 
