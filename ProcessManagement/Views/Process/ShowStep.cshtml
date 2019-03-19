@@ -102,8 +102,8 @@
             <div class="header">
                 <span>
                     RoleList
-                    <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id })">
-                        <img style="float: right" src="~/Content/images/icons-plus.png" />
+                    <a style="float: right" class="btn btn-sm btn-outline-success" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id })">
+                        <img src="~/Content/images/icons-plus.png" />
                     </a>
                 </span>
             </div>
@@ -124,15 +124,19 @@
                             <div class="media">
                                 <img class="media-object " src="~/Content/images/xs/avatar4.jpg" alt="">
                                 <div class="media-body">
-                                    <span class="name">@role.Name</span>
+                                    <span class="name">
+                                        @role.Name
+                                        <span style="float :right">
+                                            <a class="btn btn-sm btn-outline-success" style=" margin-left: 10px" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "EditRole", roleid = role.Id})">
+                                                <i class="icon-pencil"></i>
+                                            </a>
+                                            <a class="btn btn-sm btn-outline-danger js-sweetalert" title="Delete" style="margin-left: 10px" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "DeleteRole", roleid = role.Id})">
+                                                <i class="icon-trash"></i>
+                                            </a>
+                                        </span>
+                                    </span>
                                     <span class="message">
                                         @role.Description
-                                        <a style="float: right" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "EditRole", roleid = role.Id})">
-                                            <img src="~/Content/images/icons-edit.png" />
-                                        </a>
-                                        <a style="float: right" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "DeleteRole", roleid = role.Id})">
-                                            <img src="~/Content/images/icons-remove.png" />
-                                        </a>
                                     </span>
                                 </div>
                             </div>
