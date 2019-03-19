@@ -224,7 +224,7 @@
                         <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process", action = "ShowStep", groupslug = Model.groupSlug, groupid = Model.Id, processid = pro.Id })">
                             <li class="media">
 
-                                <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
+                                <img class="mr-3 process-avatar" src="@pro.Avatar" alt="Generic placeholder image">
                                 <div class="media-body">
                                     <h5 class="mt-0 mb-1">@pro.Name</h5>
                                     <p>@pro.Description</p>

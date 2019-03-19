@@ -606,13 +606,12 @@
                 }
             }
             let data = $("#mySavedModel").val();
-            let img = myDiagram.makeImage({
-                position: new go.Point(doc.x - 100, doc.y - 100),
-                size: new go.Size(doc.width + 200, doc.heigh + 200),
+            let img = myDiagram.makeImageData({
                 scale: 1,
-                background: "AntiqueWhite",
-                type: "image/jpeg"
+                background: "rgba(255, 255, 255, 0.1)",
+                type: "image/png"
             });
+            img.classname = '@Model.Id-@Model.Name';
             //saveDiagramProperties();
             let idProcess = @Model.Id;
             let b = []
@@ -630,7 +629,7 @@
                 processId: idProcess,
                 nodeData: JSON.stringify(myDiagram.model.nodeDataArray),
                 linkData: JSON.stringify(b),
-                imageprocess: JSON.stringify(img)
+                imageprocess: img
             }
             //truyen qua controller
             $.ajax({
