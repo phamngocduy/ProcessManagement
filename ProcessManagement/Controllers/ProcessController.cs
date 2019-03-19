@@ -149,23 +149,55 @@ namespace ProcessManagement.Controllers
             processStatisticModel.Add("totalstep", listStep.Count);
             processStatisticModel.Add("totalrole", listRole.Count);
 
-            List<Step> liststep = new List<Step>();
+            List<Step> listnextstep1 = new List<Step>();
+            List<Step> listnextstep2 = new List<Step>();
             Step start = listStep.Where(x => x.StartStep == true).FirstOrDefault();
-            liststep.Add(start);
+            listnextstep1.Add(start);
             int z = 0;
+            int t = 0;
             for (int j = 0; j < listStep.Count; j++)
             {
+                if (listnextstep1[j].NextStep1 == 0)
+                {
+                    break;
+                }
                 do
                 {
-                    if (listStep[z].Key == liststep[j].NextStep1 && listStep[z].StartStep == false)
+                    if (listStep[z].Key == listnextstep1[j].NextStep2 && listStep[z].StartStep == false)
                     {
-                        liststep.Add(listStep[z]);
+                        listnextstep2.Add(listStep[z]);
+                    }
+                    if (listStep[z].Key == listnextstep1[j].NextStep1 && listStep[z].StartStep == false)
+                    {
+                        listnextstep1.Add(listStep[z]);
                         z = 0;
                         break;
                     }
                     z++;
                 } while (z < listStep.Count);
+            }
 
+            for (int j = 0; j < listStep.Count; j++)
+            {
+                if (listnextstep2[j].NextStep1 == 0)
+                {
+                    break;
+                }
+                do
+                {
+                    if (listStep[t].Key == listnextstep2[j].NextStep1 && listStep[t].StartStep == false)
+                    {
+                        listnextstep2.Add(listStep[t]);
+                        t = 0;
+                        break;
+                    }
+                    t++;
+                } while (t < listStep.Count);
+            }
+
+            foreach (var item in listnextstep2)
+            {
+                listnextstep1.Add(item);
             }
 
 
@@ -173,7 +205,7 @@ namespace ProcessManagement.Controllers
             ViewData["process"] = process;
             ViewData["listRole"] = listRole;
             ViewData["statistic"] = processStatisticModel;
-            return View(liststep);
+            return View(listnextstep1);
         }
         [GroupAuthorize]
         public ActionResult EditStep(int stepid)

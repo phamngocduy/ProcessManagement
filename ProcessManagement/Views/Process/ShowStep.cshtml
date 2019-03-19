@@ -9,6 +9,27 @@
     var process = ViewData["process"] as ProcessManagement.Models.Process;
     var statistic = ViewData["statistic"] as dynamic;
     var listRole = ViewData["listRole"] as List<ProcessManagement.Models.Role>;
+    //List<Step> liststep = new List<Step>();
+    //Step start = Model.Where(x => x.StartStep == true).FirstOrDefault();
+    //liststep.Add(start);
+    //int z = 0;
+    //for (int j = 0; j < Model.Count; j++)
+    //{
+    //    if (liststep[j].NextStep1 == 0)
+    //    {
+    //        break;
+    //    }
+    //    do
+    //    {
+    //        if (Model[z].Key == liststep[j].NextStep1 && Model[z].StartStep == false)
+    //        {
+    //            liststep.Add(Model[z]);
+    //            z = 0;
+    //            break;
+    //        }
+    //        z++;
+    //    } while (z <= Model.Count);
+    //}
 }
 
 
@@ -151,7 +172,7 @@
             </div>
             <div class="body">
                 <ul class="step-list">
-                    @foreach (var step in Model)
+                    @foreach (var step in Model.Where(x => x.Figure == "Step"))
                     {
                         List<TaskProcess> taskList = db.TaskProcesses.Where(x => x.IdStep == step.Id).OrderBy(x => x.Position).ToList();
                         <li>
