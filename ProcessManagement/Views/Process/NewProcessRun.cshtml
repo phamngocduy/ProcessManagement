@@ -291,13 +291,25 @@
                                 
                             renderProcessLayout();
                             renderProcessList(1, processes);
-
+                            $(".choose-content").on("click", ".page-item:not(.previous):not(.next)", function () {
+                                var page = $(this)[0].dataset.page;
+                                $(".process-list").fadeOut("500", function () {
+                                    renderProcessList(page, processes);
+                                });
+                            });
+                            $(".search button").on("click", function () {
+                                var key = $(this).parent().find("input").val();
+                                $(".process-list").fadeOut("500", function () {
+                                    renderProcessList(1, processes, key);
+                                });
+                            });
                             //Chuyển checkbox thành radio (reference: https://stackoverflow.com/a/5839924)
                             var checkbox = $(".process-check");
-                            checkbox.on("change", function () {
+                            $(".choose-content").on("change", ".process-check", function () {
                                 checkbox.prop("checked", false);
                                 $(this).prop("checked", true);
-                            })
+                            });
+                            
                         }
                     }
                 })
@@ -321,53 +333,62 @@
                                 </div>
                             </div>`;
             $(".choose-content").html(search + processlist + footer);
-        }
-        function renderProcessList(page, processes, key = null) {
+        }   
+        function renderProcessList(page, processseList, key = null) {
             //search first
             if (key != null) {
+                key = key.trim().toLowerCase();
                 var pattern = new RegExp("^.*" + key + ".*$")
-                processes = processes.filter(process => process.name.match(pattern);
+                processseList = processseList.filter(process => process.search.match(pattern));
             }
-
+            //pagging item
             var pageSize = 4,
-                totalItem = processes.length,
-                totalPage =  Math.ceil(totalItem / pageSize),
-                position = (page - 1) * pageSize,
-                pagging = {},
-                j = 0, k = 1;
-            for (var i = 1; i < totalPage; i++) {
-
-            }
-            while (processes[j] != null) {
-                
-            }
-
-                //<li class="page-item previous"><a class="page-link waves-effect" href="#">Previous</a></li>
-                //<li class="page-item active"><a class="page-link waves-effect" href="#">1</a></li>
-                //<li class="page-item"><a class="page-link waves-effect" href="#">2</a></li>
-                //<li class="page-item"><a class="page-link waves-effect" href="#">3</a></li>
-                //<li class="page-item next"><a class="page-link waves-effect" href="#">Next</a></li>
+                totalItem = processseList.length,
+                totalPage = Math.ceil(totalItem / pageSize);
             var processlist = ``;
-            for (var i = position; i < position; i++){
-                processlist += renderProcess(processes[i]);
+            if (totalItem == 0) {
+                $(".process-list").addClass("empty-process");
+                processlist = "No process...";
+            } else {
+                $(".process-list").removeClass("empty-process");
+                var from, to;
+                if (totalPage == 1) {
+                    from = 0;
+                    to = totalItem;
+                } else {
+                    if (page == 1) {
+                        from = 0;
+                        to = pageSize;
+                    } else {
+                        var position = (page - 1) * pageSize;
+                        from = position;
+                        var odd = totalItem % pageSize;
+                        odd = odd == 0 ? totalItem : odd;
+                        to = odd + position;
+                    }
+
+                }
+                
+                for (var i = from; i < to; i++) {
+                    processlist += renderProcess(processseList[i]);
+                }
             }
-            processlist += `</div>`;
-            var footer = ` <div class="row clearfix">
-                                <div class="col-sm-12 col-md-6 process-choose">
-                                    <input type="text" name="name" class="form-control" value="process1" readonly />
-                                </div>
-                                <div class="col-sm-12 col-md-6 pagging">
-                                    <ul class="pagination">
-                                        <li class="page-item previous"><a class="page-link waves-effect" href="#">Previous</a></li>
-                                        <li class="page-item active"><a class="page-link waves-effect" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link waves-effect" href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link waves-effect" href="#">3</a></li>
-                                        <li class="page-item next"><a class="page-link waves-effect" href="#">Next</a></li>
-                                    </ul>
-                                </div>
-                            </div>`;
-            
-            
+            $(".process-list").html(processlist).fadeIn(300);
+
+            //pagging
+            var pagging = ``;
+            if (totalPage > 1) {
+                pagging = `<li class="page-item previous"><a class="page-link waves-effect" href="#">Previous</a></li>`;
+                for (var i = 1; i <= totalPage; i++) {
+                    if (page == i) {
+                        pagging += `<li class="page-item active" data-page=${i}><a class="page-link waves-effect" href="#">${i}</a></li>`
+                    } else {
+                        pagging += `<li class="page-item" data-page=${i}><a class="page-link waves-effect" href="#" >${i}</a></li>`
+                    }
+                }
+                pagging += `<li class="page-item next"><a class="page-link waves-effect" href="#">Next</a></li>`;
+            }
+            $(".pagination").html(pagging);
         }
         function renderProcess(process) {
             return `<div class="col-lg-3 col-md-4 col-sm-12">

@@ -149,7 +149,10 @@ namespace ProcessManagement.Areas.API.Controllers
                 response = new { message = message, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
-            
+
+
+
+
             if (idRole != null)
             {
                 int idR = idRole.GetValueOrDefault();
@@ -171,7 +174,8 @@ namespace ProcessManagement.Areas.API.Controllers
             message = "Created Task Successfully";
             response = new { message = message, status = status };
             return Json(response, JsonRequestBehavior.AllowGet);
-            
+
+
         }
         [HttpPost]
         public JsonResult changeTaskPosition(string position)
@@ -180,76 +184,33 @@ namespace ProcessManagement.Areas.API.Controllers
             var response = new { message = "Change position sucess", status = HttpStatusCode.OK };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
-
-        [HttpPost]
-        public JsonResult editFormTask(string name, int? idRole, string description, string formBuilder)
+        public JsonResult getProcessList(int groupid)
         {
-            ///////////////////////////
-            /// chỉ được edit task thuộc process mà mình quản lý
-            ///////////////////////////
-            var status = HttpStatusCode.OK;
-            string message;
-            object response;
-            int idTask = int.Parse(Session["idTask"].ToString());
-            var task = taskService.findTask(idTask);
-
-
-            if (task == null)
+            List<Process> processes = processService.getProcess(groupid);
+            List<object> jProcesses = new List<object>();
+            foreach (var process in processes)
             {
-                message = "Task not exit";
-                status = HttpStatusCode.InternalServerError;
-                response = new { message = message, status = status };
-                return Json(response, JsonRequestBehavior.AllowGet);
-            }
-
-            Step step = stepService.findStep(task.Step.Id);
-            //lấy group thuộc process
-            int idGroup = task.Step.Process.Group.Id;
-            string idUser = User.Identity.GetUserId();
-
-            //check xem có thuộc process trong group
-            Participate user = participateService.findMemberInGroup(idUser, idGroup);
-            if (user == null)
-            {
-                message = "Task not found";
-                status = HttpStatusCode.Forbidden;
-                response = new { message = message, status = status };
-                return Json(response, JsonRequestBehavior.AllowGet);
-            }
-            if (name == "")
-            {
-                status = HttpStatusCode.InternalServerError;
-                message = "Created Task Successfully";
-                response = new { message = message, status = status };
-                return Json(response, JsonRequestBehavior.AllowGet);
-            }
-
-
-
-
-            if (idRole != null)
-            {
-                int idR = idRole.GetValueOrDefault();
-                var role = roleService.findRoleOfProcess(idR, step.Process.Id);
-                if (role == null)
+                object jProcess = new
                 {
-                    //role not exist
-                    status = HttpStatusCode.InternalServerError;
-                    message = "Role not exist";
-                    response = new { message = message, status = status };
-                    return Json(response, JsonRequestBehavior.AllowGet);
-
-                }
-
+                    id = process.Id,
+                    name = process.Name,
+                    search = process.Name.ToLower(),
+                    des = process.Description,
+                    owner = new {
+                        name = process.AspNetUser.UserName,
+                        avatar = process.AspNetUser.Avatar,
+                        avatardefault = process.AspNetUser.AvatarDefault
+                    },
+                    avatar = process.Avatar,
+                    selected = false,
+                    update_at = process.Updated_At,
+                    time_ralitive = commonService.TimeAgo(process.Updated_At)
+                };
+                jProcesses.Add(jProcess);
             }
-
-            taskService.editFromTask(task.Id, name, idRole, description, formBuilder);
-            SetFlash(FlashType.success, "Created Task Successfully");
-            message = "Created Task Successfully";
-            response = new { message = message, status = status };
+            
+            var response = new { data = jProcesses, status = HttpStatusCode.OK };
             return Json(response, JsonRequestBehavior.AllowGet);
-
-
         }
     }
 }

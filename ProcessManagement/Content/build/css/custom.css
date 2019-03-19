@@ -1300,6 +1300,12 @@ input[type=number] {
   top: 14px;
   right: 10px;
 }
+.process-list.empty-process {
+  padding: 151px;
+  text-align: center;
+  display: block;
+  font-size: 20px;
+}
 
 .step-list {
   list-style: none;
