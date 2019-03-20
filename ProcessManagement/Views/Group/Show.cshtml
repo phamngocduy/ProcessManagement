@@ -5,7 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var listprocess = ViewData["ListProcess"] as List<ProcessManagement.Models.Process>;
     //var listuser = ViewData["ListParticipant"] as List<ProcessManagement.Models.Participate>;
-    var statistic = ViewData["statistic"] as dynamic;
+    var statistic = ViewData["Statistic"] as dynamic;
+    var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
+    var isOwnerOrAdmin = userRole.IsOwner || userRole.IsAdmin ?  "" : "disabled";
 }
 @section CustomCss{
     <link rel="stylesheet" href="~/Content/vendor/chartist/css/chartist.min.css">
@@ -13,14 +15,16 @@
     <link rel="stylesheet" href="~/Content/vendor/select2/select2.css" />
     <link rel="stylesheet" href="~/Content/vendor/bootstrap-multiselect/bootstrap-multiselect.css">
     <style>
-        .dropdown-menu  a{
-            display:block;
+        .dropdown-menu a {
+            display: block;
         }
+
         .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
             background-color: unset !important;
         }
-        .multiselect-container > li > a > label{
-            padding: 3px 40px;
+
+        .multiselect-container > li > a > label {
+            padding: 6px 6px 6px 30px;
         }
     </style>
 }
@@ -177,22 +181,29 @@
                     <li class="media">
                         <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
                         <div class="media-body">
-                            <h5 class="mt-0 mb-1">List-based media object</h5>
-                            <p>This is description</p>
+                            <h5 class="mt-0 mb-1">List-based media object</h5><span class="badge badge-warning">Running...</span>
+                            <button class="btn btn-default waves-effect"><i class="icon-settings"></i></button>
                         </div>
                     </li>
                     <li class="media my-4">
                         <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
                         <div class="media-body">
-                            <h5 class="mt-0 mb-1">List-based media object</h5>
-                            <p>This is description</p>
+                            <h5 class="mt-0 mb-1">List-based media object</h5><span class="badge badge-info">Ready to run</span>
+                            <button class="btn btn-default waves-effect"><i class="icon-settings"></i></button>
                         </div>
                     </li>
                     <li class="media">
                         <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
                         <div class="media-body">
-                            <h5 class="mt-0 mb-1">List-based media object</h5>
-                            <p>This is description</p>
+                            <h5 class="mt-0 mb-1">List-based media object</h5><span class="badge badge-success">Suceed</span>
+                            <button class="btn btn-default waves-effect"><i class="icon-settings"></i></button>
+                        </div>
+                    </li>
+                    <li class="media">
+                        <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
+                        <div class="media-body">
+                            <h5 class="mt-0 mb-1">List-based media object</h5><span class="badge badge-danger">Failed</span>
+                            <button class="btn btn-default waves-effect"><i class="icon-settings"></i></button>
                         </div>
                     </li>
                 </ul>
@@ -227,7 +238,7 @@
                                 <img class="mr-3 process-avatar" src="@pro.Avatar" alt="Generic placeholder image">
                                 <div class="media-body">
                                     <h5 class="mt-0 mb-1">@pro.Name</h5>
-                                    <p>@pro.Description</p>
+                                    @*<p>@pro.Description</p>*@
                                 </div>
                             </li>
                         </a>
@@ -259,8 +270,8 @@
                     </table>
                 </div>
                 <div id="add-member-search">
-                    <input type="hidden" style="width:calc(100% - 116px);border: 1px solid #ced4da;padding:5px 10px;" />
-                    <button class="btn btn-primary-theme waves-effect" id="btn-add-member" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing">Add member</button>
+                    <input type="hidden" style="width:calc(100% - 116px);border: 1px solid #ced4da;padding:5px 10px;" @isOwnerOrAdmin/>
+                    <button class="btn btn-primary-theme waves-effect" id="btn-add-member" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing" @isOwnerOrAdmin>Add member</button>
                 </div>
             </div>
         </div>
@@ -297,7 +308,7 @@
                 "bLengthChange": false,
                 "ajax": {
                     "type": "GET",
-                    "url": "@Url.Action("getmemberlist", "group", new { area = "api"})",
+                    "url": "@Url.Action("getmemberlist", "group", new { area = "api" })",
                     "dataSrc": function (json) {
                         console.log(json);
                         json = json.data;
@@ -315,7 +326,8 @@
                             var member = `${avatar}${name}`;
                             var isAdmin = json[i].isAdmin ? "selected" : "";
                             var isManager = json[i].isManager ? "selected" : "";
-                            var role = `<select multiple="multiple" class="role multiselect" id="role-${i + 1}" data-id="${json[i].id}">
+
+                            var role = `<select multiple="multiple" class="role multiselect" id="role-${i + 1}" data-id="${json[i].id}" @isOwnerOrAdmin>
                                             <option value="a" ${isAdmin}>admin</option>
                                             <option value="m" ${isManager}>manager</option>
                                         </select>`;
@@ -403,7 +415,7 @@
                     addMember(newMember)
                 }
             });
-            
+
             $("#add-member-search input").select2({
                 placeholder: "Search username, nickname, email...",
                 ajax: {
@@ -425,7 +437,7 @@
                     }
                 }
             });
-            
+
         });
         function addMember(newMember) {
             $.ajax({
@@ -461,7 +473,7 @@
                     console.log(response);
                     if (response.status == 200) {
                         showToastr("success", response.message, "toast-bottom-left");
-                        table.ajax.reload();
+                        $("#table-member").DataTable().ajax.reload();
                     } else {
                         showToastr("error", response.message, "toast-bottom-left")
                         console.error(response)

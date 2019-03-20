@@ -139,6 +139,7 @@ namespace ProcessManagement.Controllers
         [GroupAuthorize]
         public ActionResult ShowStep(int processid)
         {
+            string idUser = User.Identity.GetUserId();
             var process = processService.findProcess(processid);
             var group = groupService.findGroup(process.IdGroup);
             var listStep = stepService.findStepsOfProcess(processid);
@@ -201,10 +202,11 @@ namespace ProcessManagement.Controllers
             }
 
 
-            ViewData["group"] = group;
-            ViewData["process"] = process;
-            ViewData["listRole"] = listRole;
-            ViewData["statistic"] = processStatisticModel;
+            ViewData["Group"] = group;
+            ViewData["Process"] = process;
+            ViewData["ListRole"] = listRole;
+            ViewData["Statistic"] = processStatisticModel;
+            ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             return View(listnextstep1);
         }
         [GroupAuthorize]
@@ -493,6 +495,7 @@ namespace ProcessManagement.Controllers
         [GroupAuthorize]
         public ActionResult AddTask(int stepid)
         {
+            string idUser = User.Identity.GetUserId();
             Step step = stepService.findStep(stepid);
             if (step == null) return HttpNotFound();
             Process ps = processService.findProcess(step.IdProcess);
@@ -503,6 +506,7 @@ namespace ProcessManagement.Controllers
             ViewData["ListRole"] = role;
             ViewData["Group"] = group;
             Session["idStep"] = step.Id;
+            ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             return View(pr);
         }
        
@@ -510,6 +514,7 @@ namespace ProcessManagement.Controllers
         [GroupAuthorize]
         public ActionResult ShowTask(int taskid)
         {
+            string idUser = User.Identity.GetUserId();
             TaskProcess task = taskService.findTask(taskid);
             if (task == null) return HttpNotFound();
             Step step = stepService.findStep(task.IdStep);
@@ -520,7 +525,7 @@ namespace ProcessManagement.Controllers
             ViewData["ListRole"] = role;
             ViewData["Group"] = group;
             Session["idTask"] = task.Id;
-
+            ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             return View(task);
         }
 
@@ -549,6 +554,7 @@ namespace ProcessManagement.Controllers
         [GroupAuthorize]
         public ActionResult AddFormTask(int stepid)
         {
+            string idUser = User.Identity.GetUserId();
             Step step = stepService.findStep(stepid);
             if (step == null) return HttpNotFound();
             Process ps = processService.findProcess(step.IdProcess);
@@ -559,6 +565,7 @@ namespace ProcessManagement.Controllers
             ViewData["ListRole"] = role;
             ViewData["Group"] = group;
             Session["idStep"] = step.Id;
+            ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             return View(pr);
         }
 
@@ -566,6 +573,7 @@ namespace ProcessManagement.Controllers
         [GroupAuthorize]
         public ActionResult ShowFormTask(int taskid)
         {
+            string idUser = User.Identity.GetUserId();
             TaskProcess task = taskService.findTask(taskid);
             if (task == null) return HttpNotFound();
             Step step = stepService.findStep(task.IdStep);
@@ -576,7 +584,7 @@ namespace ProcessManagement.Controllers
             ViewData["ListRole"] = role;
             ViewData["Group"] = group;
             Session["idTask"] = task.Id;
-
+            ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             return View(task);
         }
     }

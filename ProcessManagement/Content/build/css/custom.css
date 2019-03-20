@@ -1222,6 +1222,9 @@ input[type=number] {
   background-color: #9e9ea0;
 }
 
+.process-list .media {
+  position: relative;
+}
 .process-list .media:hover {
   background-color: #f7f7f7;
 }
@@ -1231,6 +1234,14 @@ input[type=number] {
 }
 .process-list .media:nth-last-child {
   margin-bottom: 10px;
+}
+.process-list .media .badge {
+  margin: 0;
+}
+.process-list .media button {
+  position: absolute;
+  top: 15px;
+  right: 20px;
 }
 
 .card .header .header-dropdown .tab_btn i {

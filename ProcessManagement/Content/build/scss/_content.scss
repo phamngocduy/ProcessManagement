@@ -36,6 +36,7 @@
 }
 .process-list{
     .media{
+        position: relative;
         &:hover{
             background-color: #f7f7f7;
         }
@@ -45,6 +46,14 @@
         }
         &:nth-last-child{
             margin-bottom: 10px;
+        }
+        .badge{
+            margin:0;
+        }
+        button{
+            position: absolute;
+            top: 15px;
+            right: 20px;
         }
     }
 }

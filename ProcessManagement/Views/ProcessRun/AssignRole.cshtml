@@ -1,0 +1,141 @@
+﻿@{
+    ViewBag.Title = "AssignRole";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var group = ViewData["Group"] as ProcessManagement.Models.Group;
+}
+@section CustomCss{
+    <link rel="stylesheet" href="~/Content/vendor/bootstrap-multiselect/bootstrap-multiselect.css">
+    <style>
+        .dropdown-menu a {
+            display: block;
+        }
+
+        .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
+            background-color: unset !important;
+        }
+
+        .multiselect-container > li > a > label {
+            padding: 6px 6px 6px 30px;
+        }
+        .multiselect-container .input-group-addon {
+            display: none;
+        }
+        .multiselect-container .input-group{
+            margin: 0;
+        }
+        .multiselect-container .input-group .input-group-btn {
+            position: absolute;
+            top: 0px;
+            right: 8px;
+        }
+        .multiselect-container .input-group .input-group-btn .multiselect-clear-filter {
+            box-shadow: none;
+        }
+    </style>
+}
+
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+            <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth primary-theme"><i class="fa fa-arrow-left"></i></a> Asssign Role</h2>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="~/Home/Index" class="primary-theme"><i class="icon-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="/" class="primary-theme">Groups</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = group.Id })" class="primary-theme">@group.Name</a></li>
+                <li class="breadcrumb-item"><a href="">Process Run Name</a></li>
+                <li class="breadcrumb-item"><a href="" class="primary-theme">Asssign Role</a></li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card" style="padding-bottom:0">
+            <div class="header">
+                <h2>Role list</h2>
+            </div>
+            <div class="body" style="padding-top:0">
+                <div class="table-responsive">
+                    <table class="table table-hover dataTable table-custom m-b-0" id="table-assign-role" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Role</th>
+                                <th>Asign To</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Designer</td>
+                                <td>
+                                    <select multiple="multiple" class="ms-member multiselect">
+                                        <option value="a">An</option>
+                                        <option value="m">Duy</option>
+                                        <option value="k">Khải</option>
+                                        <option value="t">Tơ</option>
+                                        <option value="tt">Tuấn</option>
+                                        <option value="x">Xil</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Coder</td>
+                                <td>
+                                    <select multiple="multiple" class="ms-member multiselect">
+                                        <option value="a">An</option>
+                                        <option value="m">Duy</option>
+                                        <option value="k">Khải</option>
+                                        <option value="t">Tơ</option>
+                                        <option value="tt">Tuấn</option>
+                                        <option value="x">Xil</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Tester</td>
+                                <td>
+                                    <select multiple="multiple" class="ms-member multiselect">
+                                        <option value="a">An</option>
+                                        <option value="m">Duy</option>
+                                        <option value="k">Khải</option>
+                                        <option value="t">Tơ</option>
+                                        <option value="tt">Tuấn</option>
+                                        <option value="x">Xil</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section CustomScripts{
+    <script src="~/Content/vendor/bootstrap-multiselect/bootstrap-multiselect.js"></script>
+    <script>
+        $("#table-assign-role").DataTable({
+            "drawCallback": function (setting) {
+                $(".ms-member").multiselect({
+                    nonSelectedText: 'Assign to',
+                    numberDisplayed: 10,
+                    enableFiltering: true,
+                    includeSelectAllOption: true,
+                    //allSelectedText: true,
+                    templates: { // Use the Awesome Bootstrap Checkbox structure
+                        li: '<li><a href="javascript:void(0);"><label class="fancy-checkbox"><span><i></i></span></label></a></li>'
+                    }
+                });
+                $('.multiselect-container label.checkbox').each(function () {
+                    var input = $(this).find('input'),
+                        val = input.val();
+                    $(`<span><b><b></span>${val}`).insertAfter(input)
+
+                });
+                $(".page-item:not(.previous):not(.next) a").addClass("waves-effect");
+                $(".multiselect").addClass("waves-effect").css("box-shadow", "none");
+            }
+        });
+        
+    </script>
+}

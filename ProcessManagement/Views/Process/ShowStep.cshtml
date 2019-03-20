@@ -5,31 +5,12 @@
     PMSEntities db = new PMSEntities();
     ViewBag.Title = "ShowStep";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var group = ViewData["group"] as ProcessManagement.Models.Group;
-    var process = ViewData["process"] as ProcessManagement.Models.Process;
-    var statistic = ViewData["statistic"] as dynamic;
-    var listRole = ViewData["listRole"] as List<ProcessManagement.Models.Role>;
-    //List<Step> liststep = new List<Step>();
-    //Step start = Model.Where(x => x.StartStep == true).FirstOrDefault();
-    //liststep.Add(start);
-    //int z = 0;
-    //for (int j = 0; j < Model.Count; j++)
-    //{
-    //    if (liststep[j].NextStep1 == 0)
-    //    {
-    //        break;
-    //    }
-    //    do
-    //    {
-    //        if (Model[z].Key == liststep[j].NextStep1 && Model[z].StartStep == false)
-    //        {
-    //            liststep.Add(Model[z]);
-    //            z = 0;
-    //            break;
-    //        }
-    //        z++;
-    //    } while (z <= Model.Count);
-    //}
+    var group = ViewData["Group"] as ProcessManagement.Models.Group;
+    var process = ViewData["Process"] as ProcessManagement.Models.Process;
+    var statistic = ViewData["Statistic"] as dynamic;
+    var listRole = ViewData["ListRole"] as List<ProcessManagement.Models.Role>;
+    var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
+    var isManager = userRole.IsManager;
 }
 
 
@@ -83,9 +64,13 @@
             <div class="body">
                 <h5>@process.Name</h5>
                 <p>@process.Description</p>
-                <div class="progress-container progress-info m-b-25 clearfix" style="margin: 0">
-                    <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "EditProcess", processid = process.Id })" style="float: right" class="btn btn-success btn-sm">Edit Process</a>
-                </div>
+                @if (isManager)
+                {
+                    <div class="progress-container progress-info m-b-25 clearfix" style="margin: 0">
+                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "EditProcess", processid = process.Id })" style="float: right" class="btn btn-success btn-sm">Edit Process</a>
+                    </div>
+                }
+
             </div>
         </div>
         <div class="card">
@@ -102,9 +87,12 @@
             <div class="header">
                 <span>
                     RoleList
-                    <a style="float: right" class="btn btn-sm btn-outline-success" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id })">
-                        <img src="~/Content/images/icons-plus.png" />
-                    </a>
+                    @if (isManager)
+                    {
+                        <a style="float: right" class="btn btn-sm btn-outline-success" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id })">
+                            <img src="~/Content/images/icons-plus.png" />
+                        </a>
+                    }
                 </span>
             </div>
             <div class="body">
@@ -126,14 +114,17 @@
                                 <div class="media-body">
                                     <span class="name">
                                         @role.Name
-                                        <span style="float :right">
-                                            <a class="btn btn-sm btn-outline-success" style=" margin-left: 10px" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "EditRole", roleid = role.Id})">
-                                                <i class="icon-pencil"></i>
-                                            </a>
-                                            <a class="btn btn-sm btn-outline-danger js-sweetalert" title="Delete" style="margin-left: 10px" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "DeleteRole", roleid = role.Id})">
-                                                <i class="icon-trash"></i>
-                                            </a>
-                                        </span>
+                                        @if (isManager)
+                                        {
+                                             <span style="float :right">
+                                                <a class="btn btn-sm btn-outline-success" style=" margin-left: 10px" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "EditRole", roleid = role.Id})">
+                                                    <i class="icon-pencil"></i>
+                                                </a>
+                                                <a class="btn btn-sm btn-outline-danger js-sweetalert" title="Delete" style="margin-left: 10px" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "DeleteRole", roleid = role.Id})">
+                                                    <i class="icon-trash"></i>
+                                                </a>
+                                            </span>
+                                        }
                                     </span>
                                     <span class="message">
                                         @role.Description

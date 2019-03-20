@@ -102,6 +102,7 @@ namespace ProcessManagement.Controllers
         {
             //Tìm group theo id
             Group group = groupService.findGroup(groupid);
+            string idUser = User.Identity.GetUserId();
             if (group == null) return HttpNotFound();
 
             dynamic expando = new ExpandoObject();
@@ -115,7 +116,9 @@ namespace ProcessManagement.Controllers
             //Tìm tất cả các process thuộc group đó
             ViewData["ListProcess"] = processService.findListProcess(group.Id);
             //thống kê
-            ViewData["statistic"] = groupStatisticModel;
+            ViewData["Statistic"] = groupStatisticModel;
+            //lấy role của user hiện tại
+            ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             return View(group);
         }
 

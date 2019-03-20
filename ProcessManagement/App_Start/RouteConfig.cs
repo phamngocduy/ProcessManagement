@@ -37,14 +37,14 @@ namespace ProcessManagement
                name: "GroupControlLocalizedDefault",
                url: "{lang}/{groupslug}-{groupid}/{controller}/{action}",
                defaults: new { controller = "group", action = "show"},
-               constraints: new { lang = "en|vi", controller = "group|process" },
+               constraints: new { lang = "en|vi", controller = "group|process|processrun" },
                namespaces: new[] { "ProcessManagement.Controllers" }
             );
             routes.MapRoute(
                name: "GroupControlDefault",
                url: "{groupslug}-{groupid}/{controller}/{action}",
                defaults: new { controller = "group", lang = "en", action = "show"},
-               constraints: new { lang = "en|vi", controller = "group|process" },
+               constraints: new { lang = "en|vi", controller = "group|process|processrun" },
                namespaces: new[] { "ProcessManagement.Controllers" }
             );
 

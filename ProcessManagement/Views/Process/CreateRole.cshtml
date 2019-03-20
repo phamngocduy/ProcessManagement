@@ -6,38 +6,46 @@
 }
 
 
-<div class="cw-workspace-header">
-    <div class="cw-find-members">
-        <div class="cw-add-member">
-            <form action="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "process", action = "createrole"})" method="POST">
-                <input type="hidden" name="IdProcess" value="@Model.Id" />
-                <div class="form-group">
-                    <label for="cw-members-name" class="cw-required">Role Name</label>
-                    <span class="cw-input-icon">
-                        <input type="text" name="name" class="form-control cw-input-has-icon" id="rolename">
-                    </span>
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card" style="padding-bottom:0">
+            <div class="header">
+                <h2>Create Role</h2>
+            </div>
+            <div class="body" style="padding-top:0">
+                <form action="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "process", action = "createrole"})" method="POST">
+                    <input type="hidden" name="IdProcess" value="@Model.Id" />
                     <div class="row">
-                        <label class="col-sm-2"></label>
-                        <div class="col-sm-10">
-                            <p id="Status"></p>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="cw-members-name" class="required">Role Name</label>
+                                <span class="cw-input-icon">
+                                    <input type="text" name="name" class="form-control cw-input-has-icon" id="rolename">
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="cw-members-name" class="cw-required">Role Description</label>
+                                <span class="cw-input-icon">
+                                    <textarea name="description" class="form-control cw-input-has-icon" id="cw-description-name" rows="7"></textarea>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div>
+                                <button class="btn btn-primary-theme waves-effect">Add</button>
+                                <button class="btn btn-default waves-effect" type="button">Back</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="cw-members-name" class="cw-required">Role Description</label>
-                    <span class="cw-input-icon">
-                        <textarea name="description" class="form-control cw-input-has-icon" id="cw-description-name" ols="" rows=""></textarea>
-                    </span>
-                </div>
-
-                <div>
-                    <button class="btn btn-success">Add</button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-
-       
+    </div>
 </div>
+
 <script>
     function RoleCheck() {
         $("#Status").html("Checking...");

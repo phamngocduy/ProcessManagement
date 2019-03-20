@@ -223,6 +223,7 @@
                         var detailModal = $("#js-modal-process-detail");
                         detailModal.modal("show");
                     });
+
                 },
                 onStepChanging: function (event, currentIndex, newIndex) {
                     if (currentIndex > newIndex) { return true; }
@@ -291,8 +292,9 @@
                                 
                             renderProcessLayout();
                             renderProcessList(1, processes);
-                            $(".choose-content").on("click", ".page-item:not(.previous):not(.next)", function () {
+                            $(".choose-content").on("click", ".page-item:not(.previous):not(.next)", function (e) {
                                 var page = $(this)[0].dataset.page;
+                                e.preventDefault();
                                 $(".process-list").fadeOut("500", function () {
                                     renderProcessList(page, processes);
                                 });
@@ -306,10 +308,14 @@
                             //Chuyển checkbox thành radio (reference: https://stackoverflow.com/a/5839924)
                             var checkbox = $(".process-check");
                             $(".choose-content").on("change", ".process-check", function () {
-                                checkbox.prop("checked", false);
+                                $(".process-check").prop("checked", false);
                                 $(this).prop("checked", true);
+                                var id = $(this)[0].dataset.id;
+                                processes.map(function (process) {
+                                    return process.selected = process.id == id ? true : false;
+                                })
+                                console.table(processes);
                             });
-                            
                         }
                     }
                 })
@@ -374,29 +380,29 @@
                 }
             }
             $(".process-list").html(processlist).fadeIn(300);
-
             //pagging
             var pagging = ``;
             if (totalPage > 1) {
-                pagging = `<li class="page-item previous"><a class="page-link waves-effect" href="#">Previous</a></li>`;
+                pagging = `<li class="page-item previous"><a class="page-link waves-effect">Previous</a></li>`;
                 for (var i = 1; i <= totalPage; i++) {
                     if (page == i) {
-                        pagging += `<li class="page-item active" data-page=${i}><a class="page-link waves-effect" href="#">${i}</a></li>`
+                        pagging += `<li class="page-item active" data-page=${i}><a class="page-link waves-effect">${i}</a></li>`
                     } else {
-                        pagging += `<li class="page-item" data-page=${i}><a class="page-link waves-effect" href="#" >${i}</a></li>`
+                        pagging += `<li class="page-item" data-page=${i}><a class="page-link waves-effect">${i}</a></li>`
                     }
                 }
-                pagging += `<li class="page-item next"><a class="page-link waves-effect" href="#">Next</a></li>`;
+                pagging += `<li class="page-item next"><a class="page-link waves-effect">Next</a></li>`;
             }
             $(".pagination").html(pagging);
         }
         function renderProcess(process) {
+            var isCheck = process.selected? "checked" : "";
             return `<div class="col-lg-3 col-md-4 col-sm-12">
                         <div class="card">
                             <div class="process">
                                 <div class="process-avatar">
                                     <label class="fancy-checkbox">
-                                        <input type="checkbox" class="process-check" name="process-choose" data-id=${process.id}>
+                                        <input type="checkbox" class="process-check" name="process-choose" data-id=${process.id} ${isCheck}>
                                         <span></span>
                                     </label>
                                     <a href="/Content/images/image-gallery/1.jpg" data-lightbox="gallery" data-title="${process.name}" data-description="${process.des}">
