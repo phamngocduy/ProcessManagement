@@ -6,6 +6,8 @@
     var step = ViewData["Step"] as ProcessManagement.Models.Step;
     var group = ViewData["Group"] as ProcessManagement.Models.Group;
     var roles = ViewData["ListRole"] as List<ProcessManagement.Models.Role>;
+    var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
+    var isManager = userRole.IsManager;
 }
 
 
@@ -27,7 +29,7 @@
                 <li class="breadcrumb-item"><a href="" class="primary-theme"> @Model.Name</a></li>
             </ul>
         </div>
-        
+
     </div>
 </div>
 <div class="row clearfix">
@@ -63,12 +65,16 @@
                         <div id="build-wrap"></div>
                     </div>
 
-                    <div class="col-sm-12">
-                        <div class="mt-2" id="button-action">
-                            <button id="btn-edit" class="btn btn-primary-theme">Edit</button>
-                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "deletetask", taskid = Model.Id })" class="btn btn-outline-danger" id="btn-remove-task">Delete</a>
+                    @if (isManager)
+                    {
+                        <div class="col-sm-12">
+                            <div class="mt-2" id="button-action">
+                                <button id="btn-edit" class="btn btn-primary-theme">Edit</button>
+                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "deletetask", taskid = Model.Id })" class="btn btn-outline-danger" id="btn-remove-task">Delete</a>
+                            </div>
                         </div>
-                    </div>
+
+                    }
                 </div>
             </div>
         </div>
@@ -118,6 +124,9 @@
             $("body").on("click", "#btn-back", function () {
                 $("#show-task").html(showForm);
                 switchArr = createSwitch();
+                if (taskform != null) {
+                    formB = $("#build-wrap").formBuilder().actions.setData(taskform);
+                }
             });
             $("body").on("click", "#btn-save", function () {
                 $this = $(this);
@@ -126,7 +135,7 @@
                 var name = $('#task-name').val();
                 var role = $('#task-role').val();
                 var description = $('#task-description').val();
-               
+
                 var formBuilder = formB.actions.getData('json', true).replace(/\r?\n|\r/g, '');
                 formBuilder = JSON.parse(formBuilder);
                 var tempArr = []

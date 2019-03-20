@@ -16,6 +16,8 @@
     {
         fileConfig = JObject.Parse(Model.ValueInputFile);
     }
+    var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
+    var isManager = userRole.IsManager;
 }
 
 
@@ -144,12 +146,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12">
-                        <div class="mt-2" id="button-action">
-                            <button id="btn-edit" class="btn btn-primary-theme">Edit</button>
-                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "deletetask", taskid = Model.Id })" class="btn btn-outline-danger" id="btn-remove-task">Delete</a>
+                    @if (isManager)
+                    {
+                        <div class="col-sm-12">
+                            <div class="mt-2" id="button-action">
+                                <button id="btn-edit" class="btn btn-primary-theme">Edit</button>
+                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "deletetask", taskid = Model.Id })" class="btn btn-outline-danger" id="btn-remove-task">Delete</a>
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>

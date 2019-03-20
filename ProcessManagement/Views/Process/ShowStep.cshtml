@@ -120,7 +120,7 @@
                                                 <a class="btn btn-sm btn-outline-success" style=" margin-left: 10px" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "EditRole", roleid = role.Id})">
                                                     <i class="icon-pencil"></i>
                                                 </a>
-                                                <a class="btn btn-sm btn-outline-danger js-sweetalert" title="Delete" style="margin-left: 10px" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "DeleteRole", roleid = role.Id})">
+                                                <a class="btn btn-sm btn-outline-danger js-sweetalert" title="Delete" style="margin-left: 10px" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "DeleteRole", roleid = role.Id})" onclick="return confirm('bạn có chắc muốn xóa không??')">
                                                     <i class="icon-trash"></i>
                                                 </a>
                                             </span>
@@ -176,14 +176,17 @@
                                 <div class="step-name">
                                     <span data-toggle="tooltip" data-placement="top" title="@step.Description">@step.Name (@taskList.Count)</span>
                                 </div>
-                                <div class="step-action dropdown">
-                                    <a style="color: @step.Color" href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></a>
-                                    <ul class="dropdown-menu notifications animated fadeIn">
-                                        <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "editstep", groupslug = group.groupSlug, groupid = group.Id, stepid = step.Id })">Edit step</a></li>
-                                        <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "addtask", stepid = step.Id })">Add task</a></li>
-                                        <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "addformtask", stepid = step.Id })">Add form task</a></li>
-                                    </ul>
-                                </div>
+                                @if (isManager)
+	                            {
+                                    <div class="step-action dropdown">
+                                        <a style="color: @step.Color" href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></a>
+                                        <ul class="dropdown-menu notifications animated fadeIn">
+                                            <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "editstep", groupslug = group.groupSlug, groupid = group.Id, stepid = step.Id })">Edit step</a></li>
+                                            <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "addtask", stepid = step.Id })">Add task</a></li>
+                                            <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "addformtask", stepid = step.Id })">Add form task</a></li>
+                                        </ul>
+                                    </div>
+	                            }
                             </div>
                             <div class="task">
                                 <ul class="task-list" id="task-of-step-@step.Id">
@@ -198,8 +201,10 @@
                                         {
                                             <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showformtask", taskid = task.Id })">@task.Name</a>
                                         }
-
-                                        <i class="fa fa-arrows-alt handle"></i>
+                                        @if (isManager)
+	                                    {
+                                            <i class="fa fa-arrows-alt handle"></i>
+	                                    }
                                     </li>
                                     }
                                 </ul>

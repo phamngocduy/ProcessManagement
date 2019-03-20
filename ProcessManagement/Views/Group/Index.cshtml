@@ -59,6 +59,7 @@
         <div class="card">
             <div class="body project_report">
                 <div class="table-responsive">
+                    <a class="btn btn-primary-theme waves-effect" href="@Url.Action("newgroup","group")">New Group</a>
                     <table class="table table-hover js-grouplist-table dataTable dt-responsive table-custom m-b-0" style="width:100%">
                         <thead>
                             <tr>
@@ -161,15 +162,15 @@
                                 member = "There aren't member in group yet";
                             } else {
                                 member = `<ul class="list-unstyled team-info">`;
-                                for (var i = 0; i < members.length; i++) {
+                                for (var j = 0; i < members.length; j++) {
 
-                                    if (i == 3) {
+                                    if (j == 3) {
                                         if (memberleft > 1) {
                                             member += `<li>${getMemberLeft(memberleft)}</li>`;
                                             break;
                                         }
                                     }
-                                    memberAvatar = getMemberAvatar(members[i].name, members[i].avatar);
+                                    memberAvatar = getMemberAvatar(members[j].name, members[j].avatar);
                                     member += `<li>${memberAvatar}</li>`;
                                 }
                                 member += `</ul>`;
