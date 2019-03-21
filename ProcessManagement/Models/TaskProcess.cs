@@ -15,22 +15,19 @@ namespace ProcessManagement.Models
     public partial class TaskProcess
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
         public int IdStep { get; set; }
         public Nullable<int> IdRole { get; set; }
-        public Nullable<bool> Status { get; set; }
-        public Nullable<int> IdType { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
         public string ValueInputText { get; set; }
         public string ValueInputFile { get; set; }
-        public string Color { get; set; }
-        public Nullable<System.DateTime> Created_At { get; set; }
-        public Nullable<System.DateTime> Updated_At { get; set; }
-        public int Position { get; set; }
         public string ValueFormJson { get; set; }
+        public string Color { get; set; }
+        public int Position { get; set; }
+        public System.DateTime Created_At { get; set; }
+        public System.DateTime Updated_At { get; set; }
     
         public virtual Role Role { get; set; }
         public virtual Step Step { get; set; }
-        public virtual Type Type { get; set; }
     }
 }

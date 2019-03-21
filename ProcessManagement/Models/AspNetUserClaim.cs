@@ -12,18 +12,13 @@ namespace ProcessManagement.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Type
+    public partial class AspNetUserClaim
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Type()
-        {
-            this.TaskProcesses = new HashSet<TaskProcess>();
-        }
-    
         public int Id { get; set; }
-        public string NameType { get; set; }
+        public string UserId { get; set; }
+        public string ClaimType { get; set; }
+        public string ClaimValue { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TaskProcess> TaskProcesses { get; set; }
+        public virtual AspNetUser AspNetUser { get; set; }
     }
 }

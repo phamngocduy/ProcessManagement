@@ -5,6 +5,15 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="PMSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AspNetUserClaims">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ClaimType" Type="nvarchar(max)" />
+          <Property Name="ClaimValue" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="AspNetUsers">
           <Key>
             <PropertyRef Name="Id" />
@@ -62,20 +71,19 @@
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="DataJson" Type="nvarchar(max)" />
+          <Property Name="Avatar" Type="nvarchar(max)" />
           <Property Name="Created_At" Type="datetime" Nullable="false" />
           <Property Name="Updated_At" Type="datetime" Nullable="false" />
-          <Property Name="Avatar" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="ProcessRun">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="IdProcess" Type="int" Nullable="false" />
           <Property Name="IdGroup" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Status" Type="int" />
           <Property Name="Created_at" Type="datetime" />
-          <Property Name="Status" Type="nvarchar" MaxLength="50" />
           <Property Name="Updated_At" Type="datetime" />
         </EntityType>
         <EntityType Name="Role">
@@ -83,12 +91,31 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="IdProcess" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="Description" Type="varchar" MaxLength="255" />
           <Property Name="Color" Type="varchar" MaxLength="255" />
           <Property Name="Create_At" Type="datetime" />
           <Property Name="Update_At" Type="datetime" />
+        </EntityType>
+        <EntityType Name="RoleRun">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdProcess" Type="int" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="Description" Type="nvarchar" MaxLength="255" />
+          <Property Name="Create_At" Type="datetime" />
+          <Property Name="Update_At" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Description" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Step">
           <Key>
@@ -103,7 +130,6 @@
           <Property Name="NextStep2" Type="int" />
           <Property Name="Key" Type="int" Nullable="false" />
           <Property Name="Figure" Type="nvarchar" MaxLength="30" />
-          <Property Name="Status" Type="bit" />
           <Property Name="Color" Type="nvarchar" MaxLength="255" />
           <Property Name="Created_At" Type="datetime" Nullable="false" />
           <Property Name="Updated_At" Type="datetime" Nullable="false" />
@@ -113,15 +139,14 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Id_Step" Type="int" Nullable="false" />
-          <Property Name="Id_Process" Type="int" Nullable="false" />
+          <Property Name="idProcess" Type="int" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="StartStep" Type="bit" Nullable="false" />
           <Property Name="NextStep1" Type="int" Nullable="false" />
           <Property Name="NextStep2" Type="int" Nullable="false" />
           <Property Name="Key" Type="int" Nullable="false" />
           <Property Name="Figure" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Status" Type="nvarchar" MaxLength="50" />
+          <Property Name="Status" Type="int" />
           <Property Name="Created_at" Type="datetime" />
           <Property Name="Updated_At" Type="datetime" />
         </EntityType>
@@ -130,42 +155,50 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
-          <Property Name="Description" Type="varchar" MaxLength="255" />
           <Property Name="IdStep" Type="int" Nullable="false" />
           <Property Name="IdRole" Type="int" />
-          <Property Name="Status" Type="bit" />
-          <Property Name="IdType" Type="int" />
+          <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="255" />
           <Property Name="ValueInputText" Type="nvarchar(max)" />
           <Property Name="ValueInputFile" Type="nvarchar(max)" />
-          <Property Name="Color" Type="nvarchar" MaxLength="255" />
-          <Property Name="Created_At" Type="datetime" />
-          <Property Name="Updated_At" Type="datetime" />
-          <Property Name="Position" Type="int" Nullable="false" />
           <Property Name="ValueFormJson" Type="nvarchar(max)" />
+          <Property Name="Color" Type="nvarchar" MaxLength="255" />
+          <Property Name="Position" Type="int" Nullable="false" />
+          <Property Name="Created_At" Type="datetime" Nullable="false" />
+          <Property Name="Updated_At" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="TaskProcessRun">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Id_Task" Type="int" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="IdStep" Type="int" Nullable="false" />
           <Property Name="IdRole" Type="int" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="255" />
+          <Property Name="Status" Type="int" />
           <Property Name="ValueInputText" Type="nvarchar(max)" />
           <Property Name="ValueInputFile" Type="nvarchar(max)" />
-          <Property Name="Created_At" Type="datetime" />
-          <Property Name="Updated_At" Type="datetime" />
+          <Property Name="ValueFormJson" Type="nvarchar(max)" />
+          <Property Name="Color" Type="nvarchar(max)" />
           <Property Name="Position" Type="int" Nullable="false" />
+          <Property Name="Created_At" Type="datetime" Nullable="false" />
+          <Property Name="Updated_At" Type="datetime" Nullable="false" />
         </EntityType>
-        <EntityType Name="Type">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="NameType" Type="nvarchar" MaxLength="50" Nullable="false" />
-        </EntityType>
+        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserClaims" Type="Self.AspNetUserClaims" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaims">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Group_AspNetUsers">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
           <End Role="Group" Type="Self.Group" Multiplicity="*" />
@@ -226,6 +259,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ProcessRun_Group">
+          <End Role="Group" Type="Self.Group" Multiplicity="1" />
+          <End Role="ProcessRun" Type="Self.ProcessRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProcessRun">
+              <PropertyRef Name="IdGroup" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProcessRun_Status">
+          <End Role="Status" Type="Self.Status" Multiplicity="0..1" />
+          <End Role="ProcessRun" Type="Self.ProcessRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProcessRun">
+              <PropertyRef Name="Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Role_Process">
           <End Role="Process" Type="Self.Process" Multiplicity="1" />
           <End Role="Role" Type="Self.Role" Multiplicity="*" />
@@ -234,6 +291,18 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Role">
+              <PropertyRef Name="IdProcess" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoleRun_ProcessRun">
+          <End Role="ProcessRun" Type="Self.ProcessRun" Multiplicity="0..1" />
+          <End Role="RoleRun" Type="Self.RoleRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessRun">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="RoleRun">
               <PropertyRef Name="IdProcess" />
             </Dependent>
           </ReferentialConstraint>
@@ -247,6 +316,30 @@
             </Principal>
             <Dependent Role="Step">
               <PropertyRef Name="IdProcess" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StepRun_ProcessRun">
+          <End Role="ProcessRun" Type="Self.ProcessRun" Multiplicity="0..1" />
+          <End Role="StepRun" Type="Self.StepRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessRun">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="StepRun">
+              <PropertyRef Name="idProcess" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StepRun_Status">
+          <End Role="Status" Type="Self.Status" Multiplicity="0..1" />
+          <End Role="StepRun" Type="Self.StepRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="StepRun">
+              <PropertyRef Name="Status" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -274,30 +367,60 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_TaskProcess_Type">
-          <End Role="Type" Type="Self.Type" Multiplicity="0..1" />
-          <End Role="TaskProcess" Type="Self.TaskProcess" Multiplicity="*" />
+        <Association Name="FK_TaskProcessRun_RoleRun">
+          <End Role="RoleRun" Type="Self.RoleRun" Multiplicity="0..1" />
+          <End Role="TaskProcessRun" Type="Self.TaskProcessRun" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Type">
+            <Principal Role="RoleRun">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="TaskProcess">
-              <PropertyRef Name="IdType" />
+            <Dependent Role="TaskProcessRun">
+              <PropertyRef Name="IdRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskProcessRun_Status">
+          <End Role="Status" Type="Self.Status" Multiplicity="0..1" />
+          <End Role="TaskProcessRun" Type="Self.TaskProcessRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskProcessRun">
+              <PropertyRef Name="Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskProcessRun_StepRun">
+          <End Role="StepRun" Type="Self.StepRun" Multiplicity="1" />
+          <End Role="TaskProcessRun" Type="Self.TaskProcessRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StepRun">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskProcessRun">
+              <PropertyRef Name="IdStep" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="PMSModelStoreContainer">
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Group" EntityType="Self.Group" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Participate" EntityType="Self.Participate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Process" EntityType="Self.Process" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProcessRun" EntityType="Self.ProcessRun" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RoleRun" EntityType="Self.RoleRun" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Step" EntityType="Self.Step" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StepRun" EntityType="Self.StepRun" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TaskProcess" EntityType="Self.TaskProcess" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TaskProcessRun" EntityType="Self.TaskProcessRun" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Type" EntityType="Self.Type" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
           <AssociationSet Name="FK_Group_AspNetUsers" Association="Self.FK_Group_AspNetUsers">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="Group" EntitySet="Group" />
@@ -318,13 +441,33 @@
             <End Role="Group" EntitySet="Group" />
             <End Role="Process" EntitySet="Process" />
           </AssociationSet>
+          <AssociationSet Name="FK_ProcessRun_Group" Association="Self.FK_ProcessRun_Group">
+            <End Role="Group" EntitySet="Group" />
+            <End Role="ProcessRun" EntitySet="ProcessRun" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProcessRun_Status" Association="Self.FK_ProcessRun_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="ProcessRun" EntitySet="ProcessRun" />
+          </AssociationSet>
           <AssociationSet Name="FK_Role_Process" Association="Self.FK_Role_Process">
             <End Role="Process" EntitySet="Process" />
             <End Role="Role" EntitySet="Role" />
           </AssociationSet>
+          <AssociationSet Name="FK_RoleRun_ProcessRun" Association="Self.FK_RoleRun_ProcessRun">
+            <End Role="ProcessRun" EntitySet="ProcessRun" />
+            <End Role="RoleRun" EntitySet="RoleRun" />
+          </AssociationSet>
           <AssociationSet Name="FK_Step_Process" Association="Self.FK_Step_Process">
             <End Role="Process" EntitySet="Process" />
             <End Role="Step" EntitySet="Step" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StepRun_ProcessRun" Association="Self.FK_StepRun_ProcessRun">
+            <End Role="ProcessRun" EntitySet="ProcessRun" />
+            <End Role="StepRun" EntitySet="StepRun" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StepRun_Status" Association="Self.FK_StepRun_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="StepRun" EntitySet="StepRun" />
           </AssociationSet>
           <AssociationSet Name="FK_TaskProcess_Role" Association="Self.FK_TaskProcess_Role">
             <End Role="Role" EntitySet="Role" />
@@ -334,9 +477,17 @@
             <End Role="Step" EntitySet="Step" />
             <End Role="TaskProcess" EntitySet="TaskProcess" />
           </AssociationSet>
-          <AssociationSet Name="FK_TaskProcess_Type" Association="Self.FK_TaskProcess_Type">
-            <End Role="Type" EntitySet="Type" />
-            <End Role="TaskProcess" EntitySet="TaskProcess" />
+          <AssociationSet Name="FK_TaskProcessRun_RoleRun" Association="Self.FK_TaskProcessRun_RoleRun">
+            <End Role="RoleRun" EntitySet="RoleRun" />
+            <End Role="TaskProcessRun" EntitySet="TaskProcessRun" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskProcessRun_Status" Association="Self.FK_TaskProcessRun_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="TaskProcessRun" EntitySet="TaskProcessRun" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskProcessRun_StepRun" Association="Self.FK_TaskProcessRun_StepRun">
+            <End Role="StepRun" EntitySet="StepRun" />
+            <End Role="TaskProcessRun" EntitySet="TaskProcessRun" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -344,17 +495,23 @@
     <edmx:ConceptualModels>
       <Schema Namespace="PMSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="PMSEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AspNetUserClaims" EntityType="PMSModel.AspNetUserClaim" />
           <EntitySet Name="AspNetUsers" EntityType="PMSModel.AspNetUser" />
           <EntitySet Name="Groups" EntityType="PMSModel.Group" />
           <EntitySet Name="Participates" EntityType="PMSModel.Participate" />
           <EntitySet Name="Processes" EntityType="PMSModel.Process" />
           <EntitySet Name="ProcessRuns" EntityType="PMSModel.ProcessRun" />
           <EntitySet Name="Roles" EntityType="PMSModel.Role" />
+          <EntitySet Name="RoleRuns" EntityType="PMSModel.RoleRun" />
+          <EntitySet Name="Status" EntityType="PMSModel.Status" />
           <EntitySet Name="Steps" EntityType="PMSModel.Step" />
           <EntitySet Name="StepRuns" EntityType="PMSModel.StepRun" />
           <EntitySet Name="TaskProcesses" EntityType="PMSModel.TaskProcess" />
           <EntitySet Name="TaskProcessRuns" EntityType="PMSModel.TaskProcessRun" />
-          <EntitySet Name="Types" EntityType="PMSModel.Type" />
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="PMSModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaim" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
           <AssociationSet Name="FK_Group_AspNetUsers" Association="PMSModel.FK_Group_AspNetUsers">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="Group" EntitySet="Groups" />
@@ -375,6 +532,10 @@
             <End Role="Group" EntitySet="Groups" />
             <End Role="Process" EntitySet="Processes" />
           </AssociationSet>
+          <AssociationSet Name="FK_ProcessRun_Group" Association="PMSModel.FK_ProcessRun_Group">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="ProcessRun" EntitySet="ProcessRuns" />
+          </AssociationSet>
           <AssociationSet Name="FK_Role_Process" Association="PMSModel.FK_Role_Process">
             <End Role="Process" EntitySet="Processes" />
             <End Role="Role" EntitySet="Roles" />
@@ -383,19 +544,53 @@
             <End Role="Process" EntitySet="Processes" />
             <End Role="Step" EntitySet="Steps" />
           </AssociationSet>
+          <AssociationSet Name="FK_ProcessRun_Status" Association="PMSModel.FK_ProcessRun_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="ProcessRun" EntitySet="ProcessRuns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoleRun_ProcessRun" Association="PMSModel.FK_RoleRun_ProcessRun">
+            <End Role="ProcessRun" EntitySet="ProcessRuns" />
+            <End Role="RoleRun" EntitySet="RoleRuns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StepRun_ProcessRun" Association="PMSModel.FK_StepRun_ProcessRun">
+            <End Role="ProcessRun" EntitySet="ProcessRuns" />
+            <End Role="StepRun" EntitySet="StepRuns" />
+          </AssociationSet>
           <AssociationSet Name="FK_TaskProcess_Role" Association="PMSModel.FK_TaskProcess_Role">
             <End Role="Role" EntitySet="Roles" />
             <End Role="TaskProcess" EntitySet="TaskProcesses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskProcessRun_RoleRun" Association="PMSModel.FK_TaskProcessRun_RoleRun">
+            <End Role="RoleRun" EntitySet="RoleRuns" />
+            <End Role="TaskProcessRun" EntitySet="TaskProcessRuns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StepRun_Status" Association="PMSModel.FK_StepRun_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="StepRun" EntitySet="StepRuns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskProcessRun_Status" Association="PMSModel.FK_TaskProcessRun_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="TaskProcessRun" EntitySet="TaskProcessRuns" />
           </AssociationSet>
           <AssociationSet Name="FK_TaskProcess_Step" Association="PMSModel.FK_TaskProcess_Step">
             <End Role="Step" EntitySet="Steps" />
             <End Role="TaskProcess" EntitySet="TaskProcesses" />
           </AssociationSet>
-          <AssociationSet Name="FK_TaskProcess_Type" Association="PMSModel.FK_TaskProcess_Type">
-            <End Role="Type" EntitySet="Types" />
-            <End Role="TaskProcess" EntitySet="TaskProcesses" />
+          <AssociationSet Name="FK_TaskProcessRun_StepRun" Association="PMSModel.FK_TaskProcessRun_StepRun">
+            <End Role="StepRun" EntitySet="StepRuns" />
+            <End Role="TaskProcessRun" EntitySet="TaskProcessRuns" />
           </AssociationSet>
         </EntityContainer>
+        <EntityType Name="AspNetUserClaim">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="PMSModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaim" ToRole="AspNetUser" />
+        </EntityType>
         <EntityType Name="AspNetUser">
           <Key>
             <PropertyRef Name="Id" />
@@ -415,6 +610,7 @@
           <Property Name="NickName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="AvatarDefault" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Avatar" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUserClaims" Relationship="PMSModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserClaim" />
           <NavigationProperty Name="Groups" Relationship="PMSModel.FK_Group_AspNetUsers" FromRole="AspNetUser" ToRole="Group" />
           <NavigationProperty Name="Participates" Relationship="PMSModel.FK_Participate_AspNetUsers" FromRole="AspNetUser" ToRole="Participate" />
           <NavigationProperty Name="Processes" Relationship="PMSModel.FK_Process_AspNetUsers" FromRole="AspNetUser" ToRole="Process" />
@@ -434,6 +630,7 @@
           <NavigationProperty Name="AspNetUser" Relationship="PMSModel.FK_Group_AspNetUsers" FromRole="Group" ToRole="AspNetUser" />
           <NavigationProperty Name="Participates" Relationship="PMSModel.FK_Participate_Group" FromRole="Group" ToRole="Participate" />
           <NavigationProperty Name="Processes" Relationship="PMSModel.FK_Process_Group" FromRole="Group" ToRole="Process" />
+          <NavigationProperty Name="ProcessRuns" Relationship="PMSModel.FK_ProcessRun_Group" FromRole="Group" ToRole="ProcessRun" />
         </EntityType>
         <EntityType Name="Participate">
           <Key>
@@ -461,9 +658,9 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="DataJson" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Avatar" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Created_At" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Updated_At" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Avatar" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AspNetUser" Relationship="PMSModel.FK_Process_AspNetUsers" FromRole="Process" ToRole="AspNetUser" />
           <NavigationProperty Name="Group" Relationship="PMSModel.FK_Process_Group" FromRole="Process" ToRole="Group" />
           <NavigationProperty Name="Roles" Relationship="PMSModel.FK_Role_Process" FromRole="Process" ToRole="Role" />
@@ -474,26 +671,53 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdProcess" Type="Int32" Nullable="false" />
           <Property Name="IdGroup" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" />
           <Property Name="Created_at" Type="DateTime" Precision="3" />
-          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Updated_At" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Group" Relationship="PMSModel.FK_ProcessRun_Group" FromRole="ProcessRun" ToRole="Group" />
+          <NavigationProperty Name="Status1" Relationship="PMSModel.FK_ProcessRun_Status" FromRole="ProcessRun" ToRole="Status" />
+          <NavigationProperty Name="RoleRuns" Relationship="PMSModel.FK_RoleRun_ProcessRun" FromRole="ProcessRun" ToRole="RoleRun" />
+          <NavigationProperty Name="StepRuns" Relationship="PMSModel.FK_StepRun_ProcessRun" FromRole="ProcessRun" ToRole="StepRun" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="IdProcess" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Color" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Create_At" Type="DateTime" Precision="3" />
           <Property Name="Update_At" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Process" Relationship="PMSModel.FK_Role_Process" FromRole="Role" ToRole="Process" />
           <NavigationProperty Name="TaskProcesses" Relationship="PMSModel.FK_TaskProcess_Role" FromRole="Role" ToRole="TaskProcess" />
+        </EntityType>
+        <EntityType Name="RoleRun">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdProcess" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Create_At" Type="DateTime" Precision="3" />
+          <Property Name="Update_At" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="ProcessRun" Relationship="PMSModel.FK_RoleRun_ProcessRun" FromRole="RoleRun" ToRole="ProcessRun" />
+          <NavigationProperty Name="TaskProcessRuns" Relationship="PMSModel.FK_TaskProcessRun_RoleRun" FromRole="RoleRun" ToRole="TaskProcessRun" />
+        </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ProcessRuns" Relationship="PMSModel.FK_ProcessRun_Status" FromRole="Status" ToRole="ProcessRun" />
+          <NavigationProperty Name="StepRuns" Relationship="PMSModel.FK_StepRun_Status" FromRole="Status" ToRole="StepRun" />
+          <NavigationProperty Name="TaskProcessRuns" Relationship="PMSModel.FK_TaskProcessRun_Status" FromRole="Status" ToRole="TaskProcessRun" />
         </EntityType>
         <EntityType Name="Step">
           <Key>
@@ -508,7 +732,6 @@
           <Property Name="NextStep2" Type="Int32" />
           <Property Name="Key" Type="Int32" Nullable="false" />
           <Property Name="Figure" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
-          <Property Name="Status" Type="Boolean" />
           <Property Name="Color" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Created_At" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Updated_At" Type="DateTime" Nullable="false" Precision="3" />
@@ -520,63 +743,74 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Id_Step" Type="Int32" Nullable="false" />
-          <Property Name="Id_Process" Type="Int32" Nullable="false" />
+          <Property Name="idProcess" Type="Int32" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="StartStep" Type="Boolean" Nullable="false" />
           <Property Name="NextStep1" Type="Int32" Nullable="false" />
           <Property Name="NextStep2" Type="Int32" Nullable="false" />
           <Property Name="Key" Type="Int32" Nullable="false" />
           <Property Name="Figure" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" />
           <Property Name="Created_at" Type="DateTime" Precision="3" />
           <Property Name="Updated_At" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="ProcessRun" Relationship="PMSModel.FK_StepRun_ProcessRun" FromRole="StepRun" ToRole="ProcessRun" />
+          <NavigationProperty Name="Status1" Relationship="PMSModel.FK_StepRun_Status" FromRole="StepRun" ToRole="Status" />
+          <NavigationProperty Name="TaskProcessRuns" Relationship="PMSModel.FK_TaskProcessRun_StepRun" FromRole="StepRun" ToRole="TaskProcessRun" />
         </EntityType>
         <EntityType Name="TaskProcess">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="IdStep" Type="Int32" Nullable="false" />
           <Property Name="IdRole" Type="Int32" />
-          <Property Name="Status" Type="Boolean" />
-          <Property Name="IdType" Type="Int32" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="ValueInputText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ValueInputFile" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Color" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Created_At" Type="DateTime" Precision="3" />
-          <Property Name="Updated_At" Type="DateTime" Precision="3" />
-          <Property Name="Position" Type="Int32" Nullable="false" />
           <Property Name="ValueFormJson" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Color" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Position" Type="Int32" Nullable="false" />
+          <Property Name="Created_At" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Updated_At" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Role" Relationship="PMSModel.FK_TaskProcess_Role" FromRole="TaskProcess" ToRole="Role" />
           <NavigationProperty Name="Step" Relationship="PMSModel.FK_TaskProcess_Step" FromRole="TaskProcess" ToRole="Step" />
-          <NavigationProperty Name="Type" Relationship="PMSModel.FK_TaskProcess_Type" FromRole="TaskProcess" ToRole="Type" />
         </EntityType>
         <EntityType Name="TaskProcessRun">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Id_Task" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="IdStep" Type="Int32" Nullable="false" />
           <Property Name="IdRole" Type="Int32" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="Int32" />
           <Property Name="ValueInputText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ValueInputFile" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Created_At" Type="DateTime" Precision="3" />
-          <Property Name="Updated_At" Type="DateTime" Precision="3" />
+          <Property Name="ValueFormJson" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Color" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Position" Type="Int32" Nullable="false" />
+          <Property Name="Created_At" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Updated_At" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="RoleRun" Relationship="PMSModel.FK_TaskProcessRun_RoleRun" FromRole="TaskProcessRun" ToRole="RoleRun" />
+          <NavigationProperty Name="Status1" Relationship="PMSModel.FK_TaskProcessRun_Status" FromRole="TaskProcessRun" ToRole="Status" />
+          <NavigationProperty Name="StepRun" Relationship="PMSModel.FK_TaskProcessRun_StepRun" FromRole="TaskProcessRun" ToRole="StepRun" />
         </EntityType>
-        <EntityType Name="Type">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NameType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="TaskProcesses" Relationship="PMSModel.FK_TaskProcess_Type" FromRole="Type" ToRole="TaskProcess" />
-        </EntityType>
+        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+          <End Type="PMSModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="PMSModel.AspNetUserClaim" Role="AspNetUserClaim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaim">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Group_AspNetUsers">
           <End Type="PMSModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
           <End Type="PMSModel.Group" Role="Group" Multiplicity="*" />
@@ -637,6 +871,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ProcessRun_Group">
+          <End Type="PMSModel.Group" Role="Group" Multiplicity="1" />
+          <End Type="PMSModel.ProcessRun" Role="ProcessRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProcessRun">
+              <PropertyRef Name="IdGroup" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Role_Process">
           <End Type="PMSModel.Process" Role="Process" Multiplicity="1" />
           <End Type="PMSModel.Role" Role="Role" Multiplicity="*" />
@@ -661,6 +907,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ProcessRun_Status">
+          <End Type="PMSModel.Status" Role="Status" Multiplicity="0..1" />
+          <End Type="PMSModel.ProcessRun" Role="ProcessRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProcessRun">
+              <PropertyRef Name="Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoleRun_ProcessRun">
+          <End Type="PMSModel.ProcessRun" Role="ProcessRun" Multiplicity="0..1" />
+          <End Type="PMSModel.RoleRun" Role="RoleRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessRun">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="RoleRun">
+              <PropertyRef Name="IdProcess" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StepRun_ProcessRun">
+          <End Type="PMSModel.ProcessRun" Role="ProcessRun" Multiplicity="0..1" />
+          <End Type="PMSModel.StepRun" Role="StepRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessRun">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="StepRun">
+              <PropertyRef Name="idProcess" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TaskProcess_Role">
           <End Type="PMSModel.Role" Role="Role" Multiplicity="0..1" />
           <End Type="PMSModel.TaskProcess" Role="TaskProcess" Multiplicity="*" />
@@ -670,6 +952,42 @@
             </Principal>
             <Dependent Role="TaskProcess">
               <PropertyRef Name="IdRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskProcessRun_RoleRun">
+          <End Type="PMSModel.RoleRun" Role="RoleRun" Multiplicity="0..1" />
+          <End Type="PMSModel.TaskProcessRun" Role="TaskProcessRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RoleRun">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskProcessRun">
+              <PropertyRef Name="IdRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StepRun_Status">
+          <End Type="PMSModel.Status" Role="Status" Multiplicity="0..1" />
+          <End Type="PMSModel.StepRun" Role="StepRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="StepRun">
+              <PropertyRef Name="Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskProcessRun_Status">
+          <End Type="PMSModel.Status" Role="Status" Multiplicity="0..1" />
+          <End Type="PMSModel.TaskProcessRun" Role="TaskProcessRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskProcessRun">
+              <PropertyRef Name="Status" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -685,15 +1003,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_TaskProcess_Type">
-          <End Type="PMSModel.Type" Role="Type" Multiplicity="0..1" />
-          <End Type="PMSModel.TaskProcess" Role="TaskProcess" Multiplicity="*" />
+        <Association Name="FK_TaskProcessRun_StepRun">
+          <End Type="PMSModel.StepRun" Role="StepRun" Multiplicity="1" />
+          <End Type="PMSModel.TaskProcessRun" Role="TaskProcessRun" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Type">
+            <Principal Role="StepRun">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="TaskProcess">
-              <PropertyRef Name="IdType" />
+            <Dependent Role="TaskProcessRun">
+              <PropertyRef Name="IdStep" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -703,6 +1021,16 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="PMSModelStoreContainer" CdmEntityContainer="PMSEntities">
+          <EntitySetMapping Name="AspNetUserClaims">
+            <EntityTypeMapping TypeName="PMSModel.AspNetUserClaim">
+              <MappingFragment StoreEntitySet="AspNetUserClaims">
+                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
+                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="AspNetUsers">
             <EntityTypeMapping TypeName="PMSModel.AspNetUser">
               <MappingFragment StoreEntitySet="AspNetUsers">
@@ -755,9 +1083,9 @@
           <EntitySetMapping Name="Processes">
             <EntityTypeMapping TypeName="PMSModel.Process">
               <MappingFragment StoreEntitySet="Process">
-                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
                 <ScalarProperty Name="Updated_At" ColumnName="Updated_At" />
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
+                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
                 <ScalarProperty Name="DataJson" ColumnName="DataJson" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -771,11 +1099,10 @@
             <EntityTypeMapping TypeName="PMSModel.ProcessRun">
               <MappingFragment StoreEntitySet="ProcessRun">
                 <ScalarProperty Name="Updated_At" ColumnName="Updated_At" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Created_at" ColumnName="Created_at" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="IdGroup" ColumnName="IdGroup" />
-                <ScalarProperty Name="IdProcess" ColumnName="IdProcess" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -787,7 +1114,28 @@
                 <ScalarProperty Name="Create_At" ColumnName="Create_At" />
                 <ScalarProperty Name="Color" ColumnName="Color" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="IdProcess" ColumnName="IdProcess" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RoleRuns">
+            <EntityTypeMapping TypeName="PMSModel.RoleRun">
+              <MappingFragment StoreEntitySet="RoleRun">
+                <ScalarProperty Name="Update_At" ColumnName="Update_At" />
+                <ScalarProperty Name="Create_At" ColumnName="Create_At" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="IdProcess" ColumnName="IdProcess" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Status">
+            <EntityTypeMapping TypeName="PMSModel.Status">
+              <MappingFragment StoreEntitySet="Status">
+                <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
@@ -799,7 +1147,6 @@
                 <ScalarProperty Name="Updated_At" ColumnName="Updated_At" />
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
                 <ScalarProperty Name="Color" ColumnName="Color" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Figure" ColumnName="Figure" />
                 <ScalarProperty Name="Key" ColumnName="Key" />
                 <ScalarProperty Name="NextStep2" ColumnName="NextStep2" />
@@ -824,8 +1171,7 @@
                 <ScalarProperty Name="NextStep1" ColumnName="NextStep1" />
                 <ScalarProperty Name="StartStep" ColumnName="StartStep" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id_Process" ColumnName="Id_Process" />
-                <ScalarProperty Name="Id_Step" ColumnName="Id_Step" />
+                <ScalarProperty Name="idProcess" ColumnName="idProcess" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -833,19 +1179,17 @@
           <EntitySetMapping Name="TaskProcesses">
             <EntityTypeMapping TypeName="PMSModel.TaskProcess">
               <MappingFragment StoreEntitySet="TaskProcess">
-                <ScalarProperty Name="ValueFormJson" ColumnName="ValueFormJson" />
-                <ScalarProperty Name="Position" ColumnName="Position" />
                 <ScalarProperty Name="Updated_At" ColumnName="Updated_At" />
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
                 <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="ValueFormJson" ColumnName="ValueFormJson" />
                 <ScalarProperty Name="ValueInputFile" ColumnName="ValueInputFile" />
                 <ScalarProperty Name="ValueInputText" ColumnName="ValueInputText" />
-                <ScalarProperty Name="IdType" ColumnName="IdType" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="IdRole" ColumnName="IdRole" />
-                <ScalarProperty Name="IdStep" ColumnName="IdStep" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="IdRole" ColumnName="IdRole" />
+                <ScalarProperty Name="IdStep" ColumnName="IdStep" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -853,23 +1197,18 @@
           <EntitySetMapping Name="TaskProcessRuns">
             <EntityTypeMapping TypeName="PMSModel.TaskProcessRun">
               <MappingFragment StoreEntitySet="TaskProcessRun">
-                <ScalarProperty Name="Position" ColumnName="Position" />
                 <ScalarProperty Name="Updated_At" ColumnName="Updated_At" />
                 <ScalarProperty Name="Created_At" ColumnName="Created_At" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="ValueFormJson" ColumnName="ValueFormJson" />
                 <ScalarProperty Name="ValueInputFile" ColumnName="ValueInputFile" />
                 <ScalarProperty Name="ValueInputText" ColumnName="ValueInputText" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="IdRole" ColumnName="IdRole" />
                 <ScalarProperty Name="IdStep" ColumnName="IdStep" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id_Task" ColumnName="Id_Task" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Types">
-            <EntityTypeMapping TypeName="PMSModel.Type">
-              <MappingFragment StoreEntitySet="Type">
-                <ScalarProperty Name="NameType" ColumnName="NameType" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

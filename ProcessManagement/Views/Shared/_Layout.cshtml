@@ -39,6 +39,7 @@
     @Scripts.Render("~/Content/js")
     <script type="text/javascript">
         function showToastr(type, message, position) {
+            position = position || "toast-bottom-left";
             toastr.options = {
                 closeButton: true,
                 positionClass: position,

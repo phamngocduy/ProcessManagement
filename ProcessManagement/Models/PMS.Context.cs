@@ -25,16 +25,18 @@ namespace ProcessManagement.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<Participate> Participates { get; set; }
         public virtual DbSet<Process> Processes { get; set; }
         public virtual DbSet<ProcessRun> ProcessRuns { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<RoleRun> RoleRuns { get; set; }
+        public virtual DbSet<Status> Status { get; set; }
         public virtual DbSet<Step> Steps { get; set; }
         public virtual DbSet<StepRun> StepRuns { get; set; }
         public virtual DbSet<TaskProcess> TaskProcesses { get; set; }
         public virtual DbSet<TaskProcessRun> TaskProcessRuns { get; set; }
-        public virtual DbSet<Type> Types { get; set; }
     }
 }

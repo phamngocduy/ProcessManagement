@@ -217,13 +217,19 @@ body, #wrapper{
             .steps{
                 .current{
                     a{
-                        background: $color;
+                        background-color: $color;
+                    }
+                    &.error{
+                        a{
+                            background-color: rgb(253, 0, 0);
+                            color:#fff;
+                        }
                     }
                 }
                 .done{
                     a{
                         cursor: pointer;
-                        background: lighten($color, 10%);
+                        background-color: lighten($color, 10%);
                     }
                 }
                 .disabled{

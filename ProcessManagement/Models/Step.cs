@@ -29,7 +29,6 @@ namespace ProcessManagement.Models
         public Nullable<int> NextStep2 { get; set; }
         public int Key { get; set; }
         public string Figure { get; set; }
-        public Nullable<bool> Status { get; set; }
         public string Color { get; set; }
         public System.DateTime Created_At { get; set; }
         public System.DateTime Updated_At { get; set; }

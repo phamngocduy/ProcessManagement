@@ -139,11 +139,15 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   margin-top: 5px;
 }
 .theme-purple .wizard .steps .current a {
-  background: #a27ce6;
+  background-color: #a27ce6;
+}
+.theme-purple .wizard .steps .current.error a {
+  background-color: #fd0000;
+  color: #fff;
 }
 .theme-purple .wizard .steps .done a {
   cursor: pointer;
-  background: #c0a7ee;
+  background-color: #c0a7ee;
 }
 .theme-purple .wizard .steps .disabled a {
   cursor: not-allowed;
@@ -309,11 +313,15 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   margin-top: 5px;
 }
 .theme-cyan .wizard .steps .current a {
-  background: #2eacb3;
+  background-color: #2eacb3;
+}
+.theme-cyan .wizard .steps .current.error a {
+  background-color: #fd0000;
+  color: #fff;
 }
 .theme-cyan .wizard .steps .done a {
   cursor: pointer;
-  background: #45c8cf;
+  background-color: #45c8cf;
 }
 .theme-cyan .wizard .steps .disabled a {
   cursor: not-allowed;
@@ -479,11 +487,15 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   margin-top: 5px;
 }
 .theme-blue .wizard .steps .current a {
-  background: #449cff;
+  background-color: #449cff;
+}
+.theme-blue .wizard .steps .current.error a {
+  background-color: #fd0000;
+  color: #fff;
 }
 .theme-blue .wizard .steps .done a {
   cursor: pointer;
-  background: #77b7ff;
+  background-color: #77b7ff;
 }
 .theme-blue .wizard .steps .disabled a {
   cursor: not-allowed;
@@ -649,11 +661,15 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   margin-top: 5px;
 }
 .theme-green .wizard .steps .current a {
-  background: #31b96f;
+  background-color: #31b96f;
+}
+.theme-green .wizard .steps .current.error a {
+  background-color: #fd0000;
+  color: #fff;
 }
 .theme-green .wizard .steps .done a {
   cursor: pointer;
-  background: #4dd089;
+  background-color: #4dd089;
 }
 .theme-green .wizard .steps .disabled a {
   cursor: not-allowed;
@@ -819,11 +835,15 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   margin-top: 5px;
 }
 .theme-orange .wizard .steps .current a {
-  background: #ff613c;
+  background-color: #ff613c;
+}
+.theme-orange .wizard .steps .current.error a {
+  background-color: #fd0000;
+  color: #fff;
 }
 .theme-orange .wizard .steps .done a {
   cursor: pointer;
-  background: #ff8a6f;
+  background-color: #ff8a6f;
 }
 .theme-orange .wizard .steps .disabled a {
   cursor: not-allowed;
@@ -989,11 +1009,15 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   margin-top: 5px;
 }
 .theme-blush .wizard .steps .current a {
-  background: #e84f5e;
+  background-color: #e84f5e;
+}
+.theme-blush .wizard .steps .current.error a {
+  background-color: #fd0000;
+  color: #fff;
 }
 .theme-blush .wizard .steps .done a {
   cursor: pointer;
-  background: #ee7c87;
+  background-color: #ee7c87;
 }
 .theme-blush .wizard .steps .disabled a {
   cursor: not-allowed;

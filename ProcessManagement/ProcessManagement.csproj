@@ -37,7 +37,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vsE5CD.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vsE2A4.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,7 +47,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vsE5CD.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vsE2A4.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -287,6 +287,9 @@
     <Compile Include="Models\AspNetUser.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\AspNetUserClaim.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Group.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
@@ -320,6 +323,12 @@
     <Compile Include="Models\Role.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\RoleRun.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Status.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\StepRun.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
@@ -329,14 +338,12 @@
     <Compile Include="Models\TaskProcessRun.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Type.cs">
-      <DependentUpon>PMS.tt</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CommonService.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\GroupService.cs" />
     <Compile Include="Services\ParticipateService.cs" />
+    <Compile Include="Services\processRunService.cs" />
     <Compile Include="Services\ProcessService.cs" />
     <Compile Include="Services\RoleService.cs" />
     <Compile Include="Services\StepService.cs" />
