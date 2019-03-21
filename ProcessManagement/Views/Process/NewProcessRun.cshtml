@@ -194,6 +194,7 @@
     <script src="~/Content/vendor/lightbox2/dist/js/lightbox.js"></script>
     <script>
         $(function () {
+            var processes, selectProcess;
             var form = $('#js-wizard-process-run');
             form.steps({
                 headerTag: 'h3',
@@ -288,8 +289,7 @@
                              showToastr("error", response.message, "toast-bottom-left")
                             console.error(response)
                         }else {
-                            var processes = response.data;
-                                
+                            processes = response.data;
                             renderProcessLayout();
                             renderProcessList(1, processes);
                             $(".choose-content").on("click", ".page-item:not(.previous):not(.next)", function (e) {
@@ -313,8 +313,11 @@
                                 var id = $(this)[0].dataset.id;
                                 processes.map(function (process) {
                                     return process.selected = process.id == id ? true : false;
-                                })
-                                console.table(processes);
+                                });
+                                selectProcess = processes.find(function (process) {
+                                    return process.id == id;
+                                });
+                                $(".process-choose input").val(selectProcess.name);
                             });
                         }
                     }
@@ -330,7 +333,7 @@
             var processlist = `<div class="row process-list display-flex clearfix"></div>`;
             var footer = ` <div class="row clearfix">
                                 <div class="col-sm-12 col-md-6 process-choose">
-                                    <input type="text" name="name" class="form-control" value="process1" readonly />
+                                    <input type="text" name="name" class="form-control" readonly />
                                 </div>
                                 <div class="col-sm-12 col-md-6 pagging">
                                     <ul class="pagination">
@@ -362,9 +365,10 @@
                     from = 0;
                     to = totalItem;
                 } else {
-                    if (page == 1) {
-                        from = 0;
-                        to = pageSize;
+                    if (page != totalPage) {
+                        var position = (page - 1) * pageSize;
+                        from = position;
+                        to = position + pageSize;
                     } else {
                         var position = (page - 1) * pageSize;
                         from = position;
@@ -405,9 +409,9 @@
                                         <input type="checkbox" class="process-check" name="process-choose" data-id=${process.id} ${isCheck}>
                                         <span></span>
                                     </label>
-                                    <a href="/Content/images/image-gallery/1.jpg" data-lightbox="gallery" data-title="${process.name}" data-description="${process.des}">
+                                    <a href="${process.avatar}" data-lightbox="gallery" data-title="${process.name}" data-description="${process.des}">
                                         <div class="img-container">
-                                            <img class='img-responsive' src='/Content/images/image-gallery/1.jpg' alt="${process.name}" />
+                                            <img class='img-responsive' src="${process.avatar}" alt="${process.name}" />
                                         </div>
                                     </a>
                                 </div>

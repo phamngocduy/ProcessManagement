@@ -230,14 +230,14 @@
             </div>
             <div class="body process-list">
                 <ul class="list-unstyled">
-                    @foreach (var pro in listprocess)
+                    @foreach (var process in listprocess)
                     {
-                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process", action = "ShowStep", groupslug = Model.groupSlug, groupid = Model.Id, processid = pro.Id })">
+                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process", action = "ShowStep", groupslug = Model.groupSlug, groupid = Model.Id, processid = process.Id })">
                             <li class="media">
 
-                                <img class="mr-3 process-avatar" src="@pro.Avatar" alt="Generic placeholder image">
+                                <div class="media-left"><img class="mr-3 process-avatar img-responsive" src="@process.Avatar" alt="@process.Name" /></div>
                                 <div class="media-body">
-                                    <h5 class="mt-0 mb-1">@pro.Name</h5>
+                                    <h5 class="mt-0 mb-1">@process.Name</h5>
                                     @*<p>@pro.Description</p>*@
                                 </div>
                             </li>

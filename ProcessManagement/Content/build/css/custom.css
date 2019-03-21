@@ -1222,6 +1222,11 @@ input[type=number] {
   background-color: #9e9ea0;
 }
 
+.process-flow img {
+  display: block;
+  margin: 0 auto;
+}
+
 .process-list .media {
   position: relative;
 }
@@ -1229,6 +1234,8 @@ input[type=number] {
   background-color: #f7f7f7;
 }
 .process-list .media .process-avatar {
+  -o-object-fit: cover;
+  object-fit: cover;
   width: 64px;
   height: 64px;
 }
@@ -1242,15 +1249,6 @@ input[type=number] {
   position: absolute;
   top: 15px;
   right: 20px;
-}
-
-.card .header .header-dropdown .tab_btn i {
-  font-size: 14px;
-  font-weight: 100;
-}
-
-#addnewtask .switch-custom label {
-  margin-right: 10px;
 }
 
 .process-list .process {
@@ -1269,6 +1267,9 @@ input[type=number] {
 }
 .process-list .process .process-avatar label input[type=checkbox] {
   display: none;
+}
+.process-list .process .process-avatar .img-container {
+  padding: 30px;
 }
 .process-list .process .process-avatar .img-container::after {
   content: " ";
@@ -1294,7 +1295,7 @@ input[type=number] {
 .process-list .process .process-avatar .img-container img {
   -o-object-fit: cover;
   object-fit: cover;
-  max-width: 100%;
+  height: 200px;
   -webkit-transition: transform 800ms;
   transition: transform 800ms;
 }
@@ -1316,6 +1317,15 @@ input[type=number] {
   text-align: center;
   display: block;
   font-size: 20px;
+}
+
+.card .header .header-dropdown .tab_btn i {
+  font-size: 14px;
+  font-weight: 100;
+}
+
+#addnewtask .switch-custom label {
+  margin-right: 10px;
 }
 
 .step-list {
