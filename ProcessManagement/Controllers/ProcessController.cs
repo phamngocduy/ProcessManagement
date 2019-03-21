@@ -317,8 +317,26 @@ namespace ProcessManagement.Controllers
             }
             return View(ps);
         }
+		public ActionResult EditInforProcess(int processid)
+		{
+			Process process = processService.findProcess(processid);
+			if (process == null) return HttpNotFound();
+			//return RedirectToRoute("GroupControlLocalizedDefault", new { action = "editinforprocess", processid = process.Id });
+			return View(process);
+		}
+		[HttpPost]
+		[GroupAuthorize]
+		public ActionResult EditInforProcess(Process model)
+		{
+			Process process = processService.findProcess(model.Id);
+			if (process == null) return HttpNotFound();
+			//edit
+			processService.EditProcess(model);
+			SetFlash(FlashType.success, "Edited Information of " + process.Name + " Successfully");
+			return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "EditInforProcess", processid = process.Id });
 
-        [Authorize]
+		}
+		[Authorize]
         [HttpPost]
         public JsonResult EditProcess(int processId, string data, string nodeData, string linkData, string imageprocess)
         {

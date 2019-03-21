@@ -37,7 +37,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vsE2A4.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\Dell\AppData\Local\Temp\vsBB72.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,7 +47,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vsE2A4.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\Dell\AppData\Local\Temp\vsBB72.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -8504,6 +8504,7 @@
     <Content Include="Views\Process\ShowFormTask.cshtml" />
     <Content Include="Views\ProcessRun\AssignRole.cshtml" />
     <Content Include="Views\ProcessRun\Detail.cshtml" />
+    <Content Include="Views\Process\EditInforProcess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\group\" />

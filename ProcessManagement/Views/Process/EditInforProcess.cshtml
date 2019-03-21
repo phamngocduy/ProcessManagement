@@ -1,0 +1,33 @@
+﻿@model ProcessManagement.Models.Process
+@{
+    ViewBag.Title = "EditInforProcess";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="cw-workspace-header">
+    <div class="cw-find-members">
+        <div class="cw-add-member">
+            <form action="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "EditInforProcess"})" method="POST" enctype="multipart/form-data">
+                @Html.HiddenFor(model => model.Id)
+                <div class="form-group">
+                    <label for="cw-members-name" class="cw-required">Name</label>
+                    <span class="cw-input-icon">
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                    </span>
+                </div>
+                <div class="form-group">
+                    <label for="cw-members-name" class="cw-required">Description</label>
+                    <span class="cw-input-icon">
+                        @Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+                        @*<textarea name="name" class="form-control cw-input-has-icon" id="cw-description-name" ols="" rows=""></textarea>*@
+                    </span>
+                </div>
+
+                <div>
+                    <button class="btn btn-success">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
