@@ -287,6 +287,9 @@
     <Compile Include="Models\AspNetUser.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FileManager.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Group.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
@@ -320,6 +323,12 @@
     <Compile Include="Models\Role.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\RoleRun.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Status.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\StepRun.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
@@ -327,9 +336,6 @@
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TaskProcessRun.cs">
-      <DependentUpon>PMS.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Type.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

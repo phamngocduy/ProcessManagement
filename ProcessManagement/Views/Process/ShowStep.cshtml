@@ -158,7 +158,6 @@
                 <h2>Project Activity</h2>
             </div>
             <div class="body">
-                Để hình ở đây
                 <img src="@process.Avatar" />
             </div>
         </div>
@@ -168,7 +167,9 @@
             </div>
             <div class="body">
                 <ul class="step-list">
-                    @foreach (var step in Model.Where(x => x.Figure == "Step"))
+                    @if (Model != null)
+                    {
+                        foreach (var step in Model.Where(x => x.Figure == "Step"))
                     {
                         List<TaskProcess> taskList = db.TaskProcesses.Where(x => x.IdStep == step.Id).OrderBy(x => x.Position).ToList();
                         <li>
@@ -211,6 +212,8 @@
                             </div>
                         </li>
                     }
+                    }
+                    
                 </ul>
             </div>
         </div>

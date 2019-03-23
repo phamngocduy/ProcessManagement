@@ -12,18 +12,23 @@ namespace ProcessManagement.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Type
+    public partial class RoleRun
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Type()
+        public RoleRun()
         {
-            this.TaskProcesses = new HashSet<TaskProcess>();
+            this.TaskProcessRuns = new HashSet<TaskProcessRun>();
         }
     
         public int Id { get; set; }
-        public string NameType { get; set; }
+        public Nullable<int> IdProcess { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public Nullable<System.DateTime> Create_At { get; set; }
+        public Nullable<System.DateTime> Update_At { get; set; }
     
+        public virtual ProcessRun ProcessRun { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TaskProcess> TaskProcesses { get; set; }
+        public virtual ICollection<TaskProcessRun> TaskProcessRuns { get; set; }
     }
 }

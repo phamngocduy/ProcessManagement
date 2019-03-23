@@ -12,24 +12,13 @@ namespace ProcessManagement.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Role
+    public partial class FileManager
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Role()
-        {
-            this.TaskProcesses = new HashSet<TaskProcess>();
-        }
-    
-        public int Id { get; set; }
-        public int IdProcess { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
-        public string Color { get; set; }
+        public string Type { get; set; }
         public Nullable<System.DateTime> Create_At { get; set; }
         public Nullable<System.DateTime> Update_At { get; set; }
-    
-        public virtual Process Process { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TaskProcess> TaskProcesses { get; set; }
+        public string Path { get; set; }
     }
 }

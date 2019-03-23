@@ -15,14 +15,21 @@ namespace ProcessManagement.Models
     public partial class TaskProcessRun
     {
         public int Id { get; set; }
-        public int Id_Task { get; set; }
-        public string Name { get; set; }
         public int IdStep { get; set; }
         public Nullable<int> IdRole { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public Nullable<int> Status { get; set; }
         public string ValueInputText { get; set; }
         public string ValueInputFile { get; set; }
-        public Nullable<System.DateTime> Created_At { get; set; }
-        public Nullable<System.DateTime> Updated_At { get; set; }
+        public string ValueFormJson { get; set; }
+        public string Color { get; set; }
         public int Position { get; set; }
+        public System.DateTime Created_At { get; set; }
+        public System.DateTime Updated_At { get; set; }
+    
+        public virtual RoleRun RoleRun { get; set; }
+        public virtual Status Status1 { get; set; }
+        public virtual StepRun StepRun { get; set; }
     }
 }

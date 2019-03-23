@@ -14,17 +14,27 @@ namespace ProcessManagement.Models
     
     public partial class StepRun
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public StepRun()
+        {
+            this.TaskProcessRuns = new HashSet<TaskProcessRun>();
+        }
+    
         public int Id { get; set; }
-        public int Id_Step { get; set; }
-        public int Id_Process { get; set; }
+        public Nullable<int> idProcess { get; set; }
         public string Name { get; set; }
         public bool StartStep { get; set; }
         public int NextStep1 { get; set; }
         public int NextStep2 { get; set; }
         public int Key { get; set; }
         public string Figure { get; set; }
-        public string Status { get; set; }
+        public Nullable<int> Status { get; set; }
         public Nullable<System.DateTime> Created_at { get; set; }
         public Nullable<System.DateTime> Updated_At { get; set; }
+    
+        public virtual ProcessRun ProcessRun { get; set; }
+        public virtual Status Status1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TaskProcessRun> TaskProcessRuns { get; set; }
     }
 }

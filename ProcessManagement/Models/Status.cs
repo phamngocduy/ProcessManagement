@@ -12,24 +12,25 @@ namespace ProcessManagement.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Role
+    public partial class Status
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Role()
+        public Status()
         {
-            this.TaskProcesses = new HashSet<TaskProcess>();
+            this.ProcessRuns = new HashSet<ProcessRun>();
+            this.StepRuns = new HashSet<StepRun>();
+            this.TaskProcessRuns = new HashSet<TaskProcessRun>();
         }
     
         public int Id { get; set; }
-        public int IdProcess { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Color { get; set; }
-        public Nullable<System.DateTime> Create_At { get; set; }
-        public Nullable<System.DateTime> Update_At { get; set; }
     
-        public virtual Process Process { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TaskProcess> TaskProcesses { get; set; }
+        public virtual ICollection<ProcessRun> ProcessRuns { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<StepRun> StepRuns { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TaskProcessRun> TaskProcessRuns { get; set; }
     }
 }

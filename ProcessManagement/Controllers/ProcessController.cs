@@ -210,7 +210,7 @@ namespace ProcessManagement.Controllers
             {
                 listnextstep1.Add(item);
             }
-
+                
 
             ViewData["Group"] = group;
             ViewData["Process"] = process;
@@ -425,10 +425,19 @@ namespace ProcessManagement.Controllers
                     {
                         keystepkhac.Add(step);
                     }
-                    Step ste = stepService.findStepByKey(processId, item);
-                    if (ste != null)
+                    else
                     {
-                        stepService.removeStep(ste);
+                        Step ste = stepService.findStepByKey(processId, item);
+                        if (ste != null)
+                        {
+                            var listtaskofstep = db.TaskProcesses.Where(s => s.IdStep == ste.Id).ToList();
+                            for (int s = 0; s < listtaskofstep.Count; s++)
+                            {
+                                db.TaskProcesses.Remove(listtaskofstep[s]);
+                                db.SaveChanges();
+                            }
+                            stepService.removeStep(ste);
+                        }
                     }
                 }
             }
