@@ -1,9 +1,11 @@
-﻿@model ProcessManagement.Models.Role
+﻿@model ProcessManagement.Models.Process
+
 @{
-    ViewBag.Title = "EditRole";
+    ViewBag.Title = "CreateRole";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var group = ViewData["Group"] as ProcessManagement.Models.Group;
 }
+
 <div class="block-header">
     <div class="row">
         <div class="col-lg-6 col-md-8 col-sm-12">
@@ -49,24 +51,24 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="card">
             <div class="body">
-                <form action="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "process", action = "editrole"})" method="POST">
+                <form action="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "process", action = "addrole"})" method="POST">
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="role-name" class="required">Role Name</label>
-                                <input type="text" name="@Html.NameFor(m => m.Name)" class="form-control" id="role-name" value="@Model.Name">
+                                <input type="text" name="@Html.NameFor(m => m.Name)" class="form-control" id="role-name">
 
                             </div>
                         </div>
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="role-description">Description</label>
-                                <textarea name="@Html.NameFor(m => m.Description)" class="form-control" id="role-description" rows="7">@Model.Description</textarea>
+                                <textarea name="@Html.NameFor(m => m.Name)" class="form-control" id="role-description" rows="7"></textarea>
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <button class="btn btn-primary-theme waves-effect" type="submit">Save</button>
-                            <button class="btn btn-default waves-effect" type="button">Back</button>
+                                <button class="btn btn-primary-theme waves-effect" type="submit">Add</button>
+                                <button class="btn btn-default waves-effect" type="button">Back</button>
                         </div>
                     </div>
                 </form>
@@ -74,5 +76,3 @@
         </div>
     </div>
 </div>
-
-

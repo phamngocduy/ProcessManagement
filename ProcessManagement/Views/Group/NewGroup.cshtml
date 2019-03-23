@@ -6,8 +6,6 @@
 
 @section CustomCss{
     <link rel="stylesheet" href="~/Content/vendor/dropify/css/dropify.min.css">
-    <link rel="stylesheet" href="~/Content/vendor/summernote/dist/summernote.css" />
-
 }
 <div class="block-header">
     <div class="row">
@@ -56,9 +54,7 @@
                                 <input type="text" id="group-name" class="form-control" name="@Html.NameFor(m => m.Name)">
                             </div>
                         </div>
-                    </div>
-                    <div class="row clearfix">
-                        <div class="col-12">
+                        <div class="col-sm-12">
                             <label for="group-file">Upload File</label>
                             <input type="file" class="dropify" name="FileUpload" id="group-file">
                             <div class="mt-3"></div>
@@ -83,7 +79,6 @@
 </div>
 @section CustomScripts{
     <script src="~/Content/vendor/dropify/js/dropify.min.js"></script>
-    <script src="~/Content/vendor/summernote/dist/summernote.js"></script>
     <script src="~/Content/build/js/pages/forms/dropify.js"></script>
 
 }

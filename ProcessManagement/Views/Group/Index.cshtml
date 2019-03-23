@@ -129,7 +129,7 @@
     <script src="~/Content/build/js/pages/tables/jquery-datatable.js"></script>
     <script>
         $(function () {
-            
+            var lang = getCurrentLang();
             $(".js-grouplist-table").DataTable({
                 "processing": true,
                 "serverSide": false,
@@ -147,7 +147,7 @@
                         console.log(json);
                         var return_data = [];
                         for (var i = 0; i < json.length; i++) {
-                            var action = `${json[i].slug}-${json[i].id}/group`;
+                            var action = `${lang}/${json[i].slug}-${json[i].id}/group`;
                             var name = `<a href="${action}" class="primary-theme"><h6>${json[i].name}</h6></a><small>${json[i].time_ralitive}</small>`;
                             var sort = json[i].update_at.sort;
                             var owner = getOwnerAvatar(json[i].owner.name, json[i].owner.avatar);
@@ -162,7 +162,7 @@
                                 member = "There aren't member in group yet";
                             } else {
                                 member = `<ul class="list-unstyled team-info">`;
-                                for (var j = 0; i < members.length; j++) {
+                                for (var j = 0; j < members.length; j++) {
 
                                     if (j == 3) {
                                         if (memberleft > 1) {

@@ -117,7 +117,7 @@
                             <div class="col-md-12 col-sm-12">
                                 <div class="form-group form-float">
                                     <label for="description">Description</label>
-                                    <textarea class="form-control" rows="6" placeholder="Write something about your process (optional)" id="description"  name="description"></textarea>
+                                    <textarea class="form-control" rows="7" placeholder="Write something about your process (optional)" id="description"  name="description"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -128,13 +128,13 @@
                             <div class="col-md-12 col-sm-12">
                                 <div class="form-group form-float">
                                     <label for="process">You choose process to run</label>
-                                    <input type="text" name="name" id="process" class="form-control" value="Process Abc" readonly>
+                                    <input type="text" id="processrun-name" class="form-control" readonly>
                                 </div>
                             </div>
                             <div class="col-md-12 col-sm-12">
                                 <div class="form-group form-float">
                                     <label for="description">Description</label>
-                                    <textarea class="form-control" rows="6" name="description" readonly>abcabcabcabcabcabcabc</textarea>
+                                    <textarea class="form-control" rows="7" name="description" id="processrun-des" readonly></textarea>
                                 </div>
                             </div>
                         </div>
@@ -194,6 +194,7 @@
     <script src="~/Content/vendor/lightbox2/dist/js/lightbox.js"></script>
     <script>
         $(function () {
+            var processes, selectProcess;
             var form = $('#js-wizard-process-run');
             form.steps({
                 headerTag: 'h3',
@@ -232,51 +233,69 @@
                         form.find('.body:eq(' + newIndex + ') label.error').remove();
                         form.find('.body:eq(' + newIndex + ') .error').removeClass('error');
                     }
-
+                    if (currentIndex == 0) {
+                        if (selectProcess == null) {
+                            $(".steps first").addClass("error");
+                            showToastr("error", "please choose one process to run...");
+                            return false;
+                        } else {
+                            $(".steps first").removeClass("error");
+                            return true;
+                        }
+                    }
+                    if (newIndex == 2) {
+                        var des = $("#description").val();
+                        $("#processrun-name").val(selectProcess.name);
+                        $("#processrun-des").val(des);
+                    }
                     form.validate().settings.ignore = ':disabled,:hidden';
                     return form.valid();
+                    
                 },
                 onStepChanged: function (event, currentIndex, priorIndex) {
                     setButtonWavesEffect(event);
                 },
                 onFinishing: function (event, currentIndex) {
-                    form.validate().settings.ignore = ':disabled';
-                    return form.valid();
+                    co
                 },
                 onFinished: function (event, currentIndex) {
-                    swal("Good job!", "Submitted!", "success");
+                    //swal("Good job!", "Submitted!", "success");
                 }
             });
 
-            form.validate({
-                highlight: function (input) {
-                    $(input).parents('.form-line').addClass('error');
-                },
-                unhighlight: function (input) {
-                    $(input).parents('.form-line').removeClass('error');
-                },
-                errorPlacement: function (error, element) {
-                    $(element).parents('.form-group').append(error);
-                },
-                rules: {
-                    'confirm': {
-                        equalTo: '#password'
-                    }
-                }
+            $(".choose-content").on("click", ".page-item:not(.previous):not(.next)", function (e) {
+                var page = $(this)[0].dataset.page;
+                e.preventDefault();
+                $(".process-list").fadeOut("500", function () {
+                    renderProcessList(page, processes);
+                });
             });
+            $(".search button").on("click", function () {
+                var key = $(this).parent().find("input").val();
+                $(".process-list").fadeOut("500", function () {
+                    renderProcessList(1, processes, key);
+                });
+            });
+            //Chuyển checkbox thành radio (reference: https://stackoverflow.com/a/5839924)
+            $(".choose-content").on("change", ".process-check", function () {
+                $(".process-check").prop("checked", false);
+                $(this).prop("checked", true);
+                var id = $(this)[0].dataset.id;
+                processes.map(function (process) {
+                    return process.selected = process.id == id ? true : false;
+                });
+                selectProcess = processes.find(function (process) {
+                    return process.id == id;
+                });
+                $(".process-choose input").val(selectProcess.name);
+            });
+
             lightbox.option({
                 'resizeDuration': 200,
                 'wrapAround': true,
                 'showImageNumberLabel': false
             });
-        });
-
-        function setButtonWavesEffect(event) {
-            //$(event.currentTarget).find('[role="menu"] li a').removeClass('waves-effect');
-            //$(event.currentTarget).find('[role="menu"] li:not(.disabled) a').addClass('waves-effect');
-            $(event.currentTarget).find('[role="menu"] li a').addClass('waves-effect');
-        }
-        function getProcessList() {
+            function getProcessList() {
                 $.ajax({
                     url: "@Url.Action("getprocesslist", "process", new { area = "api"})",
                     type: "GET",
@@ -288,38 +307,21 @@
                              showToastr("error", response.message, "toast-bottom-left")
                             console.error(response)
                         }else {
-                            var processes = response.data;
-                                
+                            processes = response.data;
                             renderProcessLayout();
                             renderProcessList(1, processes);
-                            $(".choose-content").on("click", ".page-item:not(.previous):not(.next)", function (e) {
-                                var page = $(this)[0].dataset.page;
-                                e.preventDefault();
-                                $(".process-list").fadeOut("500", function () {
-                                    renderProcessList(page, processes);
-                                });
-                            });
-                            $(".search button").on("click", function () {
-                                var key = $(this).parent().find("input").val();
-                                $(".process-list").fadeOut("500", function () {
-                                    renderProcessList(1, processes, key);
-                                });
-                            });
-                            //Chuyển checkbox thành radio (reference: https://stackoverflow.com/a/5839924)
-                            var checkbox = $(".process-check");
-                            $(".choose-content").on("change", ".process-check", function () {
-                                $(".process-check").prop("checked", false);
-                                $(this).prop("checked", true);
-                                var id = $(this)[0].dataset.id;
-                                processes.map(function (process) {
-                                    return process.selected = process.id == id ? true : false;
-                                })
-                                console.table(processes);
-                            });
                         }
                     }
                 })
+            }
+        });
+
+        function setButtonWavesEffect(event) {
+            //$(event.currentTarget).find('[role="menu"] li a').removeClass('waves-effect');
+            //$(event.currentTarget).find('[role="menu"] li:not(.disabled) a').addClass('waves-effect');
+            $(event.currentTarget).find('[role="menu"] li a').addClass('waves-effect');
         }
+        
         function renderProcessLayout() {
             var search = `<div class="row">
                                 <div class="col-sm-12 col-md-6 offset-md-6 search">
@@ -330,7 +332,7 @@
             var processlist = `<div class="row process-list display-flex clearfix"></div>`;
             var footer = ` <div class="row clearfix">
                                 <div class="col-sm-12 col-md-6 process-choose">
-                                    <input type="text" name="name" class="form-control" value="process1" readonly />
+                                    <input type="text" name="name" class="form-control" readonly />
                                 </div>
                                 <div class="col-sm-12 col-md-6 pagging">
                                     <ul class="pagination">
@@ -362,9 +364,10 @@
                     from = 0;
                     to = totalItem;
                 } else {
-                    if (page == 1) {
-                        from = 0;
-                        to = pageSize;
+                    if (page != totalPage) {
+                        var position = (page - 1) * pageSize;
+                        from = position;
+                        to = position + pageSize;
                     } else {
                         var position = (page - 1) * pageSize;
                         from = position;
@@ -405,9 +408,9 @@
                                         <input type="checkbox" class="process-check" name="process-choose" data-id=${process.id} ${isCheck}>
                                         <span></span>
                                     </label>
-                                    <a href="/Content/images/image-gallery/1.jpg" data-lightbox="gallery" data-title="${process.name}" data-description="${process.des}">
+                                    <a href="${process.avatar}" data-lightbox="gallery" data-title="${process.name}" data-description="${process.des}">
                                         <div class="img-container">
-                                            <img class='img-responsive' src='/Content/images/image-gallery/1.jpg' alt="${process.name}" />
+                                            <img class='img-responsive' src="${process.avatar}" alt="${process.name}" />
                                         </div>
                                     </a>
                                 </div>
@@ -418,6 +421,23 @@
                             </div>
                         </div>
                     </div>`;
+        }
+        function addProcessRun(process,des) {
+            $.ajax({
+                url: "@Url.Action("addprocessrun", "process", new { area = "api" })",
+                type: "POST",
+                data: { processid: process.id, des: des },
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })';
+                    } else {
+                        showToastr("error", response.message, "toast-bottom-left")
+                        console.error(response)
+                    }
+                }
+            });
         }
         
 

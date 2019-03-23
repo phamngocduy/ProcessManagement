@@ -200,6 +200,13 @@ namespace ProcessManagement.Areas.API.Controllers
             var response = new { message = message, status = status };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult addprocessrun(int processid,string description)
+        {
+            var status = HttpStatusCode.OK;
+            var message = "Create Process Run sucessfully";
+            var response = new { message = message, status = status };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
 
 
 

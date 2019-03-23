@@ -89,5 +89,16 @@ namespace ProcessManagement.Services
             List<Process> processes = db.Processes.Where(x => x.IdGroup == idGroup).OrderByDescending(x => x.Updated_At).ToList();
             return processes;
         }
+		/// <summary>
+		/// Edit thông tin một process
+		/// </summary>
+		/// <param name="model">Process Model</param>
+		public void EditProcess(Process model)
+		{
+			Process ps = findProcess(model.Id);
+			ps.Name = model.Name;
+			ps.Description = model.Description;
+			db.SaveChanges();
+		}
 	}
 }
