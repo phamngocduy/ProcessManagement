@@ -5,15 +5,6 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="PMSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="AspNetUserClaims">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="ClaimType" Type="nvarchar(max)" />
-          <Property Name="ClaimValue" Type="nvarchar(max)" />
-        </EntityType>
         <EntityType Name="AspNetUsers">
           <Key>
             <PropertyRef Name="Id" />
@@ -33,6 +24,17 @@
           <Property Name="NickName" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="AvatarDefault" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="Avatar" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FileManager">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Type" Type="nvarchar" MaxLength="50" />
+          <Property Name="Create_At" Type="datetime" />
+          <Property Name="Update_At" Type="datetime" />
+          <Property Name="Path" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Group">
           <Key>
@@ -185,20 +187,6 @@
           <Property Name="Created_At" Type="datetime" Nullable="false" />
           <Property Name="Updated_At" Type="datetime" Nullable="false" />
         </EntityType>
-        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="AspNetUserClaims" Type="Self.AspNetUserClaims" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AspNetUserClaims">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Group_AspNetUsers">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
           <End Role="Group" Type="Self.Group" Multiplicity="*" />
@@ -404,8 +392,8 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="PMSModelStoreContainer">
-          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FileManager" EntityType="Self.FileManager" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Group" EntityType="Self.Group" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Participate" EntityType="Self.Participate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Process" EntityType="Self.Process" Schema="dbo" store:Type="Tables" />
@@ -417,10 +405,6 @@
           <EntitySet Name="StepRun" EntityType="Self.StepRun" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TaskProcess" EntityType="Self.TaskProcess" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TaskProcessRun" EntityType="Self.TaskProcessRun" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
-          </AssociationSet>
           <AssociationSet Name="FK_Group_AspNetUsers" Association="Self.FK_Group_AspNetUsers">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="Group" EntitySet="Group" />
@@ -495,8 +479,8 @@
     <edmx:ConceptualModels>
       <Schema Namespace="PMSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="PMSEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="AspNetUserClaims" EntityType="PMSModel.AspNetUserClaim" />
           <EntitySet Name="AspNetUsers" EntityType="PMSModel.AspNetUser" />
+          <EntitySet Name="FileManagers" EntityType="PMSModel.FileManager" />
           <EntitySet Name="Groups" EntityType="PMSModel.Group" />
           <EntitySet Name="Participates" EntityType="PMSModel.Participate" />
           <EntitySet Name="Processes" EntityType="PMSModel.Process" />
@@ -508,10 +492,6 @@
           <EntitySet Name="StepRuns" EntityType="PMSModel.StepRun" />
           <EntitySet Name="TaskProcesses" EntityType="PMSModel.TaskProcess" />
           <EntitySet Name="TaskProcessRuns" EntityType="PMSModel.TaskProcessRun" />
-          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="PMSModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="AspNetUserClaim" EntitySet="AspNetUserClaims" />
-          </AssociationSet>
           <AssociationSet Name="FK_Group_AspNetUsers" Association="PMSModel.FK_Group_AspNetUsers">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="Group" EntitySet="Groups" />
@@ -581,16 +561,6 @@
             <End Role="TaskProcessRun" EntitySet="TaskProcessRuns" />
           </AssociationSet>
         </EntityContainer>
-        <EntityType Name="AspNetUserClaim">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUser" Relationship="PMSModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaim" ToRole="AspNetUser" />
-        </EntityType>
         <EntityType Name="AspNetUser">
           <Key>
             <PropertyRef Name="Id" />
@@ -610,10 +580,20 @@
           <Property Name="NickName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="AvatarDefault" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Avatar" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUserClaims" Relationship="PMSModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserClaim" />
           <NavigationProperty Name="Groups" Relationship="PMSModel.FK_Group_AspNetUsers" FromRole="AspNetUser" ToRole="Group" />
           <NavigationProperty Name="Participates" Relationship="PMSModel.FK_Participate_AspNetUsers" FromRole="AspNetUser" ToRole="Participate" />
           <NavigationProperty Name="Processes" Relationship="PMSModel.FK_Process_AspNetUsers" FromRole="AspNetUser" ToRole="Process" />
+        </EntityType>
+        <EntityType Name="FileManager">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Create_At" Type="DateTime" Precision="3" />
+          <Property Name="Update_At" Type="DateTime" Precision="3" />
+          <Property Name="Path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Group">
           <Key>
@@ -797,20 +777,6 @@
           <NavigationProperty Name="Status1" Relationship="PMSModel.FK_TaskProcessRun_Status" FromRole="TaskProcessRun" ToRole="Status" />
           <NavigationProperty Name="StepRun" Relationship="PMSModel.FK_TaskProcessRun_StepRun" FromRole="TaskProcessRun" ToRole="StepRun" />
         </EntityType>
-        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
-          <End Type="PMSModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="PMSModel.AspNetUserClaim" Role="AspNetUserClaim" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AspNetUserClaim">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Group_AspNetUsers">
           <End Type="PMSModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
           <End Type="PMSModel.Group" Role="Group" Multiplicity="*" />
@@ -1021,16 +987,6 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="PMSModelStoreContainer" CdmEntityContainer="PMSEntities">
-          <EntitySetMapping Name="AspNetUserClaims">
-            <EntityTypeMapping TypeName="PMSModel.AspNetUserClaim">
-              <MappingFragment StoreEntitySet="AspNetUserClaims">
-                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
-                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="AspNetUsers">
             <EntityTypeMapping TypeName="PMSModel.AspNetUser">
               <MappingFragment StoreEntitySet="AspNetUsers">
@@ -1048,6 +1004,18 @@
                 <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
                 <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FileManagers">
+            <EntityTypeMapping TypeName="PMSModel.FileManager">
+              <MappingFragment StoreEntitySet="FileManager">
+                <ScalarProperty Name="Path" ColumnName="Path" />
+                <ScalarProperty Name="Update_At" ColumnName="Update_At" />
+                <ScalarProperty Name="Create_At" ColumnName="Create_At" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
