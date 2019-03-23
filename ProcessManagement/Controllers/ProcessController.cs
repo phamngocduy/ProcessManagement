@@ -236,17 +236,20 @@ namespace ProcessManagement.Controllers
             return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, processid = step.Process.Id });
         }
         [GroupAuthorize]
-        public ActionResult CreateRole(int processid)
+        public ActionResult AddRole(int processid)
         {
             Process process = processService.findProcess(processid);
+            if (process == null) return HttpNotFound();
+            Group group = groupService.findGroup(process.Group.Id);
             //Tìm tất cả các role thuộc quy trình đó
             ViewData["ListRole"] = processService.findListRole(process.Id);
+            ViewData["Group"] = group;
             Session["processid"] = process.Id;
             return View(process);
         }
         [GroupAuthorize]
         [HttpPost]
-        public ActionResult CreateRole(Role role)
+        public ActionResult AddRole(Role role)
         {
             int processId = (int)Session["processid"];
             Process process = processService.findProcess(processId);
@@ -285,22 +288,24 @@ namespace ProcessManagement.Controllers
         {
             Role role = participateService.findRoleInProcess(roleid);
             if (role == null) return HttpNotFound();
+            var group = groupService.findGroup(role.Process.Group.Id);
+            ViewData["Group"] = group;
+            Session["roleid"] = role.Id;
+            Session["processid"] = role.Process.Id;
             return View(role);
         }
 
-        [HttpPost]
         [GroupAuthorize]
+        [HttpPost]
         public ActionResult EditRole(Role model)
         {
-            Process process = processService.findProcess(model.IdProcess);
-            int groupid = (int)Session["groupid"];
-            Group group = groupService.findGroup(groupid);
-            Role role = participateService.findRole(model.Id);
-            if (role == null) return HttpNotFound();
+            model.Id = (int)Session["roleid"];
+            var processid = (int)Session["processid"];
+            Process process = processService.findProcess(processid);
+            Group group = groupService.findGroup(process.Group.Id);
             participateService.editRole(model);
-            SetFlash(FlashType.success, "Edited Role of " + role.Name + " Successfully");
-            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = role.IdProcess });
-
+            SetFlash(FlashType.success, "Edited Role Successfully");
+            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
         }
 
         [Authorize]
@@ -317,18 +322,22 @@ namespace ProcessManagement.Controllers
             }
             return View(ps);
         }
-		public ActionResult EditInforProcess(int processid)
+		public ActionResult Setting(int processid)
 		{
 			Process process = processService.findProcess(processid);
 			if (process == null) return HttpNotFound();
-			//return RedirectToRoute("GroupControlLocalizedDefault", new { action = "editinforprocess", processid = process.Id });
-			return View(process);
+
+            Group group = groupService.findGroup(process.Group.Id);
+            ViewData["Group"] = group;
+            Session["processid"] = process.Id;
+            return View(process);
 		}
 		[HttpPost]
 		[GroupAuthorize]
-		public ActionResult EditInforProcess(Process model)
+		public ActionResult Setting(Process model)
 		{
-			Process process = processService.findProcess(model.Id);
+            int processId = (int)Session["processid"];
+            Process process = processService.findProcess(processId);
 			if (process == null) return HttpNotFound();
 			//edit
 			processService.EditProcess(model);

@@ -46,9 +46,14 @@ body, #wrapper{
         }
         a{
             &.primary-theme{
-                color: $color;
+                color: $color !important;
                 &:hover{
-                    color: darken($color, 10%);
+                    color: darken($color, 10%) !important;
+                }
+            }
+            &.btn{
+                :focus{
+                    color: unset;
                 }
             }
         }

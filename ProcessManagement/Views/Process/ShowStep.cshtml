@@ -57,26 +57,18 @@
         </div>
     </div>
 </div>
-
 <div class="row clearfix">
     <div class="col-lg-4 col-md-12">
         <div class="card">
             <div class="body">
-                <div style="float:left">
-                    <h5>@process.Name</h5>
-                    <p>@process.Description</p>
-                </div>
+                <h5>@process.Name</h5>
+                <p>@process.Description</p>
                 @if (isManager)
                 {
-                <div class="progress-container progress-info m-b-25 clearfix" style="margin: 0 ; float: right">
-                    <div class="step-action dropdown">
-                        <a style="color: rgba(40,135,156,1)" href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></a>
-                        <ul class="dropdown-menu notifications animated fadeIn">
-                            <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "EditProcess", processid = process.Id })">Edit Process</a></li>
-                            <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "EditInforProcess", processid = process.Id })">Edit Information Process</a></li>
-                        </ul>
+                    <div class="progress-container progress-info m-b-25 clearfix" style="margin: 0; text-align:right">
+                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "EditProcess", processid = process.Id })" class="btn btn-xs btn-primary-theme waves-effect">Edit Process</a>
+                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "Setting", processid = process.Id })" class="btn btn-xs btn-default waves-effect"><i class="icon-settings"></i></a>
                     </div>
-                </div>
                 }
 
             </div>
@@ -93,15 +85,13 @@
         </div>
         <div class="card">
             <div class="header">
-                <span>
-                    RoleList
-                    @if (isManager)
-                    {
-                        <a style="float: right" class="btn btn-sm btn-outline-success" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id })">
-                            <img src="~/Content/images/icons-plus.png" />
-                        </a>
-                    }
-                </span>
+                <h2 style="display:inline-block">RoleList</h2>
+                @if (isManager)
+                {
+                    <a style="float: right" class="btn btn-sm btn-primary-theme waves-effect" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "addrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id })">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                }
             </div>
             <div class="body">
                 <div class="w_user">
@@ -125,7 +115,7 @@
                                         @if (isManager)
                                         {
                                              <span style="float :right">
-                                                <a class="btn btn-sm btn-outline-success" style=" margin-left: 10px" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "EditRole", roleid = role.Id})">
+                                                <a class="btn btn-sm btn-outline-success" style=" margin-left: 10px" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "editrole", roleid = role.Id})">
                                                     <i class="icon-pencil"></i>
                                                 </a>
                                                 <a class="btn btn-sm btn-outline-danger js-sweetalert" title="Delete" style="margin-left: 10px" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "DeleteRole", roleid = role.Id})" onclick="return confirm('bạn có chắc muốn xóa không??')">

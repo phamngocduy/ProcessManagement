@@ -26,10 +26,13 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   color: #a27ce6;
 }
 .theme-purple a.primary-theme {
-  color: #a27ce6;
+  color: #a27ce6 !important;
 }
 .theme-purple a.primary-theme:hover {
-  color: #8451de;
+  color: #8451de !important;
+}
+.theme-purple a.btn :focus {
+  color: unset;
 }
 .theme-purple .pagination .page-item {
   display: unset !important;
@@ -200,10 +203,13 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   color: #2eacb3;
 }
 .theme-cyan a.primary-theme {
-  color: #2eacb3;
+  color: #2eacb3 !important;
 }
 .theme-cyan a.primary-theme:hover {
-  color: #24858a;
+  color: #24858a !important;
+}
+.theme-cyan a.btn :focus {
+  color: unset;
 }
 .theme-cyan .pagination .page-item {
   display: unset !important;
@@ -374,10 +380,13 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   color: #449cff;
 }
 .theme-blue a.primary-theme {
-  color: #449cff;
+  color: #449cff !important;
 }
 .theme-blue a.primary-theme:hover {
-  color: #1181ff;
+  color: #1181ff !important;
+}
+.theme-blue a.btn :focus {
+  color: unset;
 }
 .theme-blue .pagination .page-item {
   display: unset !important;
@@ -548,10 +557,13 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   color: #31b96f;
 }
 .theme-green a.primary-theme {
-  color: #31b96f;
+  color: #31b96f !important;
 }
 .theme-green a.primary-theme:hover {
-  color: #269157;
+  color: #269157 !important;
+}
+.theme-green a.btn :focus {
+  color: unset;
 }
 .theme-green .pagination .page-item {
   display: unset !important;
@@ -722,10 +734,13 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   color: #ff613c;
 }
 .theme-orange a.primary-theme {
-  color: #ff613c;
+  color: #ff613c !important;
 }
 .theme-orange a.primary-theme:hover {
-  color: #ff3809;
+  color: #ff3809 !important;
+}
+.theme-orange a.btn :focus {
+  color: unset;
 }
 .theme-orange .pagination .page-item {
   display: unset !important;
@@ -896,10 +911,13 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   color: #e84f5e;
 }
 .theme-blush a.primary-theme {
-  color: #e84f5e;
+  color: #e84f5e !important;
 }
 .theme-blush a.primary-theme:hover {
-  color: #e22235;
+  color: #e22235 !important;
+}
+.theme-blush a.btn :focus {
+  color: unset;
 }
 .theme-blush .pagination .page-item {
   display: unset !important;

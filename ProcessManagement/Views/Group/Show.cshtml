@@ -7,7 +7,8 @@
     //var listuser = ViewData["ListParticipant"] as List<ProcessManagement.Models.Participate>;
     var statistic = ViewData["Statistic"] as dynamic;
     var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
-    var isOwnerOrAdmin = userRole.IsOwner || userRole.IsAdmin ?  "" : "disabled";
+    var files = ViewData["Files"] as List<ProcessManagement.Models.FileManager>;
+    var isOwnerOrAdmin = userRole.IsOwner || userRole.IsAdmin ? "" : "disabled";
 }
 @section CustomCss{
     <link rel="stylesheet" href="~/Content/vendor/chartist/css/chartist.min.css">
@@ -152,6 +153,10 @@
                 <p>
                     @Model.Description
                 </p>
+                @foreach (var file in files)
+                {
+                    <a href="@Url.Action("download","file", new { file = file.Id })" target="_blank">@file.Name</a>
+                }
             </div>
         </div>
     </div>
@@ -163,7 +168,7 @@
             <div class="header">
                 <h2>List Process Run</h2>
                 <ul class="header-dropdown">
-                    <li><a class="tab_btn" href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "newprocessrun", groupslug = Model.groupSlug, groupid = Model.Id})" data-toggle="tooltip" data-placement="top" title="Create New Process"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
+                    <li><a class="tab_btn" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "newprocessrun", groupslug = Model.groupSlug, groupid = Model.Id })" data-toggle="tooltip" data-placement="top" title="Create New Process"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
                     <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Previous"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></li>
                     <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Next"><i class="fa fa-arrow-right" aria-hidden="true"></i></a></li>
                     <li class="dropdown">
@@ -215,7 +220,7 @@
             <div class="header">
                 <h2>Processes in group</h2>
                 <ul class="header-dropdown">
-                    <li><a class="tab_btn" href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "newprocess", groupslug = Model.groupSlug, groupid = Model.Id})" data-toggle="tooltip" data-placement="top" title="Create New Process"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
+                    <li><a class="tab_btn" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "newprocess", groupslug = Model.groupSlug, groupid = Model.Id })" data-toggle="tooltip" data-placement="top" title="Create New Process"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
                     <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Previous"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></li>
                     <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Next"><i class="fa fa-arrow-right" aria-hidden="true"></i></a></li>
                     <li class="dropdown">
@@ -232,7 +237,7 @@
                 <ul class="list-unstyled">
                     @foreach (var process in listprocess)
                     {
-                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process", action = "ShowStep", groupslug = Model.groupSlug, groupid = Model.Id, processid = process.Id })">
+                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "Process", action = "ShowStep", groupslug = Model.groupSlug, groupid = Model.Id, processid = process.Id })">
                             <li class="media">
 
                                 <div class="media-left"><img class="mr-3 process-avatar img-responsive" src="@process.Avatar" alt="@process.Name" /></div>
@@ -288,8 +293,8 @@
                     <h4 class="m-b-0">@Model.AspNetUser.UserName</h4>
                 </div>
                 <div class="m-t-15">
-                    <button class="btn btn-primary">Profile</button>
-                    <button class="btn btn-outline-secondary">Message</button>
+                    <button class="btn btn-primary-theme waves-effect">Profile</button>
+                    <button class="btn btn-default waves-effect">Message</button>
                 </div>
             </div>
         </div>
@@ -326,11 +331,18 @@
                             var member = `${avatar}${name}`;
                             var isAdmin = json[i].isAdmin ? "selected" : "";
                             var isManager = json[i].isManager ? "selected" : "";
+                            if (json[i].isOwner) {
+                                var role = `<select multiple="multiple" class="role multiselect" id="role-${i + 1}" data-id="${json[i].id}" disabled>
+                                                <option value="o" selected>Owner</option>
+                                            </select>`;
+                            } else {
+                                var role = `<select multiple="multiple" class="role multiselect" id="role-${i + 1}" data-id="${json[i].id}">
+                                                <option value="a" ${isAdmin}>Admin</option>
+                                                <option value="m" ${isManager}>Manager</option>
+                                            </select>`;
 
-                            var role = `<select multiple="multiple" class="role multiselect" id="role-${i + 1}" data-id="${json[i].id}" @isOwnerOrAdmin>
-                                            <option value="a" ${isAdmin}>admin</option>
-                                            <option value="m" ${isManager}>manager</option>
-                                        </select>`;
+                            }
+                            
                             return_data.push({
                                 "member": member,
                                 "sort": name,
@@ -359,7 +371,7 @@
                 "drawCallback": function (setting) {
                     //TODO: Event update luôn fire khi ẩn thanh chọn, cần phải kiểm tra nếu thanh đổi thì mới chạy event update,không thay đổi thì thôi
                     $(".role").multiselect({
-                        nonSelectedText: 'member',
+                        nonSelectedText: 'Member',
                         numberDisplayed: 4,
                         allSelectedText: false,
                         templates: { // Use the Awesome Bootstrap Checkbox structure
@@ -390,6 +402,14 @@
                             editRole(userRole);
                         }
                     });
+                    //if not admin or owner
+                    @if (!userRole.IsOwner && !userRole.IsAdmin)
+                    {
+                        @:$("button.multiselect").addClass("disabled");
+                    }else if (userRole.IsOwner)
+                    {
+                        @:$("select[data-id=@userRole.Id]").parents("tr").find("button.multiselect").addClass("disabled");
+                    }
                     $('.multiselect-container label.checkbox').each(function () {
                         var input = $(this).find('input'),
                             val = input.val();

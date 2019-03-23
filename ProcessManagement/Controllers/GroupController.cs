@@ -114,6 +114,15 @@ namespace ProcessManagement.Controllers
             groupStatisticModel.Add("totalmember", participateService.countMemberInGroup(group.Id));
             groupStatisticModel.Add("totalprocess", processService.countProcessOfGroup(group.Id));
 
+            string savePath = Server.MapPath(String.Format("~/App_Data/Files/group/{0}", group.Id));
+            List<string> fileName = fileService.getAllFileNameFromFolder(savePath);
+            List<FileManager> file = new List<FileManager>();
+            foreach (var f in fileName)
+            {
+                FileManager temp = db.FileManagers.Where(x => x.Name == f).FirstOrDefault();
+                file.Add(temp);
+            }
+
             ////Tìm tất cả member thuộc group đó
             //var ListParticipant = participateService.findMembersInGroup(group.Id);
             //ViewData["ListParticipant"] = ListParticipant;
@@ -123,6 +132,7 @@ namespace ProcessManagement.Controllers
             ViewData["Statistic"] = groupStatisticModel;
             //lấy role của user hiện tại
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
+            ViewData["Files"] = file;
             return View(group);
         }
 

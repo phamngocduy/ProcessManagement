@@ -18,7 +18,8 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <Use64BitIISExpress>true</Use64BitIISExpress>
+    <Use64BitIISExpress>
+    </Use64BitIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -269,6 +270,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -8468,7 +8470,7 @@
     <Content Include="Views\Process\NewProcess.cshtml" />
     <Content Include="Views\Shared\Settings\General.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
-    <Content Include="Views\Process\CreateRole.cshtml" />
+    <Content Include="Views\Process\AddRole.cshtml" />
     <Content Include="Views\Process\EditRole.cshtml" />
     <Content Include="Views\Process\ShowStep.cshtml" />
     <Content Include="Views\Process\EditStep.cshtml" />
@@ -8504,7 +8506,7 @@
     <Content Include="Views\Process\ShowFormTask.cshtml" />
     <Content Include="Views\ProcessRun\AssignRole.cshtml" />
     <Content Include="Views\ProcessRun\Detail.cshtml" />
-    <Content Include="Views\Process\EditInforProcess.cshtml" />
+    <Content Include="Views\Process\Setting.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\group\" />
@@ -8523,6 +8525,7 @@
     <Folder Include="Content\vendor\jquery.file.upload\server\gae-python\static\" />
     <Folder Include="Content\vendor\jquery.file.upload\server\php\files\" />
     <Folder Include="Content\vendor\jquery.file.upload\test\" />
+    <Folder Include="Views\File\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\build\scripts\jquery-3.3.1.min.map" />

@@ -30,7 +30,7 @@ namespace ProcessManagement.Services
                     FileManager f = new FileManager();
                     f.Id = commonService.getRandomString(30);
                     f.Name = _FileName;
-                    f.Path = savePath + _FileName;
+                    f.Path = string.Format("{0}/{1}", savePath, _FileName);
                     f.Type = Path.GetExtension(_path);
                     f.Create_At = DateTime.Now;
                     f.Update_At = DateTime.Now;
@@ -38,6 +38,27 @@ namespace ProcessManagement.Services
                     db.SaveChanges();
                 }
             }
+        }
+        public List<string> getAllFileNameFromFolder(string path)
+        {
+            List<string> f = new List<string>();
+            DirectoryInfo d = new DirectoryInfo(path);//Assuming Test is your Folder
+            if (d.Exists)
+            {
+                FileInfo[] Files = d.GetFiles(); //Getting Text files
+                
+                foreach (FileInfo file in Files)
+                {
+                    f.Add(file.Name);
+                }
+            }
+            return f;
+            
+        }
+        public FileManager findFile(string id)
+        {
+            FileManager file = db.FileManagers.Find(id);
+            return file;
         }
         /// <summary>
         /// 
