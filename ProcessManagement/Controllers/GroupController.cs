@@ -52,12 +52,11 @@ namespace ProcessManagement.Controllers
             groupService.createGroup(idUser, group);
 
             //create directory
-            string directoryPath = String.Format("group/{0}/process", group.Id);
+            string directoryPath = String.Format("{0}/run", group.Id);
             fileService.CreateDirectory(directoryPath);
             //save file 
-            string savePath = Server.MapPath(String.Format("~/App_Data/Files/group/{0}", group.Id));
-            //fileService.saveFile(FileUpload, savePath);
-            string filePath = String.Format("group/{0}", group.Id);
+            string savePath = Server.MapPath(String.Format("~/App_Data/{0}", group.Id));
+            string filePath = String.Format("{0}", group.Id);
             fileService.saveFile(FileUpload, filePath);
 
 
@@ -114,12 +113,13 @@ namespace ProcessManagement.Controllers
             groupStatisticModel.Add("totalmember", participateService.countMemberInGroup(group.Id));
             groupStatisticModel.Add("totalprocess", processService.countProcessOfGroup(group.Id));
 
-            string savePath = Server.MapPath(String.Format("~/App_Data/Files/group/{0}", group.Id));
+            string savePath = Server.MapPath(String.Format("~/App_Data/{0}", group.Id));
             List<string> fileName = fileService.getAllFileNameFromFolder(savePath);
             List<FileManager> file = new List<FileManager>();
             foreach (var f in fileName)
             {
-                FileManager temp = db.FileManagers.Where(x => x.Name == f).FirstOrDefault();
+                string filePath = string.Format("{0}/{1}", group.Id, f);
+                FileManager temp = db.FileManagers.Where(x => x.Path == filePath).FirstOrDefault();
                 file.Add(temp);
             }
 

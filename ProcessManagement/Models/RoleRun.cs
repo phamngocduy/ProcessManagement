@@ -14,21 +14,13 @@ namespace ProcessManagement.Models
     
     public partial class RoleRun
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public RoleRun()
-        {
-            this.TaskProcessRuns = new HashSet<TaskProcessRun>();
-        }
-    
         public int Id { get; set; }
-        public Nullable<int> IdProcess { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public Nullable<int> IdRole { get; set; }
+        public string IdUser { get; set; }
         public Nullable<System.DateTime> Create_At { get; set; }
         public Nullable<System.DateTime> Update_At { get; set; }
     
-        public virtual ProcessRun ProcessRun { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TaskProcessRun> TaskProcessRuns { get; set; }
+        public virtual AspNetUser AspNetUser { get; set; }
+        public virtual Role Role { get; set; }
     }
 }

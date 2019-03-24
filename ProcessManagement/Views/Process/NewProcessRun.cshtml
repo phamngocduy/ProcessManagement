@@ -431,7 +431,7 @@
                 success: function (response) {
                     console.log(response);
                     if (response.status == 200) {
-                        location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })';
+                        
                     } else {
                         showToastr("error", response.message, "toast-bottom-left")
                         console.error(response)

@@ -71,7 +71,7 @@
 
 <div class="row clearfix display-flex">
     <div class="col-lg-3 col-md-6">
-        <div class="card top_counter">
+        <div class="card top_counter" style="height:100%">
             <div class="body">
                 <div class="icon"><i class="fa fa-users"></i> </div>
                 <div class="content">
@@ -111,7 +111,7 @@
         </div>
     </div>
     <div class="col-lg-3 col-md-6">
-        <div class="card text-center">
+        <div class="card text-center" style="height:100%">
             <div class="body">
                 <h5>Income Analysis</h5>
                 <span>8% High then last month</span>
@@ -135,30 +135,45 @@
         </div>
     </div>
     <div class="col-lg-6 col-md-12">
-        <div class="card">
-            <div class="header">
-                <h2>@Model.Name</h2>
-                <ul class="header-dropdown">
-                    <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"></a>
-                        <ul class="dropdown-menu dropdown-menu-right animated bounceIn">
-                            <li><a href="javascript:void(0);">Action</a></li>
-                            <li><a href="javascript:void(0);">Another Action</a></li>
-                            <li><a href="javascript:void(0);">Something else</a></li>
-                        </ul>
-                    </li>
+        <div class="card" style="height:100%">
+            <div class="header" style="padding-bottom:0">
+                <ul class="nav nav-tabs-new" style="float:right">
+                    <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#Home-new">Overview</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Profile-new">Settings</a></li>
                 </ul>
+                <div class="clearfix"></div>
             </div>
-            <div class="body">
-                <p>
-                    @Model.Description
-                </p>
-                @foreach (var file in files)
-                {
-                    <a href="@Url.Action("download","file", new { file = file.Id })" target="_blank">@file.Name</a>
-                }
+            <div class="body" style="padding-top:10px">
+                <div class="tab-content">
+                    <div class="tab-pane animated fadeIn show active" id="Home-new">
+                        <h6>@Model.Name</h6>
+                        <p>@Model.Description</p>
+                        @foreach (var file in files)
+                        {
+                            <a href="@Url.Action("download","file", new { file = file.Id })" target="_blank">@file.Name</a>
+                        }
+                    </div>
+                    <div class="tab-pane animated fadeIn" id="Profile-new">
+                        <div class="row clearfix">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="group-name" name="@Html.NameFor(m => m.Name)">
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <textarea class="form-control" rows="6" placeholder="Write something about your task (optional)" id="group-description" name="@Html.NameFor(m => m.Description)"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <button class="btn btn-primary-theme waves-effect">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        
     </div>
 </div>
 

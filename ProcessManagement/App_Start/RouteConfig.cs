@@ -33,7 +33,7 @@ namespace ProcessManagement
                 constraints: new { lang = "en|vi", controller = "home|account|error" },
                 namespaces: new[] { "ProcessManagement.Controllers" }
             );
-            
+
             //group control
             routes.MapRoute(
                name: "GroupControlLocalizedDefault",
