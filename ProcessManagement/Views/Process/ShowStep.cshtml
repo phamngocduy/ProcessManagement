@@ -104,7 +104,7 @@
                     <hr>
                 </div>
                 <ul class="right_chat list-unstyled mb-0">
-                    @foreach (var role in listRole)
+                    @foreach (var role in listRole.Where(x => x.IsRun == null))
                     {
                         <li class="online">
                             <div class="media">
@@ -167,13 +167,13 @@
                 <ul class="step-list">
                     @if (Model != null)
                     {
-                        foreach (var step in Model.Where(x => x.Figure == "Step"))
+                        foreach (var step in Model.Where(x => x.Figure == "Step" && x.IsRun == null))
                     {
                         List<TaskProcess> taskList = db.TaskProcesses.Where(x => x.IdStep == step.Id).OrderBy(x => x.Position).ToList();
                         <li>
                             <div class="step @if (taskList.Any()) { WriteLiteral("step-has-task"); }" style="border: 2px solid @step.Color; border-left:7px solid @step.Color; color:@step.Color">
                                 <div class="step-name">
-                                    <span data-toggle="tooltip" data-placement="top" title="@step.Description">@step.Name (@taskList.Count)</span>
+                                    <span data-toggle="tooltip" data-placement="top" title="@step.Description">@step.Name (@taskList.Where(x => x.IsRun == null).Count())</span>
                                 </div>
                                 @if (isManager)
 	                            {
@@ -189,7 +189,7 @@
                             </div>
                             <div class="task">
                                 <ul class="task-list" id="task-of-step-@step.Id">
-                                    @foreach (var task in taskList)
+                                    @foreach (var task in taskList.Where(x => x.IsRun == null))
                                     {
                                     <li class="task-item" style="background-color:@task.Color" data-id="@task.Id">
                                         @if (task.ValueFormJson == null)

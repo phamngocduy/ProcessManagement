@@ -198,14 +198,18 @@
             </div>
             <div class="body process-list" style="height: 387px">
                 <ul class="list-unstyled">
-                    <li class="media">
-                        <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
-                        <div class="media-body">
-                            <h5 class="mt-0 mb-1">List-based media object</h5><span class="badge badge-warning">Running...</span>
-                            <button class="btn btn-default waves-effect"><i class="icon-settings"></i></button>
-                        </div>
-                    </li>
-                    <li class="media my-4">
+                    @foreach (var item in listprocess.Where(y => y.IsRun == true))
+                    {
+                        <li class="media">
+                            <img class="mr-3 process-avatar" src="@item.Avatar" alt="Generic placeholder image">
+                            <div class="media-body">
+                                <h5 class="mt-0 mb-1">@item.Name</h5><span class="badge badge-warning">Running...</span>
+                                <button class="btn btn-default waves-effect"><i class="icon-settings"></i></button>
+                            </div>
+                        </li>
+                    }
+
+                    @*<li class="media my-4">
                         <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
                         <div class="media-body">
                             <h5 class="mt-0 mb-1">List-based media object</h5><span class="badge badge-info">Ready to run</span>
@@ -225,7 +229,7 @@
                             <h5 class="mt-0 mb-1">List-based media object</h5><span class="badge badge-danger">Failed</span>
                             <button class="btn btn-default waves-effect"><i class="icon-settings"></i></button>
                         </div>
-                    </li>
+                    </li>*@
                 </ul>
             </div>
         </div>
@@ -250,7 +254,7 @@
             </div>
             <div class="body process-list">
                 <ul class="list-unstyled">
-                    @foreach (var process in listprocess)
+                    @foreach (var process in listprocess.Where(x => x.IsRun == null))
                     {
                         <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "Process", action = "ShowStep", groupslug = Model.groupSlug, groupid = Model.Id, processid = process.Id })">
                             <li class="media">

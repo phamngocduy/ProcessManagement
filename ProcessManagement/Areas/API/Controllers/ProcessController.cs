@@ -217,10 +217,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 response = new { message = message, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
-
-
-
-
+            
             if (idRole != null)
             {
                 int idR = idRole.GetValueOrDefault();
@@ -256,7 +253,7 @@ namespace ProcessManagement.Areas.API.Controllers
         {
             List<Process> processes = processService.getProcess(groupid);
             List<object> jProcesses = new List<object>();
-            foreach (var process in processes)
+            foreach (var process in processes.Where(x => x.IsRun == null))
             {
                 object jProcess = new
                 {
@@ -278,6 +275,28 @@ namespace ProcessManagement.Areas.API.Controllers
             }
             
             var response = new { data = jProcesses, status = HttpStatusCode.OK };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult addprocessrun(int processid, string des)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+            Process prorun = processService.findProcess(processid);
+            processService.createProcessRun(prorun, des);
+            List<Role> rolerun = roleService.findListRoleOfProcess(processid);
+            roleService.addrolerun(rolerun);
+            List<Step> liststeprun = stepService.findStepsOfProcess(processid);
+            stepService.addliststeprun(liststeprun);
+            foreach (var item in liststeprun)
+            {
+                List<TaskProcess> listtaskrun = taskService.findtaskofstep(item.Id);
+                taskService.addlisttaskrun(listtaskrun);
+            }
+            message = "Created ProcessRun Successfully";
+            response = new { message = message, status = status };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
     }

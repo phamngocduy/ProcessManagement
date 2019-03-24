@@ -256,7 +256,8 @@
                     setButtonWavesEffect(event);
                 },
                 onFinishing: function (event, currentIndex) {
-                    co
+                    var des = $("#description").val();
+                    addProcessRun(selectProcess, des);
                 },
                 onFinished: function (event, currentIndex) {
                     //swal("Good job!", "Submitted!", "success");
@@ -431,6 +432,7 @@
                 success: function (response) {
                     console.log(response);
                     if (response.status == 200) {
+                        location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "group" ,action = "show", groupid = Model.Id})';
                         
                     } else {
                         showToastr("error", response.message, "toast-bottom-left")
