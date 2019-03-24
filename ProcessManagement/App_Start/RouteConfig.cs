@@ -23,14 +23,14 @@ namespace ProcessManagement
                 name: "LocalizedDefault",
                 url: "{lang}/{controller}/{action}/{id}",
                 defaults: new { controller = "group", action = "index", id = UrlParameter.Optional},
-                constraints: new { lang = "en|vi", controller = "home|account|error" },
+                constraints: new { lang = "en|vi", controller = "home|account|error|api" },
                 namespaces: new[] { "ProcessManagement.Controllers" }
             );
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "group", action = "index", lang = "en", id = UrlParameter.Optional},
-                constraints: new { lang = "en|vi", controller = "home|account|error" },
+                constraints: new { lang = "en|vi", controller = "home|account|error|api" },
                 namespaces: new[] { "ProcessManagement.Controllers" }
             );
             
