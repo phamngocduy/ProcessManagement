@@ -26,6 +26,7 @@ namespace ProcessManagement.Models
         }
     
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<FileManager> FileManagers { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<Participate> Participates { get; set; }

@@ -17,8 +17,8 @@ namespace ProcessManagement.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
+        public string Path { get; set; }
         public Nullable<System.DateTime> Create_At { get; set; }
         public Nullable<System.DateTime> Update_At { get; set; }
-        public string Path { get; set; }
     }
 }

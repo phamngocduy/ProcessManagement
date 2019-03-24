@@ -14,7 +14,7 @@ namespace ProcessManagement.Controllers
         FileService fileService = new FileService();
         ///=============================================================================================
         // GET: File
-        public void Download(string file)
+        public void DownLoad(string file)
         {
             FileManager f = fileService.findFile(file);
             if (f != null)
@@ -22,7 +22,7 @@ namespace ProcessManagement.Controllers
                 Response.Clear();
                 Response.ContentType = "application/octet-stream";
                 Response.AddHeader("Content-Disposition", "attachment; filename=" + f.Name);
-                Response.WriteFile(Server.MapPath("~/App_Data/Files/" + f.Path));
+                Response.WriteFile(Server.MapPath("~/App_Data/" + f.Path));
                 Response.End();
             }
             else

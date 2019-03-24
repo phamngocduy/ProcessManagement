@@ -30,6 +30,7 @@ namespace ProcessManagement.Models
         public int Key { get; set; }
         public string Figure { get; set; }
         public string Color { get; set; }
+        public Nullable<bool> IsRun { get; set; }
         public System.DateTime Created_At { get; set; }
         public System.DateTime Updated_At { get; set; }
     

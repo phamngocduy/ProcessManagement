@@ -20,7 +20,7 @@ namespace ProcessManagement.Services
                 if (file.ContentLength > 0)
                 {
                     string AppPath = AppDomain.CurrentDomain.BaseDirectory;
-                    string filePath = AppPath + "App_Data\\Files\\" + savePath;
+                    string filePath = AppPath + "App_Data\\" + savePath;
 
                     string _FileName = Path.GetFileName(file.FileName);
                     string _path = Path.Combine(filePath, _FileName);
@@ -28,7 +28,7 @@ namespace ProcessManagement.Services
 
 
                     FileManager f = new FileManager();
-                    f.Id = commonService.getRandomString(30);
+                    f.Id = commonService.getRandomString(50);
                     f.Name = _FileName;
                     f.Path = string.Format("{0}/{1}", savePath, _FileName);
                     f.Type = Path.GetExtension(_path);
@@ -80,7 +80,7 @@ namespace ProcessManagement.Services
         public void CreateDirectory(string stringPath)
         {
             string AppPath = AppDomain.CurrentDomain.BaseDirectory;
-            string filePath = AppPath + "App_Data\\Files\\" + stringPath;
+            string filePath = AppPath + "App_Data\\" + stringPath;
             DirectoryInfo introDirectory = Directory.CreateDirectory(filePath);
         }
 
