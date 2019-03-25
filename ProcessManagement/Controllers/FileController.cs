@@ -14,6 +14,10 @@ namespace ProcessManagement.Controllers
         FileService fileService = new FileService();
         ///=============================================================================================
         // GET: File
+        public ViewResult FileManager()
+        {
+            return View();
+        }
         public void DownLoad(string file)
         {
             FileManager f = fileService.findFile(file);

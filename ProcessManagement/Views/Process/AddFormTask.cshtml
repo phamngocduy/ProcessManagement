@@ -13,7 +13,20 @@
     <link rel="stylesheet" href="~/Content/vendor/dropify/css/dropify.min.css">
     <link rel="stylesheet" href="~/Content/vendor/select2/select2.css" />
     <link rel="stylesheet" href="~/Content/vendor/switchery/dist/switchery.min.css" />
-    
+    <style>
+        #left-sidebar [class^=icon-]:before, #left-sidebar [class*=" icon-"]:before {
+            font-family: unset;
+        }
+
+        .form-wrap.form-builder .frmb-control li {
+            font-family: inherit;
+            display: block;
+        }
+
+        .form-wrap.form-builder [class^=icon-]:before, .form-wrap.form-builder [class*=" icon-"]:before {
+            font-family: fb-icons;
+        }
+    </style>
 }
 <div class="block-header">
     <div class="row">

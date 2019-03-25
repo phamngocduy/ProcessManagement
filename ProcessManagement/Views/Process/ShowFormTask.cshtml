@@ -15,6 +15,19 @@
     <link rel="stylesheet" href="~/Content/vendor/dropify/css/dropify.min.css">
     <link rel="stylesheet" href="~/Content/vendor/select2/select2.css" />
     <link rel="stylesheet" href="~/Content/vendor/switchery/dist/switchery.min.css" />
+    <style>
+        #left-sidebar [class^=icon-]:before, #left-sidebar [class*=" icon-"]:before {
+            font-family: unset;
+        }
+        .form-wrap.form-builder .frmb-control li {
+            font-family: inherit;
+            display: block;
+        }
+
+        .form-wrap.form-builder [class^=icon-]:before, .form-wrap.form-builder [class*=" icon-"]:before {
+            font-family: fb-icons;
+        }
+    </style>
 }
 <div class="block-header">
     <div class="row">
@@ -86,25 +99,22 @@
     <script src="~/Content/build/js/pages/forms/dropify.js"></script>
     <script src="~/Content/vendor/select2/select2.min.js"></script>
     <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-    <script src="~/Content/build/js/form-builder.min.js"></script>
-    <script src="~/Content/build/js/form-render.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script src="~/Content/vendor/FormBuilder/form-builder.min.js"></script>
+    <script src="~/Content/vendor/FormBuilder/form-render.min.js"></script>
 
     <script>
         $(function () {
-            var taskform = '@Model.ValueFormJson'.replace(/&quot;/g, "\"");
-            var formData = taskform;
-            if (taskform != null) {
-                var fbRender = document.getElementById('render-wrap');
-                var formRenderOpts = {
-                    formData,
-                };
-                $(fbRender).formRender(formRenderOpts);
-            }
-
             var bAction = `<button id="btn-save" class="btn btn-primary-theme">Save</button>
                             <button id="btn-back" class="btn btn-outline-secondary">Back</button>`;
             var showForm = $("#show-task").html();
+            var taskform = '@Model.ValueFormJson'.replace(/&quot;/g, "\"");
+            var formData = taskform;
+            if (taskform != null) {
+               $("#render-wrap").formRender({formData});
+            }
+            var form;
+
             var switchArr = createSwitch();
             switchArr.forEach(item => item.disable());
 
@@ -116,25 +126,28 @@
             //Button edit
 
             $("body").on("click", "#btn-edit",function () {
+                var $this = $(this);
                 var temp = bAction;
                 if (taskform != null) {
-                    var formB = $("#build-wrap").formBuilder();
-                    setTimeout(function () { formB.actions.setData(formData); }, 0);
+                    var fbEditor = document.getElementById('build-wrap');
+                    form = $(fbEditor).formBuilder({ formData });
                 }
-                
+
                 var actionButton = $this.parents("#button-action");
                 actionButton.html(temp);
                 $("#show-task").find("input[type!='checkbox'], select#task-role, textarea").prop("disabled", function () {
                     return !$(this).prop("disabled");
                 });
                 switchArr.forEach(item => item.enable());
+                $("#render-wrap").empty();
             });
             //Button back
             $("body").on("click", "#btn-back", function () {
                 $("#show-task").html(showForm);
                 switchArr = createSwitch();
                 if (taskform != null) {
-                    formB = $("#build-wrap").formBuilder().actions.setData(taskform);
+                    $("#render-wrap").formRender({ formData });
+                    $("#build-wrap").empty();
                 }
             });
             $("body").on("click", "#btn-save", function () {
@@ -145,8 +158,9 @@
                 var role = $('#task-role').val();
                 var description = $('#task-description').val();
 
-                var formBuilder = formB.actions.getData('json', true).replace(/\r?\n|\r/g, '');
+                var formBuilder = form.actions.getData('json', true).replace(/\r?\n|\r/g, '');
                 formBuilder = JSON.parse(formBuilder);
+
                 var tempArr = []
                 for (var i = 0; i < formBuilder.length; i++) {
                     tempArr.push(formBuilder[i]);

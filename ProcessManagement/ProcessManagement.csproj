@@ -439,8 +439,6 @@
     <Content Include="Content\build\scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Content\build\scripts\modernizr-2.8.3.js" />
     <None Include="Content\build\scss\_header.scss" />
-    <Content Include="Content\build\js\form-builder.min.js" />
-    <Content Include="Content\build\js\form-render.min.js" />
     <Content Include="Content\images\auth_bg.jpg" />
     <Content Include="Content\images\avatar.png" />
     <Content Include="Content\images\back_disabled.png" />
@@ -6614,6 +6612,8 @@
     <Content Include="Content\vendor\font-awesome\css\font-awesome.min.css" />
     <Content Include="Content\vendor\font-awesome\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\vendor\font-awesome\HELP-US-OUT.txt" />
+    <Content Include="Content\vendor\FormBuilder\form-builder.min.js" />
+    <Content Include="Content\vendor\FormBuilder\form-render.min.js" />
     <Content Include="Content\vendor\fullcalendar\dist\fullcalendar.css" />
     <Content Include="Content\vendor\fullcalendar\dist\fullcalendar.js" />
     <Content Include="Content\vendor\fullcalendar\dist\fullcalendar.min.css" />
@@ -8508,6 +8508,7 @@
     <Content Include="Views\ProcessRun\AssignRole.cshtml" />
     <Content Include="Views\ProcessRun\Detail.cshtml" />
     <Content Include="Views\Process\Setting.cshtml" />
+    <Content Include="Views\File\FileManager.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -8526,7 +8527,6 @@
     <Folder Include="Content\vendor\jquery.file.upload\server\gae-python\static\" />
     <Folder Include="Content\vendor\jquery.file.upload\server\php\files\" />
     <Folder Include="Content\vendor\jquery.file.upload\test\" />
-    <Folder Include="Views\File\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\build\scripts\jquery-3.3.1.min.map" />
