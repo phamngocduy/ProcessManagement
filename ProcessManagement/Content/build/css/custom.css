@@ -29,6 +29,7 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   display: inline-block;
   color: #1233db;
   font-weight: 600;
+  font-family: "Times New Roman", Times, serif;
 }
 .logo-name span {
   color: #e91827;
