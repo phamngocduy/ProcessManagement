@@ -7,7 +7,8 @@
     //var listuser = ViewData["ListParticipant"] as List<ProcessManagement.Models.Participate>;
     var statistic = ViewData["Statistic"] as dynamic;
     var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
-    var isOwnerOrAdmin = userRole.IsOwner || userRole.IsAdmin ?  "" : "disabled";
+    var files = ViewData["Files"] as List<ProcessManagement.Models.FileManager>;
+    var isOwnerOrAdmin = userRole.IsOwner || userRole.IsAdmin ? "" : "disabled";
 }
 @section CustomCss{
     <link rel="stylesheet" href="~/Content/vendor/chartist/css/chartist.min.css">
@@ -69,7 +70,7 @@
 </div>
 
 <div class="row clearfix display-flex">
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-3 col-md-6" style="height:100%">
         <div class="card top_counter">
             <div class="body">
                 <div class="icon"><i class="fa fa-users"></i> </div>
@@ -110,7 +111,7 @@
         </div>
     </div>
     <div class="col-lg-3 col-md-6">
-        <div class="card text-center">
+        <div class="card text-center" style="height:100%">
             <div class="body">
                 <h5>Income Analysis</h5>
                 <span>8% High then last month</span>
@@ -134,36 +135,54 @@
         </div>
     </div>
     <div class="col-lg-6 col-md-12">
-        <div class="card">
-            <div class="header">
-                <h2>@Model.Name</h2>
-                <ul class="header-dropdown">
-                    <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"></a>
-                        <ul class="dropdown-menu dropdown-menu-right animated bounceIn">
-                            <li><a href="javascript:void(0);">Action</a></li>
-                            <li><a href="javascript:void(0);">Another Action</a></li>
-                            <li><a href="javascript:void(0);">Something else</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+        <div class="card clearfix" style="height:100%" id="group-infor-card">
+            <div class="header"></div>
             <div class="body">
-                <p>
-                    @Model.Description
-                </p>
+                <div class="tab-content">
+                    <!-- TODO: Không biết để nút remove với nút tranfer owner ở đâu -->
+                    <div class="tab-pane animated fadeIn show active" id="overview-tab">
+                        <a class="btn-circle btn-primary-theme btn-switch-tab" style="float:right" href="#setting-tab">Setting</a>
+                        <h5>@Model.Name</h5>
+                        <p>@Model.Description</p>
+                        @foreach (var file in files)
+                        {
+                            <a href="@Url.Action("download", "file", new { file = file.Id })" target="_blank">@file.Name</a>
+                        }
+                        
+                    </div>
+                    <div class="tab-pane animated fadeIn" id="setting-tab">
+                        <a href="#overview-tab" class="btn-switch-tab primary-theme">&lsaquo; Back</a>
+                        <div class="row clearfix">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label class="required" for="group-name">Group Name</label>
+                                    <input type="text" class="form-control" id="group-name" placeholder="Group Name" name="@Html.NameFor(m => m.Name)">
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="group-description">Description</label>
+                                    <textarea class="form-control" rows="7" placeholder="Write something about your task (optional)" id="group-description" name="@Html.NameFor(m => m.Description)"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <button class="btn btn-primary-theme waves-effect" id="btn-group-save">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row clearfix">
+<div class="row clearfix display-flex">
     <div class="col-lg-8 col-md-12">
-        <div class="card">
+        <div class="card" style="height: 100%">
             <div class="header">
                 <h2>List Process Run</h2>
                 <ul class="header-dropdown">
-                    <li><a class="tab_btn" href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "newprocessrun", groupslug = Model.groupSlug, groupid = Model.Id})" data-toggle="tooltip" data-placement="top" title="Create New Process"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
+                    <li><a class="tab_btn" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "newprocessrun", groupslug = Model.groupSlug, groupid = Model.Id })" data-toggle="tooltip" data-placement="top" title="Create New Process"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
                     <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Previous"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></li>
                     <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Next"><i class="fa fa-arrow-right" aria-hidden="true"></i></a></li>
                     <li class="dropdown">
@@ -178,14 +197,18 @@
             </div>
             <div class="body process-list" style="height: 387px">
                 <ul class="list-unstyled">
-                    <li class="media">
-                        <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
-                        <div class="media-body">
-                            <h5 class="mt-0 mb-1">List-based media object</h5><span class="badge badge-warning">Running...</span>
-                            <button class="btn btn-default waves-effect"><i class="icon-settings"></i></button>
-                        </div>
-                    </li>
-                    <li class="media my-4">
+                    @foreach (var item in listprocess.Where(y => y.IsRun == true))
+                    {
+                        <li class="media">
+                            <img class="mr-3 process-avatar" src="@item.Avatar" alt="Generic placeholder image">
+                            <div class="media-body">
+                                <h5 class="mt-0 mb-1">@item.Name</h5><span class="badge badge-warning">Running...</span>
+                                <button class="btn btn-default waves-effect"><i class="icon-settings"></i></button>
+                            </div>
+                        </li>
+                    }
+
+                    @*<li class="media my-4">
                         <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
                         <div class="media-body">
                             <h5 class="mt-0 mb-1">List-based media object</h5><span class="badge badge-info">Ready to run</span>
@@ -205,17 +228,17 @@
                             <h5 class="mt-0 mb-1">List-based media object</h5><span class="badge badge-danger">Failed</span>
                             <button class="btn btn-default waves-effect"><i class="icon-settings"></i></button>
                         </div>
-                    </li>
+                    </li>*@
                 </ul>
             </div>
         </div>
     </div>
     <div class="col-lg-4 col-md-12">
-        <div class="card">
+        <div class="card" style="height: 100%">
             <div class="header">
                 <h2>Processes in group</h2>
                 <ul class="header-dropdown">
-                    <li><a class="tab_btn" href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "newprocess", groupslug = Model.groupSlug, groupid = Model.Id})" data-toggle="tooltip" data-placement="top" title="Create New Process"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
+                    <li><a class="tab_btn" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "newprocess", groupslug = Model.groupSlug, groupid = Model.Id })" data-toggle="tooltip" data-placement="top" title="Create New Process"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
                     <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Previous"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></li>
                     <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Next"><i class="fa fa-arrow-right" aria-hidden="true"></i></a></li>
                     <li class="dropdown">
@@ -230,9 +253,9 @@
             </div>
             <div class="body process-list">
                 <ul class="list-unstyled">
-                    @foreach (var process in listprocess)
+                    @foreach (var process in listprocess.Where(x => x.IsRun == null))
                     {
-                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process", action = "ShowStep", groupslug = Model.groupSlug, groupid = Model.Id, processid = process.Id })">
+                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "Process", action = "ShowStep", groupslug = Model.groupSlug, groupid = Model.Id, processid = process.Id })">
                             <li class="media">
 
                                 <div class="media-left"><img class="mr-3 process-avatar img-responsive" src="@process.Avatar" alt="@process.Name" /></div>
@@ -250,8 +273,8 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-lg-8 col-md-7">
+<div class="row clearfix">
+    <div class="col-lg-8 col-md-7" id="group-c">
         <div class="card" style="padding-bottom:0">
             <div class="header">
                 <h2>Members of @Model.Name</h2>
@@ -269,10 +292,13 @@
                         <tbody></tbody>
                     </table>
                 </div>
-                <div id="add-member-search">
-                    <input type="hidden" style="width:calc(100% - 116px);border: 1px solid #ced4da;padding:5px 10px;" @isOwnerOrAdmin/>
-                    <button class="btn btn-primary-theme waves-effect" id="btn-add-member" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing" @isOwnerOrAdmin>Add member</button>
-                </div>
+                @if (userRole.IsAdmin || userRole.IsOwner)
+                {
+                    <div id="add-member-search">
+                        <input type="hidden" style="width:calc(100% - 116px);border: 1px solid #ced4da;padding:5px 10px;" />
+                        <button class="btn btn-primary-theme waves-effect" id="btn-add-member" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing" @isOwnerOrAdmin>Add member</button>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -288,8 +314,8 @@
                     <h4 class="m-b-0">@Model.AspNetUser.UserName</h4>
                 </div>
                 <div class="m-t-15">
-                    <button class="btn btn-primary">Profile</button>
-                    <button class="btn btn-outline-secondary">Message</button>
+                    <button class="btn btn-primary-theme waves-effect">Profile</button>
+                    <button class="btn btn-default waves-effect">Message</button>
                 </div>
             </div>
         </div>
@@ -303,6 +329,26 @@
     <script src="~/Content/build/js/index.js"></script>
     <script>
         $(function () {
+            $(".btn-switch-tab").on("click", function (e) {
+                var tab = $(this).attr("href");
+                $("#group-name").val("@Model.Name");
+                $("#group-description").val("@Model.Description");
+                $(".tab-pane").removeClass("active").removeClass("show");
+                $(tab).addClass("active").addClass("show");
+                e.preventDefault();
+            })
+            $("#btn-group-save").on("click", function () {
+                var newGroup = {
+                    groupid: @Model.Id,
+                    name: $("#group-name").val(),
+                    description: $("#group-description").val(),
+                }
+                if (newGroup.name == "") {
+                    showToastr("error", "Group Name is required");
+                } else {
+                    editGroup(newGroup);
+                }
+            })
             $("#table-member").DataTable({
                 "lengthMenu": [5, 25, 50, 75, 100],
                 "bLengthChange": false,
@@ -326,11 +372,18 @@
                             var member = `${avatar}${name}`;
                             var isAdmin = json[i].isAdmin ? "selected" : "";
                             var isManager = json[i].isManager ? "selected" : "";
+                            if (json[i].isOwner) {
+                                var role = `<select multiple="multiple" class="role multiselect" id="role-${i + 1}" data-id="${json[i].id}" disabled>
+                                                <option value="o" selected>Owner</option>
+                                            </select>`;
+                            } else {
+                                var role = `<select multiple="multiple" class="role multiselect" id="role-${i + 1}" data-id="${json[i].id}">
+                                                <option value="a" ${isAdmin}>Admin</option>
+                                                <option value="m" ${isManager}>Manager</option>
+                                            </select>`;
 
-                            var role = `<select multiple="multiple" class="role multiselect" id="role-${i + 1}" data-id="${json[i].id}" @isOwnerOrAdmin>
-                                            <option value="a" ${isAdmin}>admin</option>
-                                            <option value="m" ${isManager}>manager</option>
-                                        </select>`;
+                            }
+                            
                             return_data.push({
                                 "member": member,
                                 "sort": name,
@@ -359,7 +412,7 @@
                 "drawCallback": function (setting) {
                     //TODO: Event update luôn fire khi ẩn thanh chọn, cần phải kiểm tra nếu thanh đổi thì mới chạy event update,không thay đổi thì thôi
                     $(".role").multiselect({
-                        nonSelectedText: 'member',
+                        nonSelectedText: 'Member',
                         numberDisplayed: 4,
                         allSelectedText: false,
                         templates: { // Use the Awesome Bootstrap Checkbox structure
@@ -390,6 +443,14 @@
                             editRole(userRole);
                         }
                     });
+                    //if not admin or owner
+                    @if (!userRole.IsOwner && !userRole.IsAdmin)
+                    {
+                        @:$("button.multiselect").addClass("disabled");
+                    }else if (userRole.IsOwner)
+                    {
+                        @:$("select[data-id=@userRole.Id]").parents("tr").find("button.multiselect").addClass("disabled");
+                    }
                     $('.multiselect-container label.checkbox').each(function () {
                         var input = $(this).find('input'),
                             val = input.val();
@@ -400,10 +461,6 @@
                     $(".multiselect").addClass("waves-effect").css("box-shadow", "none");
                 }
             });
-            //$('#aniimated-thumbnials').lightGallery({
-            //    thumbnail: true,
-            //    selector: 'a'
-            //});
             $("#btn-add-member").on("click", function () {
                 var $this = $(this);
                 toggleLoading($this);
@@ -437,8 +494,26 @@
                     }
                 }
             });
-
         });
+        function editGroup(newGroup) {
+            $.ajax({
+                url: "@Url.Action("editgroup", "group", new { area ="api"})",
+                type: "POST",
+                data: newGroup,
+                dataType: "json",
+                success: function (response) {
+                    //thanh cong thi no tra du lieu ve
+                    console.log(response);
+                    if (response.status == 200) {
+                        window.location.reload();
+                    } else {
+                        showToastr("error", response.message, "toast-bottom-left")
+                        console.error(response)
+                    }
+                }
+            })
+
+        }
         function addMember(newMember) {
             $.ajax({
                 url: "@Url.Action("addmember", "group", new { area ="api"})",

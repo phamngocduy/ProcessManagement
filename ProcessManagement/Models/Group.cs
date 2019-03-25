@@ -19,7 +19,6 @@ namespace ProcessManagement.Models
         {
             this.Participates = new HashSet<Participate>();
             this.Processes = new HashSet<Process>();
-            this.ProcessRuns = new HashSet<ProcessRun>();
         }
     
         public int Id { get; set; }
@@ -36,7 +35,5 @@ namespace ProcessManagement.Models
         public virtual ICollection<Participate> Participates { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Process> Processes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProcessRun> ProcessRuns { get; set; }
     }
 }

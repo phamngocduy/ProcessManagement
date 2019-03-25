@@ -12,13 +12,13 @@ namespace ProcessManagement.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class AspNetUserClaim
+    public partial class FileManager
     {
-        public int Id { get; set; }
-        public string UserId { get; set; }
-        public string ClaimType { get; set; }
-        public string ClaimValue { get; set; }
-    
-        public virtual AspNetUser AspNetUser { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Type { get; set; }
+        public string Path { get; set; }
+        public Nullable<System.DateTime> Create_At { get; set; }
+        public Nullable<System.DateTime> Update_At { get; set; }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -23,7 +25,7 @@ namespace ProcessManagement.Services
         //    //set avatar
         //    if (ImageGr != null)
         //    {
-               
+
         //        if (ImageGr.ContentLength > 0)
         //        {
         //            var filename = Path.GetFileName(ImageGr.FileName);
@@ -46,7 +48,20 @@ namespace ProcessManagement.Services
         //        group.AvatarDefault = DefaultBackground;
         //    }
         //}
-        
+        public string getRandomString(int length)
+        {
+            const string TOKENALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            
+            var rnd = new RNGCryptoServiceProvider();
+            var tokenBytes = new byte[length];
+            rnd.GetBytes(tokenBytes);
+            var token = Enumerable
+                    .Range(0, length)
+                    .Select(i => TOKENALPHABET[tokenBytes[i] % TOKENALPHABET.Length])
+                    .ToArray();
+
+            return new string(token);
+        }
         public string getRandomColor()
         {
             Random rnd = new Random();

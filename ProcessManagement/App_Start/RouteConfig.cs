@@ -15,23 +15,25 @@ namespace ProcessManagement
             routes.MapMvcAttributeRoutes();
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            
             //"^group"
             //default route
+            //TODO: tách file ra 1 route riêng không ngôn ngư
             routes.MapRoute(
                 name: "LocalizedDefault",
                 url: "{lang}/{controller}/{action}/{id}",
-                defaults: new { controller = "group", action = "index", id = UrlParameter.Optional },
+                defaults: new { controller = "group", action = "index", id = UrlParameter.Optional},
                 constraints: new { lang = "en|vi", controller = "home|account|error|api" },
                 namespaces: new[] { "ProcessManagement.Controllers" }
             );
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "group", action = "index", lang = "en", id = UrlParameter.Optional },
+                defaults: new { controller = "group", action = "index", lang = "en", id = UrlParameter.Optional},
                 constraints: new { lang = "en|vi", controller = "home|account|error|api" },
                 namespaces: new[] { "ProcessManagement.Controllers" }
             );
-            
+
             //group control
             routes.MapRoute(
                name: "GroupControlLocalizedDefault",
@@ -64,8 +66,15 @@ namespace ProcessManagement
                namespaces: new[] { "ProcessManagement.Controllers" }
             );
 
+            //File
+            routes.MapRoute(
+               name: "FileDefault",
+               url: "{controller}/{action}/{file}",
+               defaults: "",
+               constraints: new { controller = "file" },
+               namespaces: new[] { "ProcessManagement.Controllers" }
+            );
 
-            
 
             //routes.MapRoute(
             //    name: "AccountDefault",
@@ -81,6 +90,6 @@ namespace ProcessManagement
             //);
 
 
-		}
+        }
     }
 }

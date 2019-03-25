@@ -60,14 +60,14 @@
                     <div class="col-sm-8">
                         <div class="form-group">
                             <label for="task-name" class="required">Task Name</label>
-                            <input required type="text" class="form-control" id="task-name" name="@Html.NameFor(m => m.Name)">
+                            <input type="text" class="form-control" id="task-name" name="@Html.NameFor(m => m.Name)">
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <label for="task-role">Select Role</label>
                         <select id="task-role" class="form-control show-tick ms select2">
                             <option></option>
-                            @foreach (var role in roles)
+                            @foreach (var role in roles.Where(x => x.IsRun == null))
                             {
                                 <option value="@role.Id">@role.Name</option>
                             }

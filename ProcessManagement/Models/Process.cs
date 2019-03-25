@@ -17,6 +17,7 @@ namespace ProcessManagement.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Process()
         {
+            this.ProcessRuns = new HashSet<ProcessRun>();
             this.Roles = new HashSet<Role>();
             this.Steps = new HashSet<Step>();
         }
@@ -28,11 +29,14 @@ namespace ProcessManagement.Models
         public string Description { get; set; }
         public string DataJson { get; set; }
         public string Avatar { get; set; }
+        public Nullable<bool> IsRun { get; set; }
         public System.DateTime Created_At { get; set; }
         public System.DateTime Updated_At { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
         public virtual Group Group { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProcessRun> ProcessRuns { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Role> Roles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

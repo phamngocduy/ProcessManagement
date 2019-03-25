@@ -6,7 +6,9 @@ $color-themes: (
   '.theme-orange':#ff613c,
   '.theme-blush':#e84f5e
 );
-
+body{
+    overflow-x: hidden;
+}
 body, #wrapper{
     &::before,&::after{
         display: none;
@@ -15,7 +17,43 @@ body, #wrapper{
 #content{
     margin-bottom: 50px;
 }
-
+.logo {
+    height: 42px;
+}
+.logo-name{
+    font-size: 14px;
+    margin-top: 5px;
+    margin-left: 5px;
+    display: inline-block;
+    color: #1233db;
+    font-weight: 600;
+    font-family: 'Times New Roman', Times, serif;
+    span{
+        color: #e91827;
+        font-weight: 900;
+        font-size: 17px;
+        &::after{
+            content: ' | ';
+            font-size: 20px;
+            color:#1233db;
+        }
+    }
+}
+@include respond-to-screen-size(-1, 992px){
+    .navbar-fixed-top .navbar-brand {
+        padding: 15px 0px;
+        margin-right:0px;
+    }
+    .navbar-fixed-top .navbar-right {
+        width: calc(100% - 264px) !important;
+    }    
+}
+.navbar-fixed-top{
+    .navbar-right{
+        width: calc(100% - 300px);
+    }
+}
+    
 @each $themeClass, $color in  $color-themes{
     #{$themeClass} {
         #toast-container{
@@ -46,9 +84,14 @@ body, #wrapper{
         }
         a{
             &.primary-theme{
-                color: $color;
+                color: $color !important;
                 &:hover{
-                    color: darken($color, 10%);
+                    color: darken($color, 10%) !important;
+                }
+            }
+            &.btn{
+                :focus{
+                    color: unset;
                 }
             }
         }
@@ -110,6 +153,21 @@ body, #wrapper{
                     background-color: $color;
                     i {
                         color: #ffffff;
+                    }
+                }
+            }
+        }
+        .nav-tabs-new{
+            .nav-item{
+                margin-left: 5px;
+                margin-bottom: 5px;
+                width: 109px;
+                a{
+                    text-align: center;
+                    &.active, &:hover, &:focus{
+                        background: $color;
+                        border-color: $color;
+                        color:#fff;
                     }
                 }
             }

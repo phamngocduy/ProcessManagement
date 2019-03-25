@@ -100,5 +100,24 @@ namespace ProcessManagement.Services
 			ps.Description = model.Description;
 			db.SaveChanges();
 		}
-	}
+
+        public void createProcessRun(Process process, string des)
+        {
+            if (process != null)
+            {
+                Process procrun = new Process();
+                procrun.IdGroup = process.IdGroup;
+                procrun.IdOwner = process.IdOwner;
+                procrun.Name = process.Name;
+                procrun.Description = des;
+                procrun.DataJson = process.DataJson;
+                procrun.Avatar = process.Avatar;
+                procrun.IsRun = true;
+                procrun.Created_At = DateTime.Now;
+                procrun.Updated_At = DateTime.Now;
+                db.Processes.Add(procrun);
+                db.SaveChanges();
+            }
+        }
+    }
 }

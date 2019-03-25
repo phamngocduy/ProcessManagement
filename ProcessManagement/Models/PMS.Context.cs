@@ -25,8 +25,9 @@ namespace ProcessManagement.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<FileManager> FileManagers { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<Participate> Participates { get; set; }
         public virtual DbSet<Process> Processes { get; set; }

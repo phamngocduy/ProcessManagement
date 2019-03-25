@@ -12,15 +12,17 @@ namespace ProcessManagement.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class RoleRun
+    public partial class Comment
     {
         public int Id { get; set; }
-        public Nullable<int> IdRole { get; set; }
         public string IdUser { get; set; }
+        public Nullable<int> IdType { get; set; }
+        public Nullable<int> Type { get; set; }
+        public string Content { get; set; }
         public Nullable<System.DateTime> Create_At { get; set; }
         public Nullable<System.DateTime> Update_At { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
-        public virtual Role Role { get; set; }
+        public virtual TaskProcessRun TaskProcessRun { get; set; }
     }
 }

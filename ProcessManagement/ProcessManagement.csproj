@@ -37,7 +37,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\Dell\AppData\Local\Temp\vsBB72.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vs106D.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,7 +47,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\Dell\AppData\Local\Temp\vsBB72.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vs106D.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -269,6 +269,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -287,7 +288,10 @@
     <Compile Include="Models\AspNetUser.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\AspNetUserClaim.cs">
+    <Compile Include="Models\Comment.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FileManager.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Group.cs">
@@ -355,7 +359,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\test.txt" />
     <Content Include="Content\build\bundles\chartist.bundle.js" />
     <Content Include="Content\build\bundles\datatablescripts.bundle.js" />
     <Content Include="Content\build\bundles\easypiechart.bundle.js" />
@@ -8468,7 +8471,7 @@
     <Content Include="Views\Process\NewProcess.cshtml" />
     <Content Include="Views\Shared\Settings\General.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
-    <Content Include="Views\Process\CreateRole.cshtml" />
+    <Content Include="Views\Process\AddRole.cshtml" />
     <Content Include="Views\Process\EditRole.cshtml" />
     <Content Include="Views\Process\ShowStep.cshtml" />
     <Content Include="Views\Process\EditStep.cshtml" />
@@ -8504,10 +8507,10 @@
     <Content Include="Views\Process\ShowFormTask.cshtml" />
     <Content Include="Views\ProcessRun\AssignRole.cshtml" />
     <Content Include="Views\ProcessRun\Detail.cshtml" />
-    <Content Include="Views\Process\EditInforProcess.cshtml" />
+    <Content Include="Views\Process\Setting.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\Files\group\" />
+    <Folder Include="App_Data\" />
     <Folder Include="Areas\API\Models\" />
     <Folder Include="Areas\API\Views\Process\" />
     <Folder Include="Areas\API\Views\Shared\" />
@@ -8523,6 +8526,7 @@
     <Folder Include="Content\vendor\jquery.file.upload\server\gae-python\static\" />
     <Folder Include="Content\vendor\jquery.file.upload\server\php\files\" />
     <Folder Include="Content\vendor\jquery.file.upload\test\" />
+    <Folder Include="Views\File\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\build\scripts\jquery-3.3.1.min.map" />

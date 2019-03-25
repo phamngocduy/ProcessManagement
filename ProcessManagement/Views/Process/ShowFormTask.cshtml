@@ -47,7 +47,7 @@
                         <label for="task-role">Select Role</label>
                         <select id="task-role" class="form-control show-tick ms select2" disabled>
                             <option></option>
-                            @foreach (var role in roles)
+                            @foreach (var role in roles.Where(x => x.IsRun == null))
                             {
                                 <option value="@role.Id">@role.Name</option>
                             }
@@ -63,6 +63,7 @@
                     </div>
                     <div class="col-sm-12 setDataWrap">
                         <div id="build-wrap"></div>
+                        <div class="render-wrap" id="render-wrap"></div>
                     </div>
 
                     @if (isManager)
@@ -87,32 +88,40 @@
     <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
     <script src="~/Content/build/js/form-builder.min.js"></script>
+    <script src="~/Content/build/js/form-render.min.js"></script>
 
     <script>
         $(function () {
-            var taskform = '@Model.ValueFormJson'.replace(/&quot;/g , "\"");
-            //var taskform = '[{"type":"text","label":"Full Name","subtype":"text","className":"form-control","name":"text-1476748004559"},{"type":"select","label":"Occupation","className":"form-control","name":"select-1476748006618","values":[{"label":"Street Sweeper","value":"option-1","selected":true},{"label":"Moth Man","value":"option-2"},{"label":"Chemist","value":"option-3"}]},{"type":"textarea","label":"Short Bio","rows":"5","className":"form-control","name":"textarea-1476748007461"}]';
+            var taskform = '@Model.ValueFormJson'.replace(/&quot;/g, "\"");
+            var formData = taskform;
             if (taskform != null) {
-                var formB = $("#build-wrap").formBuilder();
-                var formData = taskform;
-                window.onload = function () {
-                    formB.actions.setData(formData);
+                var fbRender = document.getElementById('render-wrap');
+                var formRenderOpts = {
+                    formData,
                 };
+                $(fbRender).formRender(formRenderOpts);
             }
+
             var bAction = `<button id="btn-save" class="btn btn-primary-theme">Save</button>
                             <button id="btn-back" class="btn btn-outline-secondary">Back</button>`;
             var showForm = $("#show-task").html();
             var switchArr = createSwitch();
             switchArr.forEach(item => item.disable());
+
             $("select#task-role").select2({
                 placeholder: "Select Role",
                 allowClear: true,
             }).select2('val', @Model.IdRole);
 
             //Button edit
+
             $("body").on("click", "#btn-edit",function () {
                 var temp = bAction;
-                var $this = $(this);
+                if (taskform != null) {
+                    var formB = $("#build-wrap").formBuilder();
+                    setTimeout(function () { formB.actions.setData(formData); }, 0);
+                }
+                
                 var actionButton = $this.parents("#button-action");
                 actionButton.html(temp);
                 $("#show-task").find("input[type!='checkbox'], select#task-role, textarea").prop("disabled", function () {

@@ -105,5 +105,30 @@ namespace ProcessManagement.Services
             task.Updated_At = DateTime.Now;
             db.SaveChanges();
         }
+
+        public void addlisttaskrun(List<TaskProcess> listtaskrun)
+        {
+            if (listtaskrun != null)
+            {
+                foreach (var item in listtaskrun)
+                {
+                    TaskProcess task = new TaskProcess();
+                    task.IdStep = item.IdStep;
+                    task.IdRole = item.IdRole;
+                    task.Name = item.Name;
+                    task.Description = item.Description;
+                    task.ValueInputText = item.ValueInputText;
+                    task.ValueInputFile = item.ValueInputFile;
+                    task.ValueFormJson = item.ValueFormJson;
+                    task.Color = item.Color;
+                    task.Position = item.Position;
+                    task.IsRun = true;
+                    task.Created_At = DateTime.Now;
+                    task.Updated_At = DateTime.Now;
+                    db.TaskProcesses.Add(task);
+                    db.SaveChanges();
+                }
+            }
+        }
     }
 }

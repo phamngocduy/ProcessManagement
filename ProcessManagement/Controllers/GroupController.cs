@@ -51,19 +51,22 @@ namespace ProcessManagement.Controllers
             //create new group
             groupService.createGroup(idUser, group);
 
+            //create directory
+            string directoryPath = String.Format("{0}/run", group.Id);
+            fileService.CreateDirectory(directoryPath);
             //save file 
-            fileService.CreateDirectory(group.Id);
-            string savePath = Server.MapPath(String.Format("~/App_Data/Files/group/{0}/intro", group.Id));
-            fileService.saveFile(FileUpload, savePath);
-            
-            
+            string savePath = Server.MapPath(String.Format("~/App_Data/{0}", group.Id));
+            string filePath = String.Format("{0}", group.Id);
+            fileService.saveFile(FileUpload, filePath);
+
+
             //create new participate
             Participate part = new Participate();
             participateService.createParticipate(idUser, group.Id, part, true);
 
             //set flash
             SetFlash(FlashType.success, "Created Group Successfully");
-            return RedirectToAction("index");
+            return RedirectToAction("index"); 
         }
 
         [Authorize]
@@ -110,6 +113,16 @@ namespace ProcessManagement.Controllers
             groupStatisticModel.Add("totalmember", participateService.countMemberInGroup(group.Id));
             groupStatisticModel.Add("totalprocess", processService.countProcessOfGroup(group.Id));
 
+            string savePath = Server.MapPath(String.Format("~/App_Data/{0}", group.Id));
+            List<string> fileName = fileService.getAllFileNameFromFolder(savePath);
+            List<FileManager> file = new List<FileManager>();
+            foreach (var f in fileName)
+            {
+                string filePath = string.Format("{0}/{1}", group.Id, f);
+                FileManager temp = db.FileManagers.Where(x => x.Path == filePath).FirstOrDefault();
+                file.Add(temp);
+            }
+
             ////Tìm tất cả member thuộc group đó
             //var ListParticipant = participateService.findMembersInGroup(group.Id);
             //ViewData["ListParticipant"] = ListParticipant;
@@ -119,6 +132,7 @@ namespace ProcessManagement.Controllers
             ViewData["Statistic"] = groupStatisticModel;
             //lấy role của user hiện tại
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
+            ViewData["Files"] = file;
             return View(group);
         }
 
