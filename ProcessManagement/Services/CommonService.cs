@@ -50,7 +50,7 @@ namespace ProcessManagement.Services
         //}
         public string getRandomString(int length)
         {
-            const string TOKENALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.";
+            const string TOKENALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             
             var rnd = new RNGCryptoServiceProvider();
             var tokenBytes = new byte[length];

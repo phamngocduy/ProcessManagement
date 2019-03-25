@@ -8,12 +8,13 @@ using Microsoft.AspNet.Identity;
 using Newtonsoft.Json.Linq;
 using ProcessManagement.Models;
 using ProcessManagement.Services;
+using ProcessManagement.Controllers;
 using ProcessManagement.Filters;
 
 namespace ProcessManagement.Areas.API.Controllers
 {
     [AjaxAuthorize]
-    public class GroupController : Controller
+    public class GroupController : ProcessManagement.Controllers.BaseController
     {
         ///=============================================================================================
         CommonService commonService = new CommonService();
@@ -22,7 +23,32 @@ namespace ProcessManagement.Areas.API.Controllers
         UserService userService = new UserService();
         ///=============================================================================================
 
-       
+        [GroupAuthorize]
+        [HttpPost]
+        public JsonResult editGroup(int groupid, string name, string description)
+        {
+            var status = HttpStatusCode.OK;
+            object response;
+            string message;
+            if (name == "")
+            {
+                status = HttpStatusCode.InternalServerError;
+                message = "Process Name is required";
+                response = new { message = message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+            Group newGroup = new Group
+            {
+                Id = groupid,
+                Name = name,
+                Description = description
+            };
+            groupService.editGroup(newGroup);
+            message = "Edit Group Successfully";
+            SetFlash(FlashType.success, "Edit Group Successfully");
+            response = new { message = message, status = status };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
         public JsonResult getGroupList()
         {
             string IdUser = User.Identity.GetUserId();

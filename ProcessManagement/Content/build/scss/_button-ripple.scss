@@ -36,6 +36,10 @@
     }
     
 }
+.btn-circle{
+    border-radius: 30px;
+    padding: 7px 23px;
+}
 @keyframes ripple{
     100%{
         transform: scale(2);

@@ -24,6 +24,7 @@ namespace ProcessManagement.Controllers
         StepService stepService = new StepService();
         TaskService taskService = new TaskService();
         RoleService roleService = new RoleService();
+        FileService fileService = new FileService();
         ///=============================================================================================
 
         [Authorize]
@@ -38,12 +39,21 @@ namespace ProcessManagement.Controllers
         [Authorize]
         [GroupAuthorize]
         [HttpPost]
-        public ActionResult NewProcess(Process pro)
+        public ActionResult NewProcess(Process pro, HttpPostedFileBase FileUpload)
         {
             int idgroup = (int)Session["idgroup"];
             string idUser = User.Identity.GetUserId();
             Group group = groupService.findGroup(idgroup);
             processService.createProcess(group.Id, idUser, pro);
+
+            //create directory
+            string directoryPath = String.Format("{0}/{1}", group.Id,pro.Id);
+            fileService.CreateDirectory(directoryPath);
+            //save file 
+            string savePath = Server.MapPath(String.Format("~/App_Data/{0}/{1}", group.Id,pro.Id));
+            string filePath = String.Format("{0}/{1}", group.Id, pro.Id);
+            fileService.saveFile(FileUpload, filePath);
+
             SetFlash(FlashType.success, "Created Process Successfully");
             return RedirectToAction("Draw", new { groupslug = group.groupSlug, groupid = group.Id, processid = pro.Id });
             //return RedirectToRoute("GroupControlLocalizedDefault", new { action = "DrawProcess", groupslug = group.groupSlug, groupid = group.Id, id = pro.Id });

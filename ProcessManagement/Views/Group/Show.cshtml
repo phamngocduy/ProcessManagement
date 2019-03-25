@@ -70,8 +70,8 @@
 </div>
 
 <div class="row clearfix display-flex">
-    <div class="col-lg-3 col-md-6">
-        <div class="card top_counter" style="height:100%">
+    <div class="col-lg-3 col-md-6" style="height:100%">
+        <div class="card top_counter">
             <div class="body">
                 <div class="icon"><i class="fa fa-users"></i> </div>
                 <div class="content">
@@ -135,51 +135,50 @@
         </div>
     </div>
     <div class="col-lg-6 col-md-12">
-        <div class="card" style="height:100%">
-            <div class="header" style="padding-bottom:0">
-                <ul class="nav nav-tabs-new" style="float:right">
-                    <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#Home-new">Overview</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Profile-new">Settings</a></li>
-                </ul>
-                <div class="clearfix"></div>
-            </div>
-            <div class="body" style="padding-top:10px">
+        <div class="card clearfix" style="height:100%" id="group-infor-card">
+            <div class="header"></div>
+            <div class="body">
                 <div class="tab-content">
-                    <div class="tab-pane animated fadeIn show active" id="Home-new">
-                        <h6>@Model.Name</h6>
+                    <!-- TODO: Không biết để nút remove với nút tranfer owner ở đâu -->
+                    <div class="tab-pane animated fadeIn show active" id="overview-tab">
+                        <a class="btn-circle btn-primary-theme btn-switch-tab" style="float:right" href="#setting-tab">Setting</a>
+                        <h5>@Model.Name</h5>
                         <p>@Model.Description</p>
                         @foreach (var file in files)
                         {
-                            <a href="@Url.Action("download","file", new { file = file.Id })" target="_blank">@file.Name</a>
+                            <a href="@Url.Action("download", "file", new { file = file.Id })" target="_blank">@file.Name</a>
                         }
+                        
                     </div>
-                    <div class="tab-pane animated fadeIn" id="Profile-new">
+                    <div class="tab-pane animated fadeIn" id="setting-tab">
+                        <a href="#overview-tab" class="btn-switch-tab primary-theme">&lsaquo; Back</a>
                         <div class="row clearfix">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="group-name" name="@Html.NameFor(m => m.Name)">
+                                    <label class="required" for="group-name">Group Name</label>
+                                    <input type="text" class="form-control" id="group-name" placeholder="Group Name" name="@Html.NameFor(m => m.Name)">
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <textarea class="form-control" rows="6" placeholder="Write something about your task (optional)" id="group-description" name="@Html.NameFor(m => m.Description)"></textarea>
+                                    <label for="group-description">Description</label>
+                                    <textarea class="form-control" rows="7" placeholder="Write something about your task (optional)" id="group-description" name="@Html.NameFor(m => m.Description)"></textarea>
                                 </div>
                             </div>
                             <div class="col-sm-12">
-                                <button class="btn btn-primary-theme waves-effect">Save</button>
+                                <button class="btn btn-primary-theme waves-effect" id="btn-group-save">Save</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
     </div>
 </div>
 
-<div class="row clearfix">
+<div class="row clearfix display-flex">
     <div class="col-lg-8 col-md-12">
-        <div class="card">
+        <div class="card" style="height: 100%">
             <div class="header">
                 <h2>List Process Run</h2>
                 <ul class="header-dropdown">
@@ -235,7 +234,7 @@
         </div>
     </div>
     <div class="col-lg-4 col-md-12">
-        <div class="card">
+        <div class="card" style="height: 100%">
             <div class="header">
                 <h2>Processes in group</h2>
                 <ul class="header-dropdown">
@@ -274,8 +273,8 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-lg-8 col-md-7">
+<div class="row clearfix">
+    <div class="col-lg-8 col-md-7" id="group-c">
         <div class="card" style="padding-bottom:0">
             <div class="header">
                 <h2>Members of @Model.Name</h2>
@@ -293,10 +292,13 @@
                         <tbody></tbody>
                     </table>
                 </div>
-                <div id="add-member-search">
-                    <input type="hidden" style="width:calc(100% - 116px);border: 1px solid #ced4da;padding:5px 10px;" @isOwnerOrAdmin/>
-                    <button class="btn btn-primary-theme waves-effect" id="btn-add-member" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing" @isOwnerOrAdmin>Add member</button>
-                </div>
+                @if (userRole.IsAdmin || userRole.IsOwner)
+                {
+                    <div id="add-member-search">
+                        <input type="hidden" style="width:calc(100% - 116px);border: 1px solid #ced4da;padding:5px 10px;" />
+                        <button class="btn btn-primary-theme waves-effect" id="btn-add-member" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing" @isOwnerOrAdmin>Add member</button>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -327,6 +329,26 @@
     <script src="~/Content/build/js/index.js"></script>
     <script>
         $(function () {
+            $(".btn-switch-tab").on("click", function (e) {
+                var tab = $(this).attr("href");
+                $("#group-name").val("@Model.Name");
+                $("#group-description").val("@Model.Description");
+                $(".tab-pane").removeClass("active").removeClass("show");
+                $(tab).addClass("active").addClass("show");
+                e.preventDefault();
+            })
+            $("#btn-group-save").on("click", function () {
+                var newGroup = {
+                    groupid: @Model.Id,
+                    name: $("#group-name").val(),
+                    description: $("#group-description").val(),
+                }
+                if (newGroup.name == "") {
+                    showToastr("error", "Group Name is required");
+                } else {
+                    editGroup(newGroup);
+                }
+            })
             $("#table-member").DataTable({
                 "lengthMenu": [5, 25, 50, 75, 100],
                 "bLengthChange": false,
@@ -439,10 +461,6 @@
                     $(".multiselect").addClass("waves-effect").css("box-shadow", "none");
                 }
             });
-            //$('#aniimated-thumbnials').lightGallery({
-            //    thumbnail: true,
-            //    selector: 'a'
-            //});
             $("#btn-add-member").on("click", function () {
                 var $this = $(this);
                 toggleLoading($this);
@@ -476,8 +494,26 @@
                     }
                 }
             });
-
         });
+        function editGroup(newGroup) {
+            $.ajax({
+                url: "@Url.Action("editgroup", "group", new { area ="api"})",
+                type: "POST",
+                data: newGroup,
+                dataType: "json",
+                success: function (response) {
+                    //thanh cong thi no tra du lieu ve
+                    console.log(response);
+                    if (response.status == 200) {
+                        window.location.reload();
+                    } else {
+                        showToastr("error", response.message, "toast-bottom-left")
+                        console.error(response)
+                    }
+                }
+            })
+
+        }
         function addMember(newMember) {
             $.ajax({
                 url: "@Url.Action("addmember", "group", new { area ="api"})",
