@@ -9,6 +9,7 @@ using System.Web;
 using ProcessManagement.Tests.Support;
 using ProcessManagement.Services;
 using System.Security.Principal;
+using System.IO;
 
 namespace ProcessManagement.Tests.Controllers
 {
@@ -44,16 +45,6 @@ namespace ProcessManagement.Tests.Controllers
 			//Set your controller ControllerContext with fake context
 			//_requestController.ControllerContext = controllerContext.Object;
 		}
-		[TestInitialize]
-		public void SetUp()
-		{
-			_stream = new FileStream(string.Format(
-							ConfigurationManager.AppSettings["File"],
-							AppDomain.CurrentDomain.BaseDirectory),
-						 FileMode.Open);
-
-			// Other stuff
-		}
 		/// <summary>
 		/// Purpose of TC: 
 		/// - Validate whether with valid input data, a group record is created and saved into database, 
@@ -66,22 +57,12 @@ namespace ProcessManagement.Tests.Controllers
 			Mock<HttpRequestBase> moqRequest = new Mock<HttpRequestBase>();
 			Mock<HttpFileCollectionBase> moqFiles = new Mock<HttpFileCollectionBase>();
 			Mock<HttpPostedFileBase> moqPostedFile = new Mock<HttpPostedFileBase>();
+			Mock<ControllerContext> cc = new Mock<ControllerContext>();
+			NewMethod(moqPostedFile);
 
 			moqRequest.Setup(r => r.Files.Count).Returns(0);
 			moqContext.Setup(x => x.Request).Returns(moqRequest.Object);
-			moqFiles.Setup(x => x.Count).Returns(1);
-
-			// The required properties from my Controller side
-			moqPostedFile.Setup(x => x.InputStream).Returns(_stream);
-			moqPostedFile.Setup(x => x.ContentLength).Returns((int)_stream.Length);
-			moqPostedFile.Setup(x => x.FileName).Returns(_stream.Name);
-
-			moqFiles.Setup(x => x.Get(0).InputStream).Returns(moqPostedFile.Object.InputStream);
-			request.Setup(x => x.Files).Returns(moqFiles.Object);
-			request.Setup(x => x.Files[0]).Returns(moqPostedFile.Object);
-
-			_controller.ControllerContext = new ControllerContext(
-									 context.Object, new RouteData(), _controller);
+			//moqFiles.Setup(x => x.Count).Returns(1);
 
 			//Arrange
 			var controller = new GroupController();
@@ -94,18 +75,25 @@ namespace ProcessManagement.Tests.Controllers
 				groupSlug = "Pet_Group",
 			};
 			//HttpPostedFileBase fileUpload = Server.MapPath(string.Format("~/App_Data/Files/group/{0}/intro", 1));
-
+			controller.ControllerContext = cc.Object;
 			controller.ControllerContext = new ControllerContext(moqContext.Object, new RouteData(), controller);
 			var validationResults = TestModelHelper.ValidateModel(controller, group);
 
 			//Act
-			//var redirectRoute = controller.NewGroup(group) as RedirectToRouteResult;
+			var redirectRoute = controller.NewGroup(group, file1) as RedirectToRouteResult;
 
 			//Assert
-			//Assert.IsNotNull(redirectRoute);
-			//Assert.AreEqual("Index", redirectRoute.RouteValues["action"]);
-			//Assert.AreEqual("Catalog", redirectRoute.RouteValues["controller"]);
-			//Assert.AreEqual(0, validationResults.Count);
+			Assert.IsNotNull(redirectRoute);
+			Assert.IsInstanceOfType(redirectRoute, typeof(ContentResult));
+			Assert.AreEqual("Index", redirectRoute.RouteValues["action"]);
+			//Assert.AreEqual("Home", redirectRoute.RouteValues["controller"]);
+			Assert.AreEqual(0, validationResults.Count);
+		}
+
+		private static void NewMethod(Mock<HttpPostedFileBase> moqPostedFile)
+		{
+			moqPostedFile.Expect(f => f.ContentLength).Returns(1);
+			moqPostedFile.Expect(f => f.FileName).Returns("myFileName");
 		}
 
 		[TestMethod]
