@@ -44,6 +44,16 @@ namespace ProcessManagement.Tests.Controllers
 			//Set your controller ControllerContext with fake context
 			//_requestController.ControllerContext = controllerContext.Object;
 		}
+		[TestInitialize]
+		public void SetUp()
+		{
+			_stream = new FileStream(string.Format(
+							ConfigurationManager.AppSettings["File"],
+							AppDomain.CurrentDomain.BaseDirectory),
+						 FileMode.Open);
+
+			// Other stuff
+		}
 		/// <summary>
 		/// Purpose of TC: 
 		/// - Validate whether with valid input data, a group record is created and saved into database, 
@@ -54,12 +64,24 @@ namespace ProcessManagement.Tests.Controllers
 		{
 			Mock<HttpContextBase> moqContext = new Mock<HttpContextBase>();
 			Mock<HttpRequestBase> moqRequest = new Mock<HttpRequestBase>();
+			Mock<HttpFileCollectionBase> moqFiles = new Mock<HttpFileCollectionBase>();
 			Mock<HttpPostedFileBase> moqPostedFile = new Mock<HttpPostedFileBase>();
 
 			moqRequest.Setup(r => r.Files.Count).Returns(0);
 			moqContext.Setup(x => x.Request).Returns(moqRequest.Object);
-			
-		
+			moqFiles.Setup(x => x.Count).Returns(1);
+
+			// The required properties from my Controller side
+			moqPostedFile.Setup(x => x.InputStream).Returns(_stream);
+			moqPostedFile.Setup(x => x.ContentLength).Returns((int)_stream.Length);
+			moqPostedFile.Setup(x => x.FileName).Returns(_stream.Name);
+
+			moqFiles.Setup(x => x.Get(0).InputStream).Returns(moqPostedFile.Object.InputStream);
+			request.Setup(x => x.Files).Returns(moqFiles.Object);
+			request.Setup(x => x.Files[0]).Returns(moqPostedFile.Object);
+
+			_controller.ControllerContext = new ControllerContext(
+									 context.Object, new RouteData(), _controller);
 
 			//Arrange
 			var controller = new GroupController();
