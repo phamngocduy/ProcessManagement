@@ -133,6 +133,7 @@ namespace ProcessManagement.Controllers
                 step.IdProcess = processId;
                 step.Name = nodeArray[i]["text"].ToString().Trim();
                 step.Key = key;
+                step.IsRun = false;
                 step.StartStep = (int)idfirstStep["to"] == (int)nodeArray[i]["key"] ? true : false;
                 step.Color = commonService.getRandomColor();
                 step.Figure = nodeArray[i]["figure"] == null ? "Step" : nodeArray[i]["figure"].ToString();
@@ -642,6 +643,24 @@ namespace ProcessManagement.Controllers
             Session["idTask"] = task.Id;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             return View(task);
+        }
+
+        [GroupAuthorize]
+        public ActionResult AssignRole(int idprocess)
+        {
+            var processrun = processService.findProcess(idprocess);
+            var listrole = roleService.findListRoleOfProcess(idprocess);
+            var listuseringroup = participateService.findMembersInGroup(processrun.IdGroup);
+            ViewData["ProcessRun"] = processrun;
+            ViewBag.ListRole = listrole;
+            ViewBag.ListUser = listuseringroup;
+            return View();
+        }
+        public ActionResult Detail(int groupid)
+        {
+            var group = groupService.findGroup(groupid);
+            ViewData["Group"] = group;
+            return View();
         }
     }
 }

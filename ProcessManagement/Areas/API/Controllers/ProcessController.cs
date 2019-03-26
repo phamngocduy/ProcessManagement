@@ -253,7 +253,7 @@ namespace ProcessManagement.Areas.API.Controllers
         {
             List<Process> processes = processService.getProcess(groupid);
             List<object> jProcesses = new List<object>();
-            foreach (var process in processes.Where(x => x.IsRun == null))
+            foreach (var process in processes.Where(x => x.IsRun == null || x.IsRun == false))
             {
                 object jProcess = new
                 {
@@ -285,19 +285,20 @@ namespace ProcessManagement.Areas.API.Controllers
             string message;
             object response;
             Process prorun = processService.findProcess(processid);
-            processService.createProcessRun(prorun, des);
-            List<Role> rolerun = roleService.findListRoleOfProcess(processid);
-            roleService.addrolerun(rolerun);
-            List<Step> liststeprun = stepService.findStepsOfProcess(processid);
-            stepService.addliststeprun(liststeprun);
-            foreach (var item in liststeprun)
+            int idprocessrun = processService.createProcessRun(prorun, des);
+            List<Role> roler = roleService.findListRoleOfProcess(processid);
+            List<Role> rolerun = roleService.addrolerun(roler, idprocessrun);
+            List<Step> liststep = stepService.findStepsOfProcess(processid);
+            List<Step> liststeprun = stepService.addliststeprun(liststep, idprocessrun);
+            foreach (var item in liststep)
             {
                 List<TaskProcess> listtaskrun = taskService.findtaskofstep(item.Id);
-                taskService.addlisttaskrun(listtaskrun);
+                taskService.addlisttaskrun(listtaskrun, rolerun, liststeprun);
             }
             message = "Created ProcessRun Successfully";
             response = new { message = message, status = status };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
+
     }
 }

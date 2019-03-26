@@ -32,6 +32,7 @@ namespace ProcessManagement.Services
             task.Name = name;
             task.IdRole = role;
             task.Description = description;
+            task.IsRun = false;
             task.ValueInputText = inputConfig;
             task.ValueInputFile = fileConfig;
             task.Color = commonService.getRandomColor();
@@ -50,6 +51,7 @@ namespace ProcessManagement.Services
             task.IdRole = role;
             task.Description = description;
             task.ValueFormJson = formBuilder;
+            task.IsRun = false;
             task.Color = commonService.getRandomColor();
             task.Position = getLastPosition(idStep) + 1;
             task.Created_At = DateTime.Now;
@@ -106,15 +108,27 @@ namespace ProcessManagement.Services
             db.SaveChanges();
         }
 
-        public void addlisttaskrun(List<TaskProcess> listtaskrun)
+        public void addlisttaskrun(List<TaskProcess> listtaskrun, List<Role> rolerun, List<Step> steprun)
         {
             if (listtaskrun != null)
             {
+                TaskProcess task = new TaskProcess();
                 foreach (var item in listtaskrun)
                 {
-                    TaskProcess task = new TaskProcess();
-                    task.IdStep = item.IdStep;
-                    task.IdRole = item.IdRole;
+                    foreach (var role in rolerun)
+                    {
+                        if (item.Role.Name.ToString() == role.Name.ToString())
+                        {
+                            task.IdRole = role.Id;
+                        }
+                    }
+                    foreach (var step in steprun)
+                    {
+                        if (item.Step.Key == step.Key)
+                        {
+                            task.IdStep = step.Id;
+                        }
+                    }
                     task.Name = item.Name;
                     task.Description = item.Description;
                     task.ValueInputText = item.ValueInputText;

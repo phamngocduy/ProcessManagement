@@ -1,7 +1,7 @@
 ﻿@{
     ViewBag.Title = "AssignRole";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var group = ViewData["Group"] as ProcessManagement.Models.Group;
+    var processrun = ViewData["ProcessRun"] as ProcessManagement.Models.Process;
 }
 @section CustomCss{
     <link rel="stylesheet" href="~/Content/vendor/bootstrap-multiselect/bootstrap-multiselect.css">
@@ -41,8 +41,8 @@
             <ul class="breadcrumb">
                 <li class="breadcrumb-item"><a href="~/Home/Index" class="primary-theme"><i class="icon-home"></i></a></li>
                 <li class="breadcrumb-item"><a href="/" class="primary-theme">Groups</a></li>
-                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = group.Id })" class="primary-theme">@group.Name</a></li>
-                <li class="breadcrumb-item"><a href="">Process Run Name</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = processrun.Group.Id })" class="primary-theme">@processrun.Group.Name</a></li>
+                <li class="breadcrumb-item"><a href="">@processrun.Name</a></li>
                 <li class="breadcrumb-item"><a href="" class="primary-theme">Asssign Role</a></li>
             </ul>
         </div>
@@ -65,45 +65,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Designer</td>
-                                <td>
-                                    <select multiple="multiple" class="ms-member multiselect">
-                                        <option value="a">An</option>
-                                        <option value="m">Duy</option>
-                                        <option value="k">Khải</option>
-                                        <option value="t">Tơ</option>
-                                        <option value="tt">Tuấn</option>
-                                        <option value="x">Xil</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Coder</td>
-                                <td>
-                                    <select multiple="multiple" class="ms-member multiselect">
-                                        <option value="a">An</option>
-                                        <option value="m">Duy</option>
-                                        <option value="k">Khải</option>
-                                        <option value="t">Tơ</option>
-                                        <option value="tt">Tuấn</option>
-                                        <option value="x">Xil</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Tester</td>
-                                <td>
-                                    <select multiple="multiple" class="ms-member multiselect">
-                                        <option value="a">An</option>
-                                        <option value="m">Duy</option>
-                                        <option value="k">Khải</option>
-                                        <option value="t">Tơ</option>
-                                        <option value="tt">Tuấn</option>
-                                        <option value="x">Xil</option>
-                                    </select>
-                                </td>
-                            </tr>
+                            @foreach (var item in ViewBag.ListRole)
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td>
+                                        <select multiple="multiple" class="ms-member multiselect">
+                                            @foreach (var user in ViewBag.ListUser)
+                                            {
+                                                <option value="a">@user.AspNetUser.UserName</option>
+                                            }
+                                        </select>
+                                    </td>
+
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>

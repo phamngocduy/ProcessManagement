@@ -47,7 +47,7 @@
                         <label for="task-role">Select Role</label>
                         <select id="task-role" class="form-control show-tick ms select2" disabled>
                             <option></option>
-                            @foreach (var role in roles.Where(x => x.IsRun == null))
+                            @foreach (var role in roles.Where(x => x.IsRun == null || x.IsRun == false))
                             {
                                 <option value="@role.Id">@role.Name</option>
                             }

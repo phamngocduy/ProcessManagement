@@ -204,6 +204,14 @@
                             <div class="media-body">
                                 <h5 class="mt-0 mb-1">@item.Name</h5><span class="badge badge-warning">Running...</span>
                                 <button class="btn btn-default waves-effect"><i class="icon-settings"></i></button>
+                                <div class="step-action dropdown">
+                                    <a style="" href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></a>
+                                    <ul class="dropdown-menu notifications animated fadeIn">
+                                        <li><a href="">Edit Process Run</a></li>
+                                        <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "assignrole", idprocess = item.Id })">Assign Role</a></li>
+                                        <li><a href="">To Do</a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </li>
                     }
@@ -253,7 +261,7 @@
             </div>
             <div class="body process-list">
                 <ul class="list-unstyled">
-                    @foreach (var process in listprocess.Where(x => x.IsRun == null))
+                    @foreach (var process in listprocess.Where(x => x.IsRun == null || x.IsRun == false))
                     {
                         <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "Process", action = "ShowStep", groupslug = Model.groupSlug, groupid = Model.Id, processid = process.Id })">
                             <li class="media">

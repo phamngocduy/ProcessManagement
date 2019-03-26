@@ -39,7 +39,7 @@ namespace ProcessManagement.Services
             Step step = db.Steps.Find(id);
             return step;
         }
-        public Step findStepByKey(int processid,int key)
+        public Step findStepByKey(int processid, int key)
         {
             Step step = db.Steps.Where(x => x.IdProcess == processid && x.Key == key).FirstOrDefault();
             return step;
@@ -49,29 +49,27 @@ namespace ProcessManagement.Services
             db.Steps.Remove(step);
             db.SaveChanges();
         }
-        public void addliststeprun(List<Step> liststep)
+        public List<Step> addliststeprun(List<Step> liststep, int idprocessrun)
         {
-            if (liststep != null)
+            foreach (var item in liststep)
             {
-                foreach (var item in liststep)
-                {
-                    Step step = new Step();
-                    step.IdProcess = item.IdProcess;
-                    step.Name = item.Name;
-                    step.Description = item.Description;
-                    step.StartStep = item.StartStep;
-                    step.NextStep1 = item.NextStep1;
-                    step.NextStep2 = item.NextStep2;
-                    step.Figure = item.Figure;
-                    step.Key = item.Key;
-                    step.Color = item.Color;
-                    step.IsRun = true;
-                    step.Created_At = DateTime.Now;
-                    step.Updated_At = DateTime.Now;
-                    db.Steps.Add(step);
-                    db.SaveChanges();
-                }
+                Step step = new Step();
+                step.IdProcess = idprocessrun;
+                step.Name = item.Name;
+                step.Description = item.Description;
+                step.StartStep = item.StartStep;
+                step.NextStep1 = item.NextStep1;
+                step.NextStep2 = item.NextStep2;
+                step.Figure = item.Figure;
+                step.Key = item.Key;
+                step.Color = item.Color;
+                step.IsRun = true;
+                step.Created_At = DateTime.Now;
+                step.Updated_At = DateTime.Now;
+                db.Steps.Add(step);
+                db.SaveChanges();
             }
+            return findStepsOfProcess(idprocessrun);
         }
     }
 }
