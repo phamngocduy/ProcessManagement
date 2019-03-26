@@ -21,3 +21,10 @@
 .navbar-fixed-top{
     top:0;
 }
+@include respond-to-screen-size(-1, 500px){
+    .navbar-nav{
+        .icon-menu{
+            padding: 13px;
+        }
+    }
+}

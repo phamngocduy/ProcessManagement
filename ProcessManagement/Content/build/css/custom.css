@@ -1345,6 +1345,11 @@ input[type=number] {
   top: 0;
 }
 
+@media only screen and (max-width: 500px) {
+  .navbar-nav .icon-menu {
+    padding: 13px;
+  }
+}
 /* end of header */
 /* left */
 .user-account .user-photo.user-default {
