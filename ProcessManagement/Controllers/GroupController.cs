@@ -48,6 +48,11 @@ namespace ProcessManagement.Controllers
         {
 
             string idUser = User.Identity.GetUserId();
+            if (string.IsNullOrEmpty(group.Name))
+            {
+                SetFlash(FlashType.error, "Group Name is required");
+                return View();
+            }
             //create new group
             groupService.createGroup(idUser, group);
 

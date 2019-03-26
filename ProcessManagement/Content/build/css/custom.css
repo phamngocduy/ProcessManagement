@@ -24,8 +24,7 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 
 .logo-name {
   font-size: 14px;
-  margin-top: 5px;
-  margin-left: 5px;
+  padding: 5px;
   display: inline-block;
   color: #1233db;
   font-weight: 600;
@@ -54,6 +53,14 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 }
 .navbar-fixed-top .navbar-right {
   width: calc(100% - 300px);
+}
+
+[class^=icon-]:before, [class*=" icon-"]:before {
+  font-family: unset !important;
+}
+
+.form-wrap.form-builder [class^=icon-]:before, .form-wrap.form-builder [class*=" icon-"]:before {
+  font-family: unset !important;
 }
 
 .theme-purple #toast-container .toast-info {
