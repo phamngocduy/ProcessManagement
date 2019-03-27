@@ -24,11 +24,17 @@ namespace ProcessManagement.Services
 			Process process = db.Processes.Find(idProcess);
 			return process;
 		}
-		/// <summary>
-		/// Tìm tất cả các process thuộc một group
-		/// </summary>
-		/// <param name="idGroup">Id Group</param>
-		public List<Process> findListProcess(int idGroup)
+
+        public ProcessRun findRunProcess(int idProcess)
+        {
+            ProcessRun process = db.ProcessRuns.Find(idProcess);
+            return process;
+        }
+        /// <summary>
+        /// Tìm tất cả các process thuộc một group
+        /// </summary>
+        /// <param name="idGroup">Id Group</param>
+        public List<Process> findListProcess(int idGroup)
 		{
 			var processes = db.Processes.Where(x => x.IdGroup == idGroup).OrderByDescending(x => x.Created_At).ToList();
 			return processes;
@@ -125,6 +131,19 @@ namespace ProcessManagement.Services
             db.Processes.Add(procrun);
             db.SaveChanges();
             return procrun.Id;
+        }
+
+        public void addrunprocess(Process process)
+        {
+            ProcessRun runpro = new ProcessRun();
+            runpro.IdProcess = process.Id;
+            runpro.Name = process.Name;
+            runpro.Description = process.Description;
+            runpro.Start_At = DateTime.Now;
+            runpro.Create_At = DateTime.Now;
+            runpro.Update_At = DateTime.Now;
+            db.ProcessRuns.Add(runpro);
+            db.SaveChanges();
         }
     }
 }

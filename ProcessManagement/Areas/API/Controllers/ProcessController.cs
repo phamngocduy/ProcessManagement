@@ -311,5 +311,19 @@ namespace ProcessManagement.Areas.API.Controllers
             response = new { message = message, status = status };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public JsonResult runprocess(int idprocess)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+            Process findprocess = processService.findProcess(idprocess);
+            processService.addrunprocess(findprocess);
+
+            message = "Created ProcessRun Successfully";
+            response = new { message = message, status = status };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
     }
 }
