@@ -300,5 +300,16 @@ namespace ProcessManagement.Areas.API.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public JsonResult assignRole(int idRole, List<string> listAssign)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+            roleService.assignrolerun(idRole, listAssign);
+            message = "Created ProcessRun Successfully";
+            response = new { message = message, status = status };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
     }
 }

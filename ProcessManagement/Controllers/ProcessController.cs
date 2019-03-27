@@ -175,7 +175,6 @@ namespace ProcessManagement.Controllers
                 }
                 do
                 {
-                    
                     if (listStep[z].Key == listnextstep1[j].NextStep2 && listStep[z].StartStep == false)
                     {
                         listnextstep2.Add(listStep[z]);
@@ -656,11 +655,80 @@ namespace ProcessManagement.Controllers
             ViewBag.ListUser = listuseringroup;
             return View();
         }
-        public ActionResult Detail(int groupid)
+
+        [GroupAuthorize]
+        public ActionResult Detail(int idprocess)
         {
-            var group = groupService.findGroup(groupid);
-            ViewData["Group"] = group;
-            return View();
+            var processrun = processService.findProcess(idprocess);
+            var listrole = roleService.findListRoleOfProcess(idprocess);
+            var listroleruns = roleService.findlistrolerun(listrole);
+            var listStep = stepService.findStepsOfProcess(idprocess);
+
+            List<Step> listnextstep1 = new List<Step>();
+            List<Step> listnextstep2 = new List<Step>();
+            Step start = listStep.Where(x => x.StartStep == true).FirstOrDefault();
+            listnextstep1.Add(start);
+            int z = 0;
+            int t = 0;
+            for (int j = 0; j < listStep.Count; j++)
+            {
+                if (listnextstep1[j].NextStep1 == 0)
+                {
+                    break;
+                }
+                do
+                {
+                    if (listStep[z].Key == listnextstep1[j].NextStep2 && listStep[z].StartStep == false)
+                    {
+                        listnextstep2.Add(listStep[z]);
+                        z = 0;
+                        break;
+                    }
+                    if (listStep[z].Key == listnextstep1[j].NextStep1 && listStep[z].StartStep == false)
+                    {
+                        listnextstep1.Add(listStep[z]);
+                        if (listnextstep1[j].Figure == "Diamond")
+                        {
+                        }
+                        else
+                        {
+                            z = 0;
+                            break;
+                        }
+                    }
+                    z++;
+                } while (z < listStep.Count);
+            }
+            if (listnextstep2.Count() > 0)
+            {
+                for (int j = 0; j < listStep.Count; j++)
+                {
+                    if (listnextstep2[j].NextStep1 == 0)
+                    {
+                        break;
+                    }
+                    do
+                    {
+                        if (listStep[t].Key == listnextstep2[j].NextStep1 && listStep[t].StartStep == false)
+                        {
+                            listnextstep2.Add(listStep[t]);
+                            t = 0;
+                            break;
+                        }
+                        t++;
+                    } while (t < listStep.Count);
+                }
+            }
+            foreach (var item in listnextstep2)
+            {
+                listnextstep1.Add(item);
+            }
+            
+            ViewBag.ListRole = listrole;
+            ViewData["ProcessRun"] = processrun;
+            ViewBag.ListRoleRun = listroleruns;
+            return View(listnextstep1);
         }
+
     }
 }

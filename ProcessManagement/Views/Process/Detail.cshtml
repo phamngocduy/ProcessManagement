@@ -1,7 +1,9 @@
-﻿@{
+﻿@using ProcessManagement.Models;
+@model List<ProcessManagement.Models.Step>
+@{
     ViewBag.Title = "ShowStep";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var group = ViewData["group"] as ProcessManagement.Models.Group;
+    var processrun = ViewData["ProcessRun"] as ProcessManagement.Models.Process;
 }
 
 @section CustomCss{
@@ -17,8 +19,8 @@
             <ul class="breadcrumb">
                 <li class="breadcrumb-item"><a href="~/Home/Index" class="primary-theme"><i class="icon-home"></i></a></li>
                 <li class="breadcrumb-item"><a href="/" class="primary-theme">Groups</a></li>
-                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = group.Id })" class="primary-theme">@group.Name</a></li>
-                <li class="breadcrumb-item"><a href="" class="primary-theme">Process Run Name</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = processrun.IdGroup })" class="primary-theme">@processrun.Group.Name</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "Detail", idprocess = processrun.Id })" class="primary-theme">@processrun.Name</a></li>
                 <li class="breadcrumb-item"><a href="" class="primary-theme">Detail</a></li>
             </ul>
         </div>
@@ -56,7 +58,7 @@
                 <p></p>
                 <div class="progress-container progress-info m-b-25" style="margin: 0; float: right">
                     <a href="#" class="btn btn-primary-theme btn-sm">Run Process</a>
-                    <button class="btn btn-default btn-sm waves-effect"><i class="icon-settings"></i></button>
+                    <a class="btn btn-default btn-sm waves-effect" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "assignrole", idprocess = processrun.Id })">Assign Roles</a>
                 </div>
                 <div class="clearfix"></div>
             </div>
