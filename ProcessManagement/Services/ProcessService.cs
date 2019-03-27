@@ -52,6 +52,7 @@ namespace ProcessManagement.Services
 		{
 			process.IdGroup = idGroup;
 			process.IdOwner = idUser;
+            process.IsRun = false;
 			process.Created_At = DateTime.Now;
 			process.Updated_At = DateTime.Now;
 			db.Processes.Add(process);
@@ -76,6 +77,14 @@ namespace ProcessManagement.Services
 		}
 		public void createRole(Role role)
 		{
+            Role roles = new Role();
+            roles.IdProcess = role.IdProcess;
+            roles.Name = role.Name;
+            roles.Description = role.Description;
+            roles.Color = role.Color;
+            roles.IsRun = false;
+            roles.Create_At = DateTime.Now;
+            roles.Update_At = DateTime.Now;
 			db.Roles.Add(role);
 			db.SaveChanges();
 		}
@@ -101,23 +110,21 @@ namespace ProcessManagement.Services
 			db.SaveChanges();
 		}
 
-        public void createProcessRun(Process process, string des)
+        public int createProcessRun(Process process, string des)
         {
-            if (process != null)
-            {
-                Process procrun = new Process();
-                procrun.IdGroup = process.IdGroup;
-                procrun.IdOwner = process.IdOwner;
-                procrun.Name = process.Name;
-                procrun.Description = des;
-                procrun.DataJson = process.DataJson;
-                procrun.Avatar = process.Avatar;
-                procrun.IsRun = true;
-                procrun.Created_At = DateTime.Now;
-                procrun.Updated_At = DateTime.Now;
-                db.Processes.Add(procrun);
-                db.SaveChanges();
-            }
+            Process procrun = new Process();
+            procrun.IdGroup = process.IdGroup;
+            procrun.IdOwner = process.IdOwner;
+            procrun.Name = process.Name;
+            procrun.Description = des;
+            procrun.DataJson = process.DataJson;
+            procrun.Avatar = process.Avatar;
+            procrun.IsRun = true;
+            procrun.Created_At = DateTime.Now;
+            procrun.Updated_At = DateTime.Now;
+            db.Processes.Add(procrun);
+            db.SaveChanges();
+            return procrun.Id;
         }
     }
 }

@@ -18,7 +18,8 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <Use64BitIISExpress>true</Use64BitIISExpress>
+    <Use64BitIISExpress>
+    </Use64BitIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -37,7 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\Dell\AppData\Local\Temp\vsD2AA.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vs247F.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,7 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\Dell\AppData\Local\Temp\vsD2AA.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vs247F.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -274,7 +275,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProcessController.cs" />
-    <Compile Include="Controllers\ProcessRunController.cs" />
     <Compile Include="Extensions\IdentityExtensions.cs" />
     <Compile Include="Filters\AjaxAuthorizeAttribute.cs" />
     <Compile Include="Filters\GroupAuthorizeAttribute.cs" />
@@ -347,7 +347,6 @@
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\GroupService.cs" />
     <Compile Include="Services\ParticipateService.cs" />
-    <Compile Include="Services\processRunService.cs" />
     <Compile Include="Services\ProcessService.cs" />
     <Compile Include="Services\RoleService.cs" />
     <Compile Include="Services\StepService.cs" />
@@ -8482,7 +8481,6 @@
     <Content Include="Views\Group\NewGroup.cshtml" />
     <Content Include="Views\Group\ProcessManagement.cshtml" />
     <Content Include="Views\Process\AddTask.cshtml" />
-    <Content Include="Views\Process\EditTask.cshtml" />
     <Content Include="Views\Process\ShowTask.cshtml" />
     <Content Include="package-lock.json" />
     <Content Include="Content\vendor\lightbox2\.editorconfig" />
@@ -8505,8 +8503,8 @@
     <Content Include="Views\Process\NewProcessRun.cshtml" />
     <Content Include="Views\Process\AddFormTask.cshtml" />
     <Content Include="Views\Process\ShowFormTask.cshtml" />
-    <Content Include="Views\ProcessRun\AssignRole.cshtml" />
-    <Content Include="Views\ProcessRun\Detail.cshtml" />
+    <Content Include="Views\Process\AssignRole.cshtml" />
+    <Content Include="Views\Process\Detail.cshtml" />
     <Content Include="Views\Process\Setting.cshtml" />
     <Content Include="Views\File\FileManager.cshtml" />
   </ItemGroup>

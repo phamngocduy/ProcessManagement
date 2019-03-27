@@ -10,7 +10,7 @@ namespace ProcessManagement.Services
         ///=============================================================================================
 		PMSEntities db = new PMSEntities();
         ///=============================================================================================
-        public Role findRoleOfProcess(int idRole,int idProcess)
+        public Role findRoleOfProcess(int idRole, int idProcess)
         {
             var role = db.Roles.Where(m => m.Id == idRole && m.IdProcess == idProcess).FirstOrDefault();
             return role;
@@ -20,25 +20,23 @@ namespace ProcessManagement.Services
             List<Role> listrole = db.Roles.Where(x => x.IdProcess == idProcess).ToList();
             return listrole;
         }
-        public void addrolerun(List<Role> listrole)
+        public List<Role> addrolerun(List<Role> listrole, int idprocessrun)
         {
-            if (listrole != null)
+            foreach (var item in listrole)
             {
-                foreach (var item in listrole)
-                {
-                    Role role = new Role();
-                    role.IdProcess = item.IdProcess;
-                    role.Name = item.Name;
-                    role.Description = item.Description;
-                    role.IsRun = true;
-                    role.Color = item.Color;
-                    role.IsRun = item.IsRun;
-                    role.Create_At = DateTime.Now;
-                    role.Update_At = DateTime.Now;
-                    db.Roles.Add(role);
-                    db.SaveChanges();
-                }
+                Role role = new Role();
+                role.IdProcess = idprocessrun;
+                role.Name = item.Name;
+                role.Description = item.Description;
+                role.IsRun = true;
+                role.Color = item.Color;
+                role.IsRun = item.IsRun;
+                role.Create_At = DateTime.Now;
+                role.Update_At = DateTime.Now;
+                db.Roles.Add(role);
+                db.SaveChanges();
             }
+            return findListRoleOfProcess(idprocessrun);
         }
     }
 }

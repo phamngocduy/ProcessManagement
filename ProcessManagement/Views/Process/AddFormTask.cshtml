@@ -13,20 +13,6 @@
     <link rel="stylesheet" href="~/Content/vendor/dropify/css/dropify.min.css">
     <link rel="stylesheet" href="~/Content/vendor/select2/select2.css" />
     <link rel="stylesheet" href="~/Content/vendor/switchery/dist/switchery.min.css" />
-    <style>
-        #left-sidebar [class^=icon-]:before, #left-sidebar [class*=" icon-"]:before {
-            font-family: unset;
-        }
-
-        .form-wrap.form-builder .frmb-control li {
-            font-family: inherit;
-            display: block;
-        }
-
-        .form-wrap.form-builder [class^=icon-]:before, .form-wrap.form-builder [class*=" icon-"]:before {
-            font-family: fb-icons;
-        }
-    </style>
 }
 <div class="block-header">
     <div class="row">
@@ -81,7 +67,7 @@
                         <label for="task-role">Select Role</label>
                         <select id="task-role" class="form-control show-tick ms select2">
                             <option></option>
-                            @foreach (var role in roles.Where(x => x.IsRun == null))
+                            @foreach (var role in roles.Where(x => x.IsRun == null || x.IsRun == false))
                             {
                                 <option value="@role.Id">@role.Name</option>
                             }
@@ -112,9 +98,9 @@
     <script src="~/Content/build/js/pages/forms/dropify.js"></script>
     <script src="~/Content/vendor/select2/select2.min.js"></script>
     <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-    <script src="~/Content/build/js/form-builder.min.js"></script>
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script src="~/Content/vendor/FormBuilder/form-builder.min.js"></script>
+
     <script>
         $(function () {
             var formB = $("#build-wrap").formBuilder();

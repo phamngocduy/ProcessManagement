@@ -22,8 +22,7 @@ body, #wrapper{
 }
 .logo-name{
     font-size: 14px;
-    margin-top: 5px;
-    margin-left: 5px;
+    padding: 5px;
     display: inline-block;
     color: #1233db;
     font-weight: 600;
@@ -53,7 +52,22 @@ body, #wrapper{
         width: calc(100% - 300px);
     }
 }
-    
+ 
+//fix font formbuillder confict witch simple font
+[class^=icon-],[class*=" icon-"]{
+    &:before{
+        font-family: unset !important;
+    }
+}
+.form-wrap{
+    &.form-builder{
+        [class^=icon-],[class*=" icon-"]{
+            &:before{
+                font-family: unset !important;
+            }
+        }
+    }
+}
 @each $themeClass, $color in  $color-themes{
     #{$themeClass} {
         #toast-container{
