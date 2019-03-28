@@ -320,7 +320,7 @@ namespace ProcessManagement.Areas.API.Controllers
             object response;
             Process findprocess = processService.findProcess(idprocess);
             processService.addrunprocess(findprocess);
-
+            stepService.addstartstep(idprocess);
             message = "Created ProcessRun Successfully";
             response = new { message = message, status = status };
             return Json(response, JsonRequestBehavior.AllowGet);

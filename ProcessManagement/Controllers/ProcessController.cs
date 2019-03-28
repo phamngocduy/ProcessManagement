@@ -663,6 +663,10 @@ namespace ProcessManagement.Controllers
             var listrole = roleService.findListRoleOfProcess(idprocess);
             var listroleruns = roleService.findlistrolerun(listrole);
             var listStep = stepService.findStepsOfProcess(idprocess);
+            var runprocess = processService.findRunProcess(processrun.Id);
+            Status status = db.Status.Where(y => y.Name == "Running").FirstOrDefault();
+            var liststepofrunprocess = stepService.findStepsOfRunProcess(runprocess.Id);
+            StepRun runpro = liststepofrunprocess.Where(x => x.Status == status.Id).FirstOrDefault();
 
             List<Step> listnextstep1 = new List<Step>();
             List<Step> listnextstep2 = new List<Step>();
@@ -727,6 +731,7 @@ namespace ProcessManagement.Controllers
             ViewBag.ListRole = listrole;
             ViewData["ProcessRun"] = processrun;
             ViewBag.ListRoleRun = listroleruns;
+            ViewData["ListRunStep"] = runpro;
             return View(listnextstep1);
         }
 

@@ -19,6 +19,7 @@ namespace ProcessManagement.Models
         {
             this.StepRuns = new HashSet<StepRun>();
             this.TaskProcessRuns = new HashSet<TaskProcessRun>();
+            this.ProcessRuns = new HashSet<ProcessRun>();
         }
     
         public int Id { get; set; }
@@ -31,5 +32,7 @@ namespace ProcessManagement.Models
         public virtual ICollection<StepRun> StepRuns { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TaskProcessRun> TaskProcessRuns { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProcessRun> ProcessRuns { get; set; }
     }
 }

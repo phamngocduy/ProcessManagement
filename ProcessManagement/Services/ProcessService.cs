@@ -27,7 +27,7 @@ namespace ProcessManagement.Services
 
         public ProcessRun findRunProcess(int idProcess)
         {
-            ProcessRun process = db.ProcessRuns.Find(idProcess);
+            ProcessRun process = db.ProcessRuns.Where(x => x.IdProcess == idProcess).FirstOrDefault();
             return process;
         }
         /// <summary>
@@ -135,9 +135,11 @@ namespace ProcessManagement.Services
 
         public void addrunprocess(Process process)
         {
+            Status status = db.Status.Where(y => y.Name == "Running").FirstOrDefault();
             ProcessRun runpro = new ProcessRun();
             runpro.IdProcess = process.Id;
             runpro.Name = process.Name;
+            runpro.Status = status.Id;
             runpro.Description = process.Description;
             runpro.Start_At = DateTime.Now;
             runpro.Create_At = DateTime.Now;

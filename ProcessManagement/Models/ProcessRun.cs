@@ -21,15 +21,17 @@ namespace ProcessManagement.Models
         }
     
         public int Id { get; set; }
-        public Nullable<int> IdProcess { get; set; }
+        public int IdProcess { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public Nullable<System.DateTime> Start_At { get; set; }
         public Nullable<System.DateTime> Create_At { get; set; }
         public Nullable<System.DateTime> Update_At { get; set; }
+        public Nullable<int> Status { get; set; }
     
         public virtual Process Process { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StepRun> StepRuns { get; set; }
+        public virtual Status Status1 { get; set; }
     }
 }

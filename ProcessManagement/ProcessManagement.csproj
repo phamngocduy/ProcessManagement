@@ -284,6 +284,7 @@
     </Compile>
     <Compile Include="Helpers\GlobalHelper.cs" />
     <Compile Include="Helpers\MultiLanguageViewEngine.cs" />
+    <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AspNetUser.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
@@ -296,7 +297,6 @@
     <Compile Include="Models\Group.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Participate.cs">
@@ -332,6 +332,9 @@
     <Compile Include="Models\Status.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Step.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\StepRun.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
@@ -352,9 +355,6 @@
     <Compile Include="Services\TaskService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Models\Step.cs">
-      <DependentUpon>PMS.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\build\bundles\chartist.bundle.js" />

@@ -21,6 +21,12 @@ namespace ProcessManagement.Services
             List<Step> step = db.Steps.Where(x => x.IdProcess == idProcess).ToList();
             return step;
         }
+
+        public List<StepRun> findStepsOfRunProcess(int idProcess)
+        {
+            List<StepRun> runstep = db.StepRuns.Where(x => x.idProcess == idProcess).ToList();
+            return runstep;
+        }
         /// <summary>
         /// Xóa tất cả các step thuộc nhiều procses
         /// </summary>
@@ -70,6 +76,29 @@ namespace ProcessManagement.Services
                 db.SaveChanges();
             }
             return findStepsOfProcess(idprocessrun);
+        }
+
+        public void addstartstep(int idprocess)
+        {
+            List<Step> step = findStepsOfProcess(idprocess);
+            Status status = db.Status.Where(y => y.Name == "Running").FirstOrDefault();
+            ProcessRun idrun = db.ProcessRuns.Where(x => x.IdProcess == idprocess).FirstOrDefault();
+            foreach (var item in step.Where(x => x.StartStep == true))
+            {
+                StepRun steprun = new StepRun();
+                steprun.idProcess = idrun.Id;
+                steprun.Name = item.Name;
+                steprun.StartStep = item.StartStep;
+                steprun.NextStep1 = item.NextStep1;
+                steprun.NextStep2 = item.NextStep2;
+                steprun.Key = item.Key;
+                steprun.Figure = item.Figure;
+                steprun.Status = status.Id;
+                steprun.Created_at = DateTime.Now;
+                steprun.Updated_At = DateTime.Now;
+                db.StepRuns.Add(steprun);
+                db.SaveChanges();
+            }
         }
     }
 }

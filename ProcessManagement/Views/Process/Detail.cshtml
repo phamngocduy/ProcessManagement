@@ -5,7 +5,8 @@
     ViewBag.Title = "ShowStep";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var processrun = ViewData["ProcessRun"] as ProcessManagement.Models.Process;
-    var ktra = db.ProcessRuns.Find(processrun.Id);
+    var runpro = ViewData["ListRunStep"] as ProcessManagement.Models.StepRun;
+    var ktra = db.ProcessRuns.Where(x => x.IdProcess == processrun.Id).FirstOrDefault();
 }
 
 @section CustomCss{
@@ -60,7 +61,7 @@
                 <h5>@processrun.Name</h5>
                 <p>@processrun.Description</p>
                 <div class="progress-container progress-info m-b-25" style="margin: 0; float: right">
-                    @if (ktra == null)
+                    @if (ktra != null)
                     {
 
                     }
@@ -94,7 +95,11 @@
                                         <div class="step @if (taskList.Any()) { WriteLiteral("step-has-task"); }" style="border: 2px solid @step.Color; border-left:7px solid @step.Color; color:@step.Color">
                                             <div class="step-name">
                                                 <span data-toggle="tooltip" data-placement="top" title="@step.Description">@step.Name (@taskList.Where(x => x.IsRun == true).Count())</span>
-                                                <button class="btn btn-primary-theme btn-sm" style="float: right" disabled>Next Step</button>
+                                                
+                                                    @if (runpro.Key == step.Key)
+                                                    {
+                                                        <button id="btn-nextstep" class="btn btn-primary-theme btn-sm" style="float: right" disabled>Next</button>
+                                                    }
                                             </div>
                                         </div>
                                         <div class="task">

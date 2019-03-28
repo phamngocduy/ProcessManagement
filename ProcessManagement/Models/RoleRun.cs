@@ -15,7 +15,7 @@ namespace ProcessManagement.Models
     public partial class RoleRun
     {
         public int Id { get; set; }
-        public Nullable<int> IdRole { get; set; }
+        public int IdRole { get; set; }
         public string IdUser { get; set; }
         public Nullable<System.DateTime> Create_At { get; set; }
         public Nullable<System.DateTime> Update_At { get; set; }
