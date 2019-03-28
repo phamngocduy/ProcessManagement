@@ -8421,6 +8421,7 @@
     <Content Include="Models\PMS.edmx.diagram">
       <DependentUpon>PMS.edmx</DependentUpon>
     </Content>
+    <Content Include="Upload\4105\1.png" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -8525,6 +8526,7 @@
     <Folder Include="Content\vendor\jquery.file.upload\server\gae-python\static\" />
     <Folder Include="Content\vendor\jquery.file.upload\server\php\files\" />
     <Folder Include="Content\vendor\jquery.file.upload\test\" />
+    <Folder Include="Upload\4105\run\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\build\scripts\jquery-3.3.1.min.map" />

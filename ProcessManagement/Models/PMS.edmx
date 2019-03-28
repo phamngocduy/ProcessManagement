@@ -42,9 +42,11 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IdGroup" Type="int" />
           <Property Name="Name" Type="nvarchar(max)" />
           <Property Name="Type" Type="nvarchar" MaxLength="50" />
           <Property Name="Path" Type="nvarchar(max)" />
+          <Property Name="Direction" Type="nvarchar" MaxLength="20" />
           <Property Name="Create_At" Type="datetime" />
           <Property Name="Update_At" Type="datetime" />
         </EntityType>
@@ -176,8 +178,8 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IdStep" Type="int" Nullable="false" />
           <Property Name="IdRole" Type="int" />
-          <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
-          <Property Name="Description" Type="varchar" MaxLength="255" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="255" />
           <Property Name="ValueInputText" Type="nvarchar(max)" />
           <Property Name="ValueInputFile" Type="nvarchar(max)" />
           <Property Name="ValueFormJson" Type="nvarchar(max)" />
@@ -250,6 +252,18 @@
             </Principal>
             <Dependent Role="Comment">
               <PropertyRef Name="IdType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FileManager_Group">
+          <End Role="Group" Type="Self.Group" Multiplicity="0..1" />
+          <End Role="FileManager" Type="Self.FileManager" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FileManager">
+              <PropertyRef Name="IdGroup" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -464,6 +478,10 @@
             <End Role="TaskProcessRun" EntitySet="TaskProcessRun" />
             <End Role="Comment" EntitySet="Comment" />
           </AssociationSet>
+          <AssociationSet Name="FK_FileManager_Group" Association="Self.FK_FileManager_Group">
+            <End Role="Group" EntitySet="Group" />
+            <End Role="FileManager" EntitySet="FileManager" />
+          </AssociationSet>
           <AssociationSet Name="FK_Group_AspNetUsers" Association="Self.FK_Group_AspNetUsers">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="Group" EntitySet="Group" />
@@ -568,6 +586,10 @@
             <End Role="TaskProcessRun" EntitySet="TaskProcessRuns" />
             <End Role="Comment" EntitySet="Comments" />
           </AssociationSet>
+          <AssociationSet Name="FK_FileManager_Group" Association="PMSModel.FK_FileManager_Group">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="FileManager" EntitySet="FileManagers" />
+          </AssociationSet>
           <AssociationSet Name="FK_Participate_Group" Association="PMSModel.FK_Participate_Group">
             <End Role="Group" EntitySet="Groups" />
             <End Role="Participate" EntitySet="Participates" />
@@ -665,11 +687,14 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IdGroup" Type="Int32" />
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Direction" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="Create_At" Type="DateTime" Precision="3" />
           <Property Name="Update_At" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Group" Relationship="PMSModel.FK_FileManager_Group" FromRole="FileManager" ToRole="Group" />
         </EntityType>
         <EntityType Name="Group">
           <Key>
@@ -684,6 +709,7 @@
           <Property Name="Created_At" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Updated_At" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="AspNetUser" Relationship="PMSModel.FK_Group_AspNetUsers" FromRole="Group" ToRole="AspNetUser" />
+          <NavigationProperty Name="FileManagers" Relationship="PMSModel.FK_FileManager_Group" FromRole="Group" ToRole="FileManager" />
           <NavigationProperty Name="Participates" Relationship="PMSModel.FK_Participate_Group" FromRole="Group" ToRole="Participate" />
           <NavigationProperty Name="Processes" Relationship="PMSModel.FK_Process_Group" FromRole="Group" ToRole="Process" />
         </EntityType>
@@ -824,8 +850,8 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IdStep" Type="Int32" Nullable="false" />
           <Property Name="IdRole" Type="Int32" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="ValueInputText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ValueInputFile" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ValueFormJson" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -928,6 +954,18 @@
             </Principal>
             <Dependent Role="Comment">
               <PropertyRef Name="IdType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FileManager_Group">
+          <End Type="PMSModel.Group" Role="Group" Multiplicity="0..1" />
+          <End Type="PMSModel.FileManager" Role="FileManager" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FileManager">
+              <PropertyRef Name="IdGroup" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1132,9 +1170,11 @@
               <MappingFragment StoreEntitySet="FileManager">
                 <ScalarProperty Name="Update_At" ColumnName="Update_At" />
                 <ScalarProperty Name="Create_At" ColumnName="Create_At" />
+                <ScalarProperty Name="Direction" ColumnName="Direction" />
                 <ScalarProperty Name="Path" ColumnName="Path" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="IdGroup" ColumnName="IdGroup" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
