@@ -627,6 +627,10 @@
             <End Role="Process" EntitySet="Processes" />
             <End Role="Step" EntitySet="Steps" />
           </AssociationSet>
+          <AssociationSet Name="FK_ProcessRun_Status" Association="PMSModel.FK_ProcessRun_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="ProcessRun" EntitySet="ProcessRuns" />
+          </AssociationSet>
           <AssociationSet Name="FK_StepRun_Instance" Association="PMSModel.FK_StepRun_Instance">
             <End Role="ProcessRun" EntitySet="ProcessRuns" />
             <End Role="StepRun" EntitySet="StepRuns" />
@@ -658,10 +662,6 @@
           <AssociationSet Name="FK_TaskProcessRun_StepRun" Association="PMSModel.FK_TaskProcessRun_StepRun">
             <End Role="StepRun" EntitySet="StepRuns" />
             <End Role="TaskProcessRun" EntitySet="TaskProcessRuns" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProcessRun_Status" Association="PMSModel.FK_ProcessRun_Status">
-            <End Role="Status" EntitySet="Status" />
-            <End Role="ProcessRun" EntitySet="ProcessRuns" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="AspNetUser">
@@ -781,10 +781,10 @@
           <Property Name="Start_At" Type="DateTime" Precision="3" />
           <Property Name="Create_At" Type="DateTime" Precision="3" />
           <Property Name="Update_At" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Process" Relationship="PMSModel.FK_Instance_Process" FromRole="ProcessRun" ToRole="Process" />
-          <NavigationProperty Name="StepRuns" Relationship="PMSModel.FK_StepRun_Instance" FromRole="ProcessRun" ToRole="StepRun" />
           <Property Name="Status" Type="Int32" />
+          <NavigationProperty Name="Process" Relationship="PMSModel.FK_Instance_Process" FromRole="ProcessRun" ToRole="Process" />
           <NavigationProperty Name="Status1" Relationship="PMSModel.FK_ProcessRun_Status" FromRole="ProcessRun" ToRole="Status" />
+          <NavigationProperty Name="StepRuns" Relationship="PMSModel.FK_StepRun_Instance" FromRole="ProcessRun" ToRole="StepRun" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -824,9 +824,9 @@
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Create_At" Type="DateTime" Precision="3" />
           <Property Name="Update_At" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="ProcessRuns" Relationship="PMSModel.FK_ProcessRun_Status" FromRole="Status" ToRole="ProcessRun" />
           <NavigationProperty Name="StepRuns" Relationship="PMSModel.FK_StepRun_Status" FromRole="Status" ToRole="StepRun" />
           <NavigationProperty Name="TaskProcessRuns" Relationship="PMSModel.FK_TaskProcessRun_Status" FromRole="Status" ToRole="TaskProcessRun" />
-          <NavigationProperty Name="ProcessRuns" Relationship="PMSModel.FK_ProcessRun_Status" FromRole="Status" ToRole="ProcessRun" />
         </EntityType>
         <EntityType Name="Step">
           <Key>
@@ -1053,6 +1053,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ProcessRun_Status">
+          <End Type="PMSModel.Status" Role="Status" Multiplicity="0..1" />
+          <End Type="PMSModel.ProcessRun" Role="ProcessRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProcessRun">
+              <PropertyRef Name="Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_StepRun_Instance">
           <End Type="PMSModel.ProcessRun" Role="ProcessRun" Multiplicity="1" />
           <End Type="PMSModel.StepRun" Role="StepRun" Multiplicity="*" />
@@ -1146,18 +1158,6 @@
             </Principal>
             <Dependent Role="TaskProcessRun">
               <PropertyRef Name="IdStep" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProcessRun_Status">
-          <End Type="PMSModel.Status" Role="Status" Multiplicity="0..1" />
-          <End Type="PMSModel.ProcessRun" Role="ProcessRun" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Status">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ProcessRun">
-              <PropertyRef Name="Status" />
             </Dependent>
           </ReferentialConstraint>
         </Association>

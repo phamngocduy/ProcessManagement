@@ -30,8 +30,8 @@ namespace ProcessManagement.Models
         public Nullable<int> Status { get; set; }
     
         public virtual Process Process { get; set; }
+        public virtual Status Status1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StepRun> StepRuns { get; set; }
-        public virtual Status Status1 { get; set; }
     }
 }
