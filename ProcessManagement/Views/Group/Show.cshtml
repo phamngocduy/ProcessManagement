@@ -144,10 +144,16 @@
                         <a class="btn-circle btn-primary-theme btn-switch-tab" style="float:right" href="#setting-tab">Setting</a>
                         <h5>@Model.Name</h5>
                         <p>@Model.Description</p>
-                        @foreach (var file in files)
-                        {
-                            <a href="@Url.Action("download", "file", new { file = file.Id })" target="_blank">@file.Name</a>
-                        }
+                        @if (files.Any())
+	                    {
+                            <ul>
+                                @foreach (var file in files)
+                                {
+                                    <li><a href="@Url.Action("download", "file", new { file = file.Id })" target="_blank">@file.Name</a></li>
+                                }
+                            </ul>
+	                    }
+                        
                         
                     </div>
                     <div class="tab-pane animated fadeIn" id="setting-tab">

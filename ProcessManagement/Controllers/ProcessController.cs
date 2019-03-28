@@ -50,9 +50,9 @@ namespace ProcessManagement.Controllers
             string directoryPath = String.Format("{0}/{1}", group.Id,pro.Id);
             fileService.CreateDirectory(directoryPath);
             //save file 
-            string savePath = Server.MapPath(String.Format("~/App_Data/{0}/{1}", group.Id,pro.Id));
+            //string savePath = Server.MapPath(String.Format("~/App_Data/{0}/{1}", group.Id,pro.Id));
             string filePath = String.Format("{0}/{1}", group.Id, pro.Id);
-            fileService.saveFile(FileUpload, filePath);
+            fileService.saveFile(group.Id, FileUpload, filePath, FileDerection.Process);
 
             SetFlash(FlashType.success, "Created Process Successfully");
             return RedirectToAction("Draw", new { groupslug = group.groupSlug, groupid = group.Id, processid = pro.Id });

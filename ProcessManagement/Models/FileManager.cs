@@ -15,10 +15,14 @@ namespace ProcessManagement.Models
     public partial class FileManager
     {
         public string Id { get; set; }
+        public Nullable<int> IdGroup { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public string Path { get; set; }
+        public string Direction { get; set; }
         public Nullable<System.DateTime> Create_At { get; set; }
         public Nullable<System.DateTime> Update_At { get; set; }
+    
+        public virtual Group Group { get; set; }
     }
 }

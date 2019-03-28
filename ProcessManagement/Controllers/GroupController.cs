@@ -57,12 +57,12 @@ namespace ProcessManagement.Controllers
             groupService.createGroup(idUser, group);
 
             //create directory
-            string directoryPath = String.Format("{0}/run", group.Id);
+            string directoryPath = String.Format("Upload/{0}/run", group.Id);
             fileService.CreateDirectory(directoryPath);
             //save file 
-            string savePath = Server.MapPath(String.Format("~/App_Data/{0}", group.Id));
-            string filePath = String.Format("{0}", group.Id);
-            fileService.saveFile(FileUpload, filePath);
+            //string savePath = Server.MapPath(String.Format("~/App_Data/{0}", group.Id));
+            string filePath = String.Format("Upload/{0}", group.Id);
+            fileService.saveFile(group.Id, FileUpload, filePath, FileDerection.Group);
 
 
             //create new participate
@@ -118,15 +118,8 @@ namespace ProcessManagement.Controllers
             groupStatisticModel.Add("totalmember", participateService.countMemberInGroup(group.Id));
             groupStatisticModel.Add("totalprocess", processService.countProcessOfGroup(group.Id));
 
-            string savePath = Server.MapPath(String.Format("~/App_Data/{0}", group.Id));
-            List<string> fileName = fileService.getAllFileNameFromFolder(savePath);
-            List<FileManager> file = new List<FileManager>();
-            foreach (var f in fileName)
-            {
-                string filePath = string.Format("{0}/{1}", group.Id, f);
-                FileManager temp = db.FileManagers.Where(x => x.Path == filePath).FirstOrDefault();
-                file.Add(temp);
-            }
+            //tìm file group
+            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id,FileDerection.Group);
 
             ////Tìm tất cả member thuộc group đó
             //var ListParticipant = participateService.findMembersInGroup(group.Id);
@@ -137,7 +130,7 @@ namespace ProcessManagement.Controllers
             ViewData["Statistic"] = groupStatisticModel;
             //lấy role của user hiện tại
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
-            ViewData["Files"] = file;
+            ViewData["Files"] = files;
             return View(group);
         }
 

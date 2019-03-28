@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using ProcessManagement.Controllers;
 using ProcessManagement.Models;
 namespace ProcessManagement.Services
 {
@@ -13,14 +14,14 @@ namespace ProcessManagement.Services
         CommonService commonService = new CommonService();
         ///=============================================================================================
         ///
-        public void saveFile(HttpPostedFileBase file, string savePath)
+        public void saveFile(int idGroup, HttpPostedFileBase file, string savePath, FileDerection Derection)
         {
             if (file != null)
             {
                 if (file.ContentLength > 0)
                 {
                     string AppPath = AppDomain.CurrentDomain.BaseDirectory;
-                    string filePath = AppPath + "App_Data\\" + savePath;
+                    string filePath = AppPath + savePath;
 
                     string _FileName = Path.GetFileName(file.FileName);
                     string _path = Path.Combine(filePath, _FileName);
@@ -29,9 +30,11 @@ namespace ProcessManagement.Services
 
                     FileManager f = new FileManager();
                     f.Id = commonService.getRandomString(50);
+                    f.IdGroup = idGroup;
                     f.Name = _FileName;
                     f.Path = string.Format("{0}/{1}", savePath, _FileName);
                     f.Type = Path.GetExtension(_path);
+                    f.Direction = Derection.ToString();
                     f.Create_At = DateTime.Now;
                     f.Update_At = DateTime.Now;
                     db.FileManagers.Add(f);
@@ -39,21 +42,27 @@ namespace ProcessManagement.Services
                 }
             }
         }
-        public List<string> getAllFileNameFromFolder(string path)
+        //public List<string> getAllFileNameFromFolder(string path)
+        //{
+        //    List<string> f = new List<string>();
+        //    DirectoryInfo d = new DirectoryInfo(path);//Assuming Test is your Folder
+        //    if (d.Exists)
+        //    {
+        //        FileInfo[] Files = d.GetFiles(); //Getting Text files
+
+        //        foreach (FileInfo file in Files)
+        //        {
+        //            f.Add(file.Name);
+        //        }
+        //    }
+        //    return f;
+
+        //}
+        public List<FileManager> getAllFileNameFromFolder(int idGroup,FileDerection Direction)
         {
-            List<string> f = new List<string>();
-            DirectoryInfo d = new DirectoryInfo(path);//Assuming Test is your Folder
-            if (d.Exists)
-            {
-                FileInfo[] Files = d.GetFiles(); //Getting Text files
-                
-                foreach (FileInfo file in Files)
-                {
-                    f.Add(file.Name);
-                }
-            }
-            return f;
-            
+            var file = db.FileManagers.Where(x => x.IdGroup == idGroup && x.Direction == Direction.ToString()).ToList();
+            return file;
+
         }
         public FileManager findFile(string id)
         {
@@ -80,7 +89,7 @@ namespace ProcessManagement.Services
         public void CreateDirectory(string stringPath)
         {
             string AppPath = AppDomain.CurrentDomain.BaseDirectory;
-            string filePath = AppPath + "App_Data\\" + stringPath;
+            string filePath = AppPath + stringPath;
             DirectoryInfo introDirectory = Directory.CreateDirectory(filePath);
         }
 

@@ -38,6 +38,13 @@ namespace ProcessManagement.Controllers
         VisibilitySetting
     }
 
+    public enum FileDerection
+    {
+        Group,
+        Process,
+        Step,
+        Task
+    }
     public class BaseController : Controller
     {
         private static string _cookieLangName = "LangForProcessManagementSystem";
