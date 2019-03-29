@@ -48,7 +48,7 @@ namespace ProcessManagement.Controllers
 
             //create directory
             string directoryPath = String.Format("{0}/{1}", group.Id,pro.Id);
-            fileService.CreateDirectory(directoryPath);
+            fileService.createDirectory(directoryPath);
             //save file 
             //string savePath = Server.MapPath(String.Format("~/App_Data/{0}/{1}", group.Id,pro.Id));
             string filePath = String.Format("{0}/{1}", group.Id, pro.Id);

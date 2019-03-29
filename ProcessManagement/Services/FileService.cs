@@ -14,8 +14,9 @@ namespace ProcessManagement.Services
         CommonService commonService = new CommonService();
         ///=============================================================================================
         ///
-        public void saveFile(int idGroup, HttpPostedFileBase file, string savePath, FileDerection Derection)
+        public FileManager saveFile(int idGroup, HttpPostedFileBase file, string savePath, FileDerection Derection)
         {
+            FileManager f = new FileManager();
             if (file != null)
             {
                 if (file.ContentLength > 0)
@@ -23,17 +24,32 @@ namespace ProcessManagement.Services
                     string AppPath = AppDomain.CurrentDomain.BaseDirectory;
                     string filePath = AppPath + savePath;
 
-                    string _FileName = Path.GetFileName(file.FileName);
-                    string _path = Path.Combine(filePath, _FileName);
-                    file.SaveAs(_path);
+                    string fileName = Path.GetFileName(file.FileName);
+                    string path = Path.Combine(filePath, fileName);
+                    string extension = Path.GetExtension(path);
+                    if (File.Exists(path))
+                    {
+                        string fileNameWithOutExtension = Path.GetFileNameWithoutExtension(file.FileName);
+                        DirectoryInfo d = new DirectoryInfo(filePath);
+                        FileInfo[] files = d.GetFiles(string.Format("*{0}", extension));
+                        int count = 0;
+                        foreach (FileInfo fs in files)
+                        {
+                            
+                            if (fs.Name.Replace(extension,"").StartsWith(fileNameWithOutExtension))
+                                count++;
+                        }
+                        fileName = string.Format("{0} ({1}){2}", fileNameWithOutExtension, count, extension);
+                        path = Path.Combine(filePath, fileName);
+                    }
+                    file.SaveAs(path);
 
 
-                    FileManager f = new FileManager();
                     f.Id = commonService.getRandomString(50);
                     f.IdGroup = idGroup;
-                    f.Name = _FileName;
-                    f.Path = string.Format("{0}/{1}", savePath, _FileName);
-                    f.Type = Path.GetExtension(_path);
+                    f.Name = fileName;
+                    f.Path = string.Format("{0}/{1}", savePath, fileName);
+                    f.Type = extension;
                     f.Direction = Derection.ToString();
                     f.Create_At = DateTime.Now;
                     f.Update_At = DateTime.Now;
@@ -41,6 +57,8 @@ namespace ProcessManagement.Services
                     db.SaveChanges();
                 }
             }
+            return f;
+
         }
         //public List<string> getAllFileNameFromFolder(string path)
         //{
@@ -69,6 +87,18 @@ namespace ProcessManagement.Services
             FileManager file = db.FileManagers.Find(id);
             return file;
         }
+        public void removeFile(FileManager file)
+        {
+            string AppPath = AppDomain.CurrentDomain.BaseDirectory;
+            string filePath = AppPath + file.Path;
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+            db.FileManagers.Remove(file);
+            db.SaveChanges();
+
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -86,12 +116,43 @@ namespace ProcessManagement.Services
 
 
         //}
-        public void CreateDirectory(string stringPath)
+        public void createDirectory(string stringPath)
         {
             string AppPath = AppDomain.CurrentDomain.BaseDirectory;
             string filePath = AppPath + stringPath;
             DirectoryInfo introDirectory = Directory.CreateDirectory(filePath);
         }
+        public bool checkFileOverSize(HttpPostedFileBase file)
+        {
+            ConfigRule fileSizeRule = db.ConfigRules.Find("filesize");
+            if (fileSizeRule != null)
+            {
+                //get file size
+                int fileSize = file.ContentLength;
 
+                //convert to byte
+                int value = fileSizeRule.Value;
+                string unit = fileSizeRule.Unit.ToLower();
+                int pow;
+                switch (unit)
+                {
+                    case "kb":
+                        pow = 1;
+                        break;
+                    case "mb":
+                        pow = 2;
+                        break;
+                    case "gb":
+                        pow = 3;
+                        break;
+                    default:
+                        pow = 0;
+                        break;
+                }
+                double toByte = value * Math.Pow(1024, pow);
+                return fileSize > toByte ? true : false; 
+            }
+            return false;
+        }
     }
 }

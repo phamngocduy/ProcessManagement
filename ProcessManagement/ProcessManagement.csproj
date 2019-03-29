@@ -18,7 +18,8 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <Use64BitIISExpress>true</Use64BitIISExpress>
+    <Use64BitIISExpress>
+    </Use64BitIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -37,7 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vsF72.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vsFE9.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,7 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vsF72.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vsFE9.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -289,6 +290,9 @@
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Comment.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ConfigRule.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FileManager.cs">
@@ -8462,13 +8466,8 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_NullLayout.cshtml" />
     <Content Include="Views\Group\EditRoleMember.cshtml" />
-    <Content Include="Views\Shared\Settings\Auth\General.cshtml" />
-    <Content Include="Views\Shared\Settings\Auth\Members.cshtml" />
-    <Content Include="Views\Shared\Settings\Auth\Visibility.cshtml" />
-    <Content Include="Views\Shared\Settings\Auth\Advanced.cshtml" />
     <Content Include="Views\Process\Draw.cshtml" />
     <Content Include="Views\Process\NewProcess.cshtml" />
-    <Content Include="Views\Shared\Settings\General.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Process\AddRole.cshtml" />
     <Content Include="Views\Process\EditRole.cshtml" />
@@ -8525,6 +8524,7 @@
     <Folder Include="Content\vendor\jquery.file.upload\server\gae-python\static\" />
     <Folder Include="Content\vendor\jquery.file.upload\server\php\files\" />
     <Folder Include="Content\vendor\jquery.file.upload\test\" />
+    <Folder Include="Upload\4102\run\" />
     <Folder Include="Upload\4105\run\" />
   </ItemGroup>
   <ItemGroup>

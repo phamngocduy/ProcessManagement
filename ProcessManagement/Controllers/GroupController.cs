@@ -40,6 +40,7 @@ namespace ProcessManagement.Controllers
         [Authorize]
         public ActionResult NewGroup()
         {
+            ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
             return View();
         }
         [Authorize]
@@ -53,12 +54,18 @@ namespace ProcessManagement.Controllers
                 SetFlash(FlashType.error, "Group Name is required");
                 return View();
             }
+            bool isFileOverSize = fileService.checkFileOverSize(FileUpload);
+            if (isFileOverSize)
+            {
+                SetFlash(FlashType.error, "Your File pass our limit size rule");
+                return View();
+            }
             //create new group
             groupService.createGroup(idUser, group);
 
             //create directory
             string directoryPath = String.Format("Upload/{0}/run", group.Id);
-            fileService.CreateDirectory(directoryPath);
+            fileService.createDirectory(directoryPath);
             //save file 
             //string savePath = Server.MapPath(String.Format("~/App_Data/{0}", group.Id));
             string filePath = String.Format("Upload/{0}", group.Id);
@@ -131,6 +138,8 @@ namespace ProcessManagement.Controllers
             //lấy role của user hiện tại
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             ViewData["Files"] = files;
+            //get maximum file config
+            ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
             return View(group);
         }
 

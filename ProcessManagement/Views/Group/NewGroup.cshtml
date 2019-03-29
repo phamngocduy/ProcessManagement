@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = ProcessManagement.Content.resources.CWgroup_create.clockworks_group_create_title;
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var maxFileSizeRule = ViewData["FileMaxSize"] as ProcessManagement.Models.ConfigRule;
 }
 
 @section CustomCss{
@@ -81,13 +82,52 @@
     <script src="~/Content/vendor/dropify/js/dropify.min.js"></script>
     <script src="~/Content/build/js/pages/forms/dropify.js"></script>
     <script>
-        $("#form-add-group").on("submit", function () {
-            var groupname = $("#group-name").val().trim();
-            if (groupname == "") {
-                showToastr("error", "Group Name is required")
-                return false;
-            } 
-            return true;
+        $(function () {
+            //fileupload
+            @if (maxFileSizeRule != null)
+            {
+                int value = maxFileSizeRule.Value;
+                string unit = maxFileSizeRule.Unit.ToLower().Trim();
+                int pow;
+                switch (unit)
+                {
+                    case "kb":
+                        pow = 1;
+                        break;
+                    case "mb":
+                        pow = 2;
+                        break;
+                    case "gb":
+                        pow = 3;
+                        break;
+                    default:
+                        pow = 0;
+                        break;
+                }
+                double toByte = value * Math.Pow(1024, pow);
+                @:var maxFileSize = @toByte;
+            }
+            else
+            {
+                @:var maxFileSize = null;
+            }
+            $("#form-add-group").on("submit", function () {
+                var groupname = $("#group-name").val().trim();
+                var file = $("#group-file")[0].files[0];
+                
+                if (groupname == "") {
+                    showToastr("error", "Group Name is required")
+                    return false;
+                }
+                if (file != null) {
+                    var fileSize = file.size;
+                    if (maxFileSize != null && fileSize > maxFileSize) {
+                        showToastr("error", "Your file pass our limit size rule")
+                        return false;
+                    }
+                }
+                return true;
+            })
         })
     </script>
 }
