@@ -681,7 +681,7 @@ namespace ProcessManagement.Controllers
             ViewData["ProcessRun"] = processRun;
             ViewData["ListRole"] = listRole;
             ViewData["ListUser"] = listUserInGroup;
-            ViewData["Roles"] = jRoleList;
+            ViewData["Roles"] = JArray.FromObject(jRoleList);
             return View(processRun);
         }
 

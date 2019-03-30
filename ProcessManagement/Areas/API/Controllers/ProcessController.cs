@@ -315,12 +315,15 @@ namespace ProcessManagement.Areas.API.Controllers
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
             roleService.removeRoleRun(roleid);
-            foreach (var member in assignList)
+            if (assignList.Any())
             {
-                var isMemberInGroup = participateService.checkMemberInGroup(member, role.Process.Group.Id);
-                if (isMemberInGroup)
+                foreach (var member in assignList)
                 {
-                    roleService.assignrolerun(roleid, member);
+                    var isMemberInGroup = participateService.checkMemberInGroup(member, role.Process.Group.Id);
+                    if (isMemberInGroup)
+                    {
+                        roleService.assignrolerun(roleid, member);
+                    }
                 }
             }
             message = "Assign Role Successfully";

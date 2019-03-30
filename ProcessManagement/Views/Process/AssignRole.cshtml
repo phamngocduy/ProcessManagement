@@ -3,9 +3,9 @@
     ViewBag.Title = "AssignRole";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var listRole = ViewData["ListRole"] as List<ProcessManagement.Models.Role>;
-    var listUserInGroup = ViewData["ListUser"] as List<ProcessManagement.Models.Participate>;
     var roles = ViewData["Roles"] as JArray;
-    
+     var listUserInGroup = ViewData["ListUser"] as List<ProcessManagement.Models.Participate>;
+
 }
 @section CustomCss{
     <link rel="stylesheet" href="~/Content/vendor/bootstrap-multiselect/bootstrap-multiselect.css">
@@ -79,9 +79,10 @@
                                     <td>@role["name"]</td>
                                     <td>
                                         <select multiple="multiple" class="ms-member multiselect" id="role-@role["id"]" data-id="@role["id"]">
-                                            @foreach (var user in role["user"])
+                                            @foreach (var user in role["users"])
                                             {
-                                                <option value="@user["id"]">@user["name"]</option>
+                                                var selected = (bool)user["isAssigned"] == true ? "selected" : "";
+                                                <option value="@user["id"]" @selected>@user["name"]</option>
                                             }
                                         </select>
                                     </td>
