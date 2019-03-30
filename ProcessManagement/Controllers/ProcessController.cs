@@ -688,14 +688,20 @@ namespace ProcessManagement.Controllers
         [GroupAuthorize]
         public ActionResult Detail(int idprocess)
         {
-            var processrun = processService.findProcess(idprocess);
+            string idUser = User.Identity.GetUserId();
+            var process = processService.findProcess(idprocess);
             var listrole = roleService.findListRoleOfProcess(idprocess);
+            var group = groupService.findGroup(process.IdGroup);
             var listroleruns = roleService.findlistrolerun(listrole);
             var listStep = stepService.findStepsOfProcess(idprocess);
-            var runprocess = processService.findRunProcess(processrun.Id);
-            Status status = db.Status.Where(y => y.Name == "Running").FirstOrDefault();
-            var liststepofrunprocess = stepService.findStepsOfRunProcess(runprocess.Id);
-            StepRun runpro = liststepofrunprocess.Where(x => x.Status == status.Id).FirstOrDefault();
+            var runprocess = processService.findRunProcessbyidprorun(process.Id);
+            var ktra = db.ProcessRuns.Where(x => x.IdProcess == process.Id).FirstOrDefault();
+            List<StepRun> liststepofrunprocess = new List<StepRun>();
+            if (runprocess != null)
+            {
+                liststepofrunprocess = stepService.findStepsOfRunProcess(runprocess.Id);
+            }
+            
 
             List<Step> listnextstep1 = new List<Step>();
             List<Step> listnextstep2 = new List<Step>();
@@ -758,9 +764,11 @@ namespace ProcessManagement.Controllers
             }
             
             ViewBag.ListRole = listrole;
-            ViewData["ProcessRun"] = processrun;
+            ViewData["ProcessRun"] = process;
             ViewBag.ListRoleRun = listroleruns;
-            ViewData["ListRunStep"] = runpro;
+            ViewBag.ListRunStep = liststepofrunprocess;
+            ViewBag.Checkprocessrun = ktra;
+            ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             return View(listnextstep1);
         }
 

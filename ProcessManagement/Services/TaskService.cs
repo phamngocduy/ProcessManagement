@@ -20,9 +20,21 @@ namespace ProcessManagement.Services
             return task;
         }
 
+        public List<TaskProcessRun> findruntaskofstep(int idStep)
+        {
+            List<TaskProcessRun> task = db.TaskProcessRuns.Where(x => x.IdStep == idStep).ToList();
+            return task;
+        }
+
         public TaskProcess findTask(int idTask)
         {
             TaskProcess task = db.TaskProcesses.Find(idTask);
+            return task;
+        }
+
+        public TaskProcessRun findTaskRun(int idTask)
+        {
+            TaskProcessRun task = db.TaskProcessRuns.Find(idTask);
             return task;
         }
         public void addtask(int idStep, string name, int? role, string description, string inputConfig, string fileConfig)
@@ -117,9 +129,16 @@ namespace ProcessManagement.Services
                 {
                     foreach (var role in rolerun)
                     {
-                        if (item.Role.Name.ToString() == role.Name.ToString())
+                        if (item.IdRole != null)
                         {
-                            task.IdRole = role.Id;
+                            if (item.Role.Name == role.Name)
+                            {
+                                task.IdRole = role.Id;
+                            }
+                        }
+                        else
+                        {
+                            task.IdRole = null;
                         }
                     }
                     foreach (var step in steprun)
@@ -144,5 +163,54 @@ namespace ProcessManagement.Services
                 }
             }
         }
+
+        public void addlistruntask(List<TaskProcess> listtaskrun, StepRun runstep)
+        {
+            Status status = db.Status.Where(y => y.Name == "Open").FirstOrDefault();
+            foreach (var item in listtaskrun)
+            {
+                TaskProcessRun runtask = new TaskProcessRun();
+                runtask.IdStep = runstep.Id;
+                runtask.IdRole = item.IdRole;
+                runtask.Name = item.Name;
+                runtask.Description = item.Description;
+                runtask.Status = status.Id;
+                runtask.ValueInputText = item.ValueInputText;
+                runtask.ValueInputFile = item.ValueInputFile;
+                runtask.ValueFormJson = item.ValueFormJson;
+                runtask.Color = item.Color;
+                runtask.Position = item.Position;
+                runtask.Created_At = DateTime.Now;
+                runtask.Updated_At = DateTime.Now;
+                db.TaskProcessRuns.Add(runtask);
+                db.SaveChanges();
+            }
+        }
+
+        public void submitdonetask(int idtaskrun)
+        {
+            Status status = db.Status.Where(y => y.Name == "Done").FirstOrDefault();
+            TaskProcessRun taskrun = findTaskRun(idtaskrun);
+            taskrun.Status = status.Id;
+            taskrun.Updated_At = DateTime.Now;
+            db.SaveChanges();
+        }
+        public void submitclosetask(int idtaskrun)
+        {
+            Status status = db.Status.Where(y => y.Name == "Close").FirstOrDefault();
+            TaskProcessRun taskrun = findTaskRun(idtaskrun);
+            taskrun.Status = status.Id;
+            taskrun.Updated_At = DateTime.Now;
+            db.SaveChanges();
+        }
+        public void submitopentask(int idtaskrun)
+        {
+            Status status = db.Status.Where(y => y.Name == "Open").FirstOrDefault();
+            TaskProcessRun taskrun = findTaskRun(idtaskrun);
+            taskrun.Status = status.Id;
+            taskrun.Updated_At = DateTime.Now;
+            db.SaveChanges();
+        }
+        
     }
 }

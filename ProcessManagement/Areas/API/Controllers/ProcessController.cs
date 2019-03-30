@@ -338,10 +338,105 @@ namespace ProcessManagement.Areas.API.Controllers
             string message;
             object response;
             Process findprocess = processService.findProcess(idprocess);
+            List<Step> liststep = stepService.findStepsOfProcess(idprocess);
             processService.addrunprocess(findprocess);
-            stepService.addstartstep(idprocess);
+            StepRun runstep = stepService.addstartstep(idprocess);
+            Step idsteprunstart = liststep.Where(x => x.Key == runstep.Key && x.StartStep == true).FirstOrDefault();
+            List<TaskProcess> listtaskrun = taskService.findtaskofstep(idsteprunstart.Id);
+            taskService.addlistruntask(listtaskrun, runstep);
             message = "Created ProcessRun Successfully";
             response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Create Run Process");
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult addnextstepinrunprocess(int idStep)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+            StepRun runstep = stepService.findsteprun(idStep);
+            stepService.changestatustep(runstep.Id);
+            ProcessRun processrun = processService.findRunProcess(runstep.idProcess);
+            List<Step> liststep = stepService.findStepsOfProcess(processrun.IdProcess);
+            
+            List<TaskProcessRun> listruntask = taskService.findruntaskofstep(idStep);
+            List<TaskProcessRun> listtaskclose = listruntask.Where(x => x.Status1.Name == "Close").ToList();
+
+            List<Step> nextstep = new List<Step>();
+            StepRun runnextstep = new StepRun();
+            foreach (var item in liststep)
+            {
+                if (runstep.NextStep1 == item.Key && item.StartStep == false)
+                {
+                    nextstep.Add(item);
+                }
+            }
+            if (nextstep != null)
+            {
+                if (listtaskclose.Count == listruntask.Count)
+                {
+                   runnextstep = stepService.addrunnextstep(processrun.Id, nextstep);
+                }
+            }
+            foreach (var nexts in nextstep)
+            {
+                List<TaskProcess> listtasknextstep = taskService.findtaskofstep(nexts.Id);
+                taskService.addlistruntask(listtasknextstep, runnextstep);
+            }
+
+            message = "Created ProcessRun Successfully";
+            response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Next step success");
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult submitdonetask(int idtask)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+
+            TaskProcessRun taskrun = taskService.findTaskRun(idtask);
+            taskService.submitdonetask(taskrun.Id);
+
+            message = "Created ProcessRun Successfully";
+            response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Step Done");
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult submitclosetask(int idtask)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+
+            TaskProcessRun taskrun = taskService.findTaskRun(idtask);
+            taskService.submitclosetask(taskrun.Id);
+
+            message = "Created ProcessRun Successfully";
+            response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Close Task");
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult submitopentask(int idtask)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+
+            TaskProcessRun taskrun = taskService.findTaskRun(idtask);
+            taskService.submitopentask(taskrun.Id);
+
+            message = "Created ProcessRun Successfully";
+            response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Open Task");
             return Json(response, JsonRequestBehavior.AllowGet);
         }
     }

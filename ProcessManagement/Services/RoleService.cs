@@ -30,7 +30,6 @@ namespace ProcessManagement.Services
                 role.Description = item.Description;
                 role.IsRun = true;
                 role.Color = item.Color;
-                role.IsRun = item.IsRun;
                 role.Create_At = DateTime.Now;
                 role.Update_At = DateTime.Now;
                 db.Roles.Add(role);

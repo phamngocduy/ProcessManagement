@@ -27,6 +27,11 @@ namespace ProcessManagement.Services
 
         public ProcessRun findRunProcess(int idProcess)
         {
+            ProcessRun process = db.ProcessRuns.Find(idProcess);
+            return process;
+        }
+        public ProcessRun findRunProcessbyidprorun(int idProcess)
+        {
             ProcessRun process = db.ProcessRuns.Where(x => x.IdProcess == idProcess).FirstOrDefault();
             return process;
         }
@@ -91,7 +96,7 @@ namespace ProcessManagement.Services
             roles.IsRun = false;
             roles.Create_At = DateTime.Now;
             roles.Update_At = DateTime.Now;
-			db.Roles.Add(role);
+			db.Roles.Add(roles);
 			db.SaveChanges();
 		}
         public int countProcessOfGroup(int idGroup)

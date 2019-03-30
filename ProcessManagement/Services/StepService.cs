@@ -27,6 +27,12 @@ namespace ProcessManagement.Services
             List<StepRun> runstep = db.StepRuns.Where(x => x.idProcess == idProcess).ToList();
             return runstep;
         }
+
+        public StepRun findsteprun(int idstep)
+        {
+            StepRun steprun = db.StepRuns.Find(idstep);
+            return steprun;
+        }
         /// <summary>
         /// Xóa tất cả các step thuộc nhiều procses
         /// </summary>
@@ -78,14 +84,14 @@ namespace ProcessManagement.Services
             return findStepsOfProcess(idprocessrun);
         }
 
-        public void addstartstep(int idprocess)
+        public StepRun addstartstep(int idprocess)
         {
             List<Step> step = findStepsOfProcess(idprocess);
             Status status = db.Status.Where(y => y.Name == "Running").FirstOrDefault();
             ProcessRun idrun = db.ProcessRuns.Where(x => x.IdProcess == idprocess).FirstOrDefault();
+            StepRun steprun = new StepRun();
             foreach (var item in step.Where(x => x.StartStep == true))
             {
-                StepRun steprun = new StepRun();
                 steprun.idProcess = idrun.Id;
                 steprun.Name = item.Name;
                 steprun.StartStep = item.StartStep;
@@ -99,6 +105,37 @@ namespace ProcessManagement.Services
                 db.StepRuns.Add(steprun);
                 db.SaveChanges();
             }
+            return steprun;
+        }
+
+        public void changestatustep(int idstep)
+        {
+            Status status = db.Status.Where(y => y.Name == "Done").FirstOrDefault();
+            StepRun steprun = findsteprun(idstep);
+            steprun.Status = status.Id;
+            db.SaveChanges();
+        }
+
+        public StepRun addrunnextstep(int idrunprocess, List<Step> liststeprun)
+        {
+            Status status = db.Status.Where(y => y.Name == "Running").FirstOrDefault();
+            StepRun steprun = new StepRun();
+            foreach (var item in liststeprun)
+            {
+                steprun.idProcess = idrunprocess;
+                steprun.Name = item.Name;
+                steprun.StartStep = item.StartStep;
+                steprun.NextStep1 = item.NextStep1;
+                steprun.NextStep2 = item.NextStep2;
+                steprun.Key = item.Key;
+                steprun.Figure = item.Figure;
+                steprun.Status = status.Id;
+                steprun.Created_at = DateTime.Now;
+                steprun.Updated_At = DateTime.Now;
+                db.StepRuns.Add(steprun);
+                db.SaveChanges();
+            }
+            return steprun;
         }
     }
 }
