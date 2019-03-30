@@ -300,5 +300,46 @@ namespace ProcessManagement.Areas.API.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public JsonResult assignRole(int processid, int roleid, List<string> assignList)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+            Role role = roleService.findRoleOfProcess(roleid, processid);
+            if (role == null)
+            {
+                status = HttpStatusCode.NotFound;
+                message = "Role isn't exist in process";
+                response = new { message = message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+            roleService.removeRoleRun(roleid);
+            foreach (var member in assignList)
+            {
+                var isMemberInGroup = participateService.checkMemberInGroup(member, role.Process.Group.Id);
+                if (isMemberInGroup)
+                {
+                    roleService.assignrolerun(roleid, member);
+                }
+            }
+            message = "Assign Role Successfully";
+            response = new { message = message, status = status };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult runprocess(int idprocess)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+            Process findprocess = processService.findProcess(idprocess);
+            processService.addrunprocess(findprocess);
+            stepService.addstartstep(idprocess);
+            message = "Created ProcessRun Successfully";
+            response = new { message = message, status = status };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
     }
 }

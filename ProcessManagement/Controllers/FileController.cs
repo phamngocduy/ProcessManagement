@@ -26,7 +26,7 @@ namespace ProcessManagement.Controllers
                 Response.Clear();
                 Response.ContentType = "application/octet-stream";
                 Response.AddHeader("Content-Disposition", "attachment; filename=" + f.Name);
-                Response.WriteFile(Server.MapPath("~/App_Data/" + f.Path));
+                Response.WriteFile(Server.MapPath("~/"+ f.Path));
                 Response.End();
             }
             else

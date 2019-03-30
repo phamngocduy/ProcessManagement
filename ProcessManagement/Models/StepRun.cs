@@ -21,11 +21,11 @@ namespace ProcessManagement.Models
         }
     
         public int Id { get; set; }
-        public Nullable<int> idProcess { get; set; }
+        public int idProcess { get; set; }
         public string Name { get; set; }
         public bool StartStep { get; set; }
-        public int NextStep1 { get; set; }
-        public int NextStep2 { get; set; }
+        public Nullable<int> NextStep1 { get; set; }
+        public Nullable<int> NextStep2 { get; set; }
         public int Key { get; set; }
         public string Figure { get; set; }
         public Nullable<int> Status { get; set; }

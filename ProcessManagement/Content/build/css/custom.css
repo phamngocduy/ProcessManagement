@@ -60,7 +60,7 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 }
 
 .form-wrap.form-builder [class^=icon-]:before, .form-wrap.form-builder [class*=" icon-"]:before {
-  font-family: unset !important;
+  font-family: fb-icons !important;
 }
 
 .theme-purple #toast-container .toast-info {

@@ -1,7 +1,11 @@
-﻿@{
+﻿@model ProcessManagement.Models.Process
+@{
     ViewBag.Title = "AssignRole";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var processrun = ViewData["ProcessRun"] as ProcessManagement.Models.Process;
+    var listRole = ViewData["ListRole"] as List<ProcessManagement.Models.Role>;
+    var listUserInGroup = ViewData["ListUser"] as List<ProcessManagement.Models.Participate>;
+    var roles = ViewData["Roles"] as JArray;
+    
 }
 @section CustomCss{
     <link rel="stylesheet" href="~/Content/vendor/bootstrap-multiselect/bootstrap-multiselect.css">
@@ -17,18 +21,22 @@
         .multiselect-container > li > a > label {
             padding: 6px 6px 6px 30px;
         }
+
         .multiselect-container .input-group-addon {
             display: none;
         }
-        .multiselect-container .input-group{
+
+        .multiselect-container .input-group {
             margin: 0;
         }
+
         .multiselect-container .input-group .input-group-btn {
             position: absolute;
             top: 0px;
             right: 8px;
         }
-        .multiselect-container .input-group .input-group-btn .multiselect-clear-filter {
+
+        .multiselect-container .input-group .input-group-btn .multiselect-clear-filter, .multiselect-container .input-group .input-group-btn .multiselect-clear-filter:focus {
             box-shadow: none;
         }
     </style>
@@ -41,8 +49,8 @@
             <ul class="breadcrumb">
                 <li class="breadcrumb-item"><a href="~/Home/Index" class="primary-theme"><i class="icon-home"></i></a></li>
                 <li class="breadcrumb-item"><a href="/" class="primary-theme">Groups</a></li>
-                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = processrun.Group.Id })" class="primary-theme">@processrun.Group.Name</a></li>
-                <li class="breadcrumb-item"><a href="">@processrun.Name</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = Model.Group.Id })" class="primary-theme">@Model.Group.Name</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "Detail", idprocess = Model.Id })">@Model.Name</a></li>
                 <li class="breadcrumb-item"><a href="" class="primary-theme">Asssign Role</a></li>
             </ul>
         </div>
@@ -56,7 +64,7 @@
                 <h2>Role list</h2>
             </div>
             <div class="body" style="padding-top:0">
-                <div class="table-responsive">
+                <div class="table-responsive" style="overflow-x:unset">
                     <table class="table table-hover dataTable table-custom m-b-0" id="table-assign-role" style="width:100%">
                         <thead>
                             <tr>
@@ -65,15 +73,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in ViewBag.ListRole)
+                            @foreach (JObject role in roles)
                             {
                                 <tr>
-                                    <td>@item.Name</td>
+                                    <td>@role["name"]</td>
                                     <td>
-                                        <select multiple="multiple" class="ms-member multiselect" id="role-@item.Id" data-id="@item.Id">
-                                            @foreach (var user in ViewBag.ListUser)
+                                        <select multiple="multiple" class="ms-member multiselect" id="role-@role["id"]" data-id="@role["id"]">
+                                            @foreach (var user in role["user"])
                                             {
-                                                <option value="@user.AspNetUser.Id">@user.AspNetUser.UserName</option>
+                                                <option value="@user["id"]">@user["name"]</option>
                                             }
                                         </select>
                                     </td>
@@ -109,9 +117,9 @@
                             assignList.push(option)
                         });
                         var roleAssign = {
-                            idRole: roleId,
-                            listAssign: assignList
-
+                            roleid: roleId,
+                            assignList: assignList,
+                            processid : @Model.Id
                         }
                         console.log(roleAssign);
                         assignRole(roleAssign);
@@ -129,7 +137,7 @@
         });
         function assignRole(role) {
             $.ajax({
-                url: "@Url.Action("assignRole", "process", new { area = "api"})",
+                url: "@Url.Action("assignrole", "process", new { area = "api"})",
                 type: "POST",
                 data: role,
                 dataType: "json",
@@ -138,7 +146,7 @@
                     console.log(response);
                     if (response.status == 200) {
                         showToastr("success", response.message, "toast-bottom-left");
-                       
+
                     } else {
                         showToastr("error", response.message, "toast-bottom-left")
                         console.error(response)

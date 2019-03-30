@@ -63,7 +63,7 @@ body, #wrapper{
     &.form-builder{
         [class^=icon-],[class*=" icon-"]{
             &:before{
-                font-family: unset !important;
+                font-family: fb-icons !important;
             }
         }
     }

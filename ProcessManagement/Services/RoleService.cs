@@ -38,5 +38,46 @@ namespace ProcessManagement.Services
             }
             return findListRoleOfProcess(idprocessrun);
         }
+
+        public List<RoleRun> findlistrolerun(List<Role> listrole)
+        {
+            List<RoleRun> listrolerun = new List<RoleRun>();
+            foreach (var item in listrole)
+            {
+                List<RoleRun> role = db.RoleRuns.Where(x => x.IdRole == item.Id).ToList();
+                foreach (var rolerun in role)
+                {
+                    listrolerun.Add(rolerun);
+                }
+            }
+            return listrolerun;
+        }
+
+        public void assignrolerun(int roleid, string userid)
+        {
+            
+            RoleRun rolerun = new RoleRun();
+            rolerun.IdRole = roleid;
+            rolerun.IdUser = userid;
+            rolerun.Create_At = DateTime.Now;
+            rolerun.Update_At = DateTime.Now;
+            db.RoleRuns.Add(rolerun);
+            db.SaveChanges();
+            
+        }
+        public void removeRoleRun(int roleid)
+        {
+            List<RoleRun> role = db.RoleRuns.Where(x => x.IdRole == roleid).ToList();
+            if (role.Any())
+            {
+                db.RoleRuns.RemoveRange(role);
+                db.SaveChanges();
+            }
+        }
+        public bool isAssigned(int roleid, string userid)
+        {
+            var role = db.RoleRuns.FirstOrDefault(x => x.IdRole == roleid && x.IdUser == userid);
+            return role != null ? true : false;
+        }
     }
 }

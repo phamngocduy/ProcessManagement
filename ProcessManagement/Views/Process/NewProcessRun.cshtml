@@ -236,7 +236,7 @@
                     if (currentIndex == 0) {
                         if (selectProcess == null) {
                             $(".steps first").addClass("error");
-                            showToastr("error", "please choose one process to run...");
+                            showToastr("error", "Please choose one process to run...");
                             return false;
                         } else {
                             $(".steps first").removeClass("error");
@@ -258,6 +258,8 @@
                 onFinishing: function (event, currentIndex) {
                     var des = $("#description").val();
                     addProcessRun(selectProcess, des);
+                    return form.valid();
+                    
                 },
                 onFinished: function (event, currentIndex) {
                     //swal("Good job!", "Submitted!", "success");

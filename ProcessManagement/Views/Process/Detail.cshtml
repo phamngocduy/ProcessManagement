@@ -1,10 +1,16 @@
-﻿@{
+﻿@using ProcessManagement.Models;
+@model List<ProcessManagement.Models.Step>
+@{
+    PMSEntities db = new PMSEntities();
     ViewBag.Title = "ShowStep";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var group = ViewData["group"] as ProcessManagement.Models.Group;
+    var processrun = ViewData["ProcessRun"] as ProcessManagement.Models.Process;
+    var runpro = ViewData["ListRunStep"] as ProcessManagement.Models.StepRun;
+    var ktra = db.ProcessRuns.Where(x => x.IdProcess == processrun.Id).FirstOrDefault();
 }
 
 @section CustomCss{
+    <link rel="stylesheet" href="~/Content/vendor/sortable/st/prettify/prettify.css" />
 }
 <div class="block-header">
     <div class="row">
@@ -17,8 +23,8 @@
             <ul class="breadcrumb">
                 <li class="breadcrumb-item"><a href="~/Home/Index" class="primary-theme"><i class="icon-home"></i></a></li>
                 <li class="breadcrumb-item"><a href="/" class="primary-theme">Groups</a></li>
-                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = group.Id })" class="primary-theme">@group.Name</a></li>
-                <li class="breadcrumb-item"><a href="" class="primary-theme">Process Run Name</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = processrun.IdGroup })" class="primary-theme">@processrun.Group.Name</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "Detail", idprocess = processrun.Id })" class="primary-theme">@processrun.Name</a></li>
                 <li class="breadcrumb-item"><a href="" class="primary-theme">Detail</a></li>
             </ul>
         </div>
@@ -52,118 +58,71 @@
     <div class="col-lg-4 col-md-12">
         <div class="card">
             <div class="body">
-                <h5>zczc</h5>
-                <p></p>
+                <h5>@processrun.Name</h5>
+                <p>@processrun.Description</p>
                 <div class="progress-container progress-info m-b-25" style="margin: 0; float: right">
-                    <a href="#" class="btn btn-primary-theme btn-sm">Run Process</a>
-                    <button class="btn btn-default btn-sm waves-effect"><i class="icon-settings"></i></button>
+                    @if (ktra != null)
+                    {
+
+                    }
+                    else
+                    {
+                        <button id="btn-runprocess" class="btn btn-primary-theme btn-sm">Run Process</button>
+                    }
+                    <a class="btn btn-default btn-sm waves-effect" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "assignrole", processid = processrun.Id })">Assign Roles</a>
                 </div>
                 <div class="clearfix"></div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="body">
-                <ul class=" list-unstyled basic-list">
-                    <li>Create At:<span class="badge badge-primary">19-Mar-19 3:46:33 PM</span></li>
-                    <li>Update_at:<span class="badge badge-info">19-Mar-19 3:46:33 PM</span></li>
-                    <li>Total Step:<span class="badge badge-danger">3 steps</span></li>
-                    <li>Total Role:<span class="badge badge-warning">0 roles</span></li>
-                </ul>
-            </div>
-        </div>
-        <div class="card">
-            <div class="header">
-                <h2>Create by </h2>
-            </div>
-            <div class="body text-center">
-                <div class="profile-image m-b-15"> <img src="/Content/images/user.png" class="rounded-circle" alt=""> </div>
-                <div>
-                    <h4 class="m-b-0"><strong>Duy Hồ</strong></h4>
-                </div>
-                <div class="m-t-15">
-                    <button class="btn btn-primary">Profile</button>
-                    <button class="btn btn-outline-secondary">Message</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-8 col-md-12">
-        <div class="card">
-            <div class="header">
-                <h2>Project Activity</h2>
-            </div>
-            <div class="body">
-                <img style="display: block;margin: 0 auto;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAagAAAF+CAYAAADX1Y7yAAAgAElEQVR4Xu2dCXgUVfa3T29JOiEbCUtCQFAWFZQtalhEUQEFxwU+QJHBBQFh/o6CDOOGqIjiDMKMyhBQGUQWERXcARFmWMOwRAYiA4gghCQEQkKWTtKd7vqe29CxCQnpTlfdulX16+fhYUiqzj3nPdd+51bfrjJJkpRMeIEACIAACICAYARMagjq5MmT5ocffrhLdnZ2y7KysuYOh6OZy+Vq7nK52N/NPB5PEhE5rVbrKYvFkhcWFpYXHh5+KiIiIi8mJuZUu3btjq5ateqAYCyRDgiAAAiAgIwEuAnqueeea/bpp5/2zc3NvdXhcNwiSVJMKHWYzea86OjojSkpKRumTJmyadSoUaWhxMO5IAACIAACYhFQTFBZWVnWcePGpR46dKhvUVFRX5fL1fGi0ps2ImodT9Q4iigh8vyfxhf+TogiqvIQFZQRnXUQFbA/ZRf+dhAdPk1U6vQP546IiNgZHx+/4cYbb9y4evXqn8TCjGxAAARAAASCJaCIoLp27dpv3759r7nd7pTqhCJtRJ2SiDqzP8lESSEsoCSJ6OhZoh9ziPbmEP0v/7zQLrzCwsL23HPPPc+sXLnyULBAcDwIgAAIgIAYBGQV1JgxY1otWbLkLxUVFTd7ywu3Eg28mii1JVG7RCKLWZmqK6uIsvKItv9KtPEIERMYkScuLm7Jq6+++uaTTz5ZpMzAiAoCIAACIKAUAVkEtXLlysg//OEPE0+fOT2WJLKS2UR0RzuiB7oSxUYolXvtcY8XEX20i2jPSe/vTWbzuStatZq5a9eujxISErzmwgsEQAAEQEB8AiELavTo0Vd8+OGHy9xud2tvuTe0JBrVnSg5Vt3q2YrqnzvPXwokIrvdvjk9Pf1xbKZQty0YHQRAAAQCJRCSoHr27NkrIyPjA0mSoumqBKLHbyJq3yTQsZU/jl3q23yUaMluiQocJovFcnTUqFEjFy5ceEz5wTECCIAACIBAKAQaLKiWLVuOy87OfpGIzPS7a4keTiUymULJRblz2WdUs/7lvexnMplKu3btOn737t0blBsQkUEABEAABEIlELSgMjIywvr16/e30tLSe71CGpdG1K99qHkof75HInp/B9Hag2wsT4sWLd7Izs7+h/IDYwQQAAEQAIGGEAhKUNOnT0+YPn36cu93mtgOvSm3EnVp0ZBx1Ttn9X6ij3Z7x4+Ojl69ffv2pzp27FilXkIYGQRAAARAoDYCAQuKrZxuueWW1U6nszPFRRBN7UfUurE2qW47RvT3zd7vTkVHR39WXFz8R20WgqxBAARAQL8EAhZUo0aNFpSVlQ2iODvRzIFETRppm8pPp4heXkfk9lBKSsorJ06cWKDtgpA9CIAACOiLQECCSkpKejovL+9PZDMTzRyk3ZVTzd79+wjR21vYTz2pqakjd+7c+W99tRfVgAAIgIB2CdQrqG7dut2RmZn5obfEybcS9bhCu9XWlvminURf/cR29zlGjhw5YPHixb/oq0BUAwIgAALaJHBZQd1///3XrP7ii69JkiJoaGeiB7pos8rLZc12981Y772vn8ViOf7222/fOWHChHP6KxQVgQAIgIC2CNQpKIfDQXFxcRtdLld7Sk0heu52bVUWTLblLqI/fU2UW4xNE8Fww7EgAAIgoCCBOgXVpk2bkceOHXuTrognemPg+Ru/6vl1quS8pMqcdNdddw349ttv9+u5XNQGAiAAAqITqFVQ33zzTcQ999yz0+PxNKa37yNqofJ99XhR3Pgz0btbKSwsbFdlZeW9vIbFOCAAAiAAApcSqFVQTZs2ffb06dNPUu82RBP7GIcb+zzq/z4nOlVKnTp1Gr1v3741xikelYIACICAWAQuERR7NPvMN2dmkMkURu/eT9QsWqyMlc5m6zGi2f9mGyZO7N27tzfuMqE0cMQHARAAgdoJXCKomJiYuSUlJfd5n+c0vqcxuT3zJdGxQvYF3mknTpx435gQUDUIgAAIqEvgIkH97ne/6/T111+v9T75dt5gooQodbNTa/RdJ4je2MC+G1W4aNGiNDxDSq1GYFwQAAEjE7hIULGxsbOLi4uH093XED16o5G5ED37DdHhM3TFFVe8cOzYsUXGhoHqQQAEQIA/gYsEZbFY9nl37s25l6hVHP9sRBrxX0eI3tlCkZGR68vKyh4WKTXkAgIgAAJGIFAtqIEDB3b67rvv1lJCJNGCoUao/fI1nisneuwTdkzl9u3br05LS3MCCgiAAAiAAD8C1YJKSkp6Ki8vb4qhN0fU5D75K6KjZyk1NfXBnTt3buLXFowEAiAAAiBQLajw8PAvnE5nqi5vCNvQPi/ZTbRqPzVu3Pi9goKClxsaBueBAAiAAAgET8ArqIULF0aPHj36AJlNJvroQaIIW/CR9HhGVh7RS2vJZrMdcTqdBvrGsh6biZpAAAS0RsArqD59+tywefPm1XRNU6LX7tJaDcrl6/YQ/X45UWUV7d+//wp8aVc51IgMAiAAAjUJeAXVsWPHe3766ad5dGcHojFp8lL6Xz7RC9/9FrN/e6JHbtDOzWcvbDd/7LHHen7wwQe/ygsH0UAABEAABOoi4BVUy5Ytx2RnZ7/sfd4Te+6TXK+acvLFrSmplXuJrksiurppaCNXVhGt+JHo9nby3eB25gainSfo5ptvvn/Tpk3/CS1BnA0CIAACIBAoAa+gEhMTpxYUFDxBT/Qg6tc+0HPrP46J5+MfiZ66majPlUQnz3nvc+d9TbqFKDGKiD3Rdt0hohl3hSaokgqiv20mKio/H1uuO7DP20a0/jBde+2147Oysr6sv2gcAQIgAAIgIAcBr6Cq77/3575EN7aSI+75GD5B1XZZj612fHKqubI6evbiy4Ls9z6B+UTEftalxfkYnZoTmYhoX95vucu1GlyWSfTZf9l9+V4+ceLEe/LBQSQQAAEQAIHLEfAKym63f1ZRUZHmfTBh+ybyEat5ic9fGnUJqn8Hone3eG/WetGrSzLR0zef/xFbKf2Y89uvb72K6KyD6L+58gvq2wNEH/yHEhIS5p05c+Y1+eAgEgiAAAiAQL2CslqtW9xudxuaN4SoaSN5iW36hejvmy+O6bvk5y+pui7x1bx0FxP+m6B8cVh0pS7xXXj8RnR09Kri4uL/kxcOooEACIAACNRFwLuCMplMbHealVb8nshqlp9WbaslJqQ2jev+DMonHN9KqXX8+c+WfIKq+VmTUoL67btQe10ul4w7SC7FbDabcyMiIvbHxsbunDlz5oe4i7r8UxERQQAEtEPAKyiz2XxYkqRIWjpC2S/p+ouKrX5uanWpoHwbKdilRrYd3Vl18eYHn6AYY3bJLzriPG2lBPVTHtFU75d197lcrut4tZY96qNjx46T8VRfXsQxDgiAgGgEvIKyWq1b3W53a/rHYPmeoFuXMGru7PP923eJr76df3UJyie/Q6fl3cV34RJfo0aNviwpKRmvZAOnT5+esHHjxiszMzPvLyoqethsNp/9+OOPbxo6dKhDyXERGwRAAAREJOAVVHh4+Gqn03kDvX4XUYcQv4vkX6VPNjUr912uY1vB/Y9hu/3aJhL9Y9ulrGpe4qu5gqp5GVGuXXwXNkk0btz4g4KCgpd4NTE2NnZOcXHxsKSkpJk5OTnv8BoX44AACICAKAS8gmrUqNH7ZWVld9GUvucvu8n5qrlJwl9ObBz/nX5sp96EHkSf7jv/3Sj2YpcC2YtttGD/u2vy+Ut+NQXF/u0/llx3rFi2h+izfZSUlPRGTk7Ou3KiuVys7t27992zZ8+SqKio70pLSx/nNS7GAQEQAAFRCHgFFR8f/zq7pETj0ojYNm+8fiMwdyvRhp+pbdu2kw4fPryCF5rhw4e3/eSTT/5ts9kOOp3O23iNi3FAAARAQBQCXkElJSVNysvLe4aGdyEapuhGNVHqDjyP138g2p1N3bp1G7l79+6NgZ8Y2pEvvfRSk+nTp/9oNptPu93uLqFFw9kgAAIgoD0CXkG1adPm98eOHZupyM1itcfk4oynfE10pIDuvvvuAV999dV+XuVAULxIYxwQAAFRCXgF1b9//y7ff//9N94NCm8OEjVX/nm53ESjlhM53c6vv/76mkGDBlXwSgKC4kUa44AACIhKwCsoh8NBjRo1OiBJUgz9czhRzIXvFomaNa+8dmcTvf4D2e32TQ6H40Few7JxICietDEWCICAiASqH/keExPzTklJyWCa0PP84yrwIpq/3bubMCUlZdqJEyfe54kEguJJG2OBAAiISKBaUB06dLj/0KFD73rvZs7uao4X0eOfEBWW0+9///ubFy9e/AtPJBAUT9oYCwRAQEQC1YJauHBh9OjRow9QuNVEHz5AZLOImC+/nH4pIPrT12SxWI5XVVX14Dfw+ZEgKN7EMR4IgIBoBKoFxRILDw//yul0dqMX7yDq2kK0XPnm88le79N5GzduvLCgoGAq38EhKN68MR4IgIB4BC4SVPX3oVJTiJ67XbxseWVU5SGa8BlRgYP79598JWIFxavZGAcEQEBUAhcJavLkyUlvzX5rK0kUTjMHErWT8eGFohKoLa8L99+zWCwnfv31154tWrTw8E4fguJNHOOBAAiIRuAiQbHkEhMTXywoKBhP1zQjeu1O0fJVPp8KF9G4z4hKK+naa68dn5WV9aXyg146AgSlBnWMCQIgIBKBSwTFNks8/vjjOyVJiqZp/YiuTxYpX+Vz+XQv0fIf2fOf/ud0OlW7zglBKd9qjAACICA2gUsExdJNTk5+Mjc391lql0g000B3lihzEj3xKZHDRWlpaQ9s3769xrPq+TUTguLHGiOBAAiISaBWQW3atCm8b9++OzweTxNFHsEhJguixbuIvsiiiIiIreXl5cPUTBOCUpM+xgYBEBCBQK2CYolV30A23k7017uJ4iNFyFe5HA7mex/tTm4PDR48+LbPPvvsoHKD1R8ZgqqfEY4AARDQN4E6BVVQUGBKSUlZXlFRcTO1aUzEHskebtUnjfxSoj99RVTqpCZNmrybn5//htqFQlBqdwDjgwAIqE2gTkGxxNiGibFPjP3W7XJfSTe0PH8LJJNJ7ZzlHd/hJGKP1MgtYTeF/deZM2ceioxUf7UIQcnbZkQDARDQHoHLCoqVM2bMmFYfLFy4TvJ4oun+TkQju2uvyroydnuIXllHlHWK7do7tHTp0kFDhw51iFAgBCVCF5ADCICAmgTqFRRLrkePHr0zMjKWE5GZ/tib6Jar1MxZvrEvPM7dZDYXP/3UU7fPnj07R77goUWCoELjh7NBAAS0TyAgQbEyW7Zs+Xh2dvYrZDUTPXcbUReN36vvs/8SLctkpXn69u07eMOGDTtFaicEJVI3kAsIgIAaBAIWFEsuNjZ2TnFx8TAym4gevYFo4DVq5BzamOyyXvp2og0/e+O0adNm8i+//MJWh0K9ICih2oFkQAAEVCAQlKCOHDliSU1NfbWoqOgRb663tSV6ogeRxaxC6g0YsqSC6I0NRAdPe1dObdu2nXz48OEVDYik+CkQlOKIMQAIgIDgBIISlK+Wdu3aDf/5yM+zSCIzdWhC9PztRI3CxS41+xzR9O+JzpSRyWIu6ZnW45EtW7ZkiJo0BCVqZ5AXCIAALwINEhRLrnfv3mnbtm//p+TxxFDTRkQv3EGUEssr7+DG2Z1NNPvfRBVVZLHZfh0zevSwefPmZQcXhO/REBRf3hgNBEBAPAINFhQrZfz48Snvvffex263uw2FWYgGXUM0+DqiyDAxKmVfwP04k2jTL0QSse85bU5PT3981KhRpWIkWHcWEJToHUJ+IAACShMISVAsucWLFzd64okn3i8vL7/Zmyy71DfkOqK7rlbvsfHFFURsl96ag0Ts4YNE7Mm47x86dOjlhIQESWmocsSHoOSgiBggAAJaJhCyoFjx7LZIPXv2vO/IkSNT3G53Ky+QxCiiB7qc/84U2/XH48We5fT1T0Srs4jKXd4Rw8LC9t50003TNm3aJNQ28vpwQFD1EcLvQQAE9E5AFkH5ILFdfnfccceDx48ff8bj8TT1/jzOTtQ95fyfLsny38/vXAXRnmwi9jlT5knv50zsZbPZsjp27PjXzMzM77XYRAhKi11DziAAAnISkFVQvsTY4zoeeuihR06ePPmkJEnx1QnbzEQdmxOlphDd0Or8Kqshr6NniXafINqVTfTzGe/nS76XxWL5pX379rN27dr1hQj31GtIeewcCKqh5HCeUQiYTKbjRGTRcr1hYWGZlZWVd2u5BiVzV0RQ/qJ6+umnex89erR/cXHxnR6PJ/GiYiJtRAlRRI0jiRLYn6gLf0cSuTxEZ8uIChzn/5y98HdBGZHTfVEYm812OC4u7vurr7563apVq3Zp5XOmyzUWglJy2iO2HghAUHro4uVrUFRQ/kM7HA72nKXrMzMz+xcWFvZ3uVwdQ8DrjoiI2JGYmPj9Pffc883cuXNPhhBLyFMhKCHbgqQEIuATlMvlIqtVW48C2rFjB3tqN/uMHCuoy8wpboKqmcMPP/wQ8cknnzQ5fPhws/z8/KalpaVNHQ5HU6fT2czpdDY1m81VNpvtVERERD77ExcXl9+kSZP8Tp065Y8ePTq/Y8eO5z9s0ukLgtJpY1GWbAQgKNlQChtINUEJS0SQxCAoQRqBNIQlAEEJ2xrZEoOgZEMpbyAISl6eiKY/AhCU/npasyIIStAeQ1CCNgZpCUMAghKmFYolAkEphja0wBBUaPxwtv4JQFAG6LEkScn6L1N7FUJQ2usZMuZLAILiy1uN0bCCUoN6AGNCUAFAwiGGJgBB6b/9EJSgPYagBG0M0hKGQLCCmj59OrtDS3X+S5YsoYceekiVevA9qMCwQ1CBceJ+FATFHTkG1BiBYARVU06+Uv0lVV5eTtOmTaPRo0dThw4dFKUBQQWGF4IKjBP3oyAo7sgxoMYIBCqogoIC70opLy+PVqxY4ZXP0qVLaeTIkTRu3DiaM2cOsTvd1DxGSRwQVGB0IajAOHE/CoLijhwDaoxAsIJau3Yt1XZZzycw9nvf69VXX6WpU6eyRwl5xeX7nU9odrudDh48SMOHD/fesqhbt25e2bGX/zF1IYWgAptsEFRgnLgfBUFxR44BNUYgUEGxsmpe4tuyZQv16tXLW3FdgpowYcJFcvLh8Qno+PHjXkHt3bv3EnL1SQqCCmyyQVCBceJ+FATFHTkG1BiBYATFPl+aOHEizZ8/v7rKzp07V1/yu9xlQN9qyl90THCJiYnVgvIJz7eqYtLyl2BNtBBUYJMNggqME/ejICjuyDGgxggEIyhfaf4CYT8bMGCA9/Mo9qr5GVRdGyvYsexSYWpqavUlPvY5Frvs5y+xy+0ShKACm2wQVGCcuB8FQXFHjgE1RqAhgqopKvZvtnGCrYYgKPEmAAQlXk+8GUFQgjYGaQlDIFBBbd26lXr37n3R5oWal/RatWrlvQSYkZFxyU4//0t8/sXXdjnP//MsXOILfapAUKEzVCQCBKUIVgTVEYFABVXbJggfBt9mBvZv/8+omJTq2iTh++yKnYNNEspOKAhKWb4Njg5BNRgdTjQIgUAFxXDUtkmi5k4733ej2PE1vx/l22buv7HCf5v5kCFDqH///l7y9e3gY8fgM6jAJikEFRgn7kdBUNyRY0CNEQhGUEqU5i8o/00SgYwFQQVCiQiCCowT96MgKO7IMaDGCEBQGmtYA9KFoBoAjccpEBQPyhhDywQgKC13L7DcIajAOHE/CoLijhwDaoyA2oIKBRcu8QVGD4IKjBP3oyAo7sgxoMYIQFAaa1gD0oWgGgCNxykQFA/KGEPLBCAoLXcvsNwhqMA4cT8KguKOHANqjAAEpbGGNSBdCKoB0HicAkHxoIwxtEwAgtJy9wLLHYIKjBP3oyAo7sgxoMYIQFAaa1gD0oWgGgCNxylqCsr3Hz6POpUaIywsLLOysvJupeIjrvoEICj1e6B0BhCU0oQbGB+CaiC4C6dBUKHx08LZPkGtX7+eLBaLFlKuzvHAgQPee/1hnl6+bRCUoNNaBEG5XC6yWq2CEqo9LXy/RFPtCilZrPRDwqeJkyEoQdsEQTWsMRBUw7hp8Sy73b6CiBRbOrnd7hgi8lgsllKl+ERERBwqLCx8Xqn4Wo8LQQnaQQiqYY2BoBrGDWddTOC5555rNnPmzD1ms/m02+3uAj7qEICg1OFe76gQVL2Iaj0AgmoYN5xVu6BMJlOZx+NpDz7qEICg1OFe76gQVL2IIKiGIcJZARC47bbbumzcuPEbIpLmz59/7dixY4sDOA2HyEwAgpIZqFzhIKiGkcQKqmHccNbFBKKjo+eVlpbew37avHnz2bm5uW+BEX8CEBR/5gGNCEEFhOmSgyCohnHDWb8RGD9+fEp6evoO309MJtO59PT0NKyi+M8SCIo/84BGhKACwgRBNQwTzroMgdjY2DnFxcXD/A/BKkqdKQNBqcO93lG1JKjp06fTSy+9VF3TkiVL6KGHHqq3RiUOwApKCarGiem3eiojoiisotTtPQSlLv86R9eKoGrKyVeQv6TKy8tp2rRpNHr0aOrQoYOixCEoRfHqPnhCQsIrYWFhxW3atNm8ffv2Vex7UE888USPZcuWPRMZGZmNz6L4TgEIii/vgEfLyMgI69Gjx1EiqpQk6cqAT5ThwEDvcVZQUOBdKeXl5dGKFSu88lm6dCmNHDmSxo0bR3PmzCGHw3HJMTKkWGcICEpJuvqPvWDBghj2WdPAgQM7fffdd2uZoCRJaskq9/1O/xTEqRCCEqcXl2RitVoz3G53y7Fjx6bNnz//hBypsksY7P8Njhgx4q158+Zl1xYzWEGtXbuWarus5xMY+73v9eqrr9LUqVOp5u98QrPb7XTw4EEaPnw4paWlUbdu3byyYy//Y+piAUHJMUsQozZBgQp/AhAUf+YBj2i32z+uqKi4OTY2dllRUdGfAj6xngN9HwLHxMSsGDFixOyaogpUUGyYmpf4tmzZQr169fJmUJeg2E0y2crLX1z+Ajp+/LhXUHv37r2kkvokBUHJNUuMHQeCEqP/EJQYfag1i65du/b78ccfF7FfRkdHf5GWlrZgzJgxh4YOHeoIJe2a22hriioYQbHPlyZOnEjz58+vTqlz587Vl/wudxnQt5ryFx0TXGJiYrWgfMLzraqYtPwlWJMDBBXKzMC5PgIQlBhzAYISow91ZpGUlPRMXl7eJB5p+kSVnp6+jd2EM5i7mfsLhOU6YMAA7+dR7FXzc6q6NlawY9mlwtTU1OpLfOxzLHbZz19il9sl6BOU1Wo9WFVVpeyODB5N0cAYZrM5JyIiYn9sbOyuWbNmLRoxYgTbAafpFwQlRvsgKDH6cNks+vTpc8POnTufdblcyW63uykRRcidtsViyW7Tps1bhw8f/iSYFVTNPHyiYj9nGyfYagiCkrtb4sYzmUyFnTt3npSZmblO3CzrzwyCqp8RjyMgKB6UBRujV69ePbZt2/YpS8tfTL40AxXU1q1bqXfv3hdtXqh5Sa9Vq1beS4AZGRmX7PTzv8Tnj6i2y3n+n2fhEp9YE+qVV15JXLduXfs9e/ZMrqiouMlsNp/58ssvbxo0aFCFWJkGng0EFTgrJY+EoJSkK2hsu93+qcvlaulbMdVMM1BB1bYJwhfLt5mB/dv/Myompbo2Sfg+u2LnYJOEoJOnnrTCw8O/czqd1yclJb2ek5MzV5tVEEFQYnQOghKjD9yyYBsk1q9f35Ndyqtr0EAFxc6vbZNEzZ12vu9GseNrfj/Kt5PPf2OF/zbzIUOGUP/+/b2p1reDjx2DTRLcplKtA3Xq1GlgVlbWe1FRUV+VlpY+oW42DR8dgmo4OznPhKDkpKmTWMEISomS/QXlv0kikLEgqEAoKXfMkCFDOnz++ecbbDbbAafTeYdyIykbGYJSlm+g0SGoQEkZ6DgIykDNlrlUvyfRnnK73d1kDs8tHATFDfVlB4KgxOiDUFlAUEK1Q1PJQFCaapfwyUJQwreIf4JqCyqUinGJLxR6oZ8LQYXOEBF+IwBBYTZcQgCCwqRoKAEIqqHkcF5tBCAozAsICnNANgIQlGwoEYiIIChMAwgKc0A2AhCUbCgRCILCHKh1WW0yHQ/2XnyikMRnUOp2AoJSl7/eRscKSm8dlaEefAYlA0SDhoCgDNp4hcqGoBQCq+WwEJSWu6du7hCUuvz1NjoEpbeOylCPT1Dr169nN5OVISK/EAcOHPDe6y8sLCyzsrLybn4jYyRGAILCPJCTAAQlJ02dxPIJSsvlQFDqdA+CUoe7XkeFoPTa2RDqstvtK9gmiRBCqH5qRETEocLCwudVT8RgCUBQBmu4wuVCUAoDRngQMBIBCMpI3Va+VghKecYYAQQMQwCCMkyruRQKQXHBjEFAwBgEIChj9JlXlRAUL9IYBwQMQACCMkCTOZYIQXGEjaFAQO8EICi9d5hvfRAUX94YDQR0TQCC0nV7uRcHQXFHjgFBQL8EICj99laNyiAoNahjTBDQKQEISqeNVaksCEol8BgWBPRIAILSY1fVqwmCUo89RgYB3RGAoHTXUlULgqBUxY/BQUBfBCAoffVT7WogKLU7gPFBQEcEICgdNVOAUiAoAZqAFEBALwQgKL10Uow6ICgx+oAsQEAXBCAoXbRRmCIgKGFagURAQPsEICjt91CkCiAokbqBXEBA4wQgKI03ULD0ISjBGoJ0QEDLBCAoLXdPvNwhKPF6goxAQLMEICjNtk7IxCEoIduCpEBAmwQgKG32TdSsIShRO4O8QECDBCAoDTZN4JQhKIGbg9RAQGsEICitdUzsfCEosfuD7EBAUwQgKE21S/hkISjhW4QEQUA7BCAo7fRKC5lCUFroEnIEAY0QgKA00iiNpAlBaaRRSBMEtEAAgtJCl7STIwSlnV4hUxAQngAEJXyLNJUgBKWpdh6PiyAAACAASURBVCFZEBCbAAQldn+0lh0EpbWOIV8QEJgABCVwczSYGgSlwaYhZRAQlYBeBDV+/PiU9PT0HYyzJEktROWt97wgKL13GPWBAEcCehGUrw6GbsKECTfOnTv3JEeMGOoCAQgKUwEEQEA2AnoUVFxc3JLCwsI/ywYJgQImAEEFjAoHggAI1EdAj4JiNUdHR3+Rlpa2YMyYMYeGDh3qqI8Dfi8PAQhKHo6IAgIgQER6E5TJZCo0mUxOj8fTzKgNNpvNOREREftjY2N3zZo1a9GIESPKeLGAoHiRxjggYAACehOU2Ww+9dFHH908ceLE8SUlJakVFRWdJEmKN0Aray2RCbtz586TMjMz1/FgAEHxoIwxQMAgBPQoKLfb3c0g7au1zFdeeSVx3bp17ffs2TO5oqLiJrPZfObLL7+8adCgQRVKc4GglCaM+CBgIAIQlL6bHR4e/p3T6bw+KSnp9ZycnLlKVwtBKU0Y8UHAQAQgKH03u1OnTgOzsrLei4qK+qq0tPQJpauFoJQmjPggYCACEJS+mz1kyJAOn3/++QabzXbA6XTeoXS1EJTShBEfBAxEAILSd7N59xeC0vd8QnUgwJUA7zcwpYrTSx1y8+HNBYKSu4OIBwIGJsD7DUwp1HqpQ24+vLlAUHJ3EPFAwMAEeL+BKYVaL3XIzYc3FwhK7g4iHggYmADvNzClUOulDrn58OYCQcndQcQDAQMT4P0GphRqvdQhNx/eXCAouTuIeCBgYAK838CUQq2XOuTmw5sLBCV3BxEPBAxMgPcbmFKo9VKH3Hx4c4Gg5O4g4oGAgQnwfgNTCrVe6pCbD28uEJTcHUQ8EDAwAd5vYEqh1ksdcvPhzQWCkruDiAcCBibA+w1MKdR6qUNuPry5QFBydxDxQMDABHi/gSmFWi91yM2HNxcISu4OIh4IGJgA7zcwpVDrpQ65+fDmAkHJ3UHEAwEDE+D9BqYUar3UITcf3lwgKLk7iHggYGACvN/AlEKtlzrk5sObCwQldwcRDwQMTID3G5hSqPVSh9x8eHOBoOTuIOKBgIEJ8H4DUwq1XuqQmw9vLhCU3B1EPBAwMAHeb2BKodZLHXLz4c0FgpK7g4gHAgYmwPsNTCnUeqlDbj68uUBQcncQ8UDAwAR4v4EphVovdcjNhzcXCEruDiIeCBiYAO83MKVQ66UOufnw5gJByd1BxAMBAxPg/QamFGq91CE3H95cICi5O4h4IGBgArzfwJRCrZc65ObDmwsEJXcHEQ8EDEyA9xuYUqj1UofcfHhzgaDk7iDigYCBCfB+A1MKtV7qkJsPby4QlNwdRDwQMDAB3m9gSqHWSx1y8+HNBYKSu4OIBwIGJsD7DUwp1HqpQ24+vLlAUHJ3EPFAwMAEeL+BKYVaL3XIzYc3FwhK7g4iHggYmADvNzClUOulDrn58OYCQcndQcQDAQMT4P0GphRqvdQhNx/eXCAouTuIeCBgYAK838CUQq2XOuTmw5sLBCV3BxEPBAxGgL1pLVq0aERpaWl7p9OZ7HQ6U81mc57b7e6uVRS834i1wok3FwhKKzMDeYKAYATGjx+fsnTp0iklJSVDaqamdUENGTKkw+eff77BZrMdcDqddwiGXrV0ICjV0GNgEACBQAm8+eab8S+88MIat9udYjKZzjVr1uy96667buNVV111Zt68edmBxhH1uE6dOg3Mysp6Lyoq6qvS0tInRM2Td14QFG/iGA8EQCBoAuHh4d85nc7ro6Ojv1i1atWk22+/vSLoIIKe4HA4KC4ubr3L5bqmSZMmf8/Pz/+LoKlyTwuC4o4cA4IACARD4LbbbkvduHHjFzab7X9Op/P2YM4V+dhXXnklcd26de337Nnzp4qKihtNJlPpuHHjbtfDilAu7hCUXCQRRzUCkyZNSl6yZMkjJSUl11dWVnaSJCletWQwMAg0gIDJZCrv0qXLE3v27FnfgNN1ewoEpdvWGqOwlJSUCSdPnnzBGNWiSj0RMJlMJVarNT88PDxrzJgx02fPnp2jp/rkqAWCkoMiYqhCYPDgwVevWrXqBzZ4XFzckrS0tCWPPfbYkaFDhzpUSQiDKkKgT58+N2zevHm13i7xKQJLZ0EhKJ011EjlNGrUaEFZWdmgxo0bf1BQUPCSkWo3Wq2RkZFLysvL+0ZHR69atWrVZD1tkjBaL4OpF4IKhhaOFYqA1WrNcLvdLZ955pnUWbNm5QqVHJKRlcCCBQtiJkyYsNbtdrcym81nmzZtuui66677QS/bzGWFpaNgEJSOmmmkUjIyMsJ69OhxlIgqJUm60ki1G7VW9kXd5cuXTzx37twDNRlo/Yu6Ru1pfXVDUPURwu+FJMB74goJwaBJ1bjV0RUul6udyWQq1vKtjgzaynrL5v3fOW51VG9LcEAgBHhP3EBywjH8CWAe8GfOc0Te/YWgeHZXx2Pxnrg6Rqnp0jAPNN2+epPn3V8Iqt6W4IBACPCeuIHkhGP4E8A84M+c54i8+wtB8eyujsfiPXF1jFLTpWEeaLp99SbPu78QVL0twQGBEOA9cQPJCcfwJ4B5wJ85zxF59xeC4tldHY/Fe+LqGKWmS8M80HT76k2ed38hqHpbggMCIcB74gaSE47hTwDzgD9zniPy7i8ExbO7Oh6L98TVMUpNl4Z5oOn21Zs87/5CUPW2BAcEQoD3xA0kJxzDnwDmAX/mPEfk3V8Iimd3dTwW74mrY5SaLg3zQNPtqzd53v2FoOptCQ4IhADviRtITjiGPwHMA/7MeY7Iu78QFM/u6ngs3hNXxyg1XRrmgabbV2/yvPsLQdXbEhwQCAHeEzeQnHAMfwKYB/yZ8xyRd38hKJ7d1fFYvCeujlFqujTMA023r97kefcXgqq3JTggEAK8J24gOeEY/gQwD/gz5zki7/5CUDy7q+OxeE9cHaPUdGmYB+q3z2QyHScii/qZNDyDsLCwzMrKyrshqIYzxJl+BPDGhOnACGAeqD8PICj1e4AMBCOANybBGqJSOpgHKoH3G9YnKJfLRVarVf2Egshgx44dlJaWRlhBBQENh9ZPAG9M9TMywhGYB+p3GYJSvwfIQDACeGMSrCEqpYN5oBJ4rKDUB48MxCWANyZxe8MzM8wDnrRrHwsrKPV7gAwEI4A3JsEaolI6mAcqgccKSn3wyEBcAnhjErc3PDPDPOBJGyso9WkjA00QwBuTJtqkeJKYB4ojrncAXOKrFxEOMBoBvDEZreO114t5oP48gKDU7wEyEIwA3pgEa4hK6WAeqAQ+hM+gpk+fTi+99FJ1hCVLltBDDz2kSiH4HpQq2PU/KN6Y9N/jQCrEPAiEkrLHBLOCqiknX2b+kiovL6dp06bR6NGjqUOHDoomD0Epite4wfHGZNze+1eekZER1qNHj6NEVClJ0pWgwp9AoIIqKCjwrpTy8vJoxYoVXvksXbqURo4cSePGjaM5c+aQw+G45BglK4KglKRr4NgQlIGbX6N0q9W60+12J0+YMOHGuXPnngQZ+QiMHz8+ZdmyZc+MGDHirXnz5mXXFjlYQa1du5Zqu6znExj7ve/16quv0tSpU6nm73xCs9vtdPDgQRo+fLj3lkXdunXzyo69/I+piwgEJd9cQSQ/AhAUpoOPgN1u/6SioqJXXFzcksLCwj+DjLwEYmNj5xQXFw+LiYlZMWLEiNk1RRWooFhWNS/xbdmyhXr16uVNuC5BTZgwwbuq8heXv4COHz/uFdTevXsvKbw+SUFQ8s4VRLtAAILCVPARuP766/vv27fvn+zf0dHRX6SlpS0YM2bMoaFDhzpAKXQCbBWVnp6+wxeppqiCERT7fGnixIk0f/786sQ6d+5cfcnvcpcBfaspf9ExwSUmJlYLyic836qKSctfgjVpQFChzw9EqIUABIVp4U+gWbNmz+Tn508CFX4EfKJKT0/fxp4HFczdzP0FwjIeMGCA9/Mo9qr5OVVdGyvYsexSYWpqavUlPvY5Frvs5y+xy+0ShKD4zRdDjQRBGardARXbp0+fG3fu3Plnl8vVwu12NyGiiIBOxEFBE7BYLNlt2rR56/Dhw58Es4KqOZBPVOznbOMEWw1BUEG3AyeIRgCCEq0jyEevBHr16tVj27Ztn7L6/MXkqzdQQW3dupV69+590eaFmpf0WrVq5b0EmJGRcclOP/9LfP6sa7uc5/95Fi7x6XVmClwXBCVwc5CargjY7fZPXS5XS9+KqWZxgQqqtk0Qvli+zQzs3/6fUTEp1bVJwvfZFTsHmyR0NeW0XwwEpf0eogLxCbANEuvXr+/JLuXVlW2ggmLn17ZJouZOO993o9jxNb8f5dvJ57+xwn+b+ZAhQ6h///7eVOvbwceOwWdQ4s9BTWYIQWmybUhahwSCEZQS5fsLyn+TRCBjQVCBUMIxQROAoIJGhhNAQBECEJQiWBFUywQgKC13D7nriQAEpaduohZZCEBQsmBEEBAImYDaggqlAFziC4Uezq2TAASFyQECYhCAoMToA7IQiAAEJVAzkIqhCUBQhm4/iq+NAASFeQECYhCAoMToA7IQiAAEJVAzkIqhCUBQhm4/iscKCnMABMQlAEGJ2xtkphIBrKBUAo9hQaAGAQgKUwIEahCAoDAlQEAMAj5BrV+/nt1MVoykAsziwIED3nv9hYWFZVZWVt5tkiQpOcBzcRgI1EkAgsLkAAExCPgEJUY2DcsCgmoYN5xVBwEIClMDBMQgYLfbV7AncYiRTcOyiIiIOFRYWPg8VlAN44ezcIkPcwAEQEBhAhCUwoCNEh4rKKN0GnWCAD8CEBQ/1roeCYLSdXtRHAioQgCCUgW7/gaFoPTXU1QEAmoTgKDU7oBOxoegdNJIlAECAhGAoARqhpZTgaC03D3kDgJiEoCgxOyL5rKCoDTXMiQMAsITgKCEb5E2EoSgtNEnZAkCWiIAQWmpWwLnCkEJ3BykBgIaJQBBabRxoqUNQYnWEeQDAtonAEFpv4dCVABBCdEGJAECuiIAQemqneoVA0Gpxx4jg4BeCUBQeu0s57ogKM7AMRwIGIAABGWAJvMoEYLiQRljgICxCEBQxuq3YtVCUIqhRWAQMCwBCMqwrZe3cAhKXp6IBgIgQARBYRbIQgCCkgUjgoAACPgRgKAwHWQhAEHJghFBQAAEICjMAbkJQFByE0U8EAABrKAwB2QhAEHJghFBQAAEsILCHJCbAAQlN1HEAwEQwAoKc0AWAhCULBgRBARAACsozAG5CUBQchNFPBAAAaygMAdkIQBByYIRQUAABLCCwhyQmwAEJTdRxAMBEMAKCnNAFgIQlCwYEQQEQAArKMwBuQlAUHITRTwQAAGsoDAHZCEAQcmCEUFAAASwgsIckJsABCU3UcQDARDACgpzQBYCEJQsGBEEBEAAKyjMAbkJQFByE0U8EAABrKAwB2QhAEHJghFBQAAEsILCHJCbAAQlN1HEAwEQwAoKc0AWAhCULBgRBARAACsozAG5CUBQchNFPBAAAaygMAdkIQBByYIRQUAABLCCwhyQmwAEJTdRxAMBEMAKCnNAFgIQlCwYEQQEQAArKMwBuQlAUHITRTwQAAGsoDAHZCEAQcmCEUFAAASwgsIckJsABCU3UcQDARDACgpzICQCCxYsiBk7dmxxbYLy/S6kAXAyCICAYQlAUIZtvTyFJyQkvBIWFnbu1ltv/eLjjz/eZDabT40dO/aeZcuWTYqMjDyZm5v7ljwjIQoIgIDRCEBQRuu4zPWOHz8+JT09fYfJZCqRJCmaiMqJyG4ymYrT09NvYqsrmYdEOBAAAYMQgKAM0mgly4yNjZ1TXFw8zH+M5s2bz8bqSUnqiA0C+icAQem/x4pX6FtF+QbC6klx5BgABAxBAIIyRJuVL9J/FYXVk/K8MQIIGIEABGWELnOo0e+zKHz2xIE3hgABIxCAoIzQZU41slVUZGRkNj574gQcw4CAzglAUDpvMM/y2Cqqa9euxdi5x5M6xgIB/RKAoPTbW0Uqy8rKso4bNy61sLCwicPhiK+oqGjsdDrjXS5X46qqqgSTyeSyWq1nrVZrYXh4+NmIiIizUVFRhS1atDi5Zs2a/yqSFIKCAAjokgAEpcu2yltURkZG2Pjx42/55ZdfBpWUlNx54ftOQQ9iNptz4+Livu3YseNXa9as2RkZGRl0DJwAAiBgHAIQlHF6HVSlDoeDevXq1e/IkSO/Ky0tZVKK8gVoa7JRCtko3mSmOLJ4/44nCzU2WchFEhVKbioij/fvQvJQkeSmg5JTyie3yRfDbDbnMVmlpqZ+unbt2r1BJYeDQQAEDEEAgjJEm4Mrslu3brfv37//OZfLdQ0700xEnU3hdKs5ku4wR1GSyRpcwAtH/+SppH95HPQvyUE/S67qGHa7fcOdd9454/PPP/9fgwLjJBAAAV0SgKB02daGFdWnT58b/rNjx6uVTuf1LAJbKY0wx9Bt5kiKMVkaFrSOs/KkKlrnKaOl7mI6TW52lBQVFfXNsGHD3li4cOExWQdDMBAAAU0SgKA02TZ5k+7fv3+XLVu2PFteXn4zi5xEVhpviaNB5igymaqvysk76IVoFZKHlntK6J/uIiolif3UHRMT8+moUaNmvfPOOzmKDIqgIAACmiAAQWmiTcolmZyc/GRubu6zbIQYMtPjllgabo4hm8JiqlnROclNH7jP0QpPMV24+FfRtWvXcXv27FmvXPWIDAIgIDIBCErk7iiYG9su3rNnz1nFxcVD2TDXmcLpb9amFC/zpbxgSzjicdIfq/Ipl6rYqZ6UlJRXT5w48V6wcXA8CICA9glAUNrvYdAVLFy4MPoPf/jD4oqKihvZycPM0TTZ0pisnFdNdSVeInloclU+7ZQqvIfExcUt/fnnn/+ckJDgvQaIFwiAgDEIQFDG6HN1lZMmTUp+++23P3a73VeFEdFUSyINsjQSjoJbkuhtdyF95Dn/OCm73f6vlStXjh40aNB5a+EFAiCgewIQlO5b/FuBq1evtg8bNuw7l8vVrhlZ6O/WZtTezDQl7muDp4xeqDpDlSRRVFTUuvz8/EfxBV9x+4XMQEBOAhCUnDQFjlVQUGBq2bLlsvLy8j7JZKUPbUmUoPLnTYHiYt+fGl2V55VUkyZN/pafn//XQM/FcSAAAtolAEFpt3dBZZ6QkDDt7NmzY+1kouW2ZGplsgV1vtoH/9vjoElV+d6N6Ndee+24rKysr9XOCeODAAgoSwCCUpavENE7dOhw36FDh+ayO0K8a21GaWa7EHkFm8QH7iKa6y4iE5GzX//+9+EWScESxPEgoC0CEJS2+hV0trfffnv3DRs2fEZEtmcs8fSQJTboGCKd8OeqfPre4yCz2Vzw7LPP3jFjxox8kfJDLiAAAvIRgKDkYylcJPZdp+uvv367x+NJvsscRTOsTYTLMdiEnJJEo6tyKUtysk0Ta0tLSx8LNgaOBwEQ0AYBCEobfWpQlq1bt370119/fa0xmekbW0sKF+R7Tg0qxu+kk5KL7nOd9N7Br1+/foPWrVv3Y6gxcT4IgIB4BCAo8XoiS0ZsS/mQwYN3eSQpbqolge63RMsSV5QgM6oK6DNPCUVEROwoLy8fLEpeyAMEQEA+AhCUfCyFipSUlPRUXl7elCvISp/ZWpBZJ6snH+QCyU13u7K9W89TU1Mf3Llz5yahGoBkQAAEQiYAQYWMULwA77zzTtxTTz21U5KkyDnWpnSLWZ9Prp1bVUgfeM6RzWbLcjqd/cXrBDICARAIhQAEFQo9Qc9t1arVYydOnJh+vSmcFtmSBM0y9LTKJQ/d5cqmYvJQ3759792wYcOu0KMiAgiAgCgEIChROiFjHna7/ZOKioper1sS6U4B77MnY6k0u+osLfEUsztM/CM/P3+GnLERCwRAQF0CEJS6/GUfffHixY0efvjhnyxElo22VtTIxL6eq9/Xbk8FjanKI4vFcryqqqqHfitFZSBgPAIQlM563r59+/93+PDhv99oiqB0W3OdVXdpOeyu531dJ6iUPPTAAw/0Wb58+RHdF40CQcAgBCAonTW6UaNG75eVld01xdKYHrDE6Ky62st5seo0fespo6SkpBk5OTn/METRKBIEDEAAgtJRkzMzM23du3X/n0RSxFpbCjUxWXVUXd2lfO8poz9XnaawsLBdlZWV9xqiaBQJAgYgAEHpqMn33XfftV988cX3HUxh3juWh/Iqktze5zBtl8prDdPDZKcZ1kSKa+AjO3zxWfBQ4rDz2W6+Pq7j7M4SrrKystZ4XlQonce5ICAOAQhKnF6EnEn37t1v27Nnz0f3mBvRy9bEkOJpSVCs0GGuk/Sz5KIZM2Zc9/zzz58NqXicDAIgIAQBCEqINsiTxJVXXvng0aNHZz1ijqU/WuNDCirnCqe2ROSOP86VRzulCrr33nv7rV69+qeQisfJIAACQhCAoIRogzxJJCUlTczLy5s8yRJPI0N8rEagAjkmuejZqtN0nSmcbjdH0oSqU95i2pvCaKa1CbW+8GDEmiuy2damtNJd4j021Et8LMZzVadpraeMunXrNnL37t0b5SGKKCAAAmoSgKDUpC/z2PHx8W8WFRWNfM2SSAND/IJufZf4xlviaIwljnyCOiQ5L6lmiDma2DOoKkiq8/OsUD/L8g3616oCWu4pobZt2z5z+PDhj2VGi3AgAAIqEICgVICu1JBRUVGLHA5Hv3nWZnRTiE/NbYigFlqbUxdzBP3oqaDHqvLIJx8mMf9/s40V37pL6UX3mepjGrrZwsfS97Td5s2b/yU3N/fvSjFGXBAAAX4EICh+rBUfKTw8fI3T6bzuY2sytTeHhTResJf4EshSfamu5rnbPOVeGfmv7AKNH2gRn7tL6DV3AcXFxX1YWFj4fKDn4TgQAAFxCUBQ4vYm6MzCw8PXOp3OTsusSXS1OTzo8/1PCFQg/p9Bsct5ESYzqSGoz9wlNOO8oJYWFhZOCal4nAwCICAEAQhKiDbIk0RkZOSS8vLyvu9Ym1KvEB+xIaegeFziW+AuonR3ETVt2nTOqVOnZslDFFFAAATUJABBqUlf5rFjY2NnFxcXD3/Zkkj3KLxJgqXOPnNinx35dvHVtYJix9b1pV+5Nkm8UVVAKz0l1Lp16+ePHj36ocxoEQ4EQEAFAhCUCtCVGrJp06bPnz59+g9PWuLpUZm2mdd1J4lgBMUkpvQ282dc+bRRclCnTp0e37dv33dKMUZcEAABfgQgKH6sFR+pZcuWY7Kzs18eYY6hydbGio8n0gCPuHLpv1IlHlwoUlOQCwiESACCChGgSKd36NDhvkOHDs0dYI6iN6xNREpN8Vx+58ymk1RFjz/+eI/33nvvuOIDYgAQAAHFCUBQiiPmN0DPnj17bd++/ZPWZKPPw1rwG1jlkUokD912/maxtH///is6duxYpXJKGB4EQEAGAhCUDBBFCeF7mi4RWb6zpVAzgzxuY627jJ5zn2ZP1T1ZVVV1oyj9QB4gAAKhEYCgQuMn3Nl2u/3jioqKm430wMKpVafpG08ZNWnS5N38/Pw3hGsKEgIBEGgQAQiqQdjEPal169aP/vrrr6/1NNnpXVszcROVKTNJkuiWC49879ev36B169b9KFNohAEBEFCZAASlcgPkHv6FF15o+vrrr2eyGx1tsl1BYSaT3EMIFe+/ngp6pCqPzGZzvtvt7ipUckgGBEAgJAIQVEj4xDw5PDz8W6fT2flv1qbUJ8Q7SohZ4W9Zza0qpA8856hx48b/LCgoeFH0fJEfCIBA4AQgqMBZaebI5OTkJ3Nzc5+9wRRB823NNZN3sIk6JYnucp2gQvJQjx49hm3btm1rsDFwPAiAgLgEIChxe9PgzKZPn54wbdq0DEmSIt+1NqOeIT56o8GJKHzie+4imucuIpvNdqioqKhvZGSkwiMiPAiAAE8CEBRP2hzH8q2i2ppsxB6/YdbZZ1GFkpsGubK9D0Ps3bv34M2bN+/giBdDgQAIcCAAQXGArMYQmzZtCu/bt+9Wj8eTNM2SQPdaotVIQ7ExZ1QV0GeeErLb7T84HI5Rig2EwCAAAqoRgKBUQ6/8wB06dBh86NChdxqTmb6xtaRwnayiTkguGuw6ye4c4X700Uf7LFy48JjyNDECCIAAbwIQFG/inMfzPWV3oDmKXtPB/fnYxojfV+XQYcnFHk64qLCw8AXOSDEcCIAAJwIQFCfQag3zyCOPtFm8ePEaSZIaPW2Jp1EhPoZDrTp84/7JlU8/SA62MeLw+++/f/eoUaNK1c4J44MACChDAIJShqtQUXv37p22devWlWYi89sa3tXn27VnMZkLn540sd+sWbNyhQKNZEAABGQlAEHJilPcYO3atRv+888/z44kEy21JdMVJpu4ydaS2SaPg56uyicTkav/gAH3rFmz5r+aKgDJggAIBE0AggoamXZPSExMfLGgoGB8C7LSh7YkamyyaKKY/3kq6dGqPKokiTp27Dhm//7932oicSQJAiAQEgEIKiR82jrZ4XCwO34vcjgc/ZqThdjlvrZmdtc+cV9bPA6aUnXa+32npKSkmTk5Oe+Imy0yAwEQkJMABCUnTQ3EyszMtN1yyy2zS0pKBkeQif5ibUK9Bb1f34fuc/S2u5AkIikpKemNnJycuRpAjBRBAARkIgBByQRSa2GSk5Mn5ObmPm8iMv3REk8PC7S7zyVJ9KL7NH3vcbA7YJR36dp17O7duzdojTHyBQEQCI0ABBUaP02f3b1799t+zMyc75GkyH7mSHrN0oRsKn+Z96zkpqeqTlGW5CSL2ZI7dNjQ4cuXLz+iadBIHgRAoEEEIKgGYdPPSQ8++OBVK1eu/NjtdienkJXGWeLoLnMU93v3lUseWuEpoUXuc1IxeUxhYWE7Z86c+ejEiRML9UMblYAACARDAIIKhpZOj128eHGjyZMnP1lw+vRYD1HYlSYbTbDEUV9TJJkUXlGxO0OwuM5FlgAAAa9JREFUe+p94C6is+Qhi9l8NqVly7e2bt26uEWLFh6dIkdZIAACARCAoAKAZJRDJk+enPT+ggXPnispGUJEpqtNYV5RKbGJokqS6AtPKbEv3+aTm8xkciY0SUxfsGDB2/fdd1+5UZijThAAgboJQFCYHZcQGDJkSIdvv/12RkVFRQ/2y6Zk8fQw2803mSLoJrOd4hv4/Sl2k9f/eCpoh6ectksVnjLymInIExMTs3LSpEmvT5s27QzaAQIgAAI+AhAU5kKdBIYPH9528+bNdxUUFNzpdDq7+A5sZ7JRC7JRvMlMcWTx/h1PFu8Xf10kEXtWUxF5Lvr7sOSU8shtYjFMRFURdvu2Zs2arXnkkUe+gZgwCUEABGojAEFhXgREYMqUKc1Xrlw54NSpU3eVl5ezlZU1oBMvHGQymcoiIyM3tmjRYs0LL7zwPW7yGgw9HAsCxiQAQRmz7yFVnZWVZX377beTfvrpp+T8/PzkkpKSFuXl5cmVlZUtzWZzZXh4+MnIyMicmJiYnKSkpJPdunXLefnll/PwSPaQsONkEDAcAQjKcC1HwSAAAiCgDQL/H6A2Dikl6JzzAAAAAElFTkSuQmCC" />
             </div>
         </div>
     </div>
     <div class="col-lg-12 col-md-12">
         <div class="card">
-            <div class="header">
-                <h2>Process Detail</h2>
-            </div>
             <div class="body">
                 <ul class="nav nav-tabs-new2">
                     <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#step-tab">Step</a></li>
                     <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#role-tab">Role</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Activity-tab">Project Activity</a></li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane show active" id="step-tab">
                         <ul class="step-list">
-                            <li>
-                                <div class="step " style="border: 2px solid rgba(16,137,242,1); border-left:7px solid rgba(16,137,242,1); color:rgba(16,137,242,1)">
-                                    <div class="step-name">
-                                        <span data-toggle="tooltip" data-placement="top">Step (0)</span>
-                                    </div>
-                                    <div class="step-action dropdown">
-                                        <a style="color: rgba(16,137,242,1)" href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></a>
-                                        <ul class="dropdown-menu notifications animated fadeIn">
-                                            <li><a href="/en/cap-team-8-4070/process/editstep?stepid=123">Edit step</a></li>
-                                            <li><a href="/en/cap-team-8-4070/process/addtask?stepid=123">Add task</a></li>
-                                            <li><a href="/en/cap-team-8-4070/process/addformtask?stepid=123">Add form task</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="task">
-                                    <ul class="task-list" id="task-of-step-123"></ul>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="step " style="border: 2px solid rgba(16,137,242,1); border-left:7px solid rgba(16,137,242,1); color:rgba(16,137,242,1)">
-                                    <div class="step-name">
-                                        <span data-toggle="tooltip" data-placement="top">Step (0)</span>
-                                    </div>
-                                    <div class="step-action dropdown">
-                                        <a style="color: rgba(16,137,242,1)" href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></a>
-                                        <ul class="dropdown-menu notifications animated fadeIn">
-                                            <li><a href="/en/cap-team-8-4070/process/editstep?stepid=125">Edit step</a></li>
-                                            <li><a href="/en/cap-team-8-4070/process/addtask?stepid=125">Add task</a></li>
-                                            <li><a href="/en/cap-team-8-4070/process/addformtask?stepid=125">Add form task</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="task">
-                                    <ul class="task-list" id="task-of-step-125"></ul>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="step " style="border: 2px solid rgba(16,137,242,1); border-left:7px solid rgba(16,137,242,1); color:rgba(16,137,242,1)">
-                                    <div class="step-name">
-                                        <span data-toggle="tooltip" data-placement="top">Step (0)</span>
-                                    </div>
-                                    <div class="step-action dropdown">
-                                        <a style="color: rgba(16,137,242,1)" href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></a>
-                                        <ul class="dropdown-menu notifications animated fadeIn">
-                                            <li><a href="/en/cap-team-8-4070/process/editstep?stepid=126">Edit step</a></li>
-                                            <li><a href="/en/cap-team-8-4070/process/addtask?stepid=126">Add task</a></li>
-                                            <li><a href="/en/cap-team-8-4070/process/addformtask?stepid=126">Add form task</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="task">
-                                    <ul class="task-list" id="task-of-step-126"></ul>
-                                </div>
-                            </li>
+                            @if (Model != null)
+                            {
+                                foreach (var step in Model.Where(x => x.Figure == "Step" && x.IsRun == true))
+                                {
+                                    List<TaskProcess> taskList = db.TaskProcesses.Where(x => x.IdStep == step.Id).OrderBy(x => x.Position).ToList();
+                                    <li>
+                                        <div class="step @if (taskList.Any()) { WriteLiteral("step-has-task"); }" style="border: 2px solid @step.Color; border-left:7px solid @step.Color; color:@step.Color">
+                                            <div class="step-name">
+                                                <span data-toggle="tooltip" data-placement="top" title="@step.Description">@step.Name (@taskList.Where(x => x.IsRun == true).Count())</span>
+                                                
+                                                    @if (runpro.Key == step.Key)
+                                                    {
+                                                        <button id="btn-nextstep" class="btn btn-primary-theme btn-sm" style="float: right" disabled>Next</button>
+                                                    }
+                                            </div>
+                                        </div>
+                                        <div class="task">
+                                            <ul class="task-list" id="task-of-step-@step.Id">
+                                                @foreach (var task in taskList.Where(x => x.IsRun == true))
+                                                {
+                                                    <li class="task-item" style="background-color:@task.Color" data-id="@task.Id">
+                                                        @if (task.ValueFormJson == null)
+                                                        {
+                                                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showtask", taskid = task.Id })">@task.Name</a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showformtask", taskid = task.Id })">@task.Name</a>
+                                                        }
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+                            }
+
                         </ul>
                     </div>
                     <div class="tab-pane" id="role-tab">
@@ -176,26 +135,28 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Designer</td>
-                                        <td>
-                                            Duy
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Coder</td>
-                                        <td>
-                                            Khai
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tester</td>
-                                        <td>
-                                            An
-                                        </td>
-                                    </tr>
+                                    @foreach (var role in ViewBag.ListRole)
+                                    {
+                                        <tr>
+                                            <td>@role.Name</td>
+                                            <td>
+                                                @foreach (var rolerun in ViewBag.ListRoleRun)
+                                                {
+                                                    if (rolerun.IdRole == role.Id)
+                                                    {
+                                                        @rolerun.AspNetUser.UserName
+                                                    }
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="Activity-tab">
+                        <div class="body">
+                            <img style="display: block;margin: 0 auto;" src="@processrun.Avatar" />
                         </div>
                     </div>
                 </div>
@@ -204,6 +165,114 @@
     </div>
 </div>
 @section CustomScripts{
+    <script src="~/Content/vendor/sortable/sortable.min.js"></script>
+    <script src="~/Content/vendor/sortable/st/prettify/prettify.js"></script>
+    <script src="~/Content/vendor/sortable/st/prettify/run_prettify.js"></script>
     <script>
+        $(function () {
+            $(".step-has-task .step-name").on("click", function () {
+                var step = $(this).parent(".step");
+                var task = step.next();
+                task.toggle("slow");
+            });
+            var showStep = localStorage.getItem("showStep");
+            if (showStep) {
+                localStorage.removeItem("showStep");
+                $(`#task-of-step-${showStep}`).parents(".task").show("slow");
+            }
+            var task = $(".task-list");
+            task.each(function () {
+                var element = $(this)[0];
+                Sortable.create(element, {
+                    handle: '.handle', // handle's class
+                    animation: 150,
+                    dataIdAttr: 'data-id',
+                    onUpdate: function (evt) {
+                        ////get item
+                        //var fromItem = evt.item;
+                        //var toItem = evt.item.previousElementSibling;
+                        ////get id
+                        //var fromId = fromItem.attributes["data-id"].value;
+                        //var toId = toItem.attributes["data-id"].value;
+                        //var position = {
+                        //    from: fromId,
+                        //    to: toId
+                        //}
+                        //position = JSON.stringify(position);
+                        //changePosition(position);
+
+
+
+
+
+                        //var formList = evt.from.children;
+                        //var formID = [];
+                        //for (var task of formList) {
+                        //    formID.push(task.dataset.id);
+                        //}
+                        //var toList = evt.to.children;
+                        //var toID = [];
+                        //for (var task of toList) {
+                        //    toID.push(task.dataset.id);
+                        //}
+                        //console.log(evt.from, evt.to);
+
+                        var newTaskOrder = evt.from.children;
+                        var newPositionList = [];
+                        for (var i = 0; i < newTaskOrder.length; i++) {
+                            var temp = {
+                                idTask : newTaskOrder[i].dataset.id,
+                                position: (i + 1)
+                            }
+                            newPositionList.push(temp);
+                        }
+                        console.log(newPositionList);
+                        changePosition(JSON.stringify(newPositionList));
+                    }
+                });
+            })
+        });
+        function changePosition(position) {
+            $.ajax({
+                url: "@Url.Action("changetaskposition","process",new { area = "api"})",
+                type: "POST",
+                data: { position : position },
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status != 200) {
+                        showToastr("error", "Error!!", "toast-bottom-left")
+                        console.error(response)
+                    }
+                }
+            });
+        }
+
+        $(function () {
+            $('#btn-runprocess').on('click', function () {
+                let data = {
+                    idprocess: @processrun.Id
+                }
+                runprocess(data);
+            })
+        });
+
+        function runprocess(data) {
+            $.ajax({
+                url: "@Url.Action("runprocess", "process",new { area = "api"})",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status != 200) {
+                        showToastr("error", "Error!!", "toast-bottom-left")
+                        console.error(response)
+                    }
+                }
+            });
+        }
+
     </script>
 }
+

@@ -48,11 +48,11 @@ namespace ProcessManagement.Controllers
 
             //create directory
             string directoryPath = String.Format("{0}/{1}", group.Id,pro.Id);
-            fileService.CreateDirectory(directoryPath);
+            fileService.createDirectory(directoryPath);
             //save file 
-            string savePath = Server.MapPath(String.Format("~/App_Data/{0}/{1}", group.Id,pro.Id));
+            //string savePath = Server.MapPath(String.Format("~/App_Data/{0}/{1}", group.Id,pro.Id));
             string filePath = String.Format("{0}/{1}", group.Id, pro.Id);
-            fileService.saveFile(FileUpload, filePath);
+            fileService.saveFile(group.Id, FileUpload, filePath, FileDerection.Process);
 
             SetFlash(FlashType.success, "Created Process Successfully");
             return RedirectToAction("Draw", new { groupslug = group.groupSlug, groupid = group.Id, processid = pro.Id });
@@ -175,7 +175,6 @@ namespace ProcessManagement.Controllers
                 }
                 do
                 {
-                    
                     if (listStep[z].Key == listnextstep1[j].NextStep2 && listStep[z].StartStep == false)
                     {
                         listnextstep2.Add(listStep[z]);
@@ -646,21 +645,124 @@ namespace ProcessManagement.Controllers
         }
 
         [GroupAuthorize]
-        public ActionResult AssignRole(int idprocess)
+        public ActionResult AssignRole(int processid)
+        {
+            //TODO: chỉ được lấy process đang run thôi,process thường không dc assign role
+            var processRun = processService.findProcess(processid);
+            if (processRun == null) return HttpNotFound();
+
+            var listRole = roleService.findListRoleOfProcess(processid);
+            var listUserInGroup = participateService.findMembersInGroup(processRun.IdGroup);
+
+            List<object> jRoleList = new List<object>();
+            foreach (var role in listRole)
+            {
+                List<object> jMemberList = new List<object>();
+                foreach (var user in listUserInGroup)
+                {
+                    object jMeber = new
+                    {
+                        id = user.AspNetUser.Id,
+                        name = user.AspNetUser.UserName,
+                        isAssigned = roleService.isAssigned(role.Id, user.AspNetUser.Id)
+                    };
+                    jMemberList.Add(jMeber);
+                }
+                object jRole = new
+                {
+                    id = role.Id,
+                    name = role.Name,
+                    description = role.Description,
+                    users = jMemberList
+                };
+                jRoleList.Add(jRole);
+            }
+
+            ViewData["ProcessRun"] = processRun;
+            ViewData["ListRole"] = listRole;
+            ViewData["ListUser"] = listUserInGroup;
+            ViewData["Roles"] = jRoleList;
+            return View(processRun);
+        }
+
+        [GroupAuthorize]
+        public ActionResult Detail(int idprocess)
         {
             var processrun = processService.findProcess(idprocess);
             var listrole = roleService.findListRoleOfProcess(idprocess);
-            var listuseringroup = participateService.findMembersInGroup(processrun.IdGroup);
-            ViewData["ProcessRun"] = processrun;
+            var listroleruns = roleService.findlistrolerun(listrole);
+            var listStep = stepService.findStepsOfProcess(idprocess);
+            var runprocess = processService.findRunProcess(processrun.Id);
+            Status status = db.Status.Where(y => y.Name == "Running").FirstOrDefault();
+            var liststepofrunprocess = stepService.findStepsOfRunProcess(runprocess.Id);
+            StepRun runpro = liststepofrunprocess.Where(x => x.Status == status.Id).FirstOrDefault();
+
+            List<Step> listnextstep1 = new List<Step>();
+            List<Step> listnextstep2 = new List<Step>();
+            Step start = listStep.Where(x => x.StartStep == true).FirstOrDefault();
+            listnextstep1.Add(start);
+            int z = 0;
+            int t = 0;
+            for (int j = 0; j < listStep.Count; j++)
+            {
+                if (listnextstep1[j].NextStep1 == 0)
+                {
+                    break;
+                }
+                do
+                {
+                    if (listStep[z].Key == listnextstep1[j].NextStep2 && listStep[z].StartStep == false)
+                    {
+                        listnextstep2.Add(listStep[z]);
+                        z = 0;
+                        break;
+                    }
+                    if (listStep[z].Key == listnextstep1[j].NextStep1 && listStep[z].StartStep == false)
+                    {
+                        listnextstep1.Add(listStep[z]);
+                        if (listnextstep1[j].Figure == "Diamond")
+                        {
+                        }
+                        else
+                        {
+                            z = 0;
+                            break;
+                        }
+                    }
+                    z++;
+                } while (z < listStep.Count);
+            }
+            if (listnextstep2.Count() > 0)
+            {
+                for (int j = 0; j < listStep.Count; j++)
+                {
+                    if (listnextstep2[j].NextStep1 == 0)
+                    {
+                        break;
+                    }
+                    do
+                    {
+                        if (listStep[t].Key == listnextstep2[j].NextStep1 && listStep[t].StartStep == false)
+                        {
+                            listnextstep2.Add(listStep[t]);
+                            t = 0;
+                            break;
+                        }
+                        t++;
+                    } while (t < listStep.Count);
+                }
+            }
+            foreach (var item in listnextstep2)
+            {
+                listnextstep1.Add(item);
+            }
+            
             ViewBag.ListRole = listrole;
-            ViewBag.ListUser = listuseringroup;
-            return View();
+            ViewData["ProcessRun"] = processrun;
+            ViewBag.ListRoleRun = listroleruns;
+            ViewData["ListRunStep"] = runpro;
+            return View(listnextstep1);
         }
-        public ActionResult Detail(int groupid)
-        {
-            var group = groupService.findGroup(groupid);
-            ViewData["Group"] = group;
-            return View();
-        }
+
     }
 }
