@@ -301,13 +301,29 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult assignRole(int idRole, List<string> listAssign)
+        public JsonResult assignRole(int processid, int roleid, List<string> assignList)
         {
             var status = HttpStatusCode.OK;
             string message;
             object response;
-            roleService.assignrolerun(idRole, listAssign);
-            message = "Created ProcessRun Successfully";
+            Role role = roleService.findRoleOfProcess(roleid, processid);
+            if (role == null)
+            {
+                status = HttpStatusCode.NotFound;
+                message = "Role isn't exist in process";
+                response = new { message = message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+            roleService.removeRoleRun(roleid);
+            foreach (var member in assignList)
+            {
+                var isMemberInGroup = participateService.checkMemberInGroup(member, role.Process.Group.Id);
+                if (isMemberInGroup)
+                {
+                    roleService.assignrolerun(roleid, member);
+                }
+            }
+            message = "Assign Role Successfully";
             response = new { message = message, status = status };
             return Json(response, JsonRequestBehavior.AllowGet);
         }

@@ -645,15 +645,44 @@ namespace ProcessManagement.Controllers
         }
 
         [GroupAuthorize]
-        public ActionResult AssignRole(int idprocess)
+        public ActionResult AssignRole(int processid)
         {
-            var processrun = processService.findProcess(idprocess);
-            var listrole = roleService.findListRoleOfProcess(idprocess);
-            var listuseringroup = participateService.findMembersInGroup(processrun.IdGroup);
-            ViewData["ProcessRun"] = processrun;
-            ViewBag.ListRole = listrole;
-            ViewBag.ListUser = listuseringroup;
-            return View();
+            //TODO: chỉ được lấy process đang run thôi,process thường không dc assign role
+            var processRun = processService.findProcess(processid);
+            if (processRun == null) return HttpNotFound();
+
+            var listRole = roleService.findListRoleOfProcess(processid);
+            var listUserInGroup = participateService.findMembersInGroup(processRun.IdGroup);
+
+            List<object> jRoleList = new List<object>();
+            foreach (var role in listRole)
+            {
+                List<object> jMemberList = new List<object>();
+                foreach (var user in listUserInGroup)
+                {
+                    object jMeber = new
+                    {
+                        id = user.AspNetUser.Id,
+                        name = user.AspNetUser.UserName,
+                        isAssigned = roleService.isAssigned(role.Id, user.AspNetUser.Id)
+                    };
+                    jMemberList.Add(jMeber);
+                }
+                object jRole = new
+                {
+                    id = role.Id,
+                    name = role.Name,
+                    description = role.Description,
+                    users = jMemberList
+                };
+                jRoleList.Add(jRole);
+            }
+
+            ViewData["ProcessRun"] = processRun;
+            ViewData["ListRole"] = listRole;
+            ViewData["ListUser"] = listUserInGroup;
+            ViewData["Roles"] = jRoleList;
+            return View(processRun);
         }
 
         [GroupAuthorize]

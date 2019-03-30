@@ -155,6 +155,11 @@ namespace ProcessManagement.Services
                 memberNotInGroup = db.AspNetUsers.Where(x => !userInGroup.Contains(x.Id)).OrderByDescending(x => x.Id).Take(quantity).ToList();
             return memberNotInGroup;
         }
+        public bool checkMemberInGroup(string userid, int groupid)
+        {
+            Participate user = db.Participates.FirstOrDefault(x => x.IdUser == userid && x.IdGroup == groupid);
+            return user != null ? true : false;
+        }
         /// <summary>
         /// Lấy role của member trong một group
         /// </summary>
