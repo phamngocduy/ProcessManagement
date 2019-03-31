@@ -103,8 +103,26 @@
             "drawCallback": function (setting) {
                 $(".ms-member").multiselect({
                     nonSelectedText: 'Assign to',
-                    numberDisplayed: 10,
-                    enableFiltering: true,
+                    buttonText: function (options, select) {
+                        if (options.length === 0) {
+                            return 'Assign To ';
+                        }
+                        //else if (options.length > 3) {
+                        //    return 'More than 3 options selected!';
+                        //}
+                        else {
+                            var labels = [];
+                            options.each(function () {
+                                if ($(this).attr('label') !== undefined) {
+                                    labels.push($(this).attr('label'));
+                                }
+                                else {
+                                    labels.push($(this).html());
+                                }
+                            });
+                            return labels.join(', ') + '';
+                        }
+                    },
                     templates: { // Use the Awesome Bootstrap Checkbox structure
                         li: '<li><a href="javascript:void(0);"><label class="fancy-checkbox"><span><i></i></span></label></a></li>'
                     },
@@ -119,8 +137,8 @@
                         });
                         var roleAssign = {
                             roleid: roleId,
-                            assignList: assignList,
-                            processid : @Model.Id
+                            members: assignList.toString(),
+                            processid: @Model.Id
                         }
                         console.log(roleAssign);
                         assignRole(roleAssign);

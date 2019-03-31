@@ -279,13 +279,13 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult addprocessrun(int processid, string des)
+        public JsonResult addprocessrun(int processid, string name,string des)
         {
             var status = HttpStatusCode.OK;
             string message;
             object response;
             Process prorun = processService.findProcess(processid);
-            int idprocessrun = processService.createProcessRun(prorun, des);
+            int idprocessrun = processService.createProcessRun(prorun, name, des);
             List<Role> roler = roleService.findListRoleOfProcess(processid);
             List<Role> rolerun = roleService.addrolerun(roler, idprocessrun);
             List<Step> liststep = stepService.findStepsOfProcess(processid);
@@ -301,7 +301,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult assignRole(int processid, int roleid, List<string> assignList)
+        public JsonResult assignRole(int processid, int roleid, string members)
         {
             var status = HttpStatusCode.OK;
             string message;
@@ -315,6 +315,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
             roleService.removeRoleRun(roleid);
+            List<string> assignList = members.Split(',').ToList();
             if (assignList.Any())
             {
                 foreach (var member in assignList)

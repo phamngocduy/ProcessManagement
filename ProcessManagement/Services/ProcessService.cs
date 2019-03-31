@@ -121,13 +121,13 @@ namespace ProcessManagement.Services
 			db.SaveChanges();
 		}
 
-        public int createProcessRun(Process process, string des)
+        public int createProcessRun(Process process, string name, string des)
         {
             Process procrun = new Process();
+            procrun.Name = name.Trim();
             procrun.IdGroup = process.IdGroup;
             procrun.IdOwner = process.IdOwner;
-            procrun.Name = process.Name;
-            procrun.Description = des;
+            procrun.Description = des.Trim();
             procrun.DataJson = process.DataJson;
             procrun.Avatar = process.Avatar;
             procrun.IsRun = true;
