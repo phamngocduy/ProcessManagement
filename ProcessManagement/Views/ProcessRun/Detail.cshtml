@@ -6,6 +6,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var processrun = ViewData["ProcessRun"] as ProcessManagement.Models.Process;
     var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
+    var listRoleRuns = ViewData["ListRoleRuns"] as List<ProcessManagement.Models.RoleRun>;
+    var listRole = ViewData["ListRole"] as List<ProcessManagement.Models.Role>;
     var isManager = userRole.IsManager;
 }
 
@@ -24,7 +26,7 @@
                 <li class="breadcrumb-item"><a href="~/Home/Index" class="primary-theme"><i class="icon-home"></i></a></li>
                 <li class="breadcrumb-item"><a href="/" class="primary-theme">Groups</a></li>
                 <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = processrun.IdGroup })" class="primary-theme">@processrun.Group.Name</a></li>
-                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "Detail", idprocess = processrun.Id })" class="primary-theme">@processrun.Name</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "Detail", idprocess = processrun.Id })" class="primary-theme">@processrun.Name</a></li>
                 <li class="breadcrumb-item"><a href="" class="primary-theme">Detail</a></li>
             </ul>
         </div>
@@ -71,7 +73,7 @@
                         {
                             <button id="btn-runprocess" class="btn btn-primary-theme btn-sm">Run Process</button>
                         }
-                        <a class="btn btn-default btn-sm waves-effect" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "assignrole", processid = processrun.Id })">Assign Roles</a>
+                        <a class="btn btn-default btn-sm waves-effect" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "assignrole", processid = processrun.Id })">Assign Roles</a>
                     </div>
                 }
                 <div class="clearfix"></div>
@@ -224,16 +226,21 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var role in ViewBag.ListRole)
+                                    @foreach (var role in listRole)
                                     {
                                         <tr>
                                             <td>@role.Name</td>
                                             <td>
-                                                @foreach (var rolerun in ViewBag.ListRoleRun)
-                                                {
-                                                    if (rolerun.IdRole == role.Id)
+                                                @{ 
+                                                    List<string> users = listRoleRuns.Where(x => x.IdRole == role.Id).Select(x => x.AspNetUser.UserName).ToList();
+                                                    if (users.Any())
                                                     {
-                                                        @rolerun.AspNetUser.UserName
+                                                        var Susers = String.Join(", ", users);
+                                                        WriteLiteral(Susers);
+                                                    }
+                                                    else
+                                                    {
+                                                        WriteLiteral("Manager");
                                                     }
                                                 }
                                             </td>

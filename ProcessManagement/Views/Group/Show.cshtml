@@ -218,7 +218,7 @@
                 <ul class="list-unstyled">
                     @foreach (var item in listprocess.Where(y => y.IsRun == true))
                     {
-                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "detail", idprocess = item.Id })">
+                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = item.Id })">
 
                             <li class="media">
                                 <img class="mr-3 process-avatar" src="@item.Avatar" alt="Generic placeholder image">
@@ -301,7 +301,7 @@
                 <h2>Members of @Model.Name</h2>
             </div>
             <div class="body" style="padding-top:0">
-                <div class="table-responsive">
+                <div class="table-responsive" style="overflow-x:unset">
                     <table class="table table-hover dataTable table-custom m-b-0" id="table-member" style="width:100%">
                         <thead>
                             <tr>

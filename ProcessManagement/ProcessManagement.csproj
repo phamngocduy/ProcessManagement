@@ -275,6 +275,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProcessController.cs" />
+    <Compile Include="Controllers\ProcessRunController.cs" />
     <Compile Include="Extensions\IdentityExtensions.cs" />
     <Compile Include="Filters\AjaxAuthorizeAttribute.cs" />
     <Compile Include="Filters\GroupAuthorizeAttribute.cs" />
@@ -8502,8 +8503,8 @@
     <Content Include="Views\Process\NewProcessRun.cshtml" />
     <Content Include="Views\Process\AddFormTask.cshtml" />
     <Content Include="Views\Process\ShowFormTask.cshtml" />
-    <Content Include="Views\Process\AssignRole.cshtml" />
-    <Content Include="Views\Process\Detail.cshtml" />
+    <Content Include="Views\ProcessRun\AssignRole.cshtml" />
+    <Content Include="Views\ProcessRun\Detail.cshtml" />
     <Content Include="Views\Process\Setting.cshtml" />
     <Content Include="Views\File\FileManager.cshtml" />
   </ItemGroup>
