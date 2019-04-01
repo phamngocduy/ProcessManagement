@@ -8507,6 +8507,7 @@
     <Content Include="Views\ProcessRun\Detail.cshtml" />
     <Content Include="Views\Process\Setting.cshtml" />
     <Content Include="Views\File\FileManager.cshtml" />
+    <Content Include="Views\Shared\Common\_File.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

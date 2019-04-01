@@ -1,7 +1,8 @@
 ﻿$(function () {
     //tooltip
     $('body').tooltip({
-        selector: '[data-toggle=tooltip]'
+        selector: '[data-toggle=tooltip]',
+        trigger: 'hover'
     });
 
     //var lang = CapstoneProject.Cookies.getCookie("LangFOrLangForProcessManagementSystem");
