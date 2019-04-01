@@ -279,13 +279,13 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult addprocessrun(int processid, string des)
+        public JsonResult addprocessrun(int processid, string name,string des)
         {
             var status = HttpStatusCode.OK;
             string message;
             object response;
             Process prorun = processService.findProcess(processid);
-            int idprocessrun = processService.createProcessRun(prorun, des);
+            int idprocessrun = processService.createProcessRun(prorun, name, des);
             List<Role> roler = roleService.findListRoleOfProcess(processid);
             List<Role> rolerun = roleService.addrolerun(roler, idprocessrun);
             List<Step> liststep = stepService.findStepsOfProcess(processid);
@@ -301,7 +301,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult assignRole(int processid, int roleid, List<string> assignList)
+        public JsonResult assignRole(int processid, int roleid, string members)
         {
             var status = HttpStatusCode.OK;
             string message;
@@ -315,12 +315,16 @@ namespace ProcessManagement.Areas.API.Controllers
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
             roleService.removeRoleRun(roleid);
-            foreach (var member in assignList)
+            List<string> assignList = members.Split(',').ToList();
+            if (assignList.Any())
             {
-                var isMemberInGroup = participateService.checkMemberInGroup(member, role.Process.Group.Id);
-                if (isMemberInGroup)
+                foreach (var member in assignList)
                 {
-                    roleService.assignrolerun(roleid, member);
+                    var isMemberInGroup = participateService.checkMemberInGroup(member, role.Process.Group.Id);
+                    if (isMemberInGroup)
+                    {
+                        roleService.assignrolerun(roleid, member);
+                    }
                 }
             }
             message = "Assign Role Successfully";
@@ -335,10 +339,105 @@ namespace ProcessManagement.Areas.API.Controllers
             string message;
             object response;
             Process findprocess = processService.findProcess(idprocess);
+            List<Step> liststep = stepService.findStepsOfProcess(idprocess);
             processService.addrunprocess(findprocess);
-            stepService.addstartstep(idprocess);
+            StepRun runstep = stepService.addstartstep(idprocess);
+            Step idsteprunstart = liststep.Where(x => x.Key == runstep.Key && x.StartStep == true).FirstOrDefault();
+            List<TaskProcess> listtaskrun = taskService.findtaskofstep(idsteprunstart.Id);
+            taskService.addlistruntask(listtaskrun, runstep);
             message = "Created ProcessRun Successfully";
             response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Create Run Process");
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult addnextstepinrunprocess(int idStep)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+            StepRun runstep = stepService.findsteprun(idStep);
+            stepService.changestatustep(runstep.Id);
+            ProcessRun processrun = processService.findRunProcess(runstep.idProcess);
+            List<Step> liststep = stepService.findStepsOfProcess(processrun.IdProcess);
+            
+            List<TaskProcessRun> listruntask = taskService.findruntaskofstep(idStep);
+            List<TaskProcessRun> listtaskclose = listruntask.Where(x => x.Status1.Name == "Close").ToList();
+
+            List<Step> nextstep = new List<Step>();
+            StepRun runnextstep = new StepRun();
+            foreach (var item in liststep)
+            {
+                if (runstep.NextStep1 == item.Key && item.StartStep == false)
+                {
+                    nextstep.Add(item);
+                }
+            }
+            if (nextstep != null)
+            {
+                if (listtaskclose.Count == listruntask.Count)
+                {
+                   runnextstep = stepService.addrunnextstep(processrun.Id, nextstep);
+                }
+            }
+            foreach (var nexts in nextstep)
+            {
+                List<TaskProcess> listtasknextstep = taskService.findtaskofstep(nexts.Id);
+                taskService.addlistruntask(listtasknextstep, runnextstep);
+            }
+
+            message = "Created ProcessRun Successfully";
+            response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Next step success");
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult submitdonetask(int idtask)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+
+            TaskProcessRun taskrun = taskService.findTaskRun(idtask);
+            taskService.submitdonetask(taskrun.Id);
+
+            message = "Created ProcessRun Successfully";
+            response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Step Done");
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult submitclosetask(int idtask)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+
+            TaskProcessRun taskrun = taskService.findTaskRun(idtask);
+            taskService.submitclosetask(taskrun.Id);
+
+            message = "Created ProcessRun Successfully";
+            response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Close Task");
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult submitopentask(int idtask)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+
+            TaskProcessRun taskrun = taskService.findTaskRun(idtask);
+            taskService.submitopentask(taskrun.Id);
+
+            message = "Created ProcessRun Successfully";
+            response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Open Task");
             return Json(response, JsonRequestBehavior.AllowGet);
         }
     }

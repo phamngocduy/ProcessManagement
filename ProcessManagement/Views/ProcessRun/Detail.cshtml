@@ -1,0 +1,636 @@
+﻿@using ProcessManagement.Models;
+@model List<ProcessManagement.Models.Step>
+@{
+    PMSEntities db = new PMSEntities();
+    ViewBag.Title = "ShowStep";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var processrun = ViewData["ProcessRun"] as ProcessManagement.Models.Process;
+    var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
+    var listRoleRuns = ViewData["ListRoleRuns"] as List<ProcessManagement.Models.RoleRun>;
+    var listRole = ViewData["ListRole"] as List<ProcessManagement.Models.Role>;
+    var isManager = userRole.IsManager;
+}
+
+@section CustomCss{
+    <link rel="stylesheet" href="~/Content/vendor/sortable/st/prettify/prettify.css" />
+}
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+            <h2>
+                <a href="javascript:void(0);" class="btn btn-xs btn-link primary-theme btn-toggle-fullwidth">
+                    <i class="fa fa-arrow-left"></i>
+                </a> Process Run Name
+            </h2>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="~/Home/Index" class="primary-theme"><i class="icon-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="/" class="primary-theme">Groups</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = processrun.IdGroup })" class="primary-theme">@processrun.Group.Name</a></li>
+                <li class="breadcrumb-item"><a href="#" class="primary-theme">Detail @processrun.Name</a></li>
+            </ul>
+        </div>
+        <div class="col-lg-6 col-md-4 col-sm-12 text-right">
+            <div class="bh_chart hidden-xs">
+                <div class="float-left m-r-15">
+                    <small>Visitors</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-user"></i> 1,784</h6>
+                </div>
+                <span class="bh_visitors float-right">2,5,1,8,3,6,7,5</span>
+            </div>
+            <div class="bh_chart hidden-sm">
+                <div class="float-left m-r-15">
+                    <small>Visits</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-globe"></i> 325</h6>
+                </div>
+                <span class="bh_visits float-right">10,8,9,3,5,8,5</span>
+            </div>
+            <div class="bh_chart hidden-sm">
+                <div class="float-left m-r-15">
+                    <small>Chats</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-bubbles"></i> 13</h6>
+                </div>
+                <span class="bh_chats float-right">1,8,5,6,2,4,3,2</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row clearfix">
+    <div class="col-lg-4 col-md-12">
+        <div class="card">
+            <div class="body">
+                <h5>@processrun.Name</h5>
+                <p>@processrun.Description</p>
+                @if (isManager)
+                {
+                    <div class="progress-container progress-info m-b-25" style="margin: 0; float: right">
+                        @if (ViewBag.Checkprocessrun != null)
+                        {
+
+                        }
+                        else
+                        {
+                            <button id="btn-runprocess" class="btn btn-primary-theme btn-sm">Run Process</button>
+                        }
+                        <a class="btn btn-default btn-sm waves-effect" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "assignrole", processid = processrun.Id })">Assign Roles</a>
+                    </div>
+                }
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="body">
+                <ul class="nav nav-tabs-new2">
+                    @if (ViewBag.Checkprocessrun != null)
+                    {
+                        <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#steprun-tab">Running</a></li>
+                    }
+                    <li class="nav-item"><a class="nav-link @if (ViewBag.Checkprocessrun == null) { WriteLiteral("active show"); }" data-toggle="tab" href="#step-tab">Step</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#role-tab">Role</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Activity-tab">Diagram</a></li>
+                </ul>
+                <div class="tab-content">
+                    @if (ViewBag.Checkprocessrun != null)
+                    {
+                        <div class="tab-pane active show" id="steprun-tab">
+                            <ul class="step-list">
+                                @if (ViewBag.ListRunStep != null)
+                                {
+                                    foreach (StepRun step in ViewBag.ListRunStep)
+                                    {
+                                        List<TaskProcessRun> taskList = db.TaskProcessRuns.Where(z => z.IdStep == step.Id).OrderBy(x => x.Position).ToList();
+                                        List<TaskProcessRun> listtaskclose = taskList.Where(x => x.Status1.Name == "Close").ToList();
+                                        <li>
+                                            <div class="step @if (taskList.Any()) { WriteLiteral("step-has-task"); }" style="border: 2px solid; border-left:7px solid;">
+                                                <div class="step-name">
+                                                    <span data-toggle="tooltip" data-placement="top" title="">@step.Name (@taskList.Count())</span>
+                                                    @if (isManager)
+                                                    {
+                                                        if (step.Status1.Name == "Running" && listtaskclose.Count == taskList.Count)
+                                                        {
+                                                            <button id="btn-nextstep" value="@step.Id" class="btn btn-primary-theme btn-sm" style="float: right">Next</button>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="task">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Description</th>
+                                                            <th>Role</th>
+                                                            <th>Status</th>
+                                                            <th>Comment</th>
+                                                            <th>Tool</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var task in taskList)
+                                                        {
+                                                            if (task.Status1.Name == "Open")
+                                                            {
+                                                                <tr>
+                                                                    @if (task.ValueFormJson == null)
+                                                                    {
+                                                                        <td><a href="#">@task.Name</a></td>
+                                                                        <td>@task.Description</td>
+                                                                        if (task.IdRole == null)
+                                                                        {
+                                                                            <td><p></p></td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td>@task.Role.Name</td>
+                                                                        }
+                                                                        <td>@task.Status1.Name</td>
+                                                                        <td><button id="btn-commenttask" value="@task.Id" class="btn btn-primary-theme btn-sm">Comment</button></td>
+                                                                        <td><button id="btn-donetask" value="@task.Id" class="btn btn-primary-theme btn-sm">Done</button></td>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <td><a href="#">@task.Name</a></td>
+                                                                        <td>@task.Description</td>
+                                                                        if (task.IdRole == null)
+                                                                        {
+                                                                            <td><p></p></td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td>@task.Role.Name</td>
+                                                                        }
+                                                                        <td>@task.Status1.Name</td>
+                                                                        <td><button id="btn-commenttask" value="@task.Id" class="btn btn-primary-theme btn-sm">Comment</button></td>
+                                                                        <td><button id="btn-donetask" value="@task.Id" class="btn btn-primary-theme btn-sm">Done</button></td>
+                                                                    }
+                                                                </tr>
+                                                            }
+                                                            if (task.Status1.Name == "Done")
+                                                            {
+                                                                <tr>
+                                                                    @if (task.ValueFormJson == null)
+                                                                    {
+                                                                        <td><a href="#">@task.Name</a></td>
+                                                                        <td>@task.Description</td>
+                                                                        if (task.IdRole == null)
+                                                                        {
+                                                                            <td><p></p></td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td>@task.Role.Name</td>
+                                                                        }
+                                                                        <td>@task.Status1.Name</td>
+                                                                        <td><button id="btn-commenttask" value="@task.Id" class="btn btn-primary-theme btn-sm">Comment</button></td>
+                                                                        <td>
+                                                                            @if (isManager)
+                                                                            {
+                                                                                <button id="btn-opentask" value="@task.Id" class="btn btn-primary-theme btn-sm">Open</button>
+                                                                                <button id="btn-closetask" value="@task.Id" class="btn btn-primary-theme btn-sm">Close</button>
+                                                                            }
+                                                                        </td>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <td><a href="#">@task.Name</a></td>
+                                                                        <td>@task.Description</td>
+                                                                        if (task.IdRole == null)
+                                                                        {
+                                                                            <td><p></p></td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td>@task.Role.Name</td>
+                                                                        }
+                                                                        <td>@task.Status1.Name</td>
+                                                                        <td><button id="btn-commenttask" value="@task.Id" class="btn btn-primary-theme btn-sm">Comment</button></td>
+                                                                        <td>
+                                                                            @if (isManager)
+                                                                            {
+                                                                                <button id="btn-opentask" value="@task.Id" class="btn btn-primary-theme btn-sm">Open</button>
+                                                                                <button id="btn-closetask" value="@task.Id" class="btn btn-primary-theme btn-sm">Close</button>
+                                                                            }
+                                                                        </td>
+                                                                    }
+                                                                </tr>
+                                                            }
+                                                            if (task.Status1.Name == "Close")
+                                                            {
+                                                                <tr>
+                                                                    @if (task.ValueFormJson == null)
+                                                                    {
+                                                                        <td><a href="#">@task.Name</a></td>
+                                                                        <td>@task.Description</td>
+                                                                        if (task.IdRole == null)
+                                                                        {
+                                                                            <td><p></p></td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td>@task.Role.Name</td>
+                                                                        }
+                                                                        <td>@task.Status1.Name</td>
+                                                                        <td><button id="btn-commenttask" value="@task.Id" class="btn btn-primary-theme btn-sm">Comment</button></td>
+                                                                        <td><p></p></td>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <td><a href="#">@task.Name</a></td>
+                                                                        <td>@task.Description</td>
+                                                                        if (task.IdRole == null)
+                                                                        {
+                                                                            <td><p></p></td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td>@task.Role.Name</td>
+                                                                        }
+                                                                        <td>@task.Status1.Name</td>
+                                                                        <td><button id="btn-commenttask" value="@task.Id" class="btn btn-primary-theme btn-sm">Comment</button></td>
+                                                                        <td><p></p></td>
+                                                                    }
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                                @*<ul class="task-list" id="task-of-step-@step.Id">
+                                                        @foreach (var task in taskList)
+                                                        {
+                                                            if (task.Status1.Name == "Open")
+                                                            {
+                                                                <li class="task-item" style="background-color:gray" data-id="@task.Id">
+                                                                    @if (task.ValueFormJson == null)
+                                                                    {
+                                                                        <a href="#">@task.Name</a>
+                                                                        <button id="btn-donetask" value="@task.Id" class="btn btn-primary-theme btn-sm" style="float: right;margin-left: 10px;">Done</button>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <a href="#">@task.Name</a>
+                                                                        <button id="btn-donetask" value="@task.Id" class="btn btn-primary-theme btn-sm" style="float: right;margin-left: 10px;">Done</button>
+                                                                    }
+                                                                </li>
+                                                            }
+                                                            if (task.Status1.Name == "Done")
+                                                            {
+                                                                <li class="task-item" style="background-color: gray" data-id="@task.Id">
+                                                                    @if (task.ValueFormJson == null)
+                                                                    {
+                                                                        <a href="#">@task.Name</a>
+                                                                        if (isManager)
+                                                                        {
+                                                                            <button id="btn-closetask" value="@task.Id" class="btn btn-primary-theme btn-sm" style="float: right;margin-left: 10px;">Close</button>
+                                                                            <button id="btn-opentask" value="@task.Id" class="btn btn-primary-theme btn-sm" style="float: right;margin-left: 10px;">Open</button>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <a href="#">@task.Name</a>
+                                                                        if (isManager)
+                                                                        {
+                                                                            <button id="btn-closetask" value="@task.Id" class="btn btn-primary-theme btn-sm" style="float: right;margin-left: 10px;">Close</button>
+                                                                            <button id="btn-opentask" value="@task.Id" class="btn btn-primary-theme btn-sm" style="float: right;margin-left: 10px;">Open</button>
+                                                                        }
+                                                                    }
+                                                                </li>
+                                                            }
+                                                            if (task.Status1.Name == "Close")
+                                                            {
+                                                                <li class="task-item" style="background-color: gray" data-id="@task.Id">
+                                                                    @if (task.ValueFormJson == null)
+                                                                    {
+                                                                        <a href="#">@task.Name</a>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <a href="#">@task.Name</a>
+                                                                    }
+                                                                </li>
+                                                            }
+                                                        }
+                                                    </ul>*@
+                                            </div>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    }
+                    <div class="tab-pane @if (ViewBag.Checkprocessrun == null) { WriteLiteral("active show"); }" id="step-tab">
+                        <ul class="step-list">
+                            @if (Model != null)
+                            {
+                                foreach (var step in Model.Where(x => x.Figure == "Step" && x.IsRun == true))
+                                {
+                                    List<TaskProcess> taskList = db.TaskProcesses.Where(x => x.IdStep == step.Id).OrderBy(x => x.Position).ToList();
+                                    <li>
+                                        <div class="step @if (taskList.Any()) { WriteLiteral("step-has-task"); }" style="border: 2px solid @step.Color; border-left:7px solid @step.Color; color:@step.Color">
+                                            <div class="step-name">
+                                                <span data-toggle="tooltip" data-placement="top" title="@step.Description">@step.Name (@taskList.Where(x => x.IsRun == true).Count())</span>
+                                            </div>
+                                        </div>
+                                        <div class="task">
+                                            <ul class="task-list" id="task-of-step-@step.Id">
+                                                @foreach (var task in taskList.Where(x => x.IsRun == true))
+                                                {
+                                                    <li class="task-item" style="background-color:@task.Color" data-id="@task.Id">
+                                                        @if (task.ValueFormJson == null)
+                                                        {
+                                                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showtask", taskid = task.Id })">@task.Name</a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showformtask", taskid = task.Id })">@task.Name</a>
+                                                        }
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+
+                    <div class="tab-pane" id="role-tab">
+                        <div class="table-responsive">
+                            <table class="table table-hover dataTable table-custom m-b-0" id="table-assign-role" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Role</th>
+                                        <th>Asign To</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var role in listRole)
+                                    {
+                                        <tr>
+                                            <td>@role.Name</td>
+                                            <td>
+                                                @{
+                                                    List<string> users = listRoleRuns.Where(x => x.IdRole == role.Id).Select(x => x.AspNetUser.UserName).ToList();
+                                                    if (users.Any())
+                                                    {
+                                                        var Susers = String.Join(", ", users);
+                                                        WriteLiteral(Susers);
+                                                    }
+                                                    else
+                                                    {
+                                                        WriteLiteral("Manager");
+                                                    }
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="Activity-tab">
+                        <div class="body">
+                            <img style="display: block;margin: 0 auto;" src="@processrun.Avatar" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section CustomScripts{
+    <script src="~/Content/vendor/sortable/sortable.min.js"></script>
+    <script src="~/Content/vendor/sortable/st/prettify/prettify.js"></script>
+    <script src="~/Content/vendor/sortable/st/prettify/run_prettify.js"></script>
+    <script>
+        $(function () {
+            $(".step-has-task .step-name").on("click", function () {
+                var step = $(this).parent(".step");
+                var task = step.next();
+                task.toggle("slow");
+            });
+            var showStep = localStorage.getItem("showStep");
+            if (showStep) {
+                localStorage.removeItem("showStep");
+                $(`#task-of-step-${showStep}`).parents(".task").show("slow");
+            }
+            var task = $(".task-list");
+            task.each(function () {
+                var element = $(this)[0];
+                Sortable.create(element, {
+                    handle: '.handle', // handle's class
+                    animation: 150,
+                    dataIdAttr: 'data-id',
+                    onUpdate: function (evt) {
+                        ////get item
+                        //var fromItem = evt.item;
+                        //var toItem = evt.item.previousElementSibling;
+                        ////get id
+                        //var fromId = fromItem.attributes["data-id"].value;
+                        //var toId = toItem.attributes["data-id"].value;
+                        //var position = {
+                        //    from: fromId,
+                        //    to: toId
+                        //}
+                        //position = JSON.stringify(position);
+                        //changePosition(position);
+
+
+
+
+
+                        //var formList = evt.from.children;
+                        //var formID = [];
+                        //for (var task of formList) {
+                        //    formID.push(task.dataset.id);
+                        //}
+                        //var toList = evt.to.children;
+                        //var toID = [];
+                        //for (var task of toList) {
+                        //    toID.push(task.dataset.id);
+                        //}
+                        //console.log(evt.from, evt.to);
+
+                        var newTaskOrder = evt.from.children;
+                        var newPositionList = [];
+                        for (var i = 0; i < newTaskOrder.length; i++) {
+                            var temp = {
+                                idTask : newTaskOrder[i].dataset.id,
+                                position: (i + 1)
+                            }
+                            newPositionList.push(temp);
+                        }
+                        console.log(newPositionList);
+                        changePosition(JSON.stringify(newPositionList));
+                    }
+                });
+            })
+        });
+        function changePosition(position) {
+            $.ajax({
+                url: "@Url.Action("changetaskposition","process",new { area = "api"})",
+                type: "POST",
+                data: { position : position },
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status != 200) {
+                        showToastr("error", "Error!!", "toast-bottom-left")
+                        console.error(response)
+                    }
+                }
+            });
+        }
+
+        $(function () {
+            $('#btn-runprocess').on('click', function () {
+                let data = {
+                    idprocess: @processrun.Id
+                }
+                runprocess(data);
+            })
+        });
+
+        $(function () {
+            var idstep = $('#btn-nextstep').val();
+            $('#btn-nextstep').on('click', function () {
+                let check = confirm("Next step?");
+                if (check) {
+                    let data = {
+                        idStep: idstep
+                    }
+                    addnextstepinrunprocess(data);
+                }
+            })
+        });
+        $(function () {
+            var idtask = $('#btn-donetask').val();
+            $('#btn-donetask').on('click', function () {
+                let check = confirm("Done task?");
+                if (check) {
+                    let data = {
+                        idtask: idtask
+                    }
+                    submitdonetask(data);
+                }
+
+            })
+        });
+
+        $(function () {
+            var idtask = $('#btn-closetask').val();
+            $('#btn-closetask').on('click', function () {
+                let check = confirm("Close task?");
+                if (check) {
+                    let data = {
+                        idtask: idtask
+                    }
+                    submitclosetask(data);
+                }
+            })
+        });
+
+        $(function () {
+            var idtask = $('#btn-opentask').val();
+            $('#btn-opentask').on('click', function () {
+                let check = confirm("Open task?");
+                if (check) {
+                    let data = {
+                        idtask: idtask
+                    }
+                    submitopentask(data);
+                }
+
+            })
+        });
+
+        function runprocess(data) {
+            $.ajax({
+                url: "@Url.Action("runprocess", "process",new { area = "api"})",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        //showToastr("error", "Error!!", "toast-bottom-left")
+                        window.location.reload();
+                        console.error(response)
+                    }
+                }
+            });
+        }
+
+        function addnextstepinrunprocess(data) {
+            $.ajax({
+                url: "@Url.Action("addnextstepinrunprocess", "process",new { area = "api"})",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        //showToastr("error", "Error!!", "toast-bottom-left")
+                        window.location.reload();
+                        console.error(response)
+                    }
+                }
+            });
+        }
+
+        function submitdonetask(data) {
+            $.ajax({
+                url: "@Url.Action("submitdonetask", "process",new { area = "api"})",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        //showToastr("error", "Error!!", "toast-bottom-left")
+                        window.location.reload();
+                        console.error(response)
+                    }
+                }
+            });
+        }
+
+        function submitclosetask(data) {
+            $.ajax({
+                url: "@Url.Action("submitclosetask", "process",new { area = "api"})",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        //showToastr("error", "Error!!", "toast-bottom-left")
+                        window.location.reload();
+                        console.error(response)
+                    }
+                }
+            });
+        }
+
+        function submitopentask(data) {
+            $.ajax({
+                url: "@Url.Action("submitopentask", "process",new { area = "api"})",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        //showToastr("error", "Error!!", "toast-bottom-left")
+                        window.location.reload();
+                        console.error(response)
+                    }
+                }
+            });
+        }
+
+    </script>
+}
+

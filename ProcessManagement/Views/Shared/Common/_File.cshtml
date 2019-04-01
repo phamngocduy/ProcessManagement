@@ -1,0 +1,23 @@
+﻿@*@Model IEnumerable<ProcessManagement.Models.FileManager>*@
+<div id="uploadfile">
+    <input type="file" id="FileUpload" name="FileUpload" style="display:none" />
+    <button class="btn btn-default waves-effect" id="btn-file"><i class="icon-cloud-upload"></i> Upload</button>
+</div>
+<div class="table-responsive m-t-15" style="overflow-x:unset" id="file-list">
+    <table class="table table-hover">
+        <tbody>
+            @foreach (var file in Model)
+            {
+                <tr>
+                    <td>@file.Name</td>
+                    <td style="text-align:center">
+                        <a href="@Url.Action("download", "file", new { file = file.Id })" class="btn btn-primary-theme waves-effect" data-toggle="tooltip" data-placement="top" title="Download">
+                            <i class="icon-cloud-download"></i>
+                        </a>
+                        <button class="btn btn-danger waves-effect btn-file-remove" data-src="@file.Id" data-toggle="tooltip" data-placement="top" title="Remove"><i class="icon-trash"></i></button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

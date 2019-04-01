@@ -113,28 +113,34 @@
                     </fieldset>
                     <h3>Process Start Information</h3>
                     <fieldset>
-                        <div class="row">
+                        <div class="row" id="step-info">
+                            <div class="col-md-12 col-sm-12">
+                                <div class="form-group form-float">
+                                    <label for="name" class="required">Process Name</label>
+                                    <input type="text" id="name" class="form-control"/>
+                                </div>
+                            </div>
                             <div class="col-md-12 col-sm-12">
                                 <div class="form-group form-float">
                                     <label for="description">Description</label>
-                                    <textarea class="form-control" rows="7" placeholder="Write something about your process (optional)" id="description"  name="description"></textarea>
+                                    <textarea class="form-control" rows="7" placeholder="Write something about your process (optional)" id="description" name="description"></textarea>
                                 </div>
                             </div>
                         </div>
                     </fieldset>
                     <h3>Confirm - Finish</h3>
                     <fieldset>
-                        <div class="row">
+                        <div class="row" id="step-confirm">
                             <div class="col-md-12 col-sm-12">
                                 <div class="form-group form-float">
-                                    <label for="process">You choose process to run</label>
-                                    <input type="text" id="processrun-name" class="form-control" readonly>
+                                    <label for="name">You choose process to run</label>
+                                    <input type="text" id="name" class="form-control" readonly>
                                 </div>
                             </div>
                             <div class="col-md-12 col-sm-12">
                                 <div class="form-group form-float">
                                     <label for="description">Description</label>
-                                    <textarea class="form-control" rows="7" name="description" id="processrun-des" readonly></textarea>
+                                    <textarea class="form-control" rows="7" name="description" id="description" readonly></textarea>
                                 </div>
                             </div>
                         </div>
@@ -233,20 +239,27 @@
                         form.find('.body:eq(' + newIndex + ') label.error').remove();
                         form.find('.body:eq(' + newIndex + ') .error').removeClass('error');
                     }
-                    if (currentIndex == 0) {
+                    if (newIndex == 1) {
                         if (selectProcess == null) {
                             $(".steps first").addClass("error");
                             showToastr("error", "Please choose one process to run...");
                             return false;
                         } else {
                             $(".steps first").removeClass("error");
+                            $("#step-info #name").val(selectProcess.name);
+                            $("#step-info #description").val(selectProcess.des);
                             return true;
                         }
-                    }
-                    if (newIndex == 2) {
-                        var des = $("#description").val();
-                        $("#processrun-name").val(selectProcess.name);
-                        $("#processrun-des").val(des);
+                    } else if (newIndex == 2) {
+                        var name = $("#step-info #name").val().trim();
+                        var des = $("#step-info #description").val();
+                        if (name == "") {
+                            showToastr("error", "Process Name is required");
+                            return false;
+                        } else {
+                            $("#step-confirm #name").val(name);
+                            $("#step-confirm #description").val(des);
+                        }
                     }
                     form.validate().settings.ignore = ':disabled,:hidden';
                     return form.valid();
@@ -256,8 +269,9 @@
                     setButtonWavesEffect(event);
                 },
                 onFinishing: function (event, currentIndex) {
-                    var des = $("#description").val();
-                    addProcessRun(selectProcess, des);
+                    var name = $("#step-info #name").val().trim();
+                    var des = $("#step-info #description").val().trim();
+                    addProcessRun(selectProcess, name, des);
                     return form.valid();
                     
                 },
@@ -425,11 +439,11 @@
                         </div>
                     </div>`;
         }
-        function addProcessRun(process,des) {
+        function addProcessRun(process, name,des) {
             $.ajax({
                 url: "@Url.Action("addprocessrun", "process", new { area = "api" })",
                 type: "POST",
-                data: { processid: process.id, des: des },
+                data: { processid: process.id, name: name,des: des },
                 dataType: "json",
                 success: function (response) {
                     console.log(response);

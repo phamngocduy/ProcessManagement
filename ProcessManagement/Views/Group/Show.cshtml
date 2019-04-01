@@ -145,7 +145,8 @@
                         <a class="btn-circle btn-primary-theme btn-switch-tab" style="float:right" href="#setting-tab"><i class="icon-settings"></i> Settings</a>
                         <h5>@Model.Name</h5>
                         <p>@Model.Description</p>
-                        <div id="uploadfile">
+                        @Html.Partial("~/Views/Shared/Common/_File.cshtml", files)
+                        @*<div id="uploadfile">
                             <input type="file" id="FileUpload" name="FileUpload" style="display:none" />
                             <button class="btn btn-default waves-effect" id="btn-file"><i class="icon-cloud-upload"></i> Upload</button>
                         </div>
@@ -166,7 +167,7 @@
                                     }
                                 </tbody>
                             </table>
-                        </div>
+                        </div>*@
 
                     </div>
                     <div class="tab-pane animated fadeIn" id="setting-tab">
@@ -218,7 +219,7 @@
                 <ul class="list-unstyled">
                     @foreach (var item in listprocess.Where(y => y.IsRun == true))
                     {
-                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "detail", idprocess = item.Id })">
+                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = item.Id })">
 
                             <li class="media">
                                 <img class="mr-3 process-avatar" src="@item.Avatar" alt="Generic placeholder image">
@@ -301,7 +302,7 @@
                 <h2>Members of @Model.Name</h2>
             </div>
             <div class="body" style="padding-top:0">
-                <div class="table-responsive">
+                <div class="table-responsive" style="overflow-x:unset">
                     <table class="table table-hover dataTable table-custom m-b-0" id="table-member" style="width:100%">
                         <thead>
                             <tr>
@@ -385,6 +386,7 @@
                 var id = this.dataset.src;
                 var fileName = $(this).parents("tr").find("td:first-child").text();
                 var check = confirm(`Are you sure you want to delete "${fileName}"?`);
+                $(this).tooltip("hide");
                 if (check) {
                     removeFile(id);
                 }

@@ -103,7 +103,7 @@ namespace ProcessManagement.Areas.API.Controllers
                     owner = jOwner,
                     name = group.Name,
                     des = group.Description ?? "",
-                    slug = group.ownerSlug,
+                    slug = group.groupSlug,
                     create_at = new
                     {
                         display = group.Created_At,

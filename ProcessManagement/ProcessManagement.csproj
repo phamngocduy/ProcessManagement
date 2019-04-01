@@ -37,7 +37,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\Dell\AppData\Local\Temp\vs34E2.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vsDC1C.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,7 +47,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\Dell\AppData\Local\Temp\vs34E2.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vsDC1C.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -274,6 +274,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProcessController.cs" />
+    <Compile Include="Controllers\ProcessRunController.cs" />
     <Compile Include="Extensions\IdentityExtensions.cs" />
     <Compile Include="Filters\AjaxAuthorizeAttribute.cs" />
     <Compile Include="Filters\GroupAuthorizeAttribute.cs" />
@@ -8501,10 +8502,11 @@
     <Content Include="Views\Process\NewProcessRun.cshtml" />
     <Content Include="Views\Process\AddFormTask.cshtml" />
     <Content Include="Views\Process\ShowFormTask.cshtml" />
-    <Content Include="Views\Process\AssignRole.cshtml" />
-    <Content Include="Views\Process\Detail.cshtml" />
+    <Content Include="Views\ProcessRun\AssignRole.cshtml" />
+    <Content Include="Views\ProcessRun\Detail.cshtml" />
     <Content Include="Views\Process\Setting.cshtml" />
     <Content Include="Views\File\FileManager.cshtml" />
+    <Content Include="Views\Shared\Common\_File.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
