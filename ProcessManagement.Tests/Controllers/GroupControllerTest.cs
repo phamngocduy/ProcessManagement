@@ -19,24 +19,6 @@ using System.Security.Claims;
 
 namespace ProcessManagement.Tests.Controllers
 {
-	//public class SutController : Controller
-	//{
-	//	public string Get()
-	//	{
-	//		return User.Identity.GetUserId();
-	//	}
-	//}
-
-	//public class TestableControllerContext : ControllerContext
-	//{
-	//	public TestableHttpContext TestableHttpContext { get; set; }
-	//}
-
-	//public class TestableHttpContext : HttpContextBase
-	//{
-	//	public override IPrincipal User { get; set; }
-	//}
-
 	[TestClass]
 	public class UnitTest1
 	{
@@ -88,15 +70,6 @@ namespace ProcessManagement.Tests.Controllers
 
 			//assert
 			Assert.IsNotNull(result);
-			//IMyMockDa mockDa = new MockDataAccess();
-			//var service = new AuthenticationService(mockDa);
-
-			//mockDa.AddUser("Name", "Password");
-
-			//Assert.IsTrue(service.DoLogin("Name", "Password"));
-
-			////Ensure data access layer was used
-			//Assert.IsTrue(mockDa.GetUserFromDBWasCalled);
 		}
 		/// <summary>
 		/// Purpose of TC: 
@@ -119,8 +92,9 @@ namespace ProcessManagement.Tests.Controllers
 
 			ViewResult result = controllerUnderTest.Show(4103) as ViewResult;
 			//assert
-			//Assert.AreEqual("Show", result.ViewName, userName);
 			Assert.IsNotNull(result);
+			//Assert.AreEqual("Show", result.ViewName, userName);
+
 		}
 		[TestMethod]
 		public void ReturnIndex_Group_UserPossess()
@@ -151,13 +125,15 @@ namespace ProcessManagement.Tests.Controllers
 		public void CreateGroup_WithValidModel_ExpectValidNavigation()
 		{
 			var userName = "tovo1@vanlanguni.vn";
-			Mock<HttpContextBase> moqContext = new Mock<HttpContextBase>();
 			Mock<HttpRequestBase> moqRequest = new Mock<HttpRequestBase>();
 			Mock<HttpFileCollectionBase> moqFiles = new Mock<HttpFileCollectionBase>();
 			Mock<HttpPostedFileBase> moqPostedFile = new Mock<HttpPostedFileBase>();
+			var controllerContext = new Mock<ControllerContext>();
+			var session = new Mock<HttpSessionStateBase>();
+			var mockHttpContext = new Mock<HttpContextBase>();
 
 			moqRequest.Setup(r => r.Files.Count).Returns(0);
-			moqContext.Setup(x => x.Request).Returns(moqRequest.Object);
+			mockHttpContext.Setup(x => x.Request).Returns(moqRequest.Object);
 			//Setup a fake HttpRequest
 			HttpPostedFileBase httpPostedFile = Mock.Of<HttpPostedFileBase>();
 			var mock = Mock.Get(httpPostedFile);
@@ -166,7 +142,13 @@ namespace ProcessManagement.Tests.Controllers
 			//...populate fake stream
 			//setup mock to return stream
 			mock.Setup(_ => _.InputStream).Returns(memoryStream);
-
+			//get session
+			mockHttpContext.Setup(ctx => ctx.Session).Returns(session.Object);
+			controllerContext.Setup(ctx => ctx.HttpContext).Returns(mockHttpContext.Object);
+			controllerContext.Setup(p => p.HttpContext.Session["Group"]).Returns(new Group
+			{
+				IdOwner = "b0245219 - c69e - 428f - bfc7 - ead7192d5936",
+			});
 			//Arrange
 			var controller = new GroupController();
 			var group = new Group
@@ -178,11 +160,9 @@ namespace ProcessManagement.Tests.Controllers
 				ownerSlug = "Pet",
 				groupSlug = "Pet_Group",
 			};
-			//controller.ControllerContext = cc.Object;
-			controller.ControllerContext = new ControllerContext(moqContext.Object, new RouteData(), controller);
+			controller.ControllerContext = new ControllerContext(mockHttpContext.Object, new RouteData(), controller);
 			var validationResults = TestModelHelper.ValidateModel(controller, group);
 			//get user id
-			var controllerContext = new Mock<ControllerContext>();
 			var principal = new Moq.Mock<IPrincipal>();
 			principal.Setup(p => p.IsInRole("owner")).Returns(true);
 			principal.SetupGet(x => x.Identity.Name).Returns(userName);
@@ -194,10 +174,6 @@ namespace ProcessManagement.Tests.Controllers
 
 			//Assert
 			Assert.IsNotNull(redirectRoute);
-			//Assert.IsInstanceOfType(redirectRoute, typeof(ContentResult));
-			//Assert.AreEqual("Index", redirectRoute.RouteValues["action"]);
-			//Assert.AreEqual("Home", redirectRoute.RouteValues["controller"]);
-			//Assert.AreEqual(0, validationResults.Count);
 		}
 		/// <summary>
 		/// Purpose of TC: 
@@ -209,17 +185,17 @@ namespace ProcessManagement.Tests.Controllers
 			var userName = "tovo1@vanlanguni.vn";
 			var processid = 120;
 			var identity = new GenericIdentity("tovo1@vanlanguni.vn");
-			var moqContext = new Mock<HttpContextBase>();
 			var moqRequest = new Mock<HttpRequestBase>();
 			var moqResponse = new Mock<HttpResponseBase>();
-			var moqSession = new Mock<HttpSessionStateBase>();
 			var moqServer = new Mock<HttpServerUtilityBase>();
 			var moqUser = new Mock<IPrincipal>();
 			var moqIdentity = new Mock<IIdentity>();
 			var moqUrlHelper = new Mock<UrlHelper>();
+			var controllerContext = new Mock<ControllerContext>();
+			var session = new Mock<HttpSessionStateBase>();
+			var mockHttpContext = new Mock<HttpContextBase>();
 			//Setup a fake HttpRequest
 			Mock<HttpPostedFileBase> moqPostedFile = new Mock<HttpPostedFileBase>();
-			var controllerContext = new Mock<ControllerContext>();
 			var principal = new Mock<IPrincipal>();
 			principal.Setup(p => p.IsInRole("owner")).Returns(true);
 			//controllerContext.SetupGet(x => x.HttpContext.User).Returns(principal.Object);
@@ -229,13 +205,17 @@ namespace ProcessManagement.Tests.Controllers
 
 			controllerContext.SetupGet(x => x.HttpContext.User).Returns(principal.Object);
 			moqRequest.Setup(r => r.Files.Count).Returns(0);
-			moqContext.Setup(x => x.Request).Returns(moqRequest.Object);
+			mockHttpContext.Setup(x => x.Request).Returns(moqRequest.Object);
 			principal.Setup(p => p.IsInRole("Manager")).Returns(true);
-			//principal.SetupGet(x => x.Identity.Name).Returns("tovo1@vanlanguni.vn");
-			//scontrollerContext.SetupGet(p => p.HttpContext.User.Identity.Name).Returns("tovo1@vanlanguni.vn");
 			controllerContext.SetupGet(p => p.HttpContext.Request.IsAuthenticated).Returns(true);
 			moqIdentity.Setup(id => id.IsAuthenticated).Returns(true);
-			//moqIdentity.Setup(id => id.Name).Returns("99");
+			//get session
+			mockHttpContext.Setup(ctx => ctx.Session).Returns(session.Object);
+			controllerContext.Setup(ctx => ctx.HttpContext).Returns(mockHttpContext.Object);
+			controllerContext.Setup(p => p.HttpContext.Session["processid"]).Returns(new Role
+			{
+				IdProcess = 120,
+			});
 			//arrange
 			HttpContext.Current = FakeHttpContext();
 			//HttpContext.Current.Session["processId"] = "101";
@@ -255,23 +235,16 @@ namespace ProcessManagement.Tests.Controllers
 			principal.SetupGet(x => x.Identity.Name).Returns(userName);
 			controllerContext.SetupGet(x => x.HttpContext.User).Returns(principal.Object);
 			controller.ControllerContext = controllerContext.Object;
-			//session
-			var contextMock = new Mock<ControllerContext>();
-			var mockHttpContext = new Mock<HttpContextBase>();
-			var session = new Mock<HttpSessionStateBase>();
-			mockHttpContext.Setup(h => h.Session).Returns(session.Object);
-			controller.ControllerContext = new ControllerContext(moqContext.Object, new RouteData(), controller);
 			//var validationResults = TestModelHelper.ValidateModel(controller, role);
 
 			//act
-			var redirectRoute = controller.AddRole(role) as RedirectToRouteResult;
-			//ViewResult result = controller.AddRole(role) as ViewResult;
+			ViewResult result = controller.AddRole(role) as ViewResult;
 			//assert
-			Assert.IsNotNull(redirectRoute);
+			Assert.IsNotNull(result);
 			//Assert.AreEqual("",result.ViewName);
 			//Assert.AreEqual("ShowStep", redirectRoute.RouteValues["action"]);
 			//Assert.AreEqual(0, validationResults.Count);
-			Assert.AreEqual(controller.AddRole(role) ,processid);
+			//Assert.AreEqual(controller.AddRole(role) ,processid);
 
 		}
 		/// <summary>
@@ -282,15 +255,15 @@ namespace ProcessManagement.Tests.Controllers
 		public void CreateProcess_WithValidModel_ExpectValidNavigation()
 		{
 			var userName = "tovo1@vanlanguni.vn";
-			var moqContext = new Mock<HttpContextBase>();
 			var moqRequest = new Mock<HttpRequestBase>();
 			var moqResponse = new Mock<HttpResponseBase>();
-			var moqSession = new Mock<HttpSessionStateBase>();
 			var moqServer = new Mock<HttpServerUtilityBase>();
 			var moqUser = new Mock<IPrincipal>();
 			var moqIdentity = new Mock<IIdentity>();
 			var moqUrlHelper = new Mock<UrlHelper>();
-			Mock<ControllerContext> cc = new Mock<ControllerContext>();
+			var controllerContext = new Mock<ControllerContext>();
+			var session = new Mock<HttpSessionStateBase>();
+			var mockHttpContext = new Mock<HttpContextBase>();
 			//Setup a fake HttpRequest
 			HttpPostedFileBase httpPostedFile = Mock.Of<HttpPostedFileBase>();
 			var mock = Mock.Get(httpPostedFile);
@@ -301,12 +274,21 @@ namespace ProcessManagement.Tests.Controllers
 			mock.Setup(_ => _.InputStream).Returns(memoryStream);
 
 			moqRequest.Setup(r => r.Files.Count).Returns(0);
-			moqContext.Setup(x => x.Request).Returns(moqRequest.Object);
-
-			cc.SetupGet(p => p.HttpContext.User.Identity.Name).Returns("tovo1@vanlanguni.vn");
-			cc.SetupGet(p => p.HttpContext.Request.IsAuthenticated).Returns(true);
-			moqContext.Setup(ctx => ctx.Session).Returns(moqSession.Object);
-
+			mockHttpContext.Setup(x => x.Request).Returns(moqRequest.Object);
+			mockHttpContext.Setup(ctx => ctx.Session).Returns(session.Object);
+			//get session
+			mockHttpContext.Setup(ctx => ctx.Session).Returns(session.Object);
+			controllerContext.Setup(ctx => ctx.HttpContext).Returns(mockHttpContext.Object);
+			controllerContext.Setup(p => p.HttpContext.Session["idgroup"]).Returns(new Group
+			{
+				Id = 4104,
+				
+			});
+			controllerContext.Setup(p => p.HttpContext.Session["Process"]).Returns(new Process
+			{
+				Id = 200,
+				IdGroup = 4104,
+			});
 			//arrange 
 			var controller = new ProcessController();
 			var process = new Process()
@@ -320,14 +302,13 @@ namespace ProcessManagement.Tests.Controllers
 				Description = "Demo test create process is correct"
 			};
 			//get user id
-			var controllerContext = new Mock<ControllerContext>();
 			var principal = new Moq.Mock<IPrincipal>();
 			principal.Setup(p => p.IsInRole("owner")).Returns(true);
 			principal.SetupGet(x => x.Identity.Name).Returns(userName);
 			controllerContext.SetupGet(x => x.HttpContext.User).Returns(principal.Object);
 			controller.ControllerContext = controllerContext.Object;
 
-			controller.ControllerContext = new ControllerContext(moqContext.Object, new RouteData(), controller);
+			controller.ControllerContext = new ControllerContext(mockHttpContext.Object, new RouteData(), controller);
 			var validationResults = TestModelHelper.ValidateModel(controller, process);
 
 			//act
@@ -336,8 +317,6 @@ namespace ProcessManagement.Tests.Controllers
 
 			//assert
 			Assert.IsNotNull(redirectRoute);
-			//Assert.AreEqual("ShowStep", redirectRoute.RouteValues["action"]);
-			//Assert.AreEqual(0, validationResults.Count);
 		}
 		/// <summary>
 		/// Purpose of TC: 
@@ -362,12 +341,11 @@ namespace ProcessManagement.Tests.Controllers
 			moqContext.Setup(x => x.Request).Returns(moqRequest.Object);
 
 			moqIdentity.Setup(id => id.IsAuthenticated).Returns(true);
-			//moqIdentity.Setup(id => id.Name).Returns("99");
 			//arrange 
 			var controller = new ProcessController();
 			var taskProcess = new TaskProcess()
 			{
-				Id = 1190,
+				Id = 1220,
 				IdStep = 273,
 				Name = "Task Test",
 				Description = "Demo test create task is correct"
@@ -384,16 +362,14 @@ namespace ProcessManagement.Tests.Controllers
 			controllerContext.SetupGet(x => x.HttpContext.User).Returns(principal.Object);
 			controller.ControllerContext = controllerContext.Object;
 			//act
-			var redirectRoute = controller.AddTask(1190) as RedirectToRouteResult;
+			var redirectRoute = controller.AddTask(1220) as RedirectToRouteResult;
 
 			//assert
 			Assert.IsNull(redirectRoute);
-			//Assert.AreEqual("ShowStep", redirectRoute.RouteValues["action"]);
-			//Assert.AreEqual(0, validationResults.Count);
 		}
 		/// <summary>
 		/// Purpose of TC: 
-		/// - Return Task View	
+		/// - Return Task View
 		/// </summary>
 		[TestMethod]
 		public void ReturnTaskView()
@@ -419,7 +395,6 @@ namespace ProcessManagement.Tests.Controllers
 
 			// assert
 			Assert.IsNull(result);
-			//assert
 			//Assert.AreEqual(controller.ShowTask(1164), identity.Name);
 		}
 
@@ -442,13 +417,26 @@ namespace ProcessManagement.Tests.Controllers
 		{
 			var userName = "tovo1@vanlanguni.vn";
 			var IdProcess = 99;
-
+			var session = new Mock<HttpSessionStateBase>();
+			var mockHttpContext = new Mock<HttpContextBase>();
 			var mockControllerContext = new Mock<ControllerContext>();
-			var mockSession = new Mock<HttpSessionStateBase>();
+			var groupService = new GroupService();
+			//get session
+			mockHttpContext.Setup(ctx => ctx.Session).Returns(session.Object);
+			mockControllerContext.Setup(ctx => ctx.HttpContext).Returns(mockHttpContext.Object);
+			mockControllerContext.Setup(p => p.HttpContext.Session["Process"]).Returns(new Process
+			{
+				Id = 99,
+				IdGroup = 4104
+			});
+			mockControllerContext.Setup(p => p.HttpContext.Session["IdGroup"]).Returns(new Group
+			{
+				Id = 4104
+			});
+			mockControllerContext.Setup(p => p.HttpContext.Session["IdGroup"]).Returns(new GroupService
+			{
 
-			mockSession.SetupGet(s => s["Id"]).Returns("288"); //somevalue
-			mockControllerContext.Setup(p => p.HttpContext.Session).Returns(mockSession.Object);
-
+			});
 			var controller = new ProcessController();
 			controller.ControllerContext = mockControllerContext.Object;
 			//get user id
@@ -462,7 +450,7 @@ namespace ProcessManagement.Tests.Controllers
 			var result = controller.ShowStep(IdProcess) as ViewResult;
 
 			//Assert
-			Assert.AreEqual("", result.ViewName, userName);
+			Assert.IsNotNull(result);
 		}
 		/// <summary>
 		/// Purpose of TC: 
@@ -475,13 +463,20 @@ namespace ProcessManagement.Tests.Controllers
 			//user need get
 			var userName = "tovo1@vanlanguni.vn";
 			var mockGroup = new Mock<Group>();
+			var controllerContext = new Mock<ControllerContext>();
+			var session = new Mock<HttpSessionStateBase>();
+			var mockHttpContext = new Mock<HttpContextBase>();
+
 			//get session
-			//var context = new Mock<HttpContextBase>();
-			//var session = new Mock<HttpSessionStateBase>();
-			//context.Setup(x => x.Session).Returns(session.Object);
+			mockHttpContext.Setup(ctx => ctx.Session).Returns(session.Object);
+			controllerContext.Setup(ctx => ctx.HttpContext).Returns(mockHttpContext.Object);
+			controllerContext.Setup(p => p.HttpContext.Session["Role"]).Returns(new Role
+			{
+				Id = 55,
+				IdProcess = 120
+			});
 			//arrange
 			//get user id
-			var controllerContext = new Mock<ControllerContext>();
 			var principal = new Moq.Mock<IPrincipal>();
 			principal.Setup(p => p.IsInRole("owner")).Returns(true);
 			principal.SetupGet(x => x.Identity.Name).Returns(userName);
@@ -490,8 +485,16 @@ namespace ProcessManagement.Tests.Controllers
 
 			ViewResult result = controllerUnderTest.EditRole(55) as ViewResult;
 			//assert
-			//Assert.AreEqual("EditRole", result.ViewName, userName);
 			Assert.IsNotNull(result);
+		}
+		/// <summary>
+		/// Purpose of TC: 
+		/// - Hanle Edit Role when login		
+		/// </summary>
+		[TestMethod]
+		public void EditRole_WithValidModel_ExpectValidNavigation()
+		{
+			
 		}
 		/// <summary>
 		/// Purpose of TC: 
@@ -515,7 +518,6 @@ namespace ProcessManagement.Tests.Controllers
 
 			ViewResult result = controllerUnderTest.EditProcess(120) as ViewResult;
 			//assert
-			//Assert.AreEqual("", result.ViewName, userName);
 			Assert.IsNotNull(result);
 		}
 		/// <summary>
@@ -540,9 +542,7 @@ namespace ProcessManagement.Tests.Controllers
 
 			ViewResult result = controllerUnderTest.Draw(120) as ViewResult;
 			//assert
-			//Assert.AreEqual("", result.ViewName, userName);
 			Assert.IsNotNull(result);
 		}
-
 	}
 }
