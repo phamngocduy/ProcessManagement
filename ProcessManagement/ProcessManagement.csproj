@@ -37,7 +37,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vsDC1C.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vs484A.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,7 +47,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vsDC1C.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vs484A.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -8526,7 +8526,10 @@
     <Folder Include="Content\vendor\jquery.file.upload\server\php\files\" />
     <Folder Include="Content\vendor\jquery.file.upload\test\" />
     <Folder Include="Upload\4102\run\" />
+    <Folder Include="Upload\4103\" />
+    <Folder Include="Upload\4104\" />
     <Folder Include="Upload\4105\run\" />
+    <Folder Include="Upload\4106\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\build\scripts\jquery-3.3.1.min.map" />

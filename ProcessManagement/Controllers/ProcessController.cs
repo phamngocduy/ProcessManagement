@@ -34,24 +34,35 @@ namespace ProcessManagement.Controllers
             Group group = groupService.findGroup(groupid);
             Process pr = new Process();
             ViewData["group"] = group;
+            ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
             return View(pr);
         }
         [Authorize]
         [GroupAuthorize]
         [HttpPost]
-        public ActionResult NewProcess(Process pro, HttpPostedFileBase FileUpload)
+        public ActionResult NewProcess(int groupid, Process pro, HttpPostedFileBase FileUpload)
         {
-            int idgroup = (int)Session["idgroup"];
             string idUser = User.Identity.GetUserId();
-            Group group = groupService.findGroup(idgroup);
+            if (string.IsNullOrEmpty(pro.Name))
+            {
+                SetFlash(FlashType.error, "Process Name is required");
+                return View();
+            }
+            bool isFileOverSize = fileService.checkFileOverSize(FileUpload);
+            if (isFileOverSize)
+            {
+                SetFlash(FlashType.error, "Your File pass our limit size rule");
+                return View();
+            }
+            Group group = groupService.findGroup(groupid);
             processService.createProcess(group.Id, idUser, pro);
 
             //create directory
-            string directoryPath = String.Format("{0}/{1}", group.Id,pro.Id);
+            string directoryPath = String.Format("Upload/{0}/{1}", group.Id,pro.Id);
             fileService.createDirectory(directoryPath);
             //save file 
             //string savePath = Server.MapPath(String.Format("~/App_Data/{0}/{1}", group.Id,pro.Id));
-            string filePath = String.Format("{0}/{1}", group.Id, pro.Id);
+            string filePath = String.Format("Upload/{0}/{1}", group.Id, pro.Id);
             fileService.saveFile(group.Id, FileUpload, filePath, FileDerection.Process);
 
             SetFlash(FlashType.success, "Created Process Successfully");
@@ -161,6 +172,9 @@ namespace ProcessManagement.Controllers
             processStatisticModel.Add("totalstep", listStep.Count);
             processStatisticModel.Add("totalrole", listRole.Count);
 
+            //tìm file group
+            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id, FileDerection.Process);
+
             List<Step> listnextstep1 = new List<Step>();
             List<Step> listnextstep2 = new List<Step>();
             Step start = listStep.Where(x => x.StartStep == true).FirstOrDefault();
@@ -227,6 +241,9 @@ namespace ProcessManagement.Controllers
             ViewData["ListRole"] = listRole;
             ViewData["Statistic"] = processStatisticModel;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
+            ViewData["Files"] = files;
+            //get maximum file config
+            ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
             return View(listnextstep1);
         }
         [GroupAuthorize]

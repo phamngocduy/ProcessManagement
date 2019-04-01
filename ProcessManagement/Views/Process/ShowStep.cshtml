@@ -11,6 +11,8 @@
     var listRole = ViewData["ListRole"] as List<ProcessManagement.Models.Role>;
     var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
     var isManager = userRole.IsManager;
+    var files = ViewData["Files"] as List<ProcessManagement.Models.FileManager>;
+    var maxFileSizeRule = ViewData["FileMaxSize"] as ProcessManagement.Models.ConfigRule;
 }
 
 
@@ -57,7 +59,7 @@
         </div>
     </div>
 </div>
-<div class="row clearfix">
+<div class="row clearfix    ">
     <div class="col-lg-4 col-md-12">
         <div class="card">
             <div class="body">
@@ -70,7 +72,7 @@
                         <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "Setting", processid = process.Id })" class="btn btn-xs btn-default waves-effect"><i class="icon-settings"></i></a>
                     </div>
                 }
-
+                @Html.Partial("~/Views/Shared/Common/_File.cshtml", files)
             </div>
         </div>
         <div class="card">
