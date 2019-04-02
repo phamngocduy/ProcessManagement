@@ -16,6 +16,7 @@ using System.Web.SessionState;
 using System.Reflection;
 using System.Text;
 using System.Security.Claims;
+using System.Transactions;
 
 namespace ProcessManagement.Tests.Controllers
 {
@@ -73,7 +74,7 @@ namespace ProcessManagement.Tests.Controllers
 		}
 		/// <summary>
 		/// Purpose of TC: 
-		/// - Ruturn view Group when login		
+		/// - Ruturn view Group when login and available	
 		/// </summary>
 		[TestMethod]
 		public void ReturnViewGroup()
@@ -94,7 +95,6 @@ namespace ProcessManagement.Tests.Controllers
 			//assert
 			Assert.IsNotNull(result);
 			//Assert.AreEqual("Show", result.ViewName, userName);
-
 		}
 		[TestMethod]
 		public void ReturnIndex_Group_UserPossess()
@@ -369,16 +369,18 @@ namespace ProcessManagement.Tests.Controllers
 		}
 		/// <summary>
 		/// Purpose of TC: 
-		/// - Return Task View
+		/// - Return Task View Available
 		/// </summary>
 		[TestMethod]
-		public void ReturnTaskView()
+		public void ReturnTaskView_Available()
 		{	
 			var controller = new ProcessController();
 			//user need get
 			var userName = "tovo1@vanlanguni.vn";
-
 			var controllerContext = new Mock<ControllerContext>();
+			var session = new Mock<HttpSessionStateBase>();
+			var mockHttpContext = new Mock<HttpContextBase>();
+
 			var principal = new Mock<IPrincipal>();
 			//get user id
 			principal.Setup(p => p.IsInRole("owner")).Returns(true);
@@ -387,15 +389,60 @@ namespace ProcessManagement.Tests.Controllers
 			controller.ControllerContext = controllerContext.Object;
 
 			principal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(true);
-
+			//get session
+			mockHttpContext.Setup(ctx => ctx.Session).Returns(session.Object);
+			controllerContext.Setup(ctx => ctx.HttpContext).Returns(mockHttpContext.Object);
+			controllerContext.Setup(p => p.HttpContext.Session["idTask"]).Returns(new TaskProcess
+			{
+				Id = 1212,
+				IdRole = 72,
+			});
 			controllerContext.SetupGet(x => x.HttpContext.User).Returns(principal.Object);
 			controller.ControllerContext = controllerContext.Object;
 			// action
-			ViewResult result = controller.ShowTask(1164) as ViewResult;
+			ViewResult result = controller.ShowTask(1212) as ViewResult;
+
+			// assert
+			Assert.IsNotNull(result);
+		}
+		/// <summary>
+		/// Purpose of TC: 
+		/// - Return Task View UnAvailable
+		/// </summary>
+		[TestMethod]
+		public void ReturnTaskView_UnAvailable()
+		{
+			var controller = new ProcessController();
+			//user need get
+			var userName = "tovo1@vanlanguni.vn";
+			var controllerContext = new Mock<ControllerContext>();
+			var session = new Mock<HttpSessionStateBase>();
+			var mockHttpContext = new Mock<HttpContextBase>();
+
+			var principal = new Mock<IPrincipal>();
+			//get user id
+			principal.Setup(p => p.IsInRole("owner")).Returns(true);
+			principal.SetupGet(x => x.Identity.Name).Returns(userName);
+			controllerContext.SetupGet(x => x.HttpContext.User).Returns(principal.Object);
+			controller.ControllerContext = controllerContext.Object;
+
+			principal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(true);
+			//get session
+			mockHttpContext.Setup(ctx => ctx.Session).Returns(session.Object);
+			controllerContext.Setup(ctx => ctx.HttpContext).Returns(mockHttpContext.Object);
+			controllerContext.Setup(p => p.HttpContext.Session["idTask"]).Returns(new TaskProcess
+			{
+				Id = 69,
+				IdRole = 72,
+			});
+			controllerContext.SetupGet(x => x.HttpContext.User).Returns(principal.Object);
+			controller.ControllerContext = controllerContext.Object;
+			// action
+			ViewResult result = controller.ShowTask(69) as ViewResult;
 
 			// assert
 			Assert.IsNull(result);
-			//Assert.AreEqual(controller.ShowTask(1164), identity.Name);
+			System.Diagnostics.Trace.WriteLine("HTTP not found");
 		}
 
 		//[TestMethod]
@@ -412,8 +459,13 @@ namespace ProcessManagement.Tests.Controllers
 		//          //Assert
 		//          Assert.IsNull(result);
 		//      }
+
+		/// <summary>
+		/// Purpose of TC: 
+		/// - Return Step View
+		/// </summary>
 		[TestMethod]
-		public void SelectProcess_Test()
+		public void SelectProcess_ReturnStep()
 		{
 			var userName = "tovo1@vanlanguni.vn";
 			var IdProcess = 99;
@@ -454,10 +506,10 @@ namespace ProcessManagement.Tests.Controllers
 		}
 		/// <summary>
 		/// Purpose of TC: 
-		/// - Ruturn view Edit Role when login		
+		/// - Ruturn view Edit Role Available		
 		/// </summary>
 		[TestMethod]
-		public void ReturnViewEditRole()
+		public void ReturnViewEditRole_Available()
 		{
 			ProcessController controllerUnderTest = new ProcessController();
 			//user need get
@@ -472,8 +524,8 @@ namespace ProcessManagement.Tests.Controllers
 			controllerContext.Setup(ctx => ctx.HttpContext).Returns(mockHttpContext.Object);
 			controllerContext.Setup(p => p.HttpContext.Session["Role"]).Returns(new Role
 			{
-				Id = 55,
-				IdProcess = 120
+				Id = 70,
+				IdProcess = 137
 			});
 			//arrange
 			//get user id
@@ -483,9 +535,45 @@ namespace ProcessManagement.Tests.Controllers
 			controllerContext.SetupGet(x => x.HttpContext.User).Returns(principal.Object);
 			controllerUnderTest.ControllerContext = controllerContext.Object;
 
-			ViewResult result = controllerUnderTest.EditRole(55) as ViewResult;
+			ViewResult result = controllerUnderTest.EditRole(70) as ViewResult;
 			//assert
 			Assert.IsNotNull(result);
+		}
+		/// <summary>
+		/// Purpose of TC: 
+		/// - Ruturn view Edit Role UnAvailable
+		/// </summary>
+		[TestMethod]
+		public void ReturnViewEditRole_UnAvailable()
+		{
+			ProcessController controllerUnderTest = new ProcessController();
+			//user need get
+			var userName = "tovo1@vanlanguni.vn";
+			var mockGroup = new Mock<Group>();
+			var controllerContext = new Mock<ControllerContext>();
+			var session = new Mock<HttpSessionStateBase>();
+			var mockHttpContext = new Mock<HttpContextBase>();
+
+			//get session
+			mockHttpContext.Setup(ctx => ctx.Session).Returns(session.Object);
+			controllerContext.Setup(ctx => ctx.HttpContext).Returns(mockHttpContext.Object);
+			controllerContext.Setup(p => p.HttpContext.Session["Role"]).Returns(new Role
+			{
+				Id = 69,
+				IdProcess = 69
+			});
+			//arrange
+			//get user id
+			var principal = new Moq.Mock<IPrincipal>();
+			principal.Setup(p => p.IsInRole("owner")).Returns(true);
+			principal.SetupGet(x => x.Identity.Name).Returns(userName);
+			controllerContext.SetupGet(x => x.HttpContext.User).Returns(principal.Object);
+			controllerUnderTest.ControllerContext = controllerContext.Object;
+
+			ViewResult result = controllerUnderTest.EditRole(69) as ViewResult;
+			//assert
+			Assert.IsNull(result);
+			System.Diagnostics.Trace.WriteLine("HTTP not found");
 		}
 		/// <summary>
 		/// Purpose of TC: 
@@ -494,14 +582,37 @@ namespace ProcessManagement.Tests.Controllers
 		[TestMethod]
 		public void EditRole_WithValidModel_ExpectValidNavigation()
 		{
-			
+			//int id = 66;
+			//string expectedView = "ShowStep";
+			//var editrole = new Role()
+			//{
+			//	Id = 66,
+			//	Name = "Role unittest"
+			//};
+			//_mockContactService.Setup(x => x.GetContact(id)).Returns(stubContact);
+			//var expectedVm = new ContactViewModel()
+			//{
+			//	Id = stubContact.Id,
+			//	FirstName = stubContact.FirstName,
+			//	LastName = stubContact.LastName,
+			//	Email = stubContact.Email
+			//};
+
+			//var actual = _controller.Edit(id) as PartialViewResult;
+			//var actualVm = actual.Model as ContactViewModel;
+
+			//Assert.AreEqual(expectedView, actual.ViewName);
+			//Assert.AreEqual(expectedVm.Email, actualVm.Email);
+			//Assert.AreEqual(expectedVm.FirstName, actualVm.FirstName);
+			//Assert.AreEqual(expectedVm.Id, actualVm.Id);
+			//Assert.AreEqual(expectedVm.LastName, actualVm.LastName);
 		}
 		/// <summary>
 		/// Purpose of TC: 
-		/// - Ruturn view Edit Process when login		
+		/// - Ruturn view Edit Process Available		
 		/// </summary>
 		[TestMethod]
-		public void ReturnViewEditProcess()
+		public void ReturnViewEditProcess_Available()
 		{
 			ProcessController controllerUnderTest = new ProcessController();
 			//user need get
@@ -516,16 +627,65 @@ namespace ProcessManagement.Tests.Controllers
 			controllerContext.SetupGet(x => x.HttpContext.User).Returns(principal.Object);
 			controllerUnderTest.ControllerContext = controllerContext.Object;
 
-			ViewResult result = controllerUnderTest.EditProcess(120) as ViewResult;
+			ViewResult result = controllerUnderTest.EditProcess(137) as ViewResult;
 			//assert
 			Assert.IsNotNull(result);
 		}
 		/// <summary>
 		/// Purpose of TC: 
-		/// - Ruturn view Draw Process when login		
+		/// - Ruturn view Edit Process UnAvailable		
 		/// </summary>
 		[TestMethod]
-		public void ReturnViewDrawProcess()
+		public void ReturnViewEditProcess_UnAvailable()
+		{
+			ProcessController controllerUnderTest = new ProcessController();
+			//user need get
+			var userName = "tovo1@vanlanguni.vn";
+			var mockGroup = new Mock<Group>();
+			//arrange
+			//get user id
+			var controllerContext = new Mock<ControllerContext>();
+			var principal = new Moq.Mock<IPrincipal>();
+			principal.Setup(p => p.IsInRole("owner")).Returns(true);
+			principal.SetupGet(x => x.Identity.Name).Returns(userName);
+			controllerContext.SetupGet(x => x.HttpContext.User).Returns(principal.Object);
+			controllerUnderTest.ControllerContext = controllerContext.Object;
+
+			ViewResult result = controllerUnderTest.EditProcess(69) as ViewResult;
+			//assert
+			Assert.IsNull(result);
+			System.Diagnostics.Trace.WriteLine("HTTP not found");
+		}
+		/// <summary>
+		/// Purpose of TC: 
+		/// - Ruturn view Draw Process Available	
+		/// </summary>
+		[TestMethod]
+		public void ReturnViewDrawProcess_Available()
+		{
+			ProcessController controllerUnderTest = new ProcessController();
+			//user need get
+			var userName = "tovo1@vanlanguni.vn";
+			var mockGroup = new Mock<Group>();
+			//arrange
+			//get user id
+			var controllerContext = new Mock<ControllerContext>();
+			var principal = new Moq.Mock<IPrincipal>();
+			principal.Setup(p => p.IsInRole("owner")).Returns(true);
+			principal.SetupGet(x => x.Identity.Name).Returns(userName);
+			controllerContext.SetupGet(x => x.HttpContext.User).Returns(principal.Object);
+			controllerUnderTest.ControllerContext = controllerContext.Object;
+
+			ViewResult result = controllerUnderTest.Draw(135) as ViewResult;
+			//assert
+			Assert.IsNotNull(result);
+		}
+		/// <summary>
+		/// Purpose of TC: 
+		/// - Ruturn view Draw Process UnAvailable	
+		/// </summary>
+		[TestMethod]
+		public void ReturnViewDrawProcess_UnAvailable()
 		{
 			ProcessController controllerUnderTest = new ProcessController();
 			//user need get
@@ -542,7 +702,61 @@ namespace ProcessManagement.Tests.Controllers
 
 			ViewResult result = controllerUnderTest.Draw(120) as ViewResult;
 			//assert
-			Assert.IsNotNull(result);
+			Assert.IsNull(result);
+			System.Diagnostics.Trace.WriteLine("HTTP not found");
+		}
+		/// <summary>
+		/// Purpose of TC: 
+		/// - Hanle Delete Role		
+		/// </summary>
+		[TestMethod]
+		public void DeleteRole_WithValidModel_ExpectValidNavigation()
+		{
+			//const int DeletedId = 123;
+			//var mockRepository = new Mock<IRepository>();
+			//var controller = new MyController(mockRepository.Object);
+			//controller.Delete(DeletedId);
+
+			//mockRepository.Verify(v => v.DeleteRestrictions(DeletedID), Times.Once());
+		}
+		/// <summary>
+		/// Purpose of TC: 
+		/// - Hanle Delete Group		
+		/// </summary>
+		[TestMethod]
+		public void DeleteGroup_WithValidModel_ExpectValidNavigation()
+		{
+
+		}
+		/// <summary>
+		/// Purpose of TC: 
+		/// - Hanle Delete Process	
+		/// </summary>
+		[TestMethod]
+		public void DeleteProcess_WithValidModel_ExpectValidNavigation()
+		{
+
+		}
+		/// <summary>
+		/// Purpose of TC: 
+		/// - Hanle Delete Step		
+		/// </summary>
+		[TestMethod]
+		public void DeleteStep_WithValidModel_ExpectValidNavigation()
+		{
+
+		}
+		public void CreateTask_UnSuccessfull()
+		{
+			//using (var scope = new TransactionScope())
+			//{
+
+			//	var result1 = controller.Edit(db.Groups.First().ID.ToString()) as ViewResult;
+			//	Assert.IsNotNull(result1);
+
+			//	System.Diagnostics.Trace.WriteLine("Error data format, please try again");
+
+			//}
 		}
 	}
 }
