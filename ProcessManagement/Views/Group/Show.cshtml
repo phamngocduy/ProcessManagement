@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = Model.Name;
     Session["groupid"] = Model.Id;
+    var group = Model;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var listprocess = ViewData["ListProcess"] as List<ProcessManagement.Models.Process>;
     //var listuser = ViewData["ListParticipant"] as List<ProcessManagement.Models.Participate>;
@@ -16,6 +17,7 @@
     <link rel="stylesheet" href="~/Content/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.css">
     <link rel="stylesheet" href="~/Content/vendor/select2/select2.css" />
     <link rel="stylesheet" href="~/Content/vendor/bootstrap-multiselect/bootstrap-multiselect.css">
+    <link href="~/Content/vendor/jquery-confirm/dist/jquery-confirm.min.css" rel="stylesheet" />
     <style>
         .dropdown-menu a {
             display: block;
@@ -147,27 +149,27 @@
                         <p>@Model.Description</p>
                         @Html.Partial("~/Views/Shared/Common/_File.cshtml", files)
                         @*<div id="uploadfile">
-                            <input type="file" id="FileUpload" name="FileUpload" style="display:none" />
-                            <button class="btn btn-default waves-effect" id="btn-file"><i class="icon-cloud-upload"></i> Upload</button>
-                        </div>
-                        <div class="table-responsive m-t-15" style="overflow-x:unset" id="file-list">
-                            <table class="table table-hover">
-                                <tbody>
-                                    @foreach (var file in files)
-                                    {
-                                        <tr>
-                                            <td>@file.Name</td>
-                                            <td style="text-align:center">
-                                                <a href="@Url.Action("download", "file", new { file = file.Id })" class="btn btn-primary-theme waves-effect" data-toggle="tooltip" data-placement="top" title="Download">
-                                                    <i class="icon-cloud-download"></i>
-                                                </a>
-                                                <button class="btn btn-danger waves-effect btn-file-remove" data-src="@file.Id" data-toggle="tooltip" data-placement="top" title="Remove"><i class="icon-trash"></i></button>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>*@
+                                <input type="file" id="FileUpload" name="FileUpload" style="display:none" />
+                                <button class="btn btn-default waves-effect" id="btn-file"><i class="icon-cloud-upload"></i> Upload</button>
+                            </div>
+                            <div class="table-responsive m-t-15" style="overflow-x:unset" id="file-list">
+                                <table class="table table-hover">
+                                    <tbody>
+                                        @foreach (var file in files)
+                                        {
+                                            <tr>
+                                                <td>@file.Name</td>
+                                                <td style="text-align:center">
+                                                    <a href="@Url.Action("download", "file", new { file = file.Id })" class="btn btn-primary-theme waves-effect" data-toggle="tooltip" data-placement="top" title="Download">
+                                                        <i class="icon-cloud-download"></i>
+                                                    </a>
+                                                    <button class="btn btn-danger waves-effect btn-file-remove" data-src="@file.Id" data-toggle="tooltip" data-placement="top" title="Remove"><i class="icon-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>*@
 
                     </div>
                     <div class="tab-pane animated fadeIn" id="setting-tab">
@@ -231,26 +233,26 @@
                     }
 
                     @*<li class="media my-4">
-            <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
-            <div class="media-body">
-                <h5 class="mt-0 mb-1">List-based media object</h5><span class="badge badge-info">Ready to run</span>
-                <button class="btn btn-default waves-effect"><i class="icon-settings"></i></button>
-            </div>
-        </li>
-        <li class="media">
-            <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
-            <div class="media-body">
-                <h5 class="mt-0 mb-1">List-based media object</h5><span class="badge badge-success">Suceed</span>
-                <button class="btn btn-default waves-effect"><i class="icon-settings"></i></button>
-            </div>
-        </li>
-        <li class="media">
-            <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
-            <div class="media-body">
-                <h5 class="mt-0 mb-1">List-based media object</h5><span class="badge badge-danger">Failed</span>
-                <button class="btn btn-default waves-effect"><i class="icon-settings"></i></button>
-            </div>
-        </li>*@
+                            <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
+                            <div class="media-body">
+                                <h5 class="mt-0 mb-1">List-based media object</h5><span class="badge badge-info">Ready to run</span>
+                                <button class="btn btn-default waves-effect"><i class="icon-settings"></i></button>
+                            </div>
+                        </li>
+                        <li class="media">
+                            <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
+                            <div class="media-body">
+                                <h5 class="mt-0 mb-1">List-based media object</h5><span class="badge badge-success">Suceed</span>
+                                <button class="btn btn-default waves-effect"><i class="icon-settings"></i></button>
+                            </div>
+                        </li>
+                        <li class="media">
+                            <img class="mr-3 process-avatar" src="~/Content/images/image-gallery/1.jpg" alt="Generic placeholder image">
+                            <div class="media-body">
+                                <h5 class="mt-0 mb-1">List-based media object</h5><span class="badge badge-danger">Failed</span>
+                                <button class="btn btn-default waves-effect"><i class="icon-settings"></i></button>
+                            </div>
+                        </li>*@
                 </ul>
             </div>
         </div>
@@ -349,64 +351,9 @@
     <script src="~/Content/vendor/select2/select2.min.js"></script>
     <script src="~/Content/vendor/bootstrap-multiselect/bootstrap-multiselect.js"></script>
     <script src="~/Content/build/js/index.js"></script>
+    <script src="~/Content/vendor/jquery-confirm/dist/jquery-confirm.min.js"></script>
     <script>
         $(function () {
-            //fileupload
-            @if (maxFileSizeRule != null)
-            {
-                int value = maxFileSizeRule.Value;
-                string unit = maxFileSizeRule.Unit.ToLower().Trim();
-                int pow;
-                switch (unit)
-                {
-                    case "kb":
-                        pow = 1;
-                        break;
-                    case "mb":
-                        pow = 2;
-                        break;
-                    case "gb":
-                        pow = 3;
-                        break;
-                    default:
-                        pow = 0;
-                        break;
-                }
-                double toByte = value * Math.Pow(1024, pow);
-                @:var maxFileSize = @toByte;
-            }
-            else
-            {
-                @:var maxFileSize = null;
-            }
-            $("#btn-file").on("click", function () {
-                $("#FileUpload").trigger("click");
-            });
-            $(document).on("click", ".btn-file-remove", function () {
-                var id = this.dataset.src;
-                var fileName = $(this).parents("tr").find("td:first-child").text();
-                var check = confirm(`Are you sure you want to delete "${fileName}"?`);
-                $(this).tooltip("hide");
-                if (check) {
-                    removeFile(id);
-                }
-            })
-            $("#FileUpload").on("change", function () {
-                //var fileName = e.target.files[0].name;
-                var file = this.files[0];
-                var fileName = file.name;
-                var fileSize = file.size;
-                if (maxFileSize != null && fileSize > maxFileSize) {
-                    showToastr("error", "Your file pass our limit size rule");
-                } else {
-                    var check = confirm(`Are you sure you want to upload "${fileName}"?`);
-                    if (check) {
-                        addFile(file);
-                    }
-                }
-                $(this).val("");
-
-            });
             $(".btn-switch-tab").on("click", function (e) {
                 var tab = $(this).attr("href");
                 $("#group-name").val("@Model.Name");
@@ -414,7 +361,7 @@
                 $(".tab-pane").removeClass("active").removeClass("show");
                 $(tab).addClass("active").addClass("show");
                 e.preventDefault();
-            })
+            });
             $("#btn-group-save").on("click", function () {
                 var newGroup = {
                     groupid: @Model.Id,
@@ -426,7 +373,7 @@
                 } else {
                     editGroup(newGroup);
                 }
-            })
+            });
             $("#table-member").DataTable({
                 "lengthMenu": [5, 25, 50, 75, 100],
                 "bLengthChange": false,
@@ -634,12 +581,110 @@
                 }
             })
         }
+    </script>
+    <script>
+        $(function () {
+            //fileupload
+            @if (maxFileSizeRule != null)
+            {
+                int value = maxFileSizeRule.Value;
+                string unit = maxFileSizeRule.Unit.ToLower().Trim();
+                int pow;
+                switch (unit)
+                {
+                    case "kb":
+                        pow = 1;
+                        break;
+                    case "mb":
+                        pow = 2;
+                        break;
+                    case "gb":
+                        pow = 3;
+                        break;
+                    default:
+                        pow = 0;
+                        break;
+                }
+                double toByte = value * Math.Pow(1024, pow);
+                @:var maxFileSize = @toByte;
+            }
+            else
+            {
+                @:var maxFileSize = null;
+            }
+            $("#btn-file").on("click", function () {
+                $("#FileUpload").trigger("click");
+            });
+            $(document).on("click", ".btn-file-remove", function () {
+                var id = this.dataset.src;
+                var fileName = $(this).parents("tr").find("td:first-child").text().trim();
+                var check = confirm(`Are you sure you want to delete "${fileName}"?`);
+                $(this).tooltip("hide");
+                if (check) {
+                    removeFile(id);
+                }
+             })
+             $(document).on("click", ".btn-file-changename", function () {
+                var id = this.dataset.src;
+                var fileName = $(this).parents("tr").find("td:first-child").text().trim();
+                var dialog = $.confirm({
+                    title: `Change File Name (${fileName})`,
+                    content:'<div class="form-group">' +
+                        '<label>Filename</label>' +
+                        '<input type="text" placeholder="Enter your new file name" class="name form-control" required />' +
+                        '</div>',
+                    columnClass: 'medium',
+                    buttons: {
+                        confirm: {
+                            btnClass: 'btn-primary-theme waves-effect',
+                            action: function () {
+                                var newFileName = this.$content.find('input').val().trim();
+                                if (newFileName == "") {
+                                    showToastr("error", "File Name is required");
+                                } else {
+                                    dialog.close();
+                                    setConfirm(`Are you sure you want to change from <b>${fileName}</b> to <b>${newFileName}</b>?`, function () {
+                                        changeFileName(id, newFileName);
+                                    });
+                                    
+                                }
+                                return false;
+                            }
+                        },
+                        cancel: {
+                            btnClass: 'btn-default waves-effect',
+                        }
+                    },
+                    onContentReady: function () {
+                        this.$content.find("input").val(fileName);
+                    },
+                });
+                
+            })
+            $("#FileUpload").on("change", function () {
+                //var fileName = e.target.files[0].name;
+                var file = this.files[0];
+                var fileName = file.name;
+                var fileSize = file.size;
+                if (maxFileSize != null && fileSize > maxFileSize) {
+                    showToastr("error", "Your file pass our limit size rule");
+                } else {
+                    var check = confirm(`Are you sure you want to upload "${fileName}"?`);
+                    if (check) {
+                        addFile(file);
+                    }
+                }
+                $(this).val("");
+
+            });
+        });
         function addFile(file) {
             var data = new FormData();
             data.append("FileUpload", file);
-            data.append("groupid", @Model.Id);
+            data.append("groupid", @group.Id);
+            data.append("direction", "@FileDirection.Group");
             $.ajax({
-                url: "@Url.Action("uploadfile", "group", new { area = "api"})",
+                url: "@Url.Action("uploadfile", "file", new { area = "api"})",
                 type: "POST",
                 data: data,
                 contentType: false,
@@ -662,10 +707,11 @@
         function removeFile(id) {
             var data = {
                 id: id,
-                groupid : @Model.Id
+                groupid : @group.Id
             }
+
             $.ajax({
-                url: "@Url.Action("removefile", "group", new { area = "api"})",
+                url: "@Url.Action("removefile", "file", new { area = "api"})",
                 type: "POST",
                 data: data,
                 dataType: "json",
@@ -685,15 +731,61 @@
         }
         function renderFile(file) {
             return `<tr>
-                        <td>${file.name}</td>
-                        <td style="text-align:center">
-                            <a href="/file/download/${file.id}" class="btn btn-primary-theme waves-effect" data-toggle="tooltip" data-placement="top" title="Download">
-                                <i class="icon-cloud-download"></i>
+                        <td>
+                            <a href="href="/file/download/${file.id}">
+                               ${file.name}
                             </a>
-                            <button class="btn btn-danger waves-effect btn-file-remove" data-src="${file.id}" data-toggle="tooltip" data-placement="top" title="Remove"><i class="icon-trash"></i></button>
                         </td>
-                    </tr>`;
+                        <td style="text-align:center">
+                            <button class="btn btn-warning waves-effect btn-file-changename" data-src="${file.id}" data-toggle="tooltip" data-placement="top" title="Change Name">
+                                <i class=" icon-pencil"></i>
+                            </button>
+                            <button class="btn btn-danger waves-effect btn-file-remove" data-src="${file.id}" data-toggle="tooltip" data-placement="top" title="Remove">
+                                <i class="icon-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`
+            
         }
+        function setConfirm(content,okfunction,cancelfunction) {
+            $.confirm({
+                content: content,
+                columnClass: 'medium',
+                buttons: {
+                    ok: {
+                        btnClass: 'btn-primary-theme waves-effect',
+                        action: okfunction
+                    },
+                    cancel: {
+                        btnClass: 'btn-default waves-effect',
+                        action: cancelfunction
+                    }
+                },
+            });
+        }
+        function changeFileName(id,filename) {
+            var data = {
+                id: id,
+                groupid: @group.Id,
+                filename: filename
+            }
 
+            $.ajax({
+                url: "@Url.Action("changefilename", "file", new { area = "api"})",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        showToastr("success", response.message, "toast-bottom-left");
+                        $(`[data-src="${id}"]`).parents("tr").find('td:first-child a').text(response.data.name);
+                    } else {
+                        showToastr("error", response.message, "toast-bottom-left");
+                        console.error(response);
+                    }
+                }
+            })
+        }
     </script>
 }

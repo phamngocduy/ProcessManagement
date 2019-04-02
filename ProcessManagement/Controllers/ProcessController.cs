@@ -63,7 +63,7 @@ namespace ProcessManagement.Controllers
             //save file 
             //string savePath = Server.MapPath(String.Format("~/App_Data/{0}/{1}", group.Id,pro.Id));
             string filePath = String.Format("Upload/{0}/{1}", group.Id, pro.Id);
-            fileService.saveFile(group.Id, FileUpload, filePath, FileDerection.Process);
+            fileService.saveFile(group.Id, FileUpload, filePath, FileDirection.Process);
 
             SetFlash(FlashType.success, "Created Process Successfully");
             return RedirectToAction("Draw", new { groupslug = group.groupSlug, groupid = group.Id, processid = pro.Id });
@@ -173,7 +173,7 @@ namespace ProcessManagement.Controllers
             processStatisticModel.Add("totalrole", listRole.Count);
 
             //tìm file group
-            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id, FileDerection.Process);
+            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id, FileDirection.Process);
 
             List<Step> listnextstep1 = new List<Step>();
             List<Step> listnextstep2 = new List<Step>();

@@ -40,6 +40,12 @@
     border-radius: 30px;
     padding: 7px 23px;
 }
+.btn-warning{
+    
+    &, &:hover, &:focus{
+        color: #fff;
+    }
+}
 @keyframes ripple{
     100%{
         transform: scale(2);

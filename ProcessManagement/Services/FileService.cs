@@ -14,7 +14,7 @@ namespace ProcessManagement.Services
         CommonService commonService = new CommonService();
         ///=============================================================================================
         ///
-        public FileManager saveFile(int idGroup, HttpPostedFileBase file, string savePath, FileDerection Derection)
+        public FileManager saveFile(int idGroup, HttpPostedFileBase file, string savePath, FileDirection Derection)
         {
             FileManager f = new FileManager();
             if (file != null)
@@ -76,7 +76,7 @@ namespace ProcessManagement.Services
         //    return f;
 
         //}
-        public List<FileManager> getAllFileNameFromFolder(int idGroup,FileDerection Direction)
+        public List<FileManager> getAllFileNameFromFolder(int idGroup,FileDirection Direction)
         {
             var file = db.FileManagers.Where(x => x.IdGroup == idGroup && x.Direction == Direction.ToString()).ToList();
             return file;
@@ -98,6 +98,29 @@ namespace ProcessManagement.Services
             db.FileManagers.Remove(file);
             db.SaveChanges();
 
+        }
+        public FileManager changeFileName(FileManager file,string filename)
+        {
+            string AppPath = AppDomain.CurrentDomain.BaseDirectory;
+            string newFilePath = file.Path.Replace(file.Name, filename);
+            string filePath = AppPath + file.Path;
+            string targetPath = AppPath + newFilePath;
+            if (File.Exists(filePath))
+            {
+                File.Copy(filePath, targetPath, true);
+                File.Delete(filePath);
+            }
+            file.Name = filename;
+            file.Path = newFilePath;
+            //TODO: Update Type cho file
+            file.Update_At = DateTime.Now;
+            db.SaveChanges();
+            return file;
+        }
+        public bool checkFileExist(int idGroup,string name, FileDirection direction)
+        {
+            var file = db.FileManagers.FirstOrDefault(x => x.IdGroup == idGroup && x.Direction == direction.ToString() && x.Name == name);
+            return file != null ? true : false;
         }
         /// <summary>
         /// 
@@ -125,7 +148,7 @@ namespace ProcessManagement.Services
         public bool checkFileOverSize(HttpPostedFileBase file)
         {
             ConfigRule fileSizeRule = db.ConfigRules.Find("filesize");
-            if (fileSizeRule != null)
+            if (fileSizeRule != null && file != null)
             {
                 //get file size
                 int fileSize = file.ContentLength;

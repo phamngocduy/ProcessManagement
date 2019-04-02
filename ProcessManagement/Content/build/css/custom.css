@@ -1221,7 +1221,7 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 }
 
 label {
-  font-weight: normal;
+  font-weight: 410;
   color: #5a5a59;
   font-size: 16px;
 }
@@ -1709,6 +1709,10 @@ input[type=number] {
 .btn-circle {
   border-radius: 30px;
   padding: 7px 23px;
+}
+
+.btn-warning, .btn-warning:hover, .btn-warning:focus {
+  color: #fff;
 }
 
 @keyframes ripple {

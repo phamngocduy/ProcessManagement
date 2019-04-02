@@ -18,7 +18,8 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <Use64BitIISExpress>true</Use64BitIISExpress>
+    <Use64BitIISExpress>
+    </Use64BitIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -37,7 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vs484A.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vs6021.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,7 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vs484A.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vs6021.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -189,6 +190,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\API\APIAreaRegistration.cs" />
+    <Compile Include="Areas\API\Controllers\FileController.cs" />
     <Compile Include="Areas\API\Controllers\GroupController.cs" />
     <Compile Include="Areas\API\Controllers\ProcessController.cs" />
     <Compile Include="Content\resources\CWcommon.vi.Designer.cs">
@@ -8511,6 +8513,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\API\Models\" />
+    <Folder Include="Areas\API\Views\File\" />
     <Folder Include="Areas\API\Views\Process\" />
     <Folder Include="Areas\API\Views\Shared\" />
     <Folder Include="Backup\Database\" />

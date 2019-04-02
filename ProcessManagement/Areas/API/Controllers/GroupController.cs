@@ -22,6 +22,7 @@ namespace ProcessManagement.Areas.API.Controllers
         ParticipateService participateService = new ParticipateService();
         UserService userService = new UserService();
         FileService fileService = new FileService();
+        TaskService taskService = new TaskService();
         ///=============================================================================================
 
         [GroupAuthorize]
@@ -225,60 +226,6 @@ namespace ProcessManagement.Areas.API.Controllers
 
             }
             var response = new { message = message, status = status };
-            return Json(response, JsonRequestBehavior.AllowGet);
-        }
-        [GroupAuthorize]
-        [HttpPost]
-        public JsonResult uploadFile(int groupid, HttpPostedFileBase FileUpload)
-        {
-            var status = HttpStatusCode.OK;
-            string message;
-            object response;
-            bool isFileOverSize = fileService.checkFileOverSize(FileUpload);
-            if (FileUpload.ContentLength == 0)
-            {
-                status = HttpStatusCode.NoContent;
-                message = "Your File is empty";
-                response = new { message = message, status = status };
-                return Json(response, JsonRequestBehavior.AllowGet);
-            }
-            if (isFileOverSize)
-            {
-                status = HttpStatusCode.InternalServerError;
-                message = "Your File pass our limit size rule";
-                response = new { message = message, status = status };
-                return Json(response, JsonRequestBehavior.AllowGet);
-            }
-            string filePath = String.Format("Upload/{0}", groupid);
-            FileManager f  = fileService.saveFile(groupid, FileUpload, filePath, FileDerection.Group);
-            object data = new
-            {
-                id = f.Id,
-                name = f.Name
-            };
-
-            message = "Save File Sucessfull";
-            response = new { message = message, data = data, status = status };
-            return Json(response, JsonRequestBehavior.AllowGet);
-        }
-        [GroupAuthorize]
-        [HttpPost]
-        public JsonResult removeFile(int groupid, string id)
-        {
-            var status = HttpStatusCode.OK;
-            string message;
-            object response;
-            FileManager file = fileService.findFile(id);
-            if (file == null)
-            {
-                status = HttpStatusCode.NotFound;
-                message = "File not found";
-                response = new { message = message, status = status };
-                return Json(response, JsonRequestBehavior.AllowGet);
-            }
-            fileService.removeFile(file);
-            message = "Remove File Sucessfull";
-            response = new { message = message, status = status };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
