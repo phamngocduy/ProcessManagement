@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Create Process";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var maxFileSizeRule = ViewData["FileMaxSize"] as ProcessManagement.Models.ConfigRule;
 }
 
 @section CustomCss{
@@ -48,7 +49,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="card">
             <div class="body">
-                <form action="@Url.RouteUrl("GroupLocalizedDefault",new { controller = "process", action = "newprocess"})" method="post" enctype="multipart/form-data">
+                <form action="@Url.RouteUrl("GroupLocalizedDefault",new { controller = "process", action = "newprocess"})" method="post" enctype="multipart/form-data" id="form-add-process">
                     <div class="row clearfix">
                         <div class="col-sm-12">
                             <div class="form-group">
@@ -85,6 +86,53 @@
     <script src="~/Content/vendor/dropify/js/dropify.min.js"></script>
     <script src="~/Content/vendor/summernote/dist/summernote.js"></script>
     <script src="~/Content/build/js/pages/forms/dropify.js"></script>
-
+    <script>
+        $(function () {
+            @if (maxFileSizeRule != null)
+            {
+                int value = maxFileSizeRule.Value;
+                string unit = maxFileSizeRule.Unit.ToLower().Trim();
+                int pow;
+                switch (unit)
+                {
+                    case "kb":
+                        pow = 1;
+                        break;
+                    case "mb":
+                        pow = 2;
+                        break;
+                    case "gb":
+                        pow = 3;
+                        break;
+                    default:
+                        pow = 0;
+                        break;
+                }
+                double toByte = value * Math.Pow(1024, pow);
+                @:var maxFileSize = @toByte;
+            }
+            else
+            {
+                @:var maxFileSize = null;
+            }
+            $("#form-add-process").on("submit", function () {
+                var processname = $("#process-name").val().trim();
+                var file = $("#process-file")[0].files[0];
+                
+                if (processname == "") {
+                    showToastr("error", "Process Name is required")
+                    return false;
+                }
+                if (file != null) {
+                    var fileSize = file.size;
+                    if (maxFileSize != null && fileSize > maxFileSize) {
+                        showToastr("error", "Your file pass our limit size rule")
+                        return false;
+                    }
+                }
+                return true;
+            })
+        })
+    </script>
 }
 
