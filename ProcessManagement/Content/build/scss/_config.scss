@@ -359,6 +359,11 @@ body, #wrapper{
                 }
             }
         }
+        .jconfirm {
+            .jconfirm-box.jconfirm-type-primary-theme{
+                border-top: 7px solid $color;
+            }
+        }
     }    
 }
 .row{

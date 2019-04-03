@@ -104,7 +104,7 @@
                                     <h5>@inputConfig["lable"]</h5>
                                 }
                                 <div class="row" style="margin-left:0;margin-right:0;">
-                                    <textarea class="form-control" rows="6" id="task-inputtext" @if (bool.Parse(fileConfig["required"].ToString())) { WriteLiteral("required"); }></textarea>
+                                    <textarea class="form-control" rows="6" id="task-inputtext"></textarea>
                                 </div>
                             </div>
                             <div class="choose-item col-sm-12 form-group" id="choose-file">
@@ -117,7 +117,7 @@
                                     <h5>@fileConfig["lable"]</h5>
                                 }
                                 <div class="row" style="margin-left:0;margin-right:0;">
-                                    <input type="file" id="task-inputfile" name="task-inputfile" value="" @if (bool.Parse(fileConfig["required"].ToString())) { WriteLiteral("required"); } />
+                                    <input type="file" id="task-inputfile" name="task-inputfile"/>
                                 </div>
                             </div>
                             <div class="choose-item col-sm-12 form-group" id="choose-comment">

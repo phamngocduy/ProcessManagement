@@ -737,7 +737,7 @@
                             </a>
                         </td>
                         <td style="text-align:center">
-                            <button class="btn btn-warning waves-effect btn-file-changename" data-src="${file.id}" data-toggle="tooltip" data-placement="top" title="Change Name">
+                            <button class="btn btn-primary-theme waves-effect btn-file-changename" data-src="${file.id}" data-toggle="tooltip" data-placement="top" title="Change Name">
                                 <i class=" icon-pencil"></i>
                             </button>
                             <button class="btn btn-danger waves-effect btn-file-remove" data-src="${file.id}" data-toggle="tooltip" data-placement="top" title="Remove">
@@ -749,8 +749,8 @@
         }
         function setConfirm(content,okfunction,cancelfunction) {
             $.confirm({
-                title: 'Warning!',
-                type: 'orange',
+                title: 'Confirm!',
+                type: 'primary-theme',
                 theme: 'material',
                 icon: 'fa fa-question',
                 closeIcon: true,
@@ -759,7 +759,7 @@
                 columnClass: 'medium',
                 buttons: {
                     ok: {
-                        btnClass: 'btn-orange waves-effect',
+                        btnClass: 'btn-primary-theme waves-effect',
                         action: okfunction
                     },
                     cancel: {

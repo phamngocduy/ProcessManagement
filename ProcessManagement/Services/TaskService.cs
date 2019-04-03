@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ProcessManagement.Models;
 
@@ -235,8 +236,8 @@ namespace ProcessManagement.Services
                 fileConfig.Add("value", valuefile);
             }
             
-            taskrun.ValueInputText = inputConfig.ToString();
-            taskrun.ValueInputFile = fileConfig.ToString();
+            taskrun.ValueInputText = inputConfig.ToString(Formatting.None);
+            taskrun.ValueInputFile = fileConfig.ToString(Formatting.None);
             db.SaveChanges();
         }
     }

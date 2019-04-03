@@ -252,6 +252,9 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-purple .wizard .actions ul li.disabled a {
   cursor: not-allowed;
 }
+.theme-purple .jconfirm .jconfirm-box.jconfirm-type-primary-theme {
+  border-top: 7px solid #a27ce6;
+}
 
 .theme-cyan #toast-container .toast-info {
   background-color: #2eacb3;
@@ -441,6 +444,9 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 }
 .theme-cyan .wizard .actions ul li.disabled a {
   cursor: not-allowed;
+}
+.theme-cyan .jconfirm .jconfirm-box.jconfirm-type-primary-theme {
+  border-top: 7px solid #2eacb3;
 }
 
 .theme-blue #toast-container .toast-info {
@@ -632,6 +638,9 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-blue .wizard .actions ul li.disabled a {
   cursor: not-allowed;
 }
+.theme-blue .jconfirm .jconfirm-box.jconfirm-type-primary-theme {
+  border-top: 7px solid #449cff;
+}
 
 .theme-green #toast-container .toast-info {
   background-color: #31b96f;
@@ -821,6 +830,9 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 }
 .theme-green .wizard .actions ul li.disabled a {
   cursor: not-allowed;
+}
+.theme-green .jconfirm .jconfirm-box.jconfirm-type-primary-theme {
+  border-top: 7px solid #31b96f;
 }
 
 .theme-orange #toast-container .toast-info {
@@ -1012,6 +1024,9 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-orange .wizard .actions ul li.disabled a {
   cursor: not-allowed;
 }
+.theme-orange .jconfirm .jconfirm-box.jconfirm-type-primary-theme {
+  border-top: 7px solid #ff613c;
+}
 
 .theme-blush #toast-container .toast-info {
   background-color: #e84f5e;
@@ -1201,6 +1216,9 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 }
 .theme-blush .wizard .actions ul li.disabled a {
   cursor: not-allowed;
+}
+.theme-blush .jconfirm .jconfirm-box.jconfirm-type-primary-theme {
+  border-top: 7px solid #e84f5e;
 }
 
 .row.display-flex {
