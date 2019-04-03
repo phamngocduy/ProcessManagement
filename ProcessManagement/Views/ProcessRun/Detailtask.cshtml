@@ -1,0 +1,187 @@
+﻿@model ProcessManagement.Models.TaskProcessRun
+
+@{
+    ViewBag.Title = "Detailtask";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
+    var isManager = userRole.IsManager;
+    JObject inputConfig = new JObject();
+    if (Model.ValueInputText != null)
+    {
+        inputConfig = JObject.Parse(Model.ValueInputText);
+    }
+    JObject fileConfig = new JObject();
+    if (Model.ValueInputFile != null)
+    {
+        fileConfig = JObject.Parse(Model.ValueInputFile);
+    }
+}
+
+@section CustomCss{
+    <link rel="stylesheet" href="~/Content/vendor/dropify/css/dropify.min.css">
+    <link rel="stylesheet" href="~/Content/vendor/select2/select2.css" />
+    <link rel="stylesheet" href="~/Content/vendor/switchery/dist/switchery.min.css" />
+}
+
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+            <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth primary-theme"><i class="fa fa-arrow-left"></i></a>Submit Task</h2>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="~/Home/Index" class="primary-theme"><i class="icon-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="/" class="primary-theme">Groups</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = Model.StepRun.ProcessRun.Process.IdGroup })" class="primary-theme">@Model.StepRun.ProcessRun.Process.Group.Name</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.Id })" class="primary-theme">@Model.StepRun.ProcessRun.Name</a></li>
+                <li class="breadcrumb-item"><a href="" class="primary-theme">@Model.StepRun.Name</a></li>
+                <li class="breadcrumb-item"><a href="" class="primary-theme"> @Model.Name</a></li>
+            </ul>
+        </div>
+        <div class="col-lg-6 col-md-4 col-sm-12 text-right">
+            <div class="bh_chart hidden-xs">
+                <div class="float-left m-r-15">
+                    <small>Visitors</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-user"></i> 1,784</h6>
+                </div>
+                <span class="bh_visitors float-right">2,5,1,8,3,6,7,5</span>
+            </div>
+            <div class="bh_chart hidden-sm">
+                <div class="float-left m-r-15">
+                    <small>Visits</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-globe"></i> 325</h6>
+                </div>
+                <span class="bh_visits float-right">10,8,9,3,5,8,5</span>
+            </div>
+            <div class="bh_chart hidden-sm">
+                <div class="float-left m-r-15">
+                    <small>Chats</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-bubbles"></i> 13</h6>
+                </div>
+                <span class="bh_chats float-right">1,8,5,6,2,4,3,2</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="body" id="show-task">
+                <div class="row clearfix">
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <label for="task-name" class="required">Task Name</label>
+                            <input type="text" class="form-control" id="task-name" name="@Html.NameFor(m => m.Name)" value="@Model.Name" disabled>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="task-role">Select Role</label>
+                        <select id="task-role" class="form-control show-tick ms select2" disabled>
+                            <option>@Model.Role.Name</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="task-description">Description</label>
+                    <textarea class="form-control" rows="2" placeholder="Write something about your task (optional)" id="task-description" name="@Html.NameFor(m => m.Description)" disabled>@Model.Description</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="body" id="show-taskrun">
+                <div class="row clearfix">
+                    <div class="col-sm-12 ">
+                        <div class="choose-type row">
+                            <div class="choose-item col-sm-12 form-group" id="choose-input">
+                                @if (inputConfig["lable"] == null)
+                                {
+                                    <h5>Response Label</h5>
+                                }
+                                else
+                                {
+                                    <h5>@inputConfig["lable"]</h5>
+                                }
+                                <div class="row" style="margin-left:0;margin-right:0;">
+                                    <textarea class="form-control" rows="6" id="task-inputtext" @if (bool.Parse(fileConfig["required"].ToString())) { WriteLiteral("required"); }></textarea>
+                                </div>
+                            </div>
+                            <div class="choose-item col-sm-12 form-group" id="choose-file">
+                                @if (fileConfig["lable"] == null)
+                                {
+                                    <h5>Upload file</h5>
+                                }
+                                else
+                                {
+                                    <h5>@fileConfig["lable"]</h5>
+                                }
+                                <div class="row" style="margin-left:0;margin-right:0;">
+                                    <input type="file" id="task-inputfile" name="task-inputfile" value="" @if (bool.Parse(fileConfig["required"].ToString())) { WriteLiteral("required"); } />
+                                </div>
+                            </div>
+                            <div class="choose-item col-sm-12 form-group" id="choose-comment">
+                                <h5>Comment</h5>
+                                <div class="row" style="margin-left:0;margin-right:0;">
+                                    <textarea class="form-control" rows="3" id="task-comment"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="mt-2" id="button-action">
+                                <button id="btn-savetask" class="btn btn-primary-theme">Save</button>
+                                <button id="btn-done" class="btn btn-primary-theme">Done</button>
+
+                            </div>
+                        </div>
+                        @if (isManager)
+                        {
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    @section CustomScripts{
+        <script src="~/Content/vendor/dropify/js/dropify.min.js"></script>
+        <script src="~/Content/build/js/pages/forms/dropify.js"></script>
+        <script src="~/Content/vendor/select2/select2.min.js"></script>
+        <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
+
+        <script>
+            $(function () {
+                $('#btn-savetask').on('click', function () {
+                    var valuetext = $('#task-inputtext').val();
+                    var valuefile = $('#task-inputfile').val();
+                    
+                    let data = {
+                        valuetext: valuetext,
+                        valuefile: valuefile,
+                        idtaskrun: @Model.Id
+                    }
+                    savevalueruntask(data);
+                })
+
+                function savevalueruntask(data) {
+                    $.ajax({
+                        url: "@Url.Action("savevalueruntask", "processrun",new { area = "api"})",
+                        type: "POST",
+                        data: data,
+                        dataType: "json",
+                        success: function (response) {
+                            console.log(response);
+                            if (response.status == 200) {
+                                //showToastr("error", "Error!!", "toast-bottom-left")
+                                window.location.reload();
+                                console.error(response)
+                            }
+                        }
+                    });
+                }
+            });
+        </script>
+    }

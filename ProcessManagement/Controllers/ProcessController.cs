@@ -80,6 +80,10 @@ namespace ProcessManagement.Controllers
         {
             Process ps = processService.findProcess(processid);
             if (ps == null) return HttpNotFound();
+            if (ps.Steps.Count > 0)
+            {
+                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "editprocess", processid = ps.Id });
+            }
             return View(ps);
         }
         [Authorize]
@@ -346,6 +350,10 @@ namespace ProcessManagement.Controllers
                 var loadprocess = ps.DataJson.ToString();
                 JObject load = JObject.Parse(loadprocess);
                 ViewData["load"] = load;
+            }
+            if (ps.Steps.Count < 1)
+            {
+                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "draw", processid = ps.Id });
             }
             return View(ps);
         }

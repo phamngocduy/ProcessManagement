@@ -1,6 +1,4 @@
 ﻿@using ProcessManagement.Models;
-@model List<ProcessManagement.Models.Step>
-
 @{
     PMSEntities db = new PMSEntities();
     ViewBag.Title = "ShowStep";
@@ -10,6 +8,7 @@
     var statistic = ViewData["Statistic"] as dynamic;
     var listRole = ViewData["ListRole"] as List<ProcessManagement.Models.Role>;
     var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
+    var listnextstep1 = ViewData["listnextstep1"] as List<ProcessManagement.Models.Step>;
     var isManager = userRole.IsManager;
     var files = ViewData["Files"] as List<ProcessManagement.Models.FileManager>;
     var maxFileSizeRule = ViewData["FileMaxSize"] as ProcessManagement.Models.ConfigRule;
@@ -68,6 +67,7 @@
                 @if (isManager)
                 {
                     <div class="progress-container progress-info m-b-25 clearfix" style="margin: 0; text-align:right">
+                    
                         <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "EditProcess", processid = process.Id })" class="btn btn-xs btn-primary-theme waves-effect">Edit Process</a>
                         <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "Setting", processid = process.Id })" class="btn btn-xs btn-default waves-effect"><i class="icon-settings"></i></a>
                     </div>
@@ -116,7 +116,7 @@
                                         @role.Name
                                         @if (isManager)
                                         {
-                                             <span style="float :right">
+                                            <span style="float :right">
                                                 <a class="btn btn-sm btn-outline-success" style=" margin-left: 10px" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "editrole", roleid = role.Id})">
                                                     <i class="icon-pencil"></i>
                                                 </a>
@@ -167,53 +167,57 @@
             </div>
             <div class="body">
                 <ul class="step-list">
-                    @if (Model != null)
+                    @if (listnextstep1 != null)
                     {
-                        foreach (var step in Model.Where(x => x.Figure == "Step" && (x.IsRun == null || x.IsRun == false)))
-                    {
-                        List<TaskProcess> taskList = db.TaskProcesses.Where(x => x.IdStep == step.Id).OrderBy(x => x.Position).ToList();
-                        <li>
-                            <div class="step @if (taskList.Any()) { WriteLiteral("step-has-task"); }" style="border: 2px solid @step.Color; border-left:7px solid @step.Color; color:@step.Color">
-                                <div class="step-name">
-                                    <span data-toggle="tooltip" data-placement="top" title="@step.Description">@step.Name (@taskList.Where(x => x.IsRun == null || x.IsRun == false).Count())</span>
-                                </div>
-                                @if (isManager)
-	                            {
-                                    <div class="step-action dropdown">
-                                        <a style="color: @step.Color" href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></a>
-                                        <ul class="dropdown-menu notifications animated fadeIn">
-                                            <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "editstep", groupslug = group.groupSlug, groupid = group.Id, stepid = step.Id })">Edit step</a></li>
-                                            <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "addtask", stepid = step.Id })">Add task</a></li>
-                                            <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "addformtask", stepid = step.Id })">Add form task</a></li>
+                        foreach (var step in listnextstep1.Where(x => x.Figure == "Step" && x.IsRun == false))
+                        {
+                            if (step != null && step.Figure == "Step" && step.IsRun == false)
+                            {
+                                List<TaskProcess> taskList = db.TaskProcesses.Where(x => x.IdStep == step.Id).OrderBy(x => x.Position).ToList();
+                                <li>
+                                    <div class="step @if (taskList.Any()) { WriteLiteral("step-has-task"); }" style="border: 2px solid @step.Color; border-left:7px solid @step.Color; color:@step.Color">
+                                        <div class="step-name">
+                                            <span data-toggle="tooltip" data-placement="top" title="@step.Description">@step.Name (@taskList.Where(x => x.IsRun == null || x.IsRun == false).Count())</span>
+                                        </div>
+                                        @if (isManager)
+                                        {
+                                            <div class="step-action dropdown">
+                                                <a style="color: @step.Color" href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></a>
+                                                <ul class="dropdown-menu notifications animated fadeIn">
+                                                    <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "editstep", groupslug = group.groupSlug, groupid = group.Id, stepid = step.Id })">Edit step</a></li>
+                                                    <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "addtask", stepid = step.Id })">Add task</a></li>
+                                                    <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "addformtask", stepid = step.Id })">Add form task</a></li>
+                                                </ul>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="task">
+                                        <ul class="task-list" id="task-of-step-@step.Id">
+                                            @foreach (var task in taskList.Where(x => x.IsRun == null || x.IsRun == false))
+                                            {
+                                                <li class="task-item" style="background-color:@task.Color" data-id="@task.Id">
+                                                    @if (task.ValueFormJson == null)
+                                                    {
+                                                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showtask", taskid = task.Id })">@task.Name</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showformtask", taskid = task.Id })">@task.Name</a>
+                                                    }
+                                                    @if (isManager)
+                                                    {
+                                                        <i class="fa fa-arrows-alt handle"></i>
+                                                    }
+                                                </li>
+                                            }
                                         </ul>
                                     </div>
-	                            }
-                            </div>
-                            <div class="task">
-                                <ul class="task-list" id="task-of-step-@step.Id">
-                                    @foreach (var task in taskList.Where(x => x.IsRun == null || x.IsRun == false))
-                                    {
-                                    <li class="task-item" style="background-color:@task.Color" data-id="@task.Id">
-                                        @if (task.ValueFormJson == null)
-                                        {
-                                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showtask", taskid = task.Id })">@task.Name</a>
-                                        }
-                                        else
-                                        {
-                                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showformtask", taskid = task.Id })">@task.Name</a>
-                                        }
-                                        @if (isManager)
-	                                    {
-                                            <i class="fa fa-arrows-alt handle"></i>
-	                                    }
-                                    </li>
-                                    }
-                                </ul>
-                            </div>
-                        </li>
+                                </li>
+                            }
+
+                        }
                     }
-                    }
-                    
+
                 </ul>
             </div>
         </div>

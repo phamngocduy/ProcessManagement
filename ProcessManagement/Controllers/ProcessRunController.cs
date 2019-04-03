@@ -154,5 +154,15 @@ namespace ProcessManagement.Controllers
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             return View(listnextstep1);
         }
+
+        [GroupAuthorize]
+        public ActionResult Detailtask(int idruntask)
+        {
+            string idUser = User.Identity.GetUserId();
+            TaskProcessRun taskrun = taskService.findTaskRun(idruntask);
+            if (taskrun == null) return HttpNotFound();            
+            ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
+            return View(taskrun);
+        }
     }
 }

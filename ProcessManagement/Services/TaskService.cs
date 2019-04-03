@@ -212,5 +212,32 @@ namespace ProcessManagement.Services
             db.SaveChanges();
         }
         
+        public void submitvaluetask(string valuetext, string valuefile, int idtaskrun)
+        {
+            TaskProcessRun taskrun = findTaskRun(idtaskrun);
+            JObject inputConfig = new JObject();
+            if (taskrun.ValueInputText != null)
+            {
+                inputConfig = JObject.Parse(taskrun.ValueInputText);
+            }
+            JObject fileConfig = new JObject();
+            if (taskrun.ValueInputFile != null)
+            {
+                fileConfig = JObject.Parse(taskrun.ValueInputFile);
+            }
+            if (inputConfig["value"] == null)
+            {
+                inputConfig.Add("value", valuetext);
+            }
+
+            if (fileConfig["value"] == null)
+            {
+                fileConfig.Add("value", valuefile);
+            }
+            
+            taskrun.ValueInputText = inputConfig.ToString();
+            taskrun.ValueInputFile = fileConfig.ToString();
+            db.SaveChanges();
+        }
     }
 }
