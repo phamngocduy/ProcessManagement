@@ -48,7 +48,7 @@ namespace ProcessManagement.Services
                     f.Id = commonService.getRandomString(50);
                     f.IdGroup = idGroup;
                     f.Name = fileName;
-                    f.Path = string.Format("{0}/{1}", savePath, fileName);
+                    f.Path = savePath;
                     f.Type = extension;
                     f.Direction = Derection.ToString();
                     f.Create_At = DateTime.Now;
@@ -90,7 +90,7 @@ namespace ProcessManagement.Services
         public void removeFile(FileManager file)
         {
             string AppPath = AppDomain.CurrentDomain.BaseDirectory;
-            string filePath = AppPath + file.Path;
+            string filePath = AppPath + string.Format("{0}/{1}", file.Path, file.Name);
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
@@ -102,24 +102,22 @@ namespace ProcessManagement.Services
         public FileManager changeFileName(FileManager file,string filename)
         {
             string AppPath = AppDomain.CurrentDomain.BaseDirectory;
-            string newFilePath = file.Path.Replace(file.Name, filename);
-            string filePath = AppPath + file.Path;
-            string targetPath = AppPath + newFilePath;
+            string filePath = AppPath + string.Format("{0}/{1}", file.Path, file.Name);
+            string targetPath = AppPath + string.Format("{0}/{1}", file.Path, filename);
             if (File.Exists(filePath))
             {
                 File.Copy(filePath, targetPath, true);
                 File.Delete(filePath);
             }
             file.Name = filename;
-            file.Path = newFilePath;
             //TODO: Update Type cho file
             file.Update_At = DateTime.Now;
             db.SaveChanges();
             return file;
         }
-        public bool checkFileExist(int idGroup,string name, FileDirection direction)
+        public bool checkFileExist(int idGroup,string name, FileDirection direction, string path)
         {
-            var file = db.FileManagers.FirstOrDefault(x => x.IdGroup == idGroup && x.Direction == direction.ToString() && x.Name == name);
+            var file = db.FileManagers.FirstOrDefault(x => x.IdGroup == idGroup && x.Direction == direction.ToString() && x.Path == path && x.Name == name);
             return file != null ? true : false;
         }
         /// <summary>

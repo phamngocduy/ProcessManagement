@@ -141,7 +141,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 response = new { message = message, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
-            var isFileExisted = fileService.checkFileExist(groupid, filename, (FileDirection)Enum.Parse(typeof(FileDirection), file.Direction));
+            var isFileExisted = fileService.checkFileExist(groupid, filename, (FileDirection)Enum.Parse(typeof(FileDirection), file.Direction), file.Path);
             if (isFileExisted)
             {
                 status = HttpStatusCode.InternalServerError;

@@ -636,7 +636,7 @@
                     closeIconClass: 'fa fa-close',
                     buttons: {
                         confirm: {
-                            btnClass: 'btn-primary-theme waves-effect',
+                            btnClass: 'btn-none waves-effect',
                             action: function () {
                                 var newFileName = this.$content.find('input').val().trim();
                                 if (newFileName == "") {
@@ -652,7 +652,7 @@
                             }
                         },
                         cancel: {
-                            btnClass: 'btn-default waves-effect',
+                            btnClass: 'btn-none waves-effect',
                         }
                     },
                     onContentReady: function () {
@@ -669,10 +669,9 @@
                 if (maxFileSize != null && fileSize > maxFileSize) {
                     showToastr("error", "Your file pass our limit size rule");
                 } else {
-                    var check = confirm(`Are you sure you want to upload "${fileName}"?`);
-                    if (check) {
+                    setConfirm(`Are you sure you want to upload "${fileName}"?`, function () {
                         addFile(file);
-                    }
+                    });
                 }
                 $(this).val("");
 
@@ -759,11 +758,11 @@
                 columnClass: 'medium',
                 buttons: {
                     ok: {
-                        btnClass: 'btn-primary-theme waves-effect',
+                        btnClass: 'btn-none waves-effect',
                         action: okfunction
                     },
                     cancel: {
-                        btnClass: 'btn-default waves-effect',
+                        btnClass: 'btn-none waves-effect',
                         action: cancelfunction
                     }
                 },
