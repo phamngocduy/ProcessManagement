@@ -618,11 +618,9 @@
             $(document).on("click", ".btn-file-remove", function () {
                 var id = this.dataset.src;
                 var fileName = $(this).parents("tr").find("td:first-child").text().trim();
-                var check = confirm(`Are you sure you want to delete "${fileName}"?`);
-                $(this).tooltip("hide");
-                if (check) {
+                setConfirm(`Are you sure you want to delete "${fileName}"?`, function () {
                     removeFile(id);
-                }
+                });
              })
              $(document).on("click", ".btn-file-changename", function () {
                 var id = this.dataset.src;
@@ -634,6 +632,8 @@
                         '<input type="text" placeholder="Enter your new file name" class="name form-control" required />' +
                         '</div>',
                     columnClass: 'medium',
+                    closeIcon: true,
+                    closeIconClass: 'fa fa-close',
                     buttons: {
                         confirm: {
                             btnClass: 'btn-primary-theme waves-effect',
@@ -749,11 +749,17 @@
         }
         function setConfirm(content,okfunction,cancelfunction) {
             $.confirm({
+                title: 'Warning!',
+                type: 'orange',
+                theme: 'material',
+                icon: 'fa fa-question',
+                closeIcon: true,
+                closeIconClass: 'fa fa-close',
                 content: content,
                 columnClass: 'medium',
                 buttons: {
                     ok: {
-                        btnClass: 'btn-primary-theme waves-effect',
+                        btnClass: 'btn-orange waves-effect',
                         action: okfunction
                     },
                     cancel: {
