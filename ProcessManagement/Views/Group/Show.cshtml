@@ -621,8 +621,8 @@
                 setConfirm(`Are you sure you want to delete "${fileName}"?`, function () {
                     removeFile(id);
                 });
-             })
-             $(document).on("click", ".btn-file-changename", function () {
+            })
+            $(document).on("click", ".btn-file-changename", function () {
                 var id = this.dataset.src;
                 var fileName = $(this).parents("tr").find("td:first-child").text().trim();
                 var dialog = $.confirm({
@@ -635,7 +635,7 @@
                     closeIcon: true,
                     closeIconClass: 'fa fa-close',
                     buttons: {
-                        confirm: {
+                        save: {
                             btnClass: 'btn-none waves-effect',
                             action: function () {
                                 var newFileName = this.$content.find('input').val().trim();
@@ -659,7 +659,6 @@
                         this.$content.find("input").val(fileName);
                     },
                 });
-                
             })
             $("#FileUpload").on("change", function () {
                 //var fileName = e.target.files[0].name;

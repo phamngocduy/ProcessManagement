@@ -5,16 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
     var isManager = userRole.IsManager;
-    JObject inputConfig = new JObject();
-    if (Model.ValueInputText != null)
-    {
-        inputConfig = JObject.Parse(Model.ValueInputText);
-    }
-    JObject fileConfig = new JObject();
-    if (Model.ValueInputFile != null)
-    {
-        fileConfig = JObject.Parse(Model.ValueInputFile);
-    }
+    var inputConfig = ViewData["ValueInput"] as JObject;
+    var fileConfig = ViewData["ValueFile"] as JObject;
 }
 
 @section CustomCss{
@@ -93,34 +85,40 @@
             <div class="body" id="show-taskrun">
                 <div class="row clearfix">
                     <div class="col-sm-12 ">
-                        <div class="choose-type row">
-                            <div class="choose-item col-sm-12 form-group" id="choose-input">
-                                @if (inputConfig["lable"] == null)
-                                {
-                                    <h5>Response Label</h5>
+                        <div class="row">
+                            <div class="col-sm-12 form-group" id="choose-input">
+                                @{
+                                    string textLabel;
+                                    if ((string)inputConfig["label"] == "")
+                                    {
+                                        textLabel = "Response Label";
+                                    }else
+                                    {
+                                        textLabel = (string)inputConfig["label"];
+
+                                    }
                                 }
-                                else
-                                {
-                                    <h5>@inputConfig["lable"]</h5>
-                                }
-                                <div class="row" style="margin-left:0;margin-right:0;">
-                                    <textarea class="form-control" rows="6" id="task-inputtext"></textarea>
-                                </div>
+                                
+                                <label @if ((bool)inputConfig["required"]) { WriteLiteral("class='required'"); }>@textLabel</label>
+                                <input class="form-control" id="task-inputtext">
                             </div>
-                            <div class="choose-item col-sm-12 form-group" id="choose-file">
-                                @if (fileConfig["lable"] == null)
-                                {
-                                    <h5>Upload file</h5>
+                            <div class="col-sm-12 form-group" id="choose-file">
+                                @{
+                                    string fileLabel;
+                                    if ((string)inputConfig["label"] == "")
+                                    {
+                                        fileLabel = "Response File";
+                                    }
+                                    else
+                                    {
+                                        fileLabel = (string)inputConfig["label"];
+
+                                    }
                                 }
-                                else
-                                {
-                                    <h5>@fileConfig["lable"]</h5>
-                                }
-                                <div class="row" style="margin-left:0;margin-right:0;">
-                                    <input type="file" id="task-inputfile" name="task-inputfile"/>
-                                </div>
+                                <label @if ((bool)fileConfig["required"]) { WriteLiteral("class='required'"); }>@fileLabel</label>
+                                <input type="file" id="task-inputfile" name="task-inputfile" />
                             </div>
-                            <div class="choose-item col-sm-12 form-group" id="choose-comment">
+                            <div class="col-sm-12 form-group" id="choose-comment">
                                 <h5>Comment</h5>
                                 <div class="row" style="margin-left:0;margin-right:0;">
                                     <textarea class="form-control" rows="3" id="task-comment"></textarea>
