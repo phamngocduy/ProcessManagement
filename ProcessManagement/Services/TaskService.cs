@@ -236,8 +236,15 @@ namespace ProcessManagement.Services
                 fileConfig.Add("value", valuefile);
             }
             
-            taskrun.ValueInputText = inputConfig.ToString(Formatting.None);
-            taskrun.ValueInputFile = fileConfig.ToString(Formatting.None);
+            taskrun.ValueInputText = inputConfig.ToString(Newtonsoft.Json.Formatting.None);
+            taskrun.ValueInputFile = fileConfig.ToString(Newtonsoft.Json.Formatting.None);
+            db.SaveChanges();
+        }
+
+        public void savevaluetaskform(int idtaskrun, string formrender)
+        {
+            TaskProcessRun taskform = findTaskRun(idtaskrun);
+            taskform.ValueFormJson = formrender;
             db.SaveChanges();
         }
     }

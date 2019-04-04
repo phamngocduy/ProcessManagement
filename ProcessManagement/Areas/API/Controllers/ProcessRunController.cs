@@ -39,5 +39,19 @@ namespace ProcessManagement.Areas.API.Controllers
             SetFlash(FlashType.success, "Save Task");
             return Json(response, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public JsonResult savetaskform(int idtaskrun, string formrender)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+
+            taskService.savevaluetaskform(idtaskrun, formrender);
+
+            message = "Created ProcessRun Successfully";
+            response = new { message = message, status = status };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
     }
 }

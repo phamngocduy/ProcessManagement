@@ -246,9 +246,10 @@ namespace ProcessManagement.Controllers
             ViewData["Statistic"] = processStatisticModel;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             ViewData["Files"] = files;
+            ViewData["listnextstep1"] = listnextstep1;
             //get maximum file config
             ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
-            return View(listnextstep1);
+            return View();
         }
         [GroupAuthorize]
         public ActionResult EditStep(int stepid)

@@ -103,7 +103,26 @@
 
     <script>
         $(function () {
-            var formB = $("#build-wrap").formBuilder();
+            var options = {
+                disableFields: [
+                    'button',
+                    'header',
+                    'hidden',
+                    'paragraph'
+                ],
+                disabledAttrs: [
+                    'access',
+                    'className',
+                    'placeholder',
+                    'name',
+                    'value',
+                    'inline',
+                    'other',
+                    'step',
+                    'toggle'
+                ]
+            };
+            var formB = $("#build-wrap").formBuilder(options);
             createSwitch();
             $("select#task-role").select2({
                 placeholder: "Select Role",

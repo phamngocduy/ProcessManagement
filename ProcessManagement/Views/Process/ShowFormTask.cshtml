@@ -115,9 +115,29 @@
             $("body").on("click", "#btn-edit",function () {
                 var $this = $(this);
                 var temp = bAction;
+                var options = {
+                    disableFields: [
+                        'button',
+                        'header',
+                        'hidden',
+                        'paragraph'
+                    ],
+                    disabledAttrs: [
+                        'access',
+                        'className',
+                        'placeholder',
+                        'name',
+                        'value',
+                        'inline',
+                        'other',
+                        'step',
+                        'toggle'
+                    ],
+                    formData
+                };
                 if (taskform != null) {
                     var fbEditor = document.getElementById('build-wrap');
-                    form = $(fbEditor).formBuilder({ formData });
+                    form = $(fbEditor).formBuilder(options);
                 }
 
                 var actionButton = $this.parents("#button-action");
