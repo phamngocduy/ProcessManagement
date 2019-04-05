@@ -31,9 +31,12 @@ namespace ProcessManagement.Models
         public Nullable<int> Status { get; set; }
         public Nullable<System.DateTime> Created_at { get; set; }
         public Nullable<System.DateTime> Updated_At { get; set; }
+        public string ApproveBy { get; set; }
+        public Nullable<System.DateTime> Approve_At { get; set; }
     
         public virtual ProcessRun ProcessRun { get; set; }
         public virtual Status Status1 { get; set; }
+        public virtual AspNetUser AspNetUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TaskProcessRun> TaskProcessRuns { get; set; }
     }

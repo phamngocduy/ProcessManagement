@@ -22,6 +22,9 @@ namespace ProcessManagement.Models
             this.Groups = new HashSet<Group>();
             this.Participates = new HashSet<Participate>();
             this.Processes = new HashSet<Process>();
+            this.StepRuns = new HashSet<StepRun>();
+            this.TaskProcessRuns = new HashSet<TaskProcessRun>();
+            this.TaskProcessRuns1 = new HashSet<TaskProcessRun>();
         }
     
         public string Id { get; set; }
@@ -50,5 +53,11 @@ namespace ProcessManagement.Models
         public virtual ICollection<Participate> Participates { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Process> Processes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<StepRun> StepRuns { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TaskProcessRun> TaskProcessRuns { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TaskProcessRun> TaskProcessRuns1 { get; set; }
     }
 }

@@ -408,37 +408,6 @@ namespace ProcessManagement.Areas.API.Controllers
             SetFlash(FlashType.success, "Step Done");
             return Json(response, JsonRequestBehavior.AllowGet);
         }
-
-        [HttpPost]
-        public JsonResult submitclosetask(int idtask)
-        {
-            var status = HttpStatusCode.OK;
-            string message;
-            object response;
-
-            TaskProcessRun taskrun = taskService.findTaskRun(idtask);
-            taskService.submitclosetask(taskrun.Id);
-
-            message = "Created ProcessRun Successfully";
-            response = new { message = message, status = status };
-            SetFlash(FlashType.success, "Close Task");
-            return Json(response, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public JsonResult submitopentask(int idtask)
-        {
-            var status = HttpStatusCode.OK;
-            string message;
-            object response;
-
-            TaskProcessRun taskrun = taskService.findTaskRun(idtask);
-            taskService.submitopentask(taskrun.Id);
-
-            message = "Created ProcessRun Successfully";
-            response = new { message = message, status = status };
-            SetFlash(FlashType.success, "Open Task");
-            return Json(response, JsonRequestBehavior.AllowGet);
-        }
+        
     }
 }

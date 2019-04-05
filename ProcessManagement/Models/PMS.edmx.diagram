@@ -18,13 +18,11 @@
         <EntityTypeShape EntityType="PMSModel.Step" Width="1.5" PointX="10.5" PointY="17" />
         <EntityTypeShape EntityType="PMSModel.StepRun" Width="1.5" PointX="12.75" PointY="12.25" />
         <EntityTypeShape EntityType="PMSModel.TaskProcess" Width="1.5" PointX="12.75" PointY="19" />
-        <EntityTypeShape EntityType="PMSModel.TaskProcessRun" Width="1.5" PointX="15" PointY="16.375" />
         <AssociationConnector Association="PMSModel.FK_AssignRole_AspNetUsers" />
         <AssociationConnector Association="PMSModel.FK_Comment_AspNetUsers" />
         <AssociationConnector Association="PMSModel.FK_Group_AspNetUsers" />
         <AssociationConnector Association="PMSModel.FK_Participate_AspNetUsers" />
         <AssociationConnector Association="PMSModel.FK_Process_AspNetUsers" />
-        <AssociationConnector Association="PMSModel.FK_Comment_TaskProcessRun" />
         <AssociationConnector Association="PMSModel.FK_FileManager_Group" />
         <AssociationConnector Association="PMSModel.FK_Participate_Group" />
         <AssociationConnector Association="PMSModel.FK_Process_Group" />
@@ -35,12 +33,17 @@
         <AssociationConnector Association="PMSModel.FK_StepRun_Instance" />
         <AssociationConnector Association="PMSModel.FK_AssignRole_Role" />
         <AssociationConnector Association="PMSModel.FK_TaskProcess_Role" />
-        <AssociationConnector Association="PMSModel.FK_TaskProcessRun_Role" />
         <AssociationConnector Association="PMSModel.FK_StepRun_Status" />
-        <AssociationConnector Association="PMSModel.FK_TaskProcessRun_Status" />
         <AssociationConnector Association="PMSModel.FK_TaskProcess_Step" />
-        <AssociationConnector Association="PMSModel.FK_TaskProcessRun_StepRun" />
         <EntityTypeShape EntityType="PMSModel.ConfigRule" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PMSModel.TaskProcessRun" Width="1.5" PointX="15" PointY="16.75" />
+        <AssociationConnector Association="PMSModel.FK_StepRun_AspNetUsers" />
+        <AssociationConnector Association="PMSModel.FK_TaskProcessRun_AspNetUsers" />
+        <AssociationConnector Association="PMSModel.FK_TaskProcessRun_AspNetUsers1" />
+        <AssociationConnector Association="PMSModel.FK_Comment_TaskProcessRun" />
+        <AssociationConnector Association="PMSModel.FK_TaskProcessRun_Role" />
+        <AssociationConnector Association="PMSModel.FK_TaskProcessRun_Status" />
+        <AssociationConnector Association="PMSModel.FK_TaskProcessRun_StepRun" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

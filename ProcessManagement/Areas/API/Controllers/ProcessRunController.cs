@@ -51,6 +51,54 @@ namespace ProcessManagement.Areas.API.Controllers
 
             message = "Created ProcessRun Successfully";
             response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Save Task");
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult donetaskform(int idtaskrun, string formrender, string iduserby)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+
+            taskService.donetaskform(idtaskrun, formrender, iduserby);
+
+            message = "Created ProcessRun Successfully";
+            response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Save Task");
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult submitfinishtask(int idtask, string iduserby)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+
+            TaskProcessRun taskrun = taskService.findTaskRun(idtask);
+            taskService.submitclosetask(taskrun.Id, iduserby);
+
+            message = "Created ProcessRun Successfully";
+            response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Close Task");
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult submitopentask(int idtask)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+
+            TaskProcessRun taskrun = taskService.findTaskRun(idtask);
+            taskService.submitopentask(taskrun.Id);
+
+            message = "Created ProcessRun Successfully";
+            response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Open Task");
             return Json(response, JsonRequestBehavior.AllowGet);
         }
     }

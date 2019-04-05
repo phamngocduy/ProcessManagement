@@ -196,11 +196,13 @@ namespace ProcessManagement.Services
             taskrun.Updated_At = DateTime.Now;
             db.SaveChanges();
         }
-        public void submitclosetask(int idtaskrun)
+        public void submitclosetask(int idtaskrun, string iduserby)
         {
-            Status status = db.Status.Where(y => y.Name == "Close").FirstOrDefault();
+            Status status = db.Status.Where(y => y.Name == "Finish").FirstOrDefault();
             TaskProcessRun taskrun = findTaskRun(idtaskrun);
             taskrun.Status = status.Id;
+            taskrun.ApproveBy = iduserby;
+            taskrun.Approve_At = DateTime.Now;
             taskrun.Updated_At = DateTime.Now;
             db.SaveChanges();
         }
@@ -245,6 +247,17 @@ namespace ProcessManagement.Services
         {
             TaskProcessRun taskform = findTaskRun(idtaskrun);
             taskform.ValueFormJson = formrender;
+            db.SaveChanges();
+        }
+
+        public void donetaskform(int idtaskrun, string formrender, string iduserby)
+        {
+            Status status = db.Status.Where(y => y.Name == "Done").FirstOrDefault();
+            TaskProcessRun taskform = findTaskRun(idtaskrun);
+            taskform.ValueFormJson = formrender;
+            taskform.Status = status.Id;
+            taskform.DoneBy = iduserby;
+            taskform.Done_At = DateTime.Now;
             db.SaveChanges();
         }
     }

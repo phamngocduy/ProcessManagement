@@ -225,7 +225,7 @@
                                                                     }
                                                                 </tr>
                                                             }
-                                                            if (task.Status1.Name == "Close")
+                                                            if (task.Status1.Name == "Finish")
                                                             {
                                                                 <tr>
                                                                     @if (task.ValueFormJson == null)
@@ -269,62 +269,6 @@
                                                         }
                                                     </tbody>
                                                 </table>
-                                                @*<ul class="task-list" id="task-of-step-@step.Id">
-                                                    @foreach (var task in taskList)
-                                                    {
-                                                        if (task.Status1.Name == "Open")
-                                                        {
-                                                            <li class="task-item" style="background-color:gray" data-id="@task.Id">
-                                                                @if (task.ValueFormJson == null)
-                                                                {
-                                                                    <a href="#">@task.Name</a>
-                                                                    <button id="btn-donetask" value="@task.Id" class="btn btn-primary-theme btn-sm" style="float: right;margin-left: 10px;">Done</button>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <a href="#">@task.Name</a>
-                                                                    <button id="btn-donetask" value="@task.Id" class="btn btn-primary-theme btn-sm" style="float: right;margin-left: 10px;">Done</button>
-                                                                }
-                                                            </li>
-                                                        }
-                                                        if (task.Status1.Name == "Done")
-                                                        {
-                                                            <li class="task-item" style="background-color: gray" data-id="@task.Id">
-                                                                @if (task.ValueFormJson == null)
-                                                                {
-                                                                    <a href="#">@task.Name</a>
-                                                                    if (isManager)
-                                                                    {
-                                                                        <button id="btn-closetask" value="@task.Id" class="btn btn-primary-theme btn-sm" style="float: right;margin-left: 10px;">Close</button>
-                                                                        <button id="btn-opentask" value="@task.Id" class="btn btn-primary-theme btn-sm" style="float: right;margin-left: 10px;">Open</button>
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    <a href="#">@task.Name</a>
-                                                                    if (isManager)
-                                                                    {
-                                                                        <button id="btn-closetask" value="@task.Id" class="btn btn-primary-theme btn-sm" style="float: right;margin-left: 10px;">Close</button>
-                                                                        <button id="btn-opentask" value="@task.Id" class="btn btn-primary-theme btn-sm" style="float: right;margin-left: 10px;">Open</button>
-                                                                    }
-                                                                }
-                                                            </li>
-                                                        }
-                                                        if (task.Status1.Name == "Close")
-                                                        {
-                                                            <li class="task-item" style="background-color: gray" data-id="@task.Id">
-                                                                @if (task.ValueFormJson == null)
-                                                                {
-                                                                    <a href="#">@task.Name</a>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <a href="#">@task.Name</a>
-                                                                }
-                                                            </li>
-                                                        }
-                                                    }
-                                                </ul>*@
                                             </div>
                                         </li>
                                     }
@@ -517,46 +461,46 @@
                 }
             })
         });
-        $(function () {
-            var idtask = $('#btn-donetask').val();
-            $('#btn-donetask').on('click', function () {
-                let check = confirm("Done task?");
-                if (check) {
-                    let data = {
-                        idtask: idtask
-                    }
-                    submitdonetask(data);
-                }
+        //$(function () {
+        //    var idtask = $('#btn-donetask').val();
+        //    $('#btn-donetask').on('click', function () {
+        //        let check = confirm("Done task?");
+        //        if (check) {
+        //            let data = {
+        //                idtask: idtask
+        //            }
+        //            submitdonetask(data);
+        //        }
 
-            })
-        });
+        //    })
+        //});
 
-        $(function () {
-            var idtask = $('#btn-closetask').val();
-            $('#btn-closetask').on('click', function () {
-                let check = confirm("Close task?");
-                if (check) {
-                    let data = {
-                        idtask: idtask
-                    }
-                    submitclosetask(data);
-                }
-            })
-        });
+        //$(function () {
+        //    var idtask = $('#btn-closetask').val();
+        //    $('#btn-closetask').on('click', function () {
+        //        let check = confirm("Close task?");
+        //        if (check) {
+        //            let data = {
+        //                idtask: idtask
+        //            }
+        //            submitclosetask(data);
+        //        }
+        //    })
+        //});
 
-        $(function () {
-            var idtask = $('#btn-opentask').val();
-            $('#btn-opentask').on('click', function () {
-                let check = confirm("Open task?");
-                if (check) {
-                    let data = {
-                        idtask: idtask
-                    }
-                    submitopentask(data);
-                }
+        //$(function () {
+        //    var idtask = $('#btn-opentask').val();
+        //    $('#btn-opentask').on('click', function () {
+        //        let check = confirm("Open task?");
+        //        if (check) {
+        //            let data = {
+        //                idtask: idtask
+        //            }
+        //            submitopentask(data);
+        //        }
 
-            })
-        });
+        //    })
+        //});
 
         function runprocess(data) {
             $.ajax({
@@ -592,7 +536,7 @@
             });
         }
 
-        function submitdonetask(data) {
+        @*function submitdonetask(data) {
             $.ajax({
                 url: "@Url.Action("submitdonetask", "process",new { area = "api"})",
                 type: "POST",
@@ -641,7 +585,7 @@
                     }
                 }
             });
-        }
+        }*@
 
     </script>
 }

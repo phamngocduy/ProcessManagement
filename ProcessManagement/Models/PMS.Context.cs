@@ -38,7 +38,7 @@ namespace ProcessManagement.Models
         public virtual DbSet<Step> Steps { get; set; }
         public virtual DbSet<StepRun> StepRuns { get; set; }
         public virtual DbSet<TaskProcess> TaskProcesses { get; set; }
-        public virtual DbSet<TaskProcessRun> TaskProcessRuns { get; set; }
         public virtual DbSet<ConfigRule> ConfigRules { get; set; }
+        public virtual DbSet<TaskProcessRun> TaskProcessRuns { get; set; }
     }
 }

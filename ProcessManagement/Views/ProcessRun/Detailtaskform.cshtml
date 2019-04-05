@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
     var isManager = userRole.IsManager;
+    string idUser = User.Identity.GetUserId();
 }
 
 @section CustomCss{
@@ -94,8 +95,21 @@
                     </div>
                     <div class="col-sm-12">
                         <div class="mt-2" id="button-action">
-                            <button id="btn-savetask" class="btn btn-primary-theme">Save</button>
-                            <button id="btn-done" class="btn btn-primary-theme">Done</button>
+                            @if (Model.Status1.Name == "Open")
+                            {
+                                <button id="btn-savetask" value="@Model.Id" class="btn btn-primary-theme">Save</button>
+                                <button id="btn-donetask" value="@Model.Id" class="btn btn-primary-theme">Done</button>
+                            }
+                            @if (Model.Status1.Name == "Done" && isManager)
+                            {
+                                <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme">Open</button>
+                                <button id="btn-finishtask" value="@Model.Id" class="btn btn-primary-theme">Finish </button>
+                            }
+                            @if (Model.Status1.Name == "Finish")
+                            {
+                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
+                            }
+
                         </div>
                     </div>
                 </div>
@@ -123,46 +137,156 @@
 
         $(function () {
             $('#btn-savetask').on('click', function () {
-                var formrender = $("#render-wrap").formRender("userData");
-                var j = 0;
-                for (var i = 0; i < formrender.Count; i++) {
-                    if (formrender[i]["required"] == true && formrender[i]["userData"] == null) {
+                let formrender = $("#render-wrap").formRender("userData");
+                let j = 0;
+                let tempArr = [];
+                for (let i = 0; i < formrender.length; i++) {
+                    if (formrender[i]["required"] == true && formrender[i]["userData"] == "") {
                         j++;
-                    } 
+                    }
+                    tempArr.push(formrender[i]);
                 }
-
+                
                 if (j == 0) {
+
                     let check = confirm("Save task?");
                     if (check) {
                         let data = {
-                            idtaskrun: @Model.Id,
-                            formrender: JSON.stringify($("#render-wrap").formRender("userData"))
+                        idtaskrun: @Model.Id,
+                        formrender: JSON.stringify(tempArr)
                         }
                         savetaskform(data);
                     }
                 } else {
-                    alert('Some required not null!' + j);
+                    alert('Some required not null!');
                     return false;
                 }
-                
             })
+
+            $('#btn-donetask').on('click', function () {
+                let formrender = $("#render-wrap").formRender("userData");
+                let j = 0;
+                let tempArr = [];
+                for (let i = 0; i < formrender.length; i++) {
+                    if (formrender[i]["required"] == true && formrender[i]["userData"] == "") {
+                        j++;
+                    }
+                    tempArr.push(formrender[i]);
+                }
+                
+                if (j == 0) {
+                    let check = confirm("Done task?");
+                    if (check) {
+                        let data = {
+                        idtaskrun: @Model.Id,
+                        formrender: JSON.stringify(tempArr),
+                        iduserby: idUser.ToString()
+                        }
+                        donetaskform(data);
+                    }
+                } else {
+                    alert('Some required not null!');
+                    return false;
+                }
+            })
+
+            function savetaskform(data) {
+                    $.ajax({
+                        url: "@Url.Action("savetaskform", "processrun", new { area = "api"})",
+                        type: "POST",
+                        data: data,
+                        dataType: "json",
+                        success: function (response) {
+                            console.log(response);
+                            if (response.status == 200) {
+                                //showToastr("error", "Error!!", "toast-bottom-left")
+                                window.location.reload();
+                                console.error(response)
+                            }
+                        }
+                    });
+            }
+
+            function donetaskform(data) {
+                    $.ajax({
+                        url: "@Url.Action("donetaskform", "processrun", new { area = "api"})",
+                        type: "POST",
+                        data: data,
+                        dataType: "json",
+                        success: function (response) {
+                            console.log(response);
+                            if (response.status == 200) {
+                                //showToastr("error", "Error!!", "toast-bottom-left")
+                                window.location.reload();
+                                console.error(response)
+                            }
+                        }
+                    });
+            }
         });
 
-        function savetaskform(data) {
-            $.ajax({
-                url: "@Url.Action("savetaskform", "processrun",new { area = "api"})",
-                type: "POST",
-                data: data,
-                dataType: "json",
-                success: function (response) {
-                    console.log(response);
-                    if (response.status != 200) {
-                        showToastr("error", "Error!!", "toast-bottom-left")
-                        console.error(response)
+            $(function () {
+                var idtask = $('#btn-finishtask').val();
+                $('#btn-finishtask').on('click', function () {
+                    let check = confirm("Finish task?");
+                    if (check) {
+                        let data = {
+                            idtask: idtask,
+                            iduserby: idUser.ToString()
+                        }
+                        submitfinishtask(data);
                     }
-                }
+                })
             });
-        }
+
+            $(function () {
+                var idtask = $('#btn-opentask').val();
+                $('#btn-opentask').on('click', function () {
+                    let check = confirm("Open task?");
+                    if (check) {
+                        let data = {
+                            idtask: idtask
+                        }
+                        submitopentask(data);
+                    }
+
+                })
+            });
+        
+            function submitfinishtask(data) {
+                $.ajax({
+                    url: "@Url.Action("submitfinishtask", "processrun",new { area = "api"})",
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+                        if (response.status == 200) {
+                            //showToastr("error", "Error!!", "toast-bottom-left")
+                            window.location.reload();
+                            console.error(response)
+                        }
+                    }
+                });
+            }
+
+            function submitopentask(data) {
+                $.ajax({
+                    url: "@Url.Action("submitopentask", "processrun",new { area = "api"})",
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+                        if (response.status == 200) {
+                            //showToastr("error", "Error!!", "toast-bottom-left")
+                            window.location.reload();
+                            console.error(response)
+                        }
+                    }
+                });
+            }
+
     </script>
 
 }
