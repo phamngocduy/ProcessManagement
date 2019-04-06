@@ -68,6 +68,39 @@ body, #wrapper{
         }
     }
 }
+.form-group{
+    &.error{
+        label{
+            color: #ff0101;
+            
+        }
+        .error-message{
+            color:#ff0101;
+        }
+        input, select, textarea{
+            border-color: #ff0101;
+            display: block;
+            margin-top: 5px;
+        }
+        .dropify-wrapper{
+            border-color: #ff0101;
+        }
+        .dropify-message{
+            color:#ff0101;
+            span{
+                &.file-icon{
+                    color:#ff0101;
+                }
+            }
+        }
+    }
+}
+.hide{
+    display: none;
+}
+.show{
+    display: block;
+}
 @each $themeClass, $color in  $color-themes{
     #{$themeClass} {
         #toast-container{
@@ -359,6 +392,11 @@ body, #wrapper{
                 }
             }
         }
+        .jconfirm {
+            .jconfirm-box.jconfirm-type-primary-theme{
+                border-top: 7px solid $color;
+            }
+        }
     }    
 }
 .row{
@@ -382,7 +420,7 @@ body, #wrapper{
 }
 // table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>td:first-child:before, table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>th:first-child:before
 label{
-    font-weight: normal;
+    font-weight: 410;
     color: #5a5a59;
     font-size: 16px;
     &.required{

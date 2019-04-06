@@ -23,7 +23,7 @@ namespace ProcessManagement.Controllers
         RoleService roleService = new RoleService();
         FileService fileService = new FileService();
         ///=============================================================================================
-        
+
 
         // GET: ProcessRun
         [GroupAuthorize]
@@ -153,6 +153,29 @@ namespace ProcessManagement.Controllers
             ViewBag.Checkprocessrun = ktra;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             return View(listnextstep1);
+        }
+
+        [GroupAuthorize]
+        public ActionResult Detailtask(int idruntask)
+        {
+            string idUser = User.Identity.GetUserId();
+            TaskProcessRun taskrun = taskService.findTaskRun(idruntask);
+            if (taskrun == null) return HttpNotFound();
+            ViewData["ValueInput"] = JObject.Parse(taskrun.ValueInputText);
+            ViewData["ValueFile"] = JObject.Parse(taskrun.ValueInputFile);
+
+            ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
+            return View(taskrun);
+        }
+
+        [GroupAuthorize]
+        public ActionResult Detailtaskform(int idruntask)
+        {
+            string idUser = User.Identity.GetUserId();
+            TaskProcessRun taskrun = taskService.findTaskRun(idruntask);
+            if (taskrun == null) return HttpNotFound();
+            ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
+            return View(taskrun);
         }
     }
 }

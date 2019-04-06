@@ -63,7 +63,7 @@ namespace ProcessManagement.Controllers
             //save file 
             //string savePath = Server.MapPath(String.Format("~/App_Data/{0}/{1}", group.Id,pro.Id));
             string filePath = String.Format("Upload/{0}/{1}", group.Id, pro.Id);
-            fileService.saveFile(group.Id, FileUpload, filePath, FileDerection.Process);
+            fileService.saveFile(group.Id, FileUpload, filePath, FileDirection.Process);
 
             SetFlash(FlashType.success, "Created Process Successfully");
             return RedirectToAction("Draw", new { groupslug = group.groupSlug, groupid = group.Id, processid = pro.Id });
@@ -80,6 +80,10 @@ namespace ProcessManagement.Controllers
         {
             Process ps = processService.findProcess(processid);
             if (ps == null) return HttpNotFound();
+            if (ps.Steps.Count > 0)
+            {
+                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "editprocess", processid = ps.Id });
+            }
             return View(ps);
         }
         [Authorize]
@@ -173,7 +177,7 @@ namespace ProcessManagement.Controllers
             processStatisticModel.Add("totalrole", listRole.Count);
 
             //tìm file group
-            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id, FileDerection.Process);
+            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id, FileDirection.Process);
 
             List<Step> listnextstep1 = new List<Step>();
             List<Step> listnextstep2 = new List<Step>();
@@ -242,9 +246,10 @@ namespace ProcessManagement.Controllers
             ViewData["Statistic"] = processStatisticModel;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             ViewData["Files"] = files;
+            ViewData["listnextstep1"] = listnextstep1;
             //get maximum file config
             ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
-            return View(listnextstep1);
+            return View();
         }
         [GroupAuthorize]
         public ActionResult EditStep(int stepid)
@@ -346,6 +351,10 @@ namespace ProcessManagement.Controllers
                 var loadprocess = ps.DataJson.ToString();
                 JObject load = JObject.Parse(loadprocess);
                 ViewData["load"] = load;
+            }
+            if (ps.Steps.Count < 1)
+            {
+                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "draw", processid = ps.Id });
             }
             return View(ps);
         }

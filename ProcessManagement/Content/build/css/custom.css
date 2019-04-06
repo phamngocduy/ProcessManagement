@@ -63,6 +63,35 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   font-family: fb-icons !important;
 }
 
+.form-group.error label {
+  color: #ff0101;
+}
+.form-group.error .error-message {
+  color: #ff0101;
+}
+.form-group.error input, .form-group.error select, .form-group.error textarea {
+  border-color: #ff0101;
+  display: block;
+  margin-top: 5px;
+}
+.form-group.error .dropify-wrapper {
+  border-color: #ff0101;
+}
+.form-group.error .dropify-message {
+  color: #ff0101;
+}
+.form-group.error .dropify-message span.file-icon {
+  color: #ff0101;
+}
+
+.hide {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
 .theme-purple #toast-container .toast-info {
   background-color: #a27ce6;
 }
@@ -251,6 +280,9 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 }
 .theme-purple .wizard .actions ul li.disabled a {
   cursor: not-allowed;
+}
+.theme-purple .jconfirm .jconfirm-box.jconfirm-type-primary-theme {
+  border-top: 7px solid #a27ce6;
 }
 
 .theme-cyan #toast-container .toast-info {
@@ -442,6 +474,9 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-cyan .wizard .actions ul li.disabled a {
   cursor: not-allowed;
 }
+.theme-cyan .jconfirm .jconfirm-box.jconfirm-type-primary-theme {
+  border-top: 7px solid #2eacb3;
+}
 
 .theme-blue #toast-container .toast-info {
   background-color: #449cff;
@@ -631,6 +666,9 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 }
 .theme-blue .wizard .actions ul li.disabled a {
   cursor: not-allowed;
+}
+.theme-blue .jconfirm .jconfirm-box.jconfirm-type-primary-theme {
+  border-top: 7px solid #449cff;
 }
 
 .theme-green #toast-container .toast-info {
@@ -822,6 +860,9 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-green .wizard .actions ul li.disabled a {
   cursor: not-allowed;
 }
+.theme-green .jconfirm .jconfirm-box.jconfirm-type-primary-theme {
+  border-top: 7px solid #31b96f;
+}
 
 .theme-orange #toast-container .toast-info {
   background-color: #ff613c;
@@ -1011,6 +1052,9 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 }
 .theme-orange .wizard .actions ul li.disabled a {
   cursor: not-allowed;
+}
+.theme-orange .jconfirm .jconfirm-box.jconfirm-type-primary-theme {
+  border-top: 7px solid #ff613c;
 }
 
 .theme-blush #toast-container .toast-info {
@@ -1202,6 +1246,9 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .theme-blush .wizard .actions ul li.disabled a {
   cursor: not-allowed;
 }
+.theme-blush .jconfirm .jconfirm-box.jconfirm-type-primary-theme {
+  border-top: 7px solid #e84f5e;
+}
 
 .row.display-flex {
   display: -webkit-box;
@@ -1221,7 +1268,7 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 }
 
 label {
-  font-weight: normal;
+  font-weight: 410;
   color: #5a5a59;
   font-size: 16px;
 }
@@ -1681,17 +1728,17 @@ input[type=number] {
 .waves-effect:hover, .waves-effect:focus {
   box-shadow: none;
 }
-.waves-effect:not(.btn-default) .btn-ripple {
+.waves-effect:not(.btn-default):not(.btn-none) .btn-ripple {
   background: rgba(255, 255, 255, 0.3);
   position: absolute;
   border-radius: 100%;
   animation: ripple 1s;
   transform: scale(0);
 }
-.waves-effect.btn-default:hover, .waves-effect.btn-default:focus {
+.waves-effect.btn-default:hover, .waves-effect.btn-default:focus, .waves-effect.btn-none:hover, .waves-effect.btn-none:focus {
   color: #777;
 }
-.waves-effect.btn-default .btn-ripple {
+.waves-effect.btn-default .btn-ripple, .waves-effect.btn-none .btn-ripple {
   background: rgba(136, 135, 135, 0.342);
   position: absolute;
   border-radius: 100%;
@@ -1699,16 +1746,35 @@ input[type=number] {
   transform: scale(0);
 }
 
-.btn:not(.btn-link):not([disabled]) {
+.btn {
+  font-weight: 500;
+}
+.btn:not(.btn-link):not([disabled]):not(.btn-none) {
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
 }
-.btn:not(.btn-link):not([disabled]):focus, .btn:not(.btn-link):not([disabled]):active {
+.btn:not(.btn-link):not([disabled]):not(.btn-none):focus, .btn:not(.btn-link):not([disabled]):not(.btn-none):active {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
 }
 
 .btn-circle {
   border-radius: 30px;
   padding: 7px 23px;
+}
+
+.btn-warning, .btn-warning:hover, .btn-warning:focus {
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn-none {
+  color: #000;
+  background: none;
+  border: none;
+  padding: 8px 18px;
+}
+.btn-none:hover, .btn-none:focus {
+  color: #000;
+  background: rgba(158, 158, 158, 0.2);
 }
 
 @keyframes ripple {

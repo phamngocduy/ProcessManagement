@@ -38,7 +38,7 @@ namespace ProcessManagement.Controllers
         VisibilitySetting
     }
 
-    public enum FileDerection
+    public enum FileDirection
     {
         Group,
         Process,

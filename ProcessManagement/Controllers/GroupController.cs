@@ -69,7 +69,7 @@ namespace ProcessManagement.Controllers
             //save file 
             //string savePath = Server.MapPath(String.Format("~/App_Data/{0}", group.Id));
             string filePath = String.Format("Upload/{0}", group.Id);
-            fileService.saveFile(group.Id, FileUpload, filePath, FileDerection.Group);
+            fileService.saveFile(group.Id, FileUpload, filePath, FileDirection.Group);
 
 
             //create new participate
@@ -126,7 +126,7 @@ namespace ProcessManagement.Controllers
             groupStatisticModel.Add("totalprocess", processService.countProcessOfGroup(group.Id));
 
             //tìm file group
-            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id,FileDerection.Group);
+            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id,FileDirection.Group);
 
             ////Tìm tất cả member thuộc group đó
             //var ListParticipant = participateService.findMembersInGroup(group.Id);

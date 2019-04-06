@@ -14,7 +14,7 @@ namespace ProcessManagement.Services
         CommonService commonService = new CommonService();
         ///=============================================================================================
         ///
-        public FileManager saveFile(int idGroup, HttpPostedFileBase file, string savePath, FileDerection Derection)
+        public FileManager saveFile(int idGroup, HttpPostedFileBase file, string savePath, FileDirection Derection)
         {
             FileManager f = new FileManager();
             if (file != null)
@@ -48,7 +48,7 @@ namespace ProcessManagement.Services
                     f.Id = commonService.getRandomString(50);
                     f.IdGroup = idGroup;
                     f.Name = fileName;
-                    f.Path = string.Format("{0}/{1}", savePath, fileName);
+                    f.Path = savePath;
                     f.Type = extension;
                     f.Direction = Derection.ToString();
                     f.Create_At = DateTime.Now;
@@ -76,7 +76,7 @@ namespace ProcessManagement.Services
         //    return f;
 
         //}
-        public List<FileManager> getAllFileNameFromFolder(int idGroup,FileDerection Direction)
+        public List<FileManager> getAllFileNameFromFolder(int idGroup,FileDirection Direction)
         {
             var file = db.FileManagers.Where(x => x.IdGroup == idGroup && x.Direction == Direction.ToString()).ToList();
             return file;
@@ -90,7 +90,7 @@ namespace ProcessManagement.Services
         public void removeFile(FileManager file)
         {
             string AppPath = AppDomain.CurrentDomain.BaseDirectory;
-            string filePath = AppPath + file.Path;
+            string filePath = AppPath + string.Format("{0}/{1}", file.Path, file.Name);
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
@@ -98,6 +98,27 @@ namespace ProcessManagement.Services
             db.FileManagers.Remove(file);
             db.SaveChanges();
 
+        }
+        public FileManager changeFileName(FileManager file,string filename)
+        {
+            string AppPath = AppDomain.CurrentDomain.BaseDirectory;
+            string filePath = AppPath + string.Format("{0}/{1}", file.Path, file.Name);
+            string targetPath = AppPath + string.Format("{0}/{1}", file.Path, filename);
+            if (File.Exists(filePath))
+            {
+                File.Copy(filePath, targetPath, true);
+                File.Delete(filePath);
+            }
+            file.Name = filename;
+            //TODO: Update Type cho file
+            file.Update_At = DateTime.Now;
+            db.SaveChanges();
+            return file;
+        }
+        public bool checkFileExist(int idGroup,string name, FileDirection direction, string path)
+        {
+            var file = db.FileManagers.FirstOrDefault(x => x.IdGroup == idGroup && x.Direction == direction.ToString() && x.Path == path && x.Name == name);
+            return file != null ? true : false;
         }
         /// <summary>
         /// 
@@ -125,7 +146,7 @@ namespace ProcessManagement.Services
         public bool checkFileOverSize(HttpPostedFileBase file)
         {
             ConfigRule fileSizeRule = db.ConfigRules.Find("filesize");
-            if (fileSizeRule != null)
+            if (fileSizeRule != null && file != null)
             {
                 //get file size
                 int fileSize = file.ContentLength;

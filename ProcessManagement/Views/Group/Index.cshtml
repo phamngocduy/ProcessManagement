@@ -14,7 +14,7 @@
                 color: black;
             }
         </style>*@
-    <link rel="stylesheet" href="//cdn.datatables.net/responsive/2.2.2/css/responsive.bootstrap4.min.css" />
+    @*<link rel="stylesheet" href="//cdn.datatables.net/responsive/2.2.2/css/responsive.bootstrap4.min.css" />*@
 }
 <div class="block-header">
     <div class="row">
@@ -66,8 +66,6 @@
                                 <th>Group</th>
                                 <th>Owner</th>
                                 <th>Member</th>
-                                <th>Status</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -125,8 +123,8 @@
     </div>
 </div>
 @section CustomScripts{
-    <script src="//cdn.datatables.net/responsive/2.2.2/js/dataTables.responsive.min.js"></script>
-    <script src="~/Content/build/js/pages/tables/jquery-datatable.js"></script>
+    @*<script src="//cdn.datatables.net/responsive/2.2.2/js/dataTables.responsive.min.js"></script>*@
+    @*<script src="~/Content/build/js/pages/tables/jquery-datatable.js"></script>*@
     <script>
         $(function () {
             var lang = getCurrentLang();
@@ -176,23 +174,11 @@
                                 member += `</ul>`;
                             }
 
-                            var status = `<span class="badge badge-success">Active</span>`;
-                            var action = `<a href="project-detail.html" class="btn btn-sm btn-outline-primary">
-                                            <i class="icon-eye"></i>
-                                        </a>
-                                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-success">
-                                            <i class="icon-pencil"></i>
-                                        </a>
-                                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger js-sweetalert" title="Delete" data-type="confirm">
-                                            <i class="icon-trash"></i>
-                                        </a>`;
                             return_data.push({
                                 "name": name,
                                 "sort": sort,
                                 "owner": owner,
                                 "member": member,
-                                "status": status,
-                                "action": action
                             })
 
                         }
@@ -212,15 +198,13 @@
                         }
                     },
                     { data: "owner" },
-                    { data: "member" },
-                    { data: "status" },
-                    { data: "action" },
+                    { data: "member" }
                 ],
-                columnDefs: [
-                    { responsivePriority: 1, targets: 0 },
-                    { responsivePriority: 2, targets: 3 },
-                    { responsivePriority: 3, targets: 4 }
-                ],
+                //columnDefs: [
+                //    { responsivePriority: 1, targets: 0 },
+                //    { responsivePriority: 2, targets: 3 },
+                //    { responsivePriority: 3, targets: 4 }
+                //],
                 "order": [[0, "desc"]],
                 "initComplete": function () {
                     $(".btn-newgroup").html('<a href="#" class="btn btn-success">New Group</a>');

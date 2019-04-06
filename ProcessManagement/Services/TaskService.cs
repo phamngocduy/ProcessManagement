@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ProcessManagement.Models;
 
@@ -195,11 +196,13 @@ namespace ProcessManagement.Services
             taskrun.Updated_At = DateTime.Now;
             db.SaveChanges();
         }
-        public void submitclosetask(int idtaskrun)
+        public void submitclosetask(int idtaskrun, string iduserby)
         {
-            Status status = db.Status.Where(y => y.Name == "Close").FirstOrDefault();
+            Status status = db.Status.Where(y => y.Name == "Finish").FirstOrDefault();
             TaskProcessRun taskrun = findTaskRun(idtaskrun);
             taskrun.Status = status.Id;
+            taskrun.ApproveBy = iduserby;
+            taskrun.Approve_At = DateTime.Now;
             taskrun.Updated_At = DateTime.Now;
             db.SaveChanges();
         }
@@ -212,5 +215,50 @@ namespace ProcessManagement.Services
             db.SaveChanges();
         }
         
+        public void submitvaluetask(string valuetext, string valuefile, int idtaskrun)
+        {
+            TaskProcessRun taskrun = findTaskRun(idtaskrun);
+            JObject inputConfig = new JObject();
+            if (taskrun.ValueInputText != null)
+            {
+                inputConfig = JObject.Parse(taskrun.ValueInputText);
+            }
+            JObject fileConfig = new JObject();
+            if (taskrun.ValueInputFile != null)
+            {
+                fileConfig = JObject.Parse(taskrun.ValueInputFile);
+            }
+            if (inputConfig["value"] == null)
+            {
+                inputConfig.Add("value", valuetext);
+            }
+
+            if (fileConfig["value"] == null)
+            {
+                fileConfig.Add("value", valuefile);
+            }
+            
+            taskrun.ValueInputText = inputConfig.ToString(Newtonsoft.Json.Formatting.None);
+            taskrun.ValueInputFile = fileConfig.ToString(Newtonsoft.Json.Formatting.None);
+            db.SaveChanges();
+        }
+
+        public void savevaluetaskform(int idtaskrun, string formrender)
+        {
+            TaskProcessRun taskform = findTaskRun(idtaskrun);
+            taskform.ValueFormJson = formrender;
+            db.SaveChanges();
+        }
+
+        public void donetaskform(int idtaskrun, string formrender, string iduserby)
+        {
+            Status status = db.Status.Where(y => y.Name == "Done").FirstOrDefault();
+            TaskProcessRun taskform = findTaskRun(idtaskrun);
+            taskform.ValueFormJson = formrender;
+            taskform.Status = status.Id;
+            taskform.DoneBy = iduserby;
+            taskform.Done_At = DateTime.Now;
+            db.SaveChanges();
+        }
     }
 }

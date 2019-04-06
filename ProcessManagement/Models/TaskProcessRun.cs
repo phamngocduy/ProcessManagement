@@ -31,9 +31,15 @@ namespace ProcessManagement.Models
         public string ValueFormJson { get; set; }
         public string Color { get; set; }
         public int Position { get; set; }
+        public string ApproveBy { get; set; }
+        public string DoneBy { get; set; }
+        public Nullable<System.DateTime> Done_At { get; set; }
+        public Nullable<System.DateTime> Approve_At { get; set; }
         public System.DateTime Created_At { get; set; }
         public System.DateTime Updated_At { get; set; }
     
+        public virtual AspNetUser AspNetUser { get; set; }
+        public virtual AspNetUser AspNetUser1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual Role Role { get; set; }
