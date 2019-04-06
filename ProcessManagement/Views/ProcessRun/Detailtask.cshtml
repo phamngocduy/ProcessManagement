@@ -85,7 +85,7 @@
             <div class="body" id="show-taskrun">
                 <div class="row clearfix">
                     <div class="col-sm-12 ">
-                        <div class="row">
+                        <div class="row cw-validation">
                             <div class="col-sm-12 form-group" id="choose-input">
                                 @{
                                     string textLabel;
@@ -99,8 +99,8 @@
                                     }
                                 }
                                 
-                                <label @if ((bool)inputConfig["required"]) { WriteLiteral("class='required'"); }>@textLabel</label>
-                                <input class="form-control" id="task-inputtext">
+                                <label @if ((bool)inputConfig["required"]) { WriteLiteral("class='required'"); } for="task-inputtext">@textLabel</label>
+                                <input type="text" class="form-control" id="task-inputtext" cw-maxlength="2" cw-required>
                             </div>
                             <div class="col-sm-12 form-group" id="choose-file">
                                 @{
@@ -115,27 +115,16 @@
 
                                     }
                                 }
-                                <label @if ((bool)fileConfig["required"]) { WriteLiteral("class='required'"); }>@fileLabel</label>
-                                <input type="file" id="task-inputfile" name="task-inputfile" />
+                                <label @if ((bool)fileConfig["required"]) { WriteLiteral("class='required'"); } for="task-inputfile">@fileLabel</label>
+                                <input type="file" id="task-inputfile" class="dropify" cw-required/>
                             </div>
-                            <div class="col-sm-12 form-group" id="choose-comment">
-                                <h5>Comment</h5>
-                                <div class="row" style="margin-left:0;margin-right:0;">
-                                    <textarea class="form-control" rows="3" id="task-comment"></textarea>
+                            <div class="col-sm-12">
+                                <div class="mt-2" id="button-action">
+                                    <button id="btn-savetask" class="btn btn-primary-theme waves-effect">Save</button>
+                                    <button id="btn-done" class="btn btn-primary-theme waves-effect">Done</button>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-12">
-                            <div class="mt-2" id="button-action">
-                                <button id="btn-savetask" class="btn btn-primary-theme">Save</button>
-                                <button id="btn-done" class="btn btn-primary-theme">Done</button>
-
-                            </div>
-                        </div>
-                        @if (isManager)
-                        {
-
-                        }
                     </div>
                 </div>
             </div>
@@ -149,9 +138,112 @@
         <script src="~/Content/build/js/pages/forms/dropify.js"></script>
         <script src="~/Content/vendor/select2/select2.min.js"></script>
         <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
-
         <script>
             $(function () {
+                $.fn.formValidation = function () {
+                    var formContainer = this;
+                    //var drEvent = $('.dropify').dropify();
+                    //drEvent.on('dropify.afterClear', function (event, element) {
+                    //    validate(this)
+                    //});
+                    $(formContainer).find(`input[type=text][cw-required]`).on("change paste keyup focusout", function () {
+                        var element = $(this);
+                        validate(element)
+                    });
+                    $(formContainer).find(`input[type=file][cw-required]`).on("change", function () {
+                        var element = $(this);
+                        validate(element)
+                    })
+                    function validate(element) {
+                        var validationArr = getFormValidateAttributes(element),
+                            hasError = false,
+                            message;
+                        for (let i = 0; i < validationArr.length; i++) {
+                            var check,
+                                validationType = validationArr[i];
+                            switch (validationType.name) {
+                                case "cw-required":
+                                    check = checkRequire(element);
+                                    break;
+                                case "cw-maxlength":
+                                    check = checkMaxLength(element, validationType.value)
+                                    break;
+                                default:
+                            }
+                            if (check.isError) {
+                                hasError = true;
+                                message = check.message;
+                                break;
+                            }
+                        }
+                        if (hasError) {
+                            setFormError(element, message);
+                        } else {
+                            removeFormError(element);
+                        }
+                    }
+                    function getFormValidateAttributes($node) {
+                        var attrs = [];
+                        $.each($node[0].attributes, function (index, attribute) {
+                            if (attribute.name.startsWith("cw")) {
+                                //attrs[attribute.name] = attribute.value;
+                                var attr = {
+                                    name: attribute.name,
+                                    value: attribute.value
+                                }
+                                attrs.push(attr);
+                            }
+                        });
+
+                        return attrs;
+                    }
+                    function checkRequire($node) {
+                        var element = $node;
+                        var container = element.closest("div.form-group");
+                        var val = element.val().trim();
+                        var error = {}
+                        if (val == "") {
+                            error["isError"] = true;
+                            error["message"] = "This field is required";
+                        } else {
+                            error["isError"] = false;
+                        }
+                        return error;
+                    }
+                    function checkMaxLength($node, length) {
+                        var element = $node;
+                        var val = element.val().trim();
+                        var error = {}
+                        if (val.length > length) {
+                            error["isError"] = true;
+                            error["message"] = `This field max length is ${length} characters`;
+                        } else {
+                            error["isError"] = false;
+                        }
+                        return error;
+                    }
+                    function setFormError($node, message) {
+                        var element = $node;
+                        var container = element.closest("div.form-group");
+                        container.addClass("error");
+                        if (container.find(".error-message").length == 0) {
+                            container.append(`<span class="error-message">${message}</span>`)
+                        } else {
+                            container.find(".error-message").text(message);
+                        }
+                    }
+                    function removeFormError($node) {
+                        var element = $node;
+                        var container = element.closest("div.form-group");
+                        container.removeClass("error").find(".error-message").fadeOut(500, function () { $(this).remove(); });
+                    }
+                }
+            })
+        </script>
+        <script>
+            $(function () {
+                $(".cw-validation").formValidation();
+                
                 $('#btn-savetask').on('click', function () {
                     var valuetext = $('#task-inputtext').val();
                     var valuefile = $('#task-inputfile').val();
@@ -180,6 +272,8 @@
                         }
                     });
                 }
+                
+                
             });
         </script>
     }

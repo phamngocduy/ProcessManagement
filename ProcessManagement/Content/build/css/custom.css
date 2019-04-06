@@ -63,6 +63,35 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   font-family: fb-icons !important;
 }
 
+.form-group.error label {
+  color: #ff0101;
+}
+.form-group.error .error-message {
+  color: #ff0101;
+}
+.form-group.error input, .form-group.error select, .form-group.error textarea {
+  border-color: #ff0101;
+  display: block;
+  margin-top: 5px;
+}
+.form-group.error .dropify-wrapper {
+  border-color: #ff0101;
+}
+.form-group.error .dropify-message {
+  color: #ff0101;
+}
+.form-group.error .dropify-message span.file-icon {
+  color: #ff0101;
+}
+
+.hide {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
 .theme-purple #toast-container .toast-info {
   background-color: #a27ce6;
 }
