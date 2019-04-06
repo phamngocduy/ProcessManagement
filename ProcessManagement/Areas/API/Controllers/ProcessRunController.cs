@@ -26,17 +26,32 @@ namespace ProcessManagement.Areas.API.Controllers
         ///=============================================================================================
 
         [HttpPost]
-        public JsonResult savevalueruntask(string valuetext, string valuefile, int idtaskrun)
+        public JsonResult savetaskrun(string valuetext, string valuefile, int idtaskrun)
         {
+            string IdUser = User.Identity.GetUserId();
             var status = HttpStatusCode.OK;
             string message;
             object response;
             
-            taskService.submitvaluetask(valuetext, valuefile, idtaskrun);
+            taskService.submitvaluetask(IdUser,valuetext, valuefile, idtaskrun);
 
-            message = "Created ProcessRun Successfully";
+            message = "Save Task Successfully";
             response = new { message = message, status = status };
-            SetFlash(FlashType.success, "Save Task");
+            SetFlash(FlashType.success, "Save Task Successfully");
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult submittaskrun(string valuetext, string valuefile, int idtaskrun)
+        {
+            string IdUser = User.Identity.GetUserId();
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+
+            taskService.submitvaluetask(IdUser, valuetext, valuefile, idtaskrun, true);
+            message = "Submit Task Successfully";
+            response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Submit Task Successfully");
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 

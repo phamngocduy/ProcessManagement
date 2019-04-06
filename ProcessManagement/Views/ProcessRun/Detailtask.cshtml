@@ -7,6 +7,7 @@
     var isManager = userRole.IsManager;
     var inputConfig = ViewData["ValueInput"] as JObject;
     var fileConfig = ViewData["ValueFile"] as JObject;
+    var textLength = ViewData["TextMaxLength"] as ProcessManagement.Models.ConfigRule;
 }
 
 @section CustomCss{
@@ -86,23 +87,27 @@
                 <div class="row clearfix">
                     <div class="col-sm-12 ">
                         <div class="row cw-validation">
-                            <div class="col-sm-12 form-group" id="choose-input">
+                            <div class="col-sm-12 form-group">
                                 @{
                                     string textLabel;
                                     if ((string)inputConfig["label"] == "")
                                     {
                                         textLabel = "Response Label";
-                                    }else
+                                    }
+                                    else
                                     {
                                         textLabel = (string)inputConfig["label"];
 
                                     }
                                 }
-                                
-                                <label @if ((bool)inputConfig["required"]) { WriteLiteral("class='required'"); } for="task-inputtext">@textLabel</label>
-                                <input type="text" class="form-control" id="task-inputtext" cw-maxlength="2" cw-required>
+                                @{ 
+                                    bool required = (bool)inputConfig["required"];
+                                    int maxlength = (string)inputConfig["maxlength"] != "" ? (int)inputConfig["maxlength"]: textLength.Value;
+                                }
+                                <label @if (required) { WriteLiteral("class='required'"); } for="task-inputtext">@textLabel</label>
+                                <input type="text" class="form-control" id="task-inputtext" @if (required) { WriteLiteral("cw-required"); } cw-maxlength="@maxlength">
                             </div>
-                            <div class="col-sm-12 form-group" id="choose-file">
+                            <div class="col-sm-12 form-group">
                                 @{
                                     string fileLabel;
                                     if ((string)inputConfig["label"] == "")
@@ -116,12 +121,12 @@
                                     }
                                 }
                                 <label @if ((bool)fileConfig["required"]) { WriteLiteral("class='required'"); } for="task-inputfile">@fileLabel</label>
-                                <input type="file" id="task-inputfile" class="dropify" cw-required/>
+                                <input type="file" id="task-inputfile" class="dropify" cw-required />
                             </div>
                             <div class="col-sm-12">
                                 <div class="mt-2" id="button-action">
-                                    <button id="btn-savetask" class="btn btn-primary-theme waves-effect">Save</button>
-                                    <button id="btn-done" class="btn btn-primary-theme waves-effect">Done</button>
+                                    <button id="btn-savetask" class="btn btn-primary-theme waves-effect"><i class="fa fa-save"></i> Save</button>
+                                    <button id="btn-donetask" class="btn btn-primary-theme waves-effect"><i class="fa fa-check"></i> Done</button>
                                 </div>
                             </div>
                         </div>
@@ -137,128 +142,167 @@
         <script src="~/Content/vendor/dropify/js/dropify.min.js"></script>
         <script src="~/Content/build/js/pages/forms/dropify.js"></script>
         <script src="~/Content/vendor/select2/select2.min.js"></script>
-        <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
         <script>
             $(function () {
                 $.fn.formValidation = function () {
+                    
                     var formContainer = this;
-                    //var drEvent = $('.dropify').dropify();
-                    //drEvent.on('dropify.afterClear', function (event, element) {
-                    //    validate(this)
-                    //});
+                    var method  = {
+                            validate : function (element) {
+                                var validationArr = method.getFormValidateAttributes(element),
+                                    hasError = false,
+                                    message;
+                                for (let i = 0; i < validationArr.length; i++) {
+                                    var check,
+                                        validationType = validationArr[i];
+                                    switch (validationType.name) {
+                                        case "cw-required":
+                                            check = method.checkRequire(element);
+                                            break;
+                                        case "cw-maxlength":
+                                            check = method.checkMaxLength(element, validationType.value)
+                                            break;
+                                        default:
+                                    }
+                                    if (check.isError) {
+                                        hasError = true;
+                                        message = check.message;
+                                        break;
+                                    }
+                                }
+                                if (hasError) {
+                                    method.setFormError(element, message);
+                                    return true;
+                                } else {
+                                    method.removeFormError(element);
+                                    return false;
+                                }
+                            },
+                            validates: function () {
+                               
+                                var texts = $(formContainer).find(`input[type=text]`),
+                                    files = $(formContainer).find(`input[type=file]`)
+                                var input = [...texts, ...files];
+                                var formHasError = false;
+                                for (var i = 0; i < input.length; i++) {
+                                    var element = $(input[i]);
+                                    var isError = method.validate(element);
+                                    if (isError && !formHasError) {
+                                        formHasError = true;
+                                    }
+                                }
+                                return formHasError;
+                            },
+                            getFormValidateAttributes : function ($node) {
+                                var attrs = [];
+                                $.each($node[0].attributes, function (index, attribute) {
+                                    if (attribute.name.startsWith("cw")) {
+                                        //attrs[attribute.name] = attribute.value;
+                                        var attr = {
+                                            name: attribute.name,
+                                            value: attribute.value
+                                        }
+                                        attrs.push(attr);
+                                    }
+                                });
+
+                                return attrs;
+                            },
+                            checkRequire : function ($node) {
+                                var element = $node;
+                                var container = element.closest("div.form-group");
+                                var val = element.val().trim();
+                                var error = {}
+                                if (val == "") {
+                                    error["isError"] = true;
+                                    error["message"] = "This field is required";
+                                } else {
+                                    error["isError"] = false;
+                                }
+                                return error;
+                            },
+                            checkMaxLength : function ($node, length) {
+                                var element = $node;
+                                var val = element.val().trim();
+                                var error = {}
+                                if (val.length > length) {
+                                    error["isError"] = true;
+                                    error["message"] = `This field max length is ${length} characters`;
+                                } else {
+                                    error["isError"] = false;
+                                }
+                                return error;
+                            },
+                            setFormError : function ($node, message) {
+                                var element = $node;
+                                var container = element.closest("div.form-group");
+                                container.addClass("error");
+                                if (container.find(".error-message").length == 0) {
+                                    container.append(`<span class="error-message">${message}</span>`)
+                                } else {
+                                    container.find(".error-message").text(message);
+                                }
+                            },
+                            removeFormError : function ($node) {
+                                var element = $node;
+                                var container = element.closest("div.form-group");
+                                container.removeClass("error").find(".error-message").fadeOut(500, function () { $(this).remove(); });
+                            }
+
+                    }
                     $(formContainer).find(`input[type=text][cw-required]`).on("change paste keyup focusout", function () {
                         var element = $(this);
-                        validate(element)
+                        method.validate(element);
                     });
                     $(formContainer).find(`input[type=file][cw-required]`).on("change", function () {
                         var element = $(this);
-                        validate(element)
+                        method.validate(element);
                     })
-                    function validate(element) {
-                        var validationArr = getFormValidateAttributes(element),
-                            hasError = false,
-                            message;
-                        for (let i = 0; i < validationArr.length; i++) {
-                            var check,
-                                validationType = validationArr[i];
-                            switch (validationType.name) {
-                                case "cw-required":
-                                    check = checkRequire(element);
-                                    break;
-                                case "cw-maxlength":
-                                    check = checkMaxLength(element, validationType.value)
-                                    break;
-                                default:
-                            }
-                            if (check.isError) {
-                                hasError = true;
-                                message = check.message;
-                                break;
-                            }
-                        }
-                        if (hasError) {
-                            setFormError(element, message);
-                        } else {
-                            removeFormError(element);
-                        }
-                    }
-                    function getFormValidateAttributes($node) {
-                        var attrs = [];
-                        $.each($node[0].attributes, function (index, attribute) {
-                            if (attribute.name.startsWith("cw")) {
-                                //attrs[attribute.name] = attribute.value;
-                                var attr = {
-                                    name: attribute.name,
-                                    value: attribute.value
-                                }
-                                attrs.push(attr);
-                            }
-                        });
+                    return method;
 
-                        return attrs;
-                    }
-                    function checkRequire($node) {
-                        var element = $node;
-                        var container = element.closest("div.form-group");
-                        var val = element.val().trim();
-                        var error = {}
-                        if (val == "") {
-                            error["isError"] = true;
-                            error["message"] = "This field is required";
-                        } else {
-                            error["isError"] = false;
-                        }
-                        return error;
-                    }
-                    function checkMaxLength($node, length) {
-                        var element = $node;
-                        var val = element.val().trim();
-                        var error = {}
-                        if (val.length > length) {
-                            error["isError"] = true;
-                            error["message"] = `This field max length is ${length} characters`;
-                        } else {
-                            error["isError"] = false;
-                        }
-                        return error;
-                    }
-                    function setFormError($node, message) {
-                        var element = $node;
-                        var container = element.closest("div.form-group");
-                        container.addClass("error");
-                        if (container.find(".error-message").length == 0) {
-                            container.append(`<span class="error-message">${message}</span>`)
-                        } else {
-                            container.find(".error-message").text(message);
-                        }
-                    }
-                    function removeFormError($node) {
-                        var element = $node;
-                        var container = element.closest("div.form-group");
-                        container.removeClass("error").find(".error-message").fadeOut(500, function () { $(this).remove(); });
-                    }
                 }
             })
         </script>
         <script>
             $(function () {
-                $(".cw-validation").formValidation();
-                
-                $('#btn-savetask').on('click', function () {
-                    var valuetext = $('#task-inputtext').val();
-                    var valuefile = $('#task-inputfile').val();
-                    
+                var form = $(".cw-validation").formValidation();
+                var drEvent = $(".dropify").dropify();
+                drEvent.on('dropify.afterClear', function (event, element) {
+                    var element = $(this);
+                    form.validate(element);
+                });
+                //TODO: Add TaskRun Authenticate
+                $("#btn-savetask").on("click", function () {
+                    var valuetext = $("#task-inputtext").val();
+                    var valuefile = $("#task-inputfile").val();
+
                     let data = {
                         valuetext: valuetext,
                         valuefile: valuefile,
                         idtaskrun: @Model.Id
                     }
-                    savevalueruntask(data);
-                })
+                    saveTaskRun(data);
+                });
+                //TODO: Add TaskRun Authenticate
+                $("#btn-donetask").on("click", function () {
+                    var isFormHaveError = form.validates();
+                    if (isFormHaveError) {
+                        showToastr("error", "Error!!");
+                    } else {
+                        var valuetext = $("#task-inputtext").val();
+                        var valuefile = $("#task-inputfile").val();
 
-                function savevalueruntask(data) {
+                        let data = {
+                            valuetext: valuetext,
+                            valuefile: valuefile,
+                            idtaskrun: @Model.Id
+                        }
+                        submitTaskRun(data)
+                    }
+                });
+                function saveTaskRun(data) {
                     $.ajax({
-                        url: "@Url.Action("savevalueruntask", "processrun",new { area = "api"})",
+                        url: "@Url.Action("savetaskrun", "processrun",new { area = "api"})",
                         type: "POST",
                         data: data,
                         dataType: "json",
@@ -272,7 +316,22 @@
                         }
                     });
                 }
-                
+                function submitTaskRun(data) {
+                    $.ajax({
+                        url: "@Url.Action("submittaskrun", "processrun",new { area = "api"})",
+                        type: "POST",
+                        data: data,
+                        dataType: "json",
+                        success: function (response) {
+                            console.log(response);
+                            if (response.status == 200) {
+                                //showToastr("error", "Error!!", "toast-bottom-left")
+                                window.location.reload();
+                                console.error(response)
+                            }
+                        }
+                    });
+                }
                 
             });
         </script>
