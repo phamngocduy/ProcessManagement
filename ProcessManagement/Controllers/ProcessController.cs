@@ -48,10 +48,11 @@ namespace ProcessManagement.Controllers
                 SetFlash(FlashType.error, "Process Name is required");
                 return View();
             }
+            ConfigRule fileSizeRule = db.ConfigRules.Find("filesize");
             bool isFileOverSize = fileService.checkFileOverSize(FileUpload);
             if (isFileOverSize)
             {
-                SetFlash(FlashType.error, "Your File pass our limit size rule");
+                SetFlash(FlashType.error, string.Format("This file is too big ({0} {1} maximum)", fileSizeRule.Value, fileSizeRule.Unit));
                 return View();
             }
             Group group = groupService.findGroup(groupid);

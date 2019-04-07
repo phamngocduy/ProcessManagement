@@ -406,6 +406,7 @@
     <Content Include="Content\build\js\pages\chart\gauge.js" />
     <Content Include="Content\build\js\pages\file\filemanager.js" />
     <Content Include="Content\build\js\pages\forms\advanced-form-elements.js" />
+    <Content Include="Content\build\js\pages\forms\custom-validation.js" />
     <Content Include="Content\build\js\pages\forms\dropify.js" />
     <Content Include="Content\build\js\pages\forms\editors.js" />
     <Content Include="Content\build\js\pages\forms\form-wizard.js" />
@@ -8468,7 +8469,6 @@
     <Content Include="Views\Shared\Common\_Left.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Shared\_NullLayout.cshtml" />
     <Content Include="Views\Group\EditRoleMember.cshtml" />
     <Content Include="Views\Process\Draw.cshtml" />
     <Content Include="Views\Process\NewProcess.cshtml" />

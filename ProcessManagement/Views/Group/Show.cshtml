@@ -743,28 +743,6 @@
                     </tr>`
             
         }
-        function setConfirm(content,okfunction,cancelfunction) {
-            $.confirm({
-                title: 'Confirm!',
-                type: 'primary-theme',
-                theme: 'material',
-                icon: 'fa fa-question',
-                closeIcon: true,
-                closeIconClass: 'fa fa-close',
-                content: content,
-                columnClass: 'medium',
-                buttons: {
-                    ok: {
-                        btnClass: 'btn-none waves-effect',
-                        action: okfunction
-                    },
-                    cancel: {
-                        btnClass: 'btn-none waves-effect',
-                        action: cancelfunction
-                    }
-                },
-            });
-        }
         function changeFileName(id,filename) {
             var data = {
                 id: id,

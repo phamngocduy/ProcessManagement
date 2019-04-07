@@ -3,12 +3,11 @@
     ViewBag.Title = "Create Process";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var maxFileSizeRule = ViewData["FileMaxSize"] as ProcessManagement.Models.ConfigRule;
+    var maxSize = maxFileSizeRule.Value + maxFileSizeRule.Unit;
 }
 
 @section CustomCss{
     <link rel="stylesheet" href="~/Content/vendor/dropify/css/dropify.min.css">
-    <link rel="stylesheet" href="~/Content/vendor/summernote/dist/summernote.css" />
-
 }
 <div class="block-header">
     <div class="row">
@@ -50,19 +49,19 @@
         <div class="card">
             <div class="body">
                 <form action="@Url.RouteUrl("GroupLocalizedDefault",new { controller = "process", action = "newprocess"})" method="post" enctype="multipart/form-data" id="form-add-process">
-                    <div class="row clearfix">
+                    <div class="row clearfix cw-validation">
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="process-name" class="required">Process Name</label>
-                                <input type="text" class="form-control" id="process-name" name="@Html.NameFor(m => m.Name)">
+                                <input type="text" class="form-control" id="process-name" name="@Html.NameFor(m => m.Name)" cw-required>
                             </div>
                         </div>
-                    </div>
-                    <div class="row clearfix">
                         <div class="col-12">
-                            <label for="process-file">Upload File</label>
-                            <input type="file" class="dropify" id="process-file" name="FileUpload">
-                            <div class="mt-3"></div>
+                            <div class="form-group">
+                                <label for="process-file">Upload File</label>
+                                <input type="file" class="dropify" id="process-file" name="FileUpload" cw-maxsize="@maxSize">
+                                <div class="mt-3"></div>
+                            </div>
                         </div>
                         <div class="col-sm-12">
                             <div class="form-group">
@@ -84,51 +83,15 @@
 </div>
 @section CustomScripts{
     <script src="~/Content/vendor/dropify/js/dropify.min.js"></script>
-    <script src="~/Content/vendor/summernote/dist/summernote.js"></script>
     <script src="~/Content/build/js/pages/forms/dropify.js"></script>
     <script>
         $(function () {
-            @if (maxFileSizeRule != null)
-            {
-                int value = maxFileSizeRule.Value;
-                string unit = maxFileSizeRule.Unit.ToLower().Trim();
-                int pow;
-                switch (unit)
-                {
-                    case "kb":
-                        pow = 1;
-                        break;
-                    case "mb":
-                        pow = 2;
-                        break;
-                    case "gb":
-                        pow = 3;
-                        break;
-                    default:
-                        pow = 0;
-                        break;
-                }
-                double toByte = value * Math.Pow(1024, pow);
-                @:var maxFileSize = @toByte;
-            }
-            else
-            {
-                @:var maxFileSize = null;
-            }
+            var form = $(".cw-validation").formValidation();
             $("#form-add-process").on("submit", function () {
-                var processname = $("#process-name").val().trim();
-                var file = $("#process-file")[0].files[0];
-                
-                if (processname == "") {
-                    showToastr("error", "Process Name is required")
+                var isHaveError = form.validates();
+                if (isHaveError) {
+                    showToastr("error", "Error!!");
                     return false;
-                }
-                if (file != null) {
-                    var fileSize = file.size;
-                    if (maxFileSize != null && fileSize > maxFileSize) {
-                        showToastr("error", "Your file pass our limit size rule")
-                        return false;
-                    }
                 }
                 return true;
             })

@@ -3,6 +3,7 @@
     ViewBag.Title = ProcessManagement.Content.resources.CWgroup_create.clockworks_group_create_title;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var maxFileSizeRule = ViewData["FileMaxSize"] as ProcessManagement.Models.ConfigRule;
+    var maxSize = maxFileSizeRule.Value + maxFileSizeRule.Unit;
 }
 
 @section CustomCss{
@@ -48,17 +49,19 @@
         <div class="card">
             <div class="body">
                 <form action="@Url.RouteUrl("GroupLocalizedDefault",new { controller = "Group", action = "NewGroup"})" method="post" enctype="multipart/form-data" id="form-add-group">
-                    <div class="row clearfix">
+                    <div class="row clearfix cw-validation">
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="group-name" class="required">Group Name</label>
-                                <input type="text" id="group-name" class="form-control" name="@Html.NameFor(m => m.Name)">
+                                <input type="text" id="group-name" class="form-control" name="@Html.NameFor(m => m.Name)" cw-required>
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <label for="group-file">Upload File</label>
-                            <input type="file" class="dropify" name="FileUpload" id="group-file">
-                            <div class="mt-3"></div>
+                            <div class="form-group">
+                                <label for="group-file">Upload File</label>
+                                <input type="file" class="dropify" name="FileUpload" id="group-file" cw-maxsize="@maxSize">
+                                <div class="mt-3"></div>
+                            </div>
                         </div>
                         <div class="col-sm-12">
                             <label for="group-description">Group Description</label>
@@ -83,48 +86,12 @@
     <script src="~/Content/build/js/pages/forms/dropify.js"></script>
     <script>
         $(function () {
-            //fileupload
-            @if (maxFileSizeRule != null)
-            {
-                int value = maxFileSizeRule.Value;
-                string unit = maxFileSizeRule.Unit.ToLower().Trim();
-                int pow;
-                switch (unit)
-                {
-                    case "kb":
-                        pow = 1;
-                        break;
-                    case "mb":
-                        pow = 2;
-                        break;
-                    case "gb":
-                        pow = 3;
-                        break;
-                    default:
-                        pow = 0;
-                        break;
-                }
-                double toByte = value * Math.Pow(1024, pow);
-                @:var maxFileSize = @toByte;
-            }
-            else
-            {
-                @:var maxFileSize = null;
-            }
+            var form = $(".cw-validation").formValidation();
             $("#form-add-group").on("submit", function () {
-                var groupname = $("#group-name").val().trim();
-                var file = $("#group-file")[0].files[0];
-                
-                if (groupname == "") {
-                    showToastr("error", "Group Name is required")
+                var isHaveError = form.validates();
+                if (isHaveError) {
+                    showToastr("error", "Error!!");
                     return false;
-                }
-                if (file != null) {
-                    var fileSize = file.size;
-                    if (maxFileSize != null && fileSize > maxFileSize) {
-                        showToastr("error", "Your file pass our limit size rule")
-                        return false;
-                    }
                 }
                 return true;
             })

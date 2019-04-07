@@ -166,3 +166,39 @@ function toggleLoading(element) {
     var loadingConfig = element.attr("data-loading-text");
     element.html(loadingConfig).attr("data-loading-text", text);
 }
+//toast
+function showToastr(type, message, position) {
+    position = position || "toast-bottom-left";
+    toastr.options = {
+        closeButton: true,
+        positionClass: position,
+        showDuration: "300",
+        hideDuration: "1000",
+        timeOut: "3000",
+        preventDuplicates: true
+    }
+    toastr[type](message);
+}
+//confirm
+function setConfirm(content, okfunction, cancelfunction) {
+    $.confirm({
+        title: 'Confirm!',
+        type: 'primary-theme',
+        theme: 'material',
+        icon: 'fa fa-question',
+        closeIcon: true,
+        closeIconClass: 'fa fa-close',
+        content: content,
+        columnClass: 'medium',
+        buttons: {
+            ok: {
+                btnClass: 'btn-none waves-effect',
+                action: okfunction
+            },
+            cancel: {
+                btnClass: 'btn-none waves-effect',
+                action: cancelfunction
+            }
+        },
+    });
+}
