@@ -1,0 +1,43 @@
+27/2/2018(sync)
+db_schema_release.slq
+project-member.html
+member-add.html
+28/2/2018
+-redsun-hrm:(sync)
+	+hrm_schema.sql
+	+relationship.java
+	+ReletionshipMapper.java
+1/3/2018
+-redsun-hrm:(sync)
+	+RelationshipDao.java
+	+RelationshipDaoImpl.java
+	+RelationshipService.java
+	+RelationshipServiceImpl.java
+	+RelationshipController.Java
+-redsun:(sync)
+	+RelationshipController.Java
+	+RedSunURLs.java
+	+RelationshipService.js
+	+HRDetailController.js
+	+HRDetail.jsp
+2/3/2018:(not sync)
+-red-hrm:
+	+hrm_schema.sql
+	+JobInforController.java
+	+JobInforDao.java
+	+JobInforDaoImpl.java
+	+JobInforMapper.java
+	+JobInfors.java
+	+JobInforService.java
+	+JobInforServiceImpl.java
+-redsun:
+	+RelationshipController.java 	
+	+JobInforController.java
+	+RedSunURLs.java
+	+JobInforService.js
+	+HRDetailController.js
+	+script.jsp
+	+HRDetail.jsp
+3/3/2018:(not sync)
+-redsun-hrm:
+	+hrm_schema.sql

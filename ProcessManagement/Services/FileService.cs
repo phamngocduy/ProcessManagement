@@ -137,11 +137,17 @@ namespace ProcessManagement.Services
 
 
         //}
-        public void createDirectory(string stringPath)
+        public void createDirectory(string path)
         {
             string AppPath = AppDomain.CurrentDomain.BaseDirectory;
-            string filePath = AppPath + stringPath;
+            string filePath = AppPath + path;
             DirectoryInfo introDirectory = Directory.CreateDirectory(filePath);
+        }
+        public void removeDirectory(string path)
+        {
+            string AppPath = AppDomain.CurrentDomain.BaseDirectory;
+            string filePath = AppPath + path;
+            Directory.Delete(filePath);
         }
         public bool checkFileOverSize(HttpPostedFileBase file)
         {

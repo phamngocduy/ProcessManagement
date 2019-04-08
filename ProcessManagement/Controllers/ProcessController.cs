@@ -146,7 +146,7 @@ namespace ProcessManagement.Controllers
                     }
                 }
 
-                step.IdProcess = processId;
+                step.IdProcess = ps.Id;
                 step.Name = nodeArray[i]["text"].ToString().Trim();
                 step.Key = key;
                 step.IsRun = false;
@@ -158,9 +158,11 @@ namespace ProcessManagement.Controllers
                 if (step.Figure != "Circle")
                 {
                     db.Steps.Add(step);
+                    db.SaveChanges();
+                    string directoryPath = String.Format("Upload/{0}/{1}/{2}", ps.Group.Id, ps.Id, step.Id);
+                    fileService.createDirectory(directoryPath);
                 }
             }
-            db.SaveChanges();
             return Json(new { id = ps.Id });
         }
         [GroupAuthorize]
@@ -256,7 +258,19 @@ namespace ProcessManagement.Controllers
         [GroupAuthorize]
         public ActionResult EditStep(int stepid)
         {
+            string idUser = User.Identity.GetUserId();
             var step = stepService.findStep(stepid);
+            if (step == null) return HttpNotFound();
+            Group group = groupService.findGroup(step.Process.Group.Id);
+
+            //file 
+            string stepPath = string.Format("Upload/{0}/{1}/{2}", group.Id, step.Process.Id, step.Id);
+            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id, stepPath);
+
+            ViewData["Group"] = group;
+            ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
+            ViewData["Files"] = files;
+            ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
             return View(step);
         }
         [GroupAuthorize]
@@ -392,7 +406,7 @@ namespace ProcessManagement.Controllers
             JArray nodeArray = JArray.Parse(nodeData);
             JArray linkArray = JArray.Parse(linkData);
             var idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();
-            var liststep = db.Steps.Where(z => z.IdProcess == processId).ToList();
+            var liststep = db.Steps.Where(z => z.IdProcess == ps.Id).ToList();
             List<int> keystep = new List<int>();
             List<int> keynode = new List<int>();
             List<int> b = new List<int>();
@@ -434,7 +448,7 @@ namespace ProcessManagement.Controllers
             List<Step> keystepkhac = new List<Step>();
             foreach (var item in same)
             {
-                Step s = db.Steps.Where(p => p.Key == item && p.IdProcess == processId).FirstOrDefault();
+                Step s = db.Steps.Where(p => p.Key == item && p.IdProcess == ps.Id).FirstOrDefault();
                 keystepgiong.Add(s);
             }
 
@@ -476,7 +490,7 @@ namespace ProcessManagement.Controllers
                     }
                 }
 
-                step.IdProcess = processId;
+                step.IdProcess = ps.Id;
                 step.Name = nodeArray[i]["text"].ToString();
                 step.Key = key;
                 step.StartStep = (int)idfirstStep["to"] == (int)nodeArray[i]["key"] ? true : false;
@@ -492,7 +506,7 @@ namespace ProcessManagement.Controllers
                     }
                     else
                     {
-                        Step ste = stepService.findStepByKey(processId, item);
+                        Step ste = stepService.findStepByKey(ps.Id, item);
                         if (ste != null)
                         {
                             var listtaskofstep = db.TaskProcesses.Where(s => s.IdStep == ste.Id).ToList();
@@ -500,7 +514,10 @@ namespace ProcessManagement.Controllers
                             {
                                 db.TaskProcesses.Remove(listtaskofstep[s]);
                                 db.SaveChanges();
+                                
                             }
+                            string stepPath = string.Format("Upload/{0}/{1}/{2}", ps.Group.Id, ps.Id,ste.Id);
+                            fileService.removeDirectory(stepPath);
                             stepService.removeStep(ste);
                         }
                     }
@@ -509,7 +526,7 @@ namespace ProcessManagement.Controllers
             foreach (var item3 in keystepkhac)
             {
                 Step step = new Step();
-                step.IdProcess = processId;
+                step.IdProcess = ps.Id;
                 step.Name = item3.Name;
                 step.Key = item3.Key;
                 step.StartStep = item3.StartStep;
@@ -522,6 +539,9 @@ namespace ProcessManagement.Controllers
                 if (step.Figure != "Circle")
                 {
                     db.Steps.Add(step);
+                    db.SaveChanges();
+                    string stepPath = string.Format("Upload/{0}/{1}/{2}", ps.Group.Id, ps.Id, step.Id);
+                    fileService.createDirectory(stepPath);
                 }
             }
 
@@ -604,12 +624,19 @@ namespace ProcessManagement.Controllers
             Step step = stepService.findStep(task.IdStep);
             Group group = groupService.findGroup(step.Process.Group.Id);
             List<Role> role = db.Roles.Where(x => x.IdProcess == task.Step.Process.Id).ToList();
-            
+
+            //file 
+            string taskPath = string.Format("Upload/{0}/{1}/{2}/{3}", group.Id, task.Step.Process.Id, task.Step.Id, task.Id);
+            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id, taskPath);
+
+
             ViewData["Step"] = step;
             ViewData["ListRole"] = role;
             ViewData["Group"] = group;
             Session["idTask"] = task.Id;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
+            ViewData["Files"] = files;
+            ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
             return View(task);
         }
 
@@ -663,12 +690,18 @@ namespace ProcessManagement.Controllers
             Step step = stepService.findStep(task.IdStep);
             Group group = groupService.findGroup(step.Process.Group.Id);
             List<Role> role = db.Roles.Where(x => x.IdProcess == task.Step.Process.Id).ToList();
+            
+            //file
+            string taskPath = string.Format("Upload/{0}/{1}/{2}/{3}", group.Id, task.Step.Process.Id, task.Step.Id, task.Id);
+            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id, taskPath);
 
             ViewData["Step"] = step;
             ViewData["ListRole"] = role;
             ViewData["Group"] = group;
             Session["idTask"] = task.Id;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
+            ViewData["Files"] = files;
+            ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
             return View(task);
         }
     }

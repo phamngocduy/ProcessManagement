@@ -38,7 +38,7 @@ namespace ProcessManagement.Services
             TaskProcessRun task = db.TaskProcessRuns.Find(idTask);
             return task;
         }
-        public void addtask(int idStep, string name, int? role, string description, string inputConfig, string fileConfig)
+        public TaskProcess addtask(int idStep, string name, int? role, string description, string inputConfig, string fileConfig)
         {
             TaskProcess task = new TaskProcess();
             task.IdStep = idStep;
@@ -54,9 +54,10 @@ namespace ProcessManagement.Services
             task.Updated_At = DateTime.Now;
             db.TaskProcesses.Add(task);
             db.SaveChanges();
+            return task;
         }
 
-        public void AddFormTask(int idStep, string name, int? role, string description, string formBuilder)
+        public TaskProcess AddFormTask(int idStep, string name, int? role, string description, string formBuilder)
         {
             TaskProcess task = new TaskProcess();
             task.IdStep = idStep;
@@ -71,6 +72,7 @@ namespace ProcessManagement.Services
             task.Updated_At = DateTime.Now;
             db.TaskProcesses.Add(task);
             db.SaveChanges();
+            return task;
         }
 
         public void editTask(int idTask, string name, int? role, string description, string inputConfig, string fileConfig)

@@ -71,7 +71,7 @@ namespace ProcessManagement.Areas.API.Controllers
                     response = new { message = message, status = status };
                     return Json(response, JsonRequestBehavior.AllowGet);
                 }
-                filePath = String.Format("Upload/{0}{1}/{2}", st.Process.Group.Id, st.Process.Id, st.Id);
+                filePath = String.Format("Upload/{0}/{1}/{2}", st.Process.Group.Id, st.Process.Id, st.Id);
 
             }
             else if (direction == FileDirection.Task)
@@ -84,7 +84,7 @@ namespace ProcessManagement.Areas.API.Controllers
                     response = new { message = message, status = status };
                     return Json(response, JsonRequestBehavior.AllowGet);
                 }
-                filePath = String.Format("Upload/{0}{1}/{2}/{3}", tp.Step.Process.Group.Id, tp.Step.Process.Id, tp.Step.Id, tp.Id);
+                filePath = String.Format("Upload/{0}/{1}/{2}/{3}", tp.Step.Process.Group.Id, tp.Step.Process.Id, tp.Step.Id, tp.Id);
             }
             else
             {
