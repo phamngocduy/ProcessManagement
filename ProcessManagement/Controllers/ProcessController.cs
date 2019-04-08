@@ -172,13 +172,14 @@ namespace ProcessManagement.Controllers
             var listStep = stepService.findStepsOfProcess(processid);
             var listRole = processService.findListRole(process.Id);
             //statics
-            dynamic expando = new ExpandoObject();
-            var processStatisticModel = expando as IDictionary<string, object>;
-            processStatisticModel.Add("totalstep", listStep.Count);
-            processStatisticModel.Add("totalrole", listRole.Count);
+            //dynamic expando = new ExpandoObject();
+            //var processStatisticModel = expando as IDictionary<string, object>;
+            //processStatisticModel.Add("totalstep", listStep.Count);
+            //processStatisticModel.Add("totalrole", listRole.Count);
 
             //tìm file group
-            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id, FileDirection.Process);
+            string processPath = string.Format("Upload/{0}/{1}", group.Id, process.Id);
+            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id, processPath);
 
             List<Step> listnextstep1 = new List<Step>();
             List<Step> listnextstep2 = new List<Step>();
@@ -244,7 +245,7 @@ namespace ProcessManagement.Controllers
             ViewData["Group"] = group;
             ViewData["Process"] = process;
             ViewData["ListRole"] = listRole;
-            ViewData["Statistic"] = processStatisticModel;
+            //ViewData["Statistic"] = processStatisticModel;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             ViewData["Files"] = files;
             ViewData["listnextstep1"] = listnextstep1;

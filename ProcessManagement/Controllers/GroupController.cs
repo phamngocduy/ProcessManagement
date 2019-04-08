@@ -127,7 +127,8 @@ namespace ProcessManagement.Controllers
             groupStatisticModel.Add("totalprocess", processService.countProcessOfGroup(group.Id));
 
             //tìm file group
-            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id,FileDirection.Group);
+            string groupPath = string.Format("Upload/{0}",group.Id);
+            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id,groupPath);
 
             ////Tìm tất cả member thuộc group đó
             //var ListParticipant = participateService.findMembersInGroup(group.Id);
