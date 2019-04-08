@@ -163,7 +163,7 @@ namespace ProcessManagement.Controllers
             if (taskrun == null) return HttpNotFound();
             ViewData["ValueInput"] = JObject.Parse(taskrun.ValueInputText);
             ViewData["ValueFile"] = JObject.Parse(taskrun.ValueInputFile);
-
+            ViewData["TextMaxLength"] = db.ConfigRules.Find("textlength");
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
             return View(taskrun);
         }

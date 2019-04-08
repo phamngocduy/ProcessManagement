@@ -31,7 +31,8 @@ namespace ProcessManagement
                 .Include("~/Content/build/bundles/mainscripts.bundle.js")
                 .Include("~/Content/build/bundles/datatablescripts.bundle.js")
                 .Include("~/Content/build/js/button-ripple.js")
-                .Include("~/Content/build/js/custom.js");
+                .Include("~/Content/build/js/custom.js")
+                .Include("~/Content/build/js/pages/forms/custom-validation.js");
             scriptBundle.Orderer = new PassthruBundleOrderer();
             bundles.Add(scriptBundle);
 

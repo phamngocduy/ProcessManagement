@@ -215,7 +215,7 @@ namespace ProcessManagement.Services
             db.SaveChanges();
         }
         
-        public void submitvaluetask(string valuetext, string valuefile, int idtaskrun)
+        public void submitvaluetask(string userid,string valuetext, string valuefile, int idtaskrun,bool isDone = false)
         {
             TaskProcessRun taskrun = findTaskRun(idtaskrun);
             JObject inputConfig = new JObject();
@@ -228,18 +228,36 @@ namespace ProcessManagement.Services
             {
                 fileConfig = JObject.Parse(taskrun.ValueInputFile);
             }
+
+            //TODO: Gộp 2 cột file với text lại thành một
             if (inputConfig["value"] == null)
             {
                 inputConfig.Add("value", valuetext);
+            }
+            else
+            {
+                inputConfig["value"] = valuetext;
             }
 
             if (fileConfig["value"] == null)
             {
                 fileConfig.Add("value", valuefile);
             }
+            else
+            {
+                fileConfig["value"] = valuefile;
+            }
             
             taskrun.ValueInputText = inputConfig.ToString(Newtonsoft.Json.Formatting.None);
             taskrun.ValueInputFile = fileConfig.ToString(Newtonsoft.Json.Formatting.None);
+            if (isDone)
+            {
+                Status status = db.Status.Where(y => y.Name == "Done").FirstOrDefault();
+                taskrun.Status = status.Id;
+                taskrun.DoneBy = userid;
+                taskrun.Done_At = DateTime.Now;
+            }
+            taskrun.Updated_At = DateTime.Now;
             db.SaveChanges();
         }
 
@@ -247,6 +265,7 @@ namespace ProcessManagement.Services
         {
             TaskProcessRun taskform = findTaskRun(idtaskrun);
             taskform.ValueFormJson = formrender;
+            taskform.Updated_At = DateTime.Now;
             db.SaveChanges();
         }
 
@@ -258,6 +277,7 @@ namespace ProcessManagement.Services
             taskform.Status = status.Id;
             taskform.DoneBy = iduserby;
             taskform.Done_At = DateTime.Now;
+            taskform.Updated_At = DateTime.Now;
             db.SaveChanges();
         }
     }

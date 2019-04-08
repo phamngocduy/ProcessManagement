@@ -124,18 +124,18 @@
     <script src="~/Content/build/js/pages/forms/dropify.js"></script>
     <script src="~/Content/vendor/select2/select2.min.js"></script>
     <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
     <script src="~/Content/vendor/FormBuilder/form-builder.min.js"></script>
     <script src="~/Content/vendor/FormBuilder/form-render.min.js"></script>
 
     <script>
-        var taskform = '@Model.ValueFormJson'.replace(/&quot;/g, "\"");
-        var formData = taskform;
-        if (taskform != null) {
-            $("#render-wrap").formRender({formData});
-        }
-
         $(function () {
+            var taskform = '@Model.ValueFormJson'.replace(/&quot;/g, "\"");
+            var formData = taskform;
+            if (taskform != null) {
+                $("#render-wrap").formRender({formData});
+            }
+            $(`[required]`).attr("cw-required","").removeAttr("required");
+            $(".rendered-form").formValidation();
             $('#btn-savetask').on('click', function () {
                 let formrender = $("#render-wrap").formRender("userData");
                 let j = 0;

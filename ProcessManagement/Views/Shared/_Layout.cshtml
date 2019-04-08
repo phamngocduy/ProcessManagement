@@ -26,11 +26,9 @@
         <!-- header -->
         @Html.Partial("~/Views/Shared/Common/_Header.cshtml")
         <!-- end of header -->
-        
         <!-- menu left -->
         @Html.Partial("~/Views/Shared/Common/_Left.cshtml")
         <!-- end of menu left -->
-        
         <!-- main content -->
         <div id="main-content">
             <div class="container-fluid" id="content">
@@ -41,57 +39,45 @@
         </div>
     </div>
     @Scripts.Render("~/Content/js")
-    <script type="text/javascript">
-        function showToastr(type, message, position) {
-            position = position || "toast-bottom-left";
-            toastr.options = {
-                closeButton: true,
-                positionClass: position,
-                showDuration: "300",
-                hideDuration: "1000",
-                timeOut: "3000",
-                preventDuplicates: true
-            }
-            toastr[type](message);
-        }
-        $(function () {
-        @{
-            string text = (string)TempData["FlashMessage.Text"];
-            if (!string.IsNullOrWhiteSpace(text))
-            {
-                FlashType type = (FlashType)TempData["FlashMessage.Type"];
-                FlashPosition position = (FlashPosition)TempData["FlashMessage.Position"];
-                string positionClass;
-                switch (position)
-                {
-                    case FlashPosition.BottomRight:
-                        positionClass = "toast-bottom-right";
-                        break;
-                    case FlashPosition.BottomLeft:
-                        positionClass = "toast-bottom-left";
-                        break;
-                    case FlashPosition.TopLeft:
-                        positionClass = "toast-top-left";
-                        break;
-                    case FlashPosition.TopRight:
-                        positionClass = "toast-top-right";
-                        break;
-                    case FlashPosition.TopCenter:
-                        positionClass = "toast-top-center";
-                        break;
-                    case FlashPosition.BottomCenter:
-                        positionClass = "toast-bottom-center";
-                        break;
-                    default:
-                        positionClass = "toast-bottom-left";
-                        break;
-                }
-                @:showToastr("@type", "@text", "@positionClass");
 
+    @{
+        string text = (string)TempData["FlashMessage.Text"];
+        if (!string.IsNullOrWhiteSpace(text))
+        {
+            FlashType type = (FlashType)TempData["FlashMessage.Type"];
+            FlashPosition position = (FlashPosition)TempData["FlashMessage.Position"];
+            string positionClass;
+            switch (position)
+            {
+                case FlashPosition.BottomRight:
+                    positionClass = "toast-bottom-right";
+                    break;
+                case FlashPosition.BottomLeft:
+                    positionClass = "toast-bottom-left";
+                    break;
+                case FlashPosition.TopLeft:
+                    positionClass = "toast-top-left";
+                    break;
+                case FlashPosition.TopRight:
+                    positionClass = "toast-top-right";
+                    break;
+                case FlashPosition.TopCenter:
+                    positionClass = "toast-top-center";
+                    break;
+                case FlashPosition.BottomCenter:
+                    positionClass = "toast-bottom-center";
+                    break;
+                default:
+                    positionClass = "toast-bottom-left";
+                    break;
             }
+            <script type="text/javascript">
+                $(function() {
+                    showToastr("@type", "@text", "@positionClass");
+                });
+            </script>
         }
-        });
-    </script>
+    }
     @if (IsSectionDefined("CustomScripts"))
     {
         @RenderSection("CustomScripts", required: false)

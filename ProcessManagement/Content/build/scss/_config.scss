@@ -28,7 +28,7 @@ body, #wrapper{
     font-weight: 600;
     font-family: 'Times New Roman', Times, serif;
     span{
-        color: #e91827;
+        color: #d6333b;
         font-weight: 900;
         font-size: 17px;
         &::after{
@@ -84,15 +84,26 @@ body, #wrapper{
         }
         .dropify-wrapper{
             border-color: #ff0101;
-        }
-        .dropify-message{
-            color:#ff0101;
-            span{
-                &.file-icon{
-                    color:#ff0101;
+            .dropify-message{
+                color:#ff0101;
+                span{
+                    &.file-icon{
+                        color:#ff0101;
+                    }
+                }
+            }
+            .dropify-preview{
+                .dropify-render{
+                    i{
+                        color:#ff0101;
+                    }
+                    .dropify-extension{
+                        color:#ff0101;
+                    }
                 }
             }
         }
+        
     }
 }
 .hide{

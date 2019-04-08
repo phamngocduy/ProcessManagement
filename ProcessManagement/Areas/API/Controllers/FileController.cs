@@ -17,6 +17,7 @@ namespace ProcessManagement.Areas.API.Controllers
     {
 
         ///=============================================================================================
+        PMSEntities db = new PMSEntities();
         GroupService groupService = new GroupService();
         ProcessService processService = new ProcessService();
         StepService stepService = new StepService();
@@ -31,7 +32,6 @@ namespace ProcessManagement.Areas.API.Controllers
             var status = HttpStatusCode.OK;
             string message;
             object response;
-            bool isFileOverSize = fileService.checkFileOverSize(FileUpload);
             if (FileUpload.ContentLength == 0)
             {
                 status = HttpStatusCode.NoContent;
@@ -39,10 +39,12 @@ namespace ProcessManagement.Areas.API.Controllers
                 response = new { message = message, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
+            ConfigRule fileSizeRule = db.ConfigRules.Find("filesize");
+            bool isFileOverSize = fileService.checkFileOverSize(FileUpload);
             if (isFileOverSize)
             {
                 status = HttpStatusCode.InternalServerError;
-                message = "Your File pass our limit size rule";
+                message = string.Format("This file is too big ({0} {1} maximum)",fileSizeRule.Value,fileSizeRule.Unit);
                 response = new { message = message, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);
             }

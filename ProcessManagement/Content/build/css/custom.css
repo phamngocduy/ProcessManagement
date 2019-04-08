@@ -31,7 +31,7 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   font-family: "Times New Roman", Times, serif;
 }
 .logo-name span {
-  color: #e91827;
+  color: #d6333b;
   font-weight: 900;
   font-size: 17px;
 }
@@ -77,10 +77,16 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .form-group.error .dropify-wrapper {
   border-color: #ff0101;
 }
-.form-group.error .dropify-message {
+.form-group.error .dropify-wrapper .dropify-message {
   color: #ff0101;
 }
-.form-group.error .dropify-message span.file-icon {
+.form-group.error .dropify-wrapper .dropify-message span.file-icon {
+  color: #ff0101;
+}
+.form-group.error .dropify-wrapper .dropify-preview .dropify-render i {
+  color: #ff0101;
+}
+.form-group.error .dropify-wrapper .dropify-preview .dropify-render .dropify-extension {
   color: #ff0101;
 }
 

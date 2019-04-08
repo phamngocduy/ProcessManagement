@@ -664,7 +664,7 @@
                 var fileName = file.name;
                 var fileSize = file.size;
                 if (maxFileSize != null && fileSize > maxFileSize) {
-                    showToastr("error", "Your file pass our limit size rule");
+                    showToastr("error", `This file is too big (@maxFileSizeRule.Value @maxFileSizeRule.Unit maximum)`);
                 } else {
                     setConfirm(`Are you sure you want to upload "${fileName}"?`, function () {
                         addFile(file);
@@ -742,28 +742,6 @@
                         </td>
                     </tr>`
             
-        }
-        function setConfirm(content,okfunction,cancelfunction) {
-            $.confirm({
-                title: 'Confirm!',
-                type: 'primary-theme',
-                theme: 'material',
-                icon: 'fa fa-question',
-                closeIcon: true,
-                closeIconClass: 'fa fa-close',
-                content: content,
-                columnClass: 'medium',
-                buttons: {
-                    ok: {
-                        btnClass: 'btn-none waves-effect',
-                        action: okfunction
-                    },
-                    cancel: {
-                        btnClass: 'btn-none waves-effect',
-                        action: cancelfunction
-                    }
-                },
-            });
         }
         function changeFileName(id,filename) {
             var data = {

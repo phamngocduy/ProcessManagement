@@ -125,114 +125,114 @@
 @section CustomScripts{
     @*<script src="//cdn.datatables.net/responsive/2.2.2/js/dataTables.responsive.min.js"></script>*@
     @*<script src="~/Content/build/js/pages/tables/jquery-datatable.js"></script>*@
-    <script>
-        $(function () {
-            var lang = getCurrentLang();
-            $(".js-grouplist-table").DataTable({
-                "processing": true,
-                "serverSide": false,
-                "bLengthChange": false,
-                "language": {
-                    "emptyTable": "You doesn't have any group yet",
-                    "info": "Showing _START_ to _END_ of _TOTAL_ group",
-                },
-                "ajax": {
-                    "type": "GET",
-                    "url": "@Url.Action("getgrouplist", "group", new { area = "api"})",
-                    "dataSrc": function (json) {
-                        json = json.data;
-                        var lang = getCurrentLang();
-                        console.log(json);
-                        var return_data = [];
-                        for (var i = 0; i < json.length; i++) {
-                            var action = `${lang}/${json[i].slug}-${json[i].id}/group`;
-                            var name = `<a href="${action}" class="primary-theme"><h6>${json[i].name}</h6></a><small>${json[i].time_ralitive}</small>`;
-                            var sort = json[i].update_at.sort;
-                            var owner = getOwnerAvatar(json[i].owner.name, json[i].owner.avatar);
-                            var members = json[i].members.list;
-                            var memberAvatar;
-                            //member left
-                            var membertotal = json[i].members.total;
-                            var memberleft = membertotal - 4;
+<script type="text/javascript">
+    $(function () {
+        var lang = getCurrentLang();
+        $(".js-grouplist-table").DataTable({
+            "processing": true,
+            "serverSide": false,
+            "bLengthChange": false,
+            "language": {
+                "emptyTable": "You doesn't have any group yet",
+                "info": "Showing _START_ to _END_ of _TOTAL_ group",
+            },
+            "ajax": {
+                "type": "GET",
+                "url": "@Url.Action("getgrouplist", "group", new { area = "api"})",
+                "dataSrc": function (json) {
+                    json = json.data;
+                    var lang = getCurrentLang();
+                    console.log(json);
+                    var return_data = [];
+                    for (var i = 0; i < json.length; i++) {
+                        var action = `${lang}/${json[i].slug}-${json[i].id}/group`;
+                        var name = `<a href="${action}" class="primary-theme"><h6>${json[i].name}</h6></a><small>${json[i].time_ralitive}</small>`;
+                        var sort = json[i].update_at.sort;
+                        var owner = getOwnerAvatar(json[i].owner.name, json[i].owner.avatar);
+                        var members = json[i].members.list;
+                        var memberAvatar;
+                        //member left
+                        var membertotal = json[i].members.total;
+                        var memberleft = membertotal - 4;
 
-                            var member;
-                            if (membertotal == 1) {
-                                member = "There aren't member in group yet";
-                            } else {
-                                member = `<ul class="list-unstyled team-info">`;
-                                for (var j = 0; j < members.length; j++) {
+                        var member;
+                        if (membertotal == 1) {
+                            member = "There aren't member in group yet";
+                        } else {
+                            member = `<ul class="list-unstyled team-info">`;
+                            for (var j = 0; j < members.length; j++) {
 
-                                    if (j == 3) {
-                                        if (memberleft > 1) {
-                                            member += `<li>${getMemberLeft(memberleft)}</li>`;
-                                            break;
-                                        }
+                                if (j == 3) {
+                                    if (memberleft > 1) {
+                                        member += `<li>${getMemberLeft(memberleft)}</li>`;
+                                        break;
                                     }
-                                    memberAvatar = getMemberAvatar(members[j].name, members[j].avatar);
-                                    member += `<li>${memberAvatar}</li>`;
                                 }
-                                member += `</ul>`;
+                                memberAvatar = getMemberAvatar(members[j].name, members[j].avatar);
+                                member += `<li>${memberAvatar}</li>`;
                             }
-
-                            return_data.push({
-                                "name": name,
-                                "sort": sort,
-                                "owner": owner,
-                                "member": member,
-                            })
-
+                            member += `</ul>`;
                         }
-                        return return_data;
+
+                        return_data.push({
+                            "name": name,
+                            "sort": sort,
+                            "owner": owner,
+                            "member": member,
+                        })
+
                     }
-                },
-                "createdRow": function (row, data, dataIndex) {
-                    if (dataIndex == 1 ) {
-                        $(row).addClass("project-title");
-                    }
-                },
-                "columns": [
-                    {
-                        data: {
-                            _: "name",
-                            sort: "sort"
-                        }
-                    },
-                    { data: "owner" },
-                    { data: "member" }
-                ],
-                //columnDefs: [
-                //    { responsivePriority: 1, targets: 0 },
-                //    { responsivePriority: 2, targets: 3 },
-                //    { responsivePriority: 3, targets: 4 }
-                //],
-                "order": [[0, "desc"]],
-                "initComplete": function () {
-                    $(".btn-newgroup").html('<a href="#" class="btn btn-success">New Group</a>');
-                    $(".page-item:not(.previous):not(.next) a").addClass("waves-effect");
-                },
-                "drawCallback": function (setting) {
-                    //$('[data-toggle="tooltip"]').tooltip();
+                    return return_data;
                 }
-            });
-        })
-        function getOwnerAvatar(name, avatar) {
-            if (avatar.avatar != "") {
-                return `<img src="Content/images/xs/avatar1.jpg" data-toggle="tooltip" data-placement="top" title="${name}" alt="Avatar" class="width35 rounded">`;
-            } else {
-                var avatardefault = JSON.parse(avatar.avatardefault);
-                return `<div data-toggle="tooltip" data-placement="top" title="${name}" class="width35 rounded owner-default" style="background-color:${avatardefault.background}">${avatardefault.name}</div>`
+            },
+            "createdRow": function (row, data, dataIndex) {
+                if (dataIndex == 1 ) {
+                    $(row).addClass("project-title");
+                }
+            },
+            "columns": [
+                {
+                    data: {
+                        _: "name",
+                        sort: "sort"
+                    }
+                },
+                { data: "owner" },
+                { data: "member" }
+            ],
+            //columnDefs: [
+            //    { responsivePriority: 1, targets: 0 },
+            //    { responsivePriority: 2, targets: 3 },
+            //    { responsivePriority: 3, targets: 4 }
+            //],
+            "order": [[0, "desc"]],
+            "initComplete": function () {
+                $(".btn-newgroup").html('<a href="#" class="btn btn-success">New Group</a>');
+                $(".page-item:not(.previous):not(.next) a").addClass("waves-effect");
+            },
+            "drawCallback": function (setting) {
+                //$('[data-toggle="tooltip"]').tooltip();
             }
+        });
+    })
+    function getOwnerAvatar(name, avatar) {
+        if (avatar.avatar != "") {
+            return `<img src="Content/images/xs/avatar1.jpg" data-toggle="tooltip" data-placement="top" title="${name}" alt="Avatar" class="width35 rounded">`;
+        } else {
+            var avatardefault = JSON.parse(avatar.avatardefault);
+            return `<div data-toggle="tooltip" data-placement="top" title="${name}" class="width35 rounded owner-default" style="background-color:${avatardefault.background}">${avatardefault.name}</div>`
         }
-        function getMemberAvatar(name, avatar) {
-            if (avatar.avatar != "") {
-                return `<img src="Content/images/xs/avatar1.jpg" data-toggle="tooltip" data-placement="top" title="${name}" alt="Avatar">`;
-            } else {
-                var avatardefault = JSON.parse(avatar.avatardefault);
-                return `<div data-toggle="tooltip" data-placement="top" title="${name}" class="member-default" style="background-color:${avatardefault.background}">${avatardefault.name}</div>`;
-            }
+    }
+    function getMemberAvatar(name, avatar) {
+        if (avatar.avatar != "") {
+            return `<img src="Content/images/xs/avatar1.jpg" data-toggle="tooltip" data-placement="top" title="${name}" alt="Avatar">`;
+        } else {
+            var avatardefault = JSON.parse(avatar.avatardefault);
+            return `<div data-toggle="tooltip" data-placement="top" title="${name}" class="member-default" style="background-color:${avatardefault.background}">${avatardefault.name}</div>`;
         }
-        function getMemberLeft(memberleft) {
-            return `<div data-toggle="tooltip" data-placement="top" title="and ${memberleft} member more..." class="member-default member-left">${memberleft}+</div>`;
-        }
-    </script>
+    }
+    function getMemberLeft(memberleft) {
+        return `<div data-toggle="tooltip" data-placement="top" title="and ${memberleft} member more..." class="member-default member-left">${memberleft}+</div>`;
+    }
+</script>
 }

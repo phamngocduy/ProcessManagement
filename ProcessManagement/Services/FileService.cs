@@ -76,9 +76,9 @@ namespace ProcessManagement.Services
         //    return f;
 
         //}
-        public List<FileManager> getAllFileNameFromFolder(int idGroup,FileDirection Direction)
+        public List<FileManager> getAllFileNameFromFolder(int idGroup,string path)
         {
-            var file = db.FileManagers.Where(x => x.IdGroup == idGroup && x.Direction == Direction.ToString()).ToList();
+            var file = db.FileManagers.Where(x => x.IdGroup == idGroup && x.Path == path).ToList();
             return file;
 
         }
