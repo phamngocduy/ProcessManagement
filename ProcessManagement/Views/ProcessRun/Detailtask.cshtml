@@ -8,6 +8,8 @@
     var inputConfig = ViewData["ValueInput"] as JObject;
     var fileConfig = ViewData["ValueFile"] as JObject;
     var textLength = ViewData["TextMaxLength"] as ProcessManagement.Models.ConfigRule;
+    var TaskStatus = Model.Status;
+    var isOpen = TaskStatus == 6 ? true : false;
 }
 
 @section CustomCss{
@@ -24,7 +26,7 @@
                 <li class="breadcrumb-item"><a href="~/Home/Index" class="primary-theme"><i class="icon-home"></i></a></li>
                 <li class="breadcrumb-item"><a href="/" class="primary-theme">Groups</a></li>
                 <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = Model.StepRun.ProcessRun.Process.IdGroup })" class="primary-theme">@Model.StepRun.ProcessRun.Process.Group.Name</a></li>
-                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.Id })" class="primary-theme">@Model.StepRun.ProcessRun.Name</a></li>
+                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.Process.Id })" class="primary-theme">@Model.StepRun.ProcessRun.Name</a></li>
                 <li class="breadcrumb-item"><a href="" class="primary-theme">@Model.StepRun.Name</a></li>
                 <li class="breadcrumb-item"><a href="" class="primary-theme"> @Model.Name</a></li>
             </ul>
@@ -58,23 +60,27 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="card">
             <div class="body" id="show-task">
-                <div class="row clearfix">
+                <div class="row clearfix disable-all">
                     <div class="col-sm-8">
                         <div class="form-group">
                             <label for="task-name" class="required">Task Name</label>
-                            <input type="text" class="form-control" id="task-name" name="@Html.NameFor(m => m.Name)" value="@Model.Name" disabled>
+                            <input type="text" class="form-control" id="task-name" name="@Html.NameFor(m => m.Name)" value="@Model.Name">
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <label for="task-role">Select Role</label>
-                        <select id="task-role" class="form-control show-tick ms select2" disabled>
-                            <option>@Model.Role.Name</option>
-                        </select>
+                        <div class="form-group">
+                            <label for="task-role">Select Role</label>
+                            <select id="task-role" class="form-control show-tick ms select2">
+                                <option>@Model.Role.Name</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="task-description">Description</label>
-                    <textarea class="form-control" rows="2" placeholder="Write something about your task (optional)" id="task-description" name="@Html.NameFor(m => m.Description)" disabled>@Model.Description</textarea>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="task-description">Description</label>
+                            <textarea class="form-control" rows="5" placeholder="Write something about your task (optional)" id="task-description" name="@Html.NameFor(m => m.Description)">@Model.Description</textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -84,51 +90,59 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="card">
             <div class="body" id="show-taskrun">
-                <div class="row clearfix">
+                <div class="row clearfix @if (!isOpen) { WriteLiteral("disable-all"); } ">
                     <div class="col-sm-12 ">
                         <div class="row cw-validation">
-                            <div class="col-sm-12 form-group">
-                                @{
-                                    string textLabel;
-                                    if ((string)inputConfig["label"] == "")
-                                    {
-                                        textLabel = "Response Label";
-                                    }
-                                    else
-                                    {
-                                        textLabel = (string)inputConfig["label"];
-
-                                    }
-                                }
-                                @{ 
-                                    bool required = (bool)inputConfig["required"];
-                                    int maxlength = (string)inputConfig["maxlength"] != "" ? (int)inputConfig["maxlength"]: textLength.Value;
-                                }
-                                <label @if (required) { WriteLiteral("class='required'"); } for="task-inputtext">@textLabel</label>
-                                <input type="text" class="form-control" id="task-inputtext" @if (required) { WriteLiteral("cw-required"); } cw-maxlength="@maxlength">
-                            </div>
-                            <div class="col-sm-12 form-group">
-                                @{
-                                    string fileLabel;
-                                    if ((string)inputConfig["label"] == "")
-                                    {
-                                        fileLabel = "Response File";
-                                    }
-                                    else
-                                    {
-                                        fileLabel = (string)inputConfig["label"];
-
-                                    }
-                                }
-                                <label @if ((bool)fileConfig["required"]) { WriteLiteral("class='required'"); } for="task-inputfile">@fileLabel</label>
-                                <input type="file" id="task-inputfile" class="dropify" cw-required />
-                            </div>
                             <div class="col-sm-12">
-                                <div class="mt-2" id="button-action">
-                                    <button id="btn-savetask" class="btn btn-primary-theme waves-effect"><i class="fa fa-save"></i> Save</button>
-                                    <button id="btn-donetask" class="btn btn-primary-theme waves-effect"><i class="fa fa-check"></i> Done</button>
+                                <div class="form-group">
+                                    @{
+                                        string textLabel;
+                                        if ((string)inputConfig["label"] == "")
+                                        {
+                                            textLabel = "Response Label";
+                                        }
+                                        else
+                                        {
+                                            textLabel = (string)inputConfig["label"];
+
+                                        }
+                                    }
+                                    @{
+                                        bool required = (bool)inputConfig["required"];
+                                        int maxlength = (string)inputConfig["maxlength"] != "" ? (int)inputConfig["maxlength"] : textLength.Value;
+                                    }
+                                    <label @if (required) { WriteLiteral("class='required'"); } for="task-inputtext">@textLabel</label>
+                                    <input type="text" class="form-control" id="task-inputtext" @if (required) { WriteLiteral("cw-required"); } cw-maxlength="@maxlength" value="@inputConfig["value"]">
                                 </div>
                             </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+
+                                    @{
+                                        string fileLabel;
+                                        if ((string)inputConfig["label"] == "")
+                                        {
+                                            fileLabel = "Response File";
+                                        }
+                                        else
+                                        {
+                                            fileLabel = (string)inputConfig["label"];
+
+                                        }
+                                    }
+                                    <label @if ((bool)fileConfig["required"]) { WriteLiteral("class='required'"); } for="task-inputfile">@fileLabel</label>
+                                    <input type="file" id="task-inputfile" class="dropify" cw-required value="@fileConfig["value"]"/>
+                                </div>
+                            </div>
+                            @if (isOpen)
+                            {
+                                <div class="col-sm-12">
+                                    <div class="mt-2" id="button-action">
+                                        <button id="btn-savetask" class="btn btn-primary-theme waves-effect"><i class="fa fa-save"></i> Save</button>
+                                        <button id="btn-donetask" class="btn btn-primary-theme waves-effect"><i class="fa fa-check"></i> Done</button>
+                                    </div>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>

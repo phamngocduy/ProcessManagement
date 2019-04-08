@@ -68,6 +68,8 @@
             return false;
         }
     })
+    //disable all field
+    disabledAllField();
 })
 
 
@@ -157,6 +159,9 @@ function createSelect2() {
         allowClear: true
     });
 
+}
+function disabledAllField() {
+    $(".disable-all").find("input, textarea, button, select").prop("disabled", true);
 }
 function toggleLoading(element) {
     var text = element.html();
