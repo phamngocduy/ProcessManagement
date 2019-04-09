@@ -124,8 +124,10 @@
                     } else {
                         error["isError"] = false;
                     }
-                    return error;
+                } else {
+                    error["isError"] = false;
                 }
+                return error;
             },
             setFormError: function ($node, message) {
                 var element = $node;

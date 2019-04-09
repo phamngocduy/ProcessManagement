@@ -33,8 +33,9 @@ namespace ProcessManagement.Areas.API.Controllers
             var status = HttpStatusCode.OK;
             string message;
             object response;
-            Step step = stepService.findStep(stepid);
+            Step step = db.Steps.Find(stepid);
             step.Description = des.Trim();
+            step.Updated_At = DateTime.Now;
             db.SaveChanges();
             
             message = "Update Step Successfully";
@@ -44,13 +45,13 @@ namespace ProcessManagement.Areas.API.Controllers
 
         [HttpPost]
         [GroupAuthorize(Role = new UserRole[] { UserRole.Manager })]
-        public JsonResult addTask(string name, int? idRole, string description, string inputConfig, string fileConfig)
+        public JsonResult addTask(int stepid, string name, int? idRole, string description, string inputConfig, string fileConfig, HttpPostedFileBase fileupload)
         {
             var status = HttpStatusCode.OK;
             string message;
             object response;
-            int idstep = (int)Session["idStep"];
-            Step step = stepService.findStep(idstep);
+            //int idstep = (int)Session["idStep"];
+            Step step = stepService.findStep(stepid);
 
 
             if (name == "")
@@ -82,6 +83,8 @@ namespace ProcessManagement.Areas.API.Controllers
             Group group = groupService.findGroup(step.Process.Group.Id);
             string directoryPath = String.Format("Upload/{0}/{1}/{2}/{3}", group.Id, step.Process.Id, step.Id, task.Id);
             fileService.createDirectory(directoryPath);
+            //file 
+            fileService.saveFile(group.Id, fileupload, directoryPath, FileDirection.Task);
 
             SetFlash(FlashType.success, "Created Task Successfully");
             message = "Created Task Successfully";

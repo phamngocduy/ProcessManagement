@@ -611,6 +611,7 @@ namespace ProcessManagement.Controllers
             ViewData["Group"] = group;
             Session["idStep"] = step.Id;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
+            ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
             return View(pr);
         }
        
