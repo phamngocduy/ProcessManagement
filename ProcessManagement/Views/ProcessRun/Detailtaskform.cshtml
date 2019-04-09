@@ -5,13 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
     var isManager = userRole.IsManager;
-    string idUser = User.Identity.GetUserId();
 }
 
 @section CustomCss{
-    <link rel="stylesheet" href="~/Content/vendor/dropify/css/dropify.min.css">
-    <link rel="stylesheet" href="~/Content/vendor/select2/select2.css" />
-    <link rel="stylesheet" href="~/Content/vendor/switchery/dist/switchery.min.css" />
+
 }
 
 <div class="block-header">
@@ -91,7 +88,7 @@
             <div class="body" id="show-taskrun">
                 <div class="row clearfix">
                     <div class="col-sm-12 setDataWrap">
-                        <form class="render-wrap" id="render-wrap"></form>
+                        <form class="render-wrap" id="render-wrap" ></form>
                     </div>
                     <div class="col-sm-12">
                         <div class="mt-2" id="button-action">
@@ -120,41 +117,49 @@
 
 
 @section CustomScripts{
-    <script src="~/Content/vendor/dropify/js/dropify.min.js"></script>
-    <script src="~/Content/build/js/pages/forms/dropify.js"></script>
-    <script src="~/Content/vendor/select2/select2.min.js"></script>
-    <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
     <script src="~/Content/vendor/FormBuilder/form-builder.min.js"></script>
     <script src="~/Content/vendor/FormBuilder/form-render.min.js"></script>
 
     <script>
+        var taskform = '@Model.ValueFormJson'.replace(/&quot;/g, "\"").replace(/&#244;/gi, "ô").replace(/&#224;/gi, "à");
+        var formData = taskform;
+        if (taskform != null) {
+            $("#render-wrap").formRender({formData});
+        }
+
         $(function () {
-            var taskform = '@Model.ValueFormJson'.replace(/&quot;/g, "\"");
-            var formData = taskform;
-            if (taskform != null) {
-                $("#render-wrap").formRender({formData});
-            }
-            $(`[required]`).attr("cw-required","").removeAttr("required");
-            $(".rendered-form").formValidation();
             $('#btn-savetask').on('click', function () {
                 let formrender = $("#render-wrap").formRender("userData");
                 let j = 0;
                 let tempArr = [];
+                let form = JSON.parse(formData);
                 for (let i = 0; i < formrender.length; i++) {
-                    if (formrender[i]["required"] == true && formrender[i]["userData"] == "") {
-                        j++;
+                    for (let k = 0; k < form.length; k++) {
+                        if (form[k]["name"] == formrender[i]["name"] && formrender[i]["required"] == true && (formrender[i]["userData"] == "" /*|| formrender[i]["userData"] == undefined*/)) {
+                            j++;
+                        }
+                        if (form[k]["name"] == formrender[i]["name"] && form[k]["required"] == formrender[i]["required"] && form[k]["userData"] == formrender[i]["userData"]) {
+                            tempArr.push(form[k]);
+                        }
+                        if (form[k]["name"] == formrender[i]["name"] && form[k]["required"] == formrender[i]["required"] && form[k]["userData"] != formrender[i]["userData"]) {
+                            tempArr.push(formrender[i]);
+                        }
                     }
-                    tempArr.push(formrender[i]);
                 }
-                
-                if (j == 0) {
 
+                for (let i = 0; i < formrender.length; i++) {
+                    if (formrender[i]["type"] == "textarea") {
+
+                    }
+                }
+
+                if (j == 0) {
                     let check = confirm("Save task?");
                     if (check) {
                         let data = {
-                        idtaskrun: @Model.Id,
-                        formrender: JSON.stringify(tempArr)
-                        }
+                            idtaskrun: @Model.Id,
+                            formrender: JSON.stringify(tempArr)
+                        };
                         savetaskform(data);
                     }
                 } else {
@@ -162,26 +167,39 @@
                     return false;
                 }
             })
+        });
 
+        $(function () {
             $('#btn-donetask').on('click', function () {
                 let formrender = $("#render-wrap").formRender("userData");
                 let j = 0;
                 let tempArr = [];
+                let form = JSON.parse(formData);
                 for (let i = 0; i < formrender.length; i++) {
-                    if (formrender[i]["required"] == true && formrender[i]["userData"] == "") {
-                        j++;
+                    for (let k = 0; k < form.length; k++) {
+                        if (form[k]["name"] == formrender[i]["name"] && formrender[i]["required"] == true && formrender[i]["userData"] == "") {
+                            j++;
+                        }
+                        if (form[k]["name"] == formrender[i]["name"] && form[k]["required"] == formrender[i]["required"] && form[k]["userData"] == formrender[i]["userData"]) {
+                            tempArr.push(form[k]);
+                        }
+                        if (form[k]["name"] == formrender[i]["name"] && form[k]["required"] == formrender[i]["required"] && form[k]["userData"] != formrender[i]["userData"]) {
+                            tempArr.push(formrender[i]);
+                        }
                     }
-                    tempArr.push(formrender[i]);
                 }
-                
+
+                for (let i = 0; i < tempArr.length; i++) {
+                    tempArr[i]["disabled"] = "undefined";
+                }
+
                 if (j == 0) {
                     let check = confirm("Done task?");
                     if (check) {
                         let data = {
-                        idtaskrun: @Model.Id,
-                        formrender: JSON.stringify(tempArr),
-                        iduserby: idUser.ToString()
-                        }
+                            idtaskrun: @Model.Id,
+                            formrender: JSON.stringify(tempArr)
+                        };
                         donetaskform(data);
                     }
                 } else {
@@ -189,6 +207,7 @@
                     return false;
                 }
             })
+        });
 
             function savetaskform(data) {
                     $.ajax({
@@ -223,7 +242,6 @@
                         }
                     });
             }
-        });
 
             $(function () {
                 var idtask = $('#btn-finishtask').val();
@@ -231,27 +249,35 @@
                     let check = confirm("Finish task?");
                     if (check) {
                         let data = {
-                            idtask: idtask,
-                            iduserby: idUser.ToString()
+                            idtask: idtask
                         }
                         submitfinishtask(data);
                     }
                 })
-            });
+            })
 
             $(function () {
                 var idtask = $('#btn-opentask').val();
                 $('#btn-opentask').on('click', function () {
+                    let formrender = $("#render-wrap").formRender("userData");
+                    let tempArr = [];
+                    for (let i = 0; i < formrender.length; i++) {
+                        tempArr.push(formrender[i]);
+                    }
+                    for (let i = 0; i < tempArr.length; i++) {
+                        tempArr[i]["disabled"] = "";
+                    }
                     let check = confirm("Open task?");
                     if (check) {
                         let data = {
-                            idtask: idtask
+                            idtask: idtask,
+                            formrender: JSON.stringify(tempArr)
                         }
                         submitopentask(data);
                     }
 
                 })
-            });
+            })
         
             function submitfinishtask(data) {
                 $.ajax({

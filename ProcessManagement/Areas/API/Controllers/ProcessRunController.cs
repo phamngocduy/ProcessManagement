@@ -56,7 +56,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult savetaskform(int idtaskrun, string formrender)
+        public JsonResult savetaskform(int idtaskrun,string formrender)
         {
             var status = HttpStatusCode.OK;
             string message;
@@ -71,13 +71,14 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult donetaskform(int idtaskrun, string formrender, string iduserby)
+        public JsonResult donetaskform(int idtaskrun,string formrender)
         {
+            string IdUser = User.Identity.GetUserId();
             var status = HttpStatusCode.OK;
             string message;
             object response;
 
-            taskService.donetaskform(idtaskrun, formrender, iduserby);
+            taskService.donetaskform(idtaskrun, formrender, IdUser);
 
             message = "Created ProcessRun Successfully";
             response = new { message = message, status = status };
@@ -86,14 +87,15 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult submitfinishtask(int idtask, string iduserby)
+        public JsonResult submitfinishtask(int idtask)
         {
+            string IdUser = User.Identity.GetUserId();
             var status = HttpStatusCode.OK;
             string message;
             object response;
 
             TaskProcessRun taskrun = taskService.findTaskRun(idtask);
-            taskService.submitclosetask(taskrun.Id, iduserby);
+            taskService.submitclosetask(taskrun.Id, IdUser);
 
             message = "Created ProcessRun Successfully";
             response = new { message = message, status = status };
@@ -102,14 +104,14 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult submitopentask(int idtask)
+        public JsonResult submitopentask(int idtask, string formrender)
         {
             var status = HttpStatusCode.OK;
             string message;
             object response;
 
             TaskProcessRun taskrun = taskService.findTaskRun(idtask);
-            taskService.submitopentask(taskrun.Id);
+            taskService.submitopentask(taskrun.Id, formrender);
 
             message = "Created ProcessRun Successfully";
             response = new { message = message, status = status };

@@ -395,7 +395,7 @@ namespace ProcessManagement.Areas.API.Controllers
             List<Step> liststep = stepService.findStepsOfProcess(processrun.IdProcess);
             
             List<TaskProcessRun> listruntask = taskService.findruntaskofstep(idStep);
-            List<TaskProcessRun> listtaskclose = listruntask.Where(x => x.Status1.Name == "Close").ToList();
+            List<TaskProcessRun> listtaskclose = listruntask.Where(x => x.Status1.Name == "Finish").ToList();
 
             List<Step> nextstep = new List<Step>();
             StepRun runnextstep = new StepRun();

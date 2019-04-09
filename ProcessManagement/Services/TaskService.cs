@@ -208,10 +208,11 @@ namespace ProcessManagement.Services
             taskrun.Updated_At = DateTime.Now;
             db.SaveChanges();
         }
-        public void submitopentask(int idtaskrun)
+        public void submitopentask(int idtaskrun, string formrender)
         {
             Status status = db.Status.Where(y => y.Name == "Open").FirstOrDefault();
             TaskProcessRun taskrun = findTaskRun(idtaskrun);
+            taskrun.ValueFormJson = formrender;
             taskrun.Status = status.Id;
             taskrun.Updated_At = DateTime.Now;
             db.SaveChanges();
@@ -274,6 +275,7 @@ namespace ProcessManagement.Services
         public void donetaskform(int idtaskrun, string formrender, string iduserby)
         {
             Status status = db.Status.Where(y => y.Name == "Done").FirstOrDefault();
+            
             TaskProcessRun taskform = findTaskRun(idtaskrun);
             taskform.ValueFormJson = formrender;
             taskform.Status = status.Id;

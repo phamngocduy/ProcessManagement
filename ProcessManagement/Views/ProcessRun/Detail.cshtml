@@ -102,7 +102,7 @@
                                     foreach (StepRun step in ViewBag.ListRunStep)
                                     {
                                         List<TaskProcessRun> taskList = db.TaskProcessRuns.Where(z => z.IdStep == step.Id).OrderBy(x => x.Position).ToList();
-                                        List<TaskProcessRun> listtaskclose = taskList.Where(x => x.Status1.Name == "Close").ToList();
+                                        List<TaskProcessRun> listtaskclose = taskList.Where(x => x.Status1.Name == "Finish").ToList();
                                         <li>
                                             <div class="step @if (taskList.Any()) { WriteLiteral("step-has-task"); }" style="border: 2px solid; border-left:7px solid;">
                                                 <div class="step-name">
@@ -111,7 +111,14 @@
                                                     {
                                                         if (step.Status1.Name == "Running" && listtaskclose.Count == taskList.Count)
                                                         {
-                                                            <button id="btn-nextstep" value="@step.Id" class="btn btn-primary-theme btn-sm" style="float: right">Next</button>
+                                                            if (step.NextStep1 != 0)
+                                                            {
+                                                                <button id="btn-nextstep" value="@step.Id" class="btn btn-primary-theme btn-sm" style="float: right">Next</button>
+                                                            }
+                                                            else
+                                                            {
+                                                                <button id="btn-nextstep" value="@step.Id" class="btn btn-primary-theme btn-sm" style="float: right">Complete</button>
+                                                            }
                                                         }
                                                     }
                                                 </div>
@@ -137,10 +144,10 @@
                                                                     @if (task.ValueFormJson == null)
                                                                     {
                                                                         <td><a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "processrun", action = "detailtask", idruntask = task.Id })">@task.Name</a></td>
-                                                                        
+
                                                                         if (task.IdRole == null)
                                                                         {
-                                                                            <td><p></p></td>
+                                                                            <td></td>
                                                                         }
                                                                         else
                                                                         {
@@ -149,13 +156,13 @@
                                                                         <td>@task.Status1.Name</td>
                                                                         <td></td>
                                                                         <td></td>
-                                                                        @*<td><button id="btn-commenttask" value="@task.Id" class="btn btn-primary-theme btn-sm">Comment</button></td>
-                                                                        <td><button id="btn-donetask" value="@task.Id" class="btn btn-primary-theme btn-sm">Done</button></td>*@
+
+
                                                                     }
                                                                     else
                                                                     {
                                                                         <td><a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "processrun", action = "detailtaskform", idruntask = task.Id })">@task.Name</a></td>
-                                                                        
+
                                                                         if (task.IdRole == null)
                                                                         {
                                                                             <td><p></p></td>
@@ -167,8 +174,6 @@
                                                                         <td>@task.Status1.Name</td>
                                                                         <td></td>
                                                                         <td></td>
-                                                                        @*<td><button id="btn-commenttask" value="@task.Id" class="btn btn-primary-theme btn-sm">Comment</button></td>
-                                                                        <td><button id="btn-donetask" value="@task.Id" class="btn btn-primary-theme btn-sm">Done</button></td>*@
                                                                     }
                                                                 </tr>
                                                             }
@@ -178,50 +183,50 @@
                                                                     @if (task.ValueFormJson == null)
                                                                     {
                                                                         <td><a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "processrun", action = "detailtask", idruntask = task.Id })">@task.Name</a></td>
-                                                                        
+
                                                                         if (task.IdRole == null)
                                                                         {
-                                                                            <td><p></p></td>
+                                                                            <td></td>
                                                                         }
                                                                         else
                                                                         {
                                                                             <td>@task.Role.Name</td>
                                                                         }
                                                                         <td>@task.Status1.Name</td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        @*<td><button id="btn-commenttask" value="@task.Id" class="btn btn-primary-theme btn-sm">Comment</button></td>
-                                                                        <td>
-                                                                            @if (isManager)
-                                                                            {
-                                                                                <button id="btn-opentask" value="@task.Id" class="btn btn-primary-theme btn-sm">Open</button>
-                                                                                <button id="btn-closetask" value="@task.Id" class="btn btn-primary-theme btn-sm">Close</button>
-                                                                            }
-                                                                        </td>*@
+                                                                        if (task.DoneBy != null)
+                                                                        {
+                                                                            <td>@task.AspNetUser1.UserName</td>
+                                                                            <td>@task.Done_At</td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        }
                                                                     }
                                                                     else
                                                                     {
                                                                         <td><a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "processrun", action = "detailtaskform", idruntask = task.Id })">@task.Name</a></td>
-                                                                        
+
                                                                         if (task.IdRole == null)
                                                                         {
-                                                                            <td><p></p></td>
+                                                                            <td></td>
                                                                         }
                                                                         else
                                                                         {
                                                                             <td>@task.Role.Name</td>
                                                                         }
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        @*<td>@task.Status1.Name</td>
-                                                                        <td><button id="btn-commenttask" value="@task.Id" class="btn btn-primary-theme btn-sm">Comment</button></td>
-                                                                        <td>
-                                                                            @if (isManager)
-                                                                            {
-                                                                                <button id="btn-opentask" value="@task.Id" class="btn btn-primary-theme btn-sm">Open</button>
-                                                                                <button id="btn-closetask" value="@task.Id" class="btn btn-primary-theme btn-sm">Close</button>
-                                                                            }
-                                                                        </td>*@
+                                                                        <td>@task.Status1.Name</td>
+                                                                        if (task.DoneBy != null)
+                                                                        {
+                                                                            <td>@task.AspNetUser1.UserName</td>
+                                                                            <td>@task.Done_At</td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        }
                                                                     }
                                                                 </tr>
                                                             }
@@ -231,7 +236,7 @@
                                                                     @if (task.ValueFormJson == null)
                                                                     {
                                                                         <td><a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "processrun", action = "detailtask", idruntask = task.Id })">@task.Name</a></td>
-                                                                        
+
                                                                         if (task.IdRole == null)
                                                                         {
                                                                             <td><p></p></td>
@@ -241,15 +246,21 @@
                                                                             <td>@task.Role.Name</td>
                                                                         }
                                                                         <td>@task.Status1.Name</td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        @*<td><button id="btn-commenttask" value="@task.Id" class="btn btn-primary-theme btn-sm">Comment</button></td>
-                                                                        <td><p></p></td>*@
+                                                                        if (task.ApproveBy != null)
+                                                                        {
+                                                                            <td>@task.AspNetUser.UserName</td>
+                                                                            <td>@task.Approve_At</td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        }
                                                                     }
                                                                     else
                                                                     {
                                                                         <td><a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "processrun", action = "detailtaskform", idruntask = task.Id })">@task.Name</a></td>
-                                                                        
+
                                                                         if (task.IdRole == null)
                                                                         {
                                                                             <td><p></p></td>
@@ -259,10 +270,16 @@
                                                                             <td>@task.Role.Name</td>
                                                                         }
                                                                         <td>@task.Status1.Name</td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        @*<td><button id="btn-commenttask" value="@task.Id" class="btn btn-primary-theme btn-sm">Comment</button></td>
-                                                                        <td><p></p></td>*@
+                                                                        if (task.ApproveBy != null)
+                                                                        {
+                                                                            <td>@task.AspNetUser.UserName</td>
+                                                                            <td>@task.Approve_At</td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        }
                                                                     }
                                                                 </tr>
                                                             }
@@ -452,56 +469,15 @@
         $(function () {
             var idstep = $('#btn-nextstep').val();
             $('#btn-nextstep').on('click', function () {
-                let check = confirm("Next step?");
-                if (check) {
-                    let data = {
-                        idStep: idstep
+                    let check = confirm("Next step?");
+                    if (check) {
+                        let data = {
+                            idStep: idstep
+                        }
+                        addnextstepinrunprocess(data);
                     }
-                    addnextstepinrunprocess(data);
-                }
             })
         });
-        //$(function () {
-        //    var idtask = $('#btn-donetask').val();
-        //    $('#btn-donetask').on('click', function () {
-        //        let check = confirm("Done task?");
-        //        if (check) {
-        //            let data = {
-        //                idtask: idtask
-        //            }
-        //            submitdonetask(data);
-        //        }
-
-        //    })
-        //});
-
-        //$(function () {
-        //    var idtask = $('#btn-closetask').val();
-        //    $('#btn-closetask').on('click', function () {
-        //        let check = confirm("Close task?");
-        //        if (check) {
-        //            let data = {
-        //                idtask: idtask
-        //            }
-        //            submitclosetask(data);
-        //        }
-        //    })
-        //});
-
-        //$(function () {
-        //    var idtask = $('#btn-opentask').val();
-        //    $('#btn-opentask').on('click', function () {
-        //        let check = confirm("Open task?");
-        //        if (check) {
-        //            let data = {
-        //                idtask: idtask
-        //            }
-        //            submitopentask(data);
-        //        }
-
-        //    })
-        //});
-
         function runprocess(data) {
             $.ajax({
                 url: "@Url.Action("runprocess", "process",new { area = "api"})",
@@ -536,56 +512,6 @@
             });
         }
 
-        @*function submitdonetask(data) {
-            $.ajax({
-                url: "@Url.Action("submitdonetask", "process",new { area = "api"})",
-                type: "POST",
-                data: data,
-                dataType: "json",
-                success: function (response) {
-                    console.log(response);
-                    if (response.status == 200) {
-                        //showToastr("error", "Error!!", "toast-bottom-left")
-                        window.location.reload();
-                        console.error(response)
-                    }
-                }
-            });
-        }
-
-        function submitclosetask(data) {
-            $.ajax({
-                url: "@Url.Action("submitclosetask", "process",new { area = "api"})",
-                type: "POST",
-                data: data,
-                dataType: "json",
-                success: function (response) {
-                    console.log(response);
-                    if (response.status == 200) {
-                        //showToastr("error", "Error!!", "toast-bottom-left")
-                        window.location.reload();
-                        console.error(response)
-                    }
-                }
-            });
-        }
-
-        function submitopentask(data) {
-            $.ajax({
-                url: "@Url.Action("submitopentask", "process",new { area = "api"})",
-                type: "POST",
-                data: data,
-                dataType: "json",
-                success: function (response) {
-                    console.log(response);
-                    if (response.status == 200) {
-                        //showToastr("error", "Error!!", "toast-bottom-left")
-                        window.location.reload();
-                        console.error(response)
-                    }
-                }
-            });
-        }*@
 
     </script>
 }
