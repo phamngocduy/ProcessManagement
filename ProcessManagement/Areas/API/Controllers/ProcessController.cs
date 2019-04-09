@@ -16,23 +16,42 @@ namespace ProcessManagement.Areas.API.Controllers
     public class ProcessController : ProcessManagement.Controllers.BaseController
     {
         ///=============================================================================================
+        PMSEntities db = new PMSEntities();
         CommonService commonService = new CommonService();
+        GroupService groupService = new GroupService();
         ProcessService processService = new ProcessService();
         StepService stepService = new StepService();
         RoleService roleService = new RoleService();
         TaskService taskService = new TaskService();
         ParticipateService participateService = new ParticipateService();
+        FileService fileService = new FileService();
         ///=============================================================================================
-
         [HttpPost]
         [GroupAuthorize(Role = new UserRole[] { UserRole.Manager })]
-        public JsonResult addTask(string name, int? idRole, string description, string inputConfig, string fileConfig)
+        public JsonResult editstep(int stepid, string des)
         {
             var status = HttpStatusCode.OK;
             string message;
             object response;
-            int idstep = (int)Session["idStep"];
-            Step step = stepService.findStep(idstep);
+            Step step = db.Steps.Find(stepid);
+            step.Description = des.Trim();
+            step.Updated_At = DateTime.Now;
+            db.SaveChanges();
+            
+            message = "Update Step Successfully";
+            response = new { message = message, status = status };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        [GroupAuthorize(Role = new UserRole[] { UserRole.Manager })]
+        public JsonResult addTask(int stepid, string name, int? idRole, string description, string inputConfig, string fileConfig, HttpPostedFileBase fileupload)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+            //int idstep = (int)Session["idStep"];
+            Step step = stepService.findStep(stepid);
 
 
             if (name == "")
@@ -59,7 +78,14 @@ namespace ProcessManagement.Areas.API.Controllers
 
             }
 
-            taskService.addtask(step.Id, name, idRole, description, inputConfig, fileConfig);
+            var task = taskService.addtask(step.Id, name, idRole, description, inputConfig, fileConfig);
+            //create directory
+            Group group = groupService.findGroup(step.Process.Group.Id);
+            string directoryPath = String.Format("Upload/{0}/{1}/{2}/{3}", group.Id, step.Process.Id, step.Id, task.Id);
+            fileService.createDirectory(directoryPath);
+            //file 
+            fileService.saveFile(group.Id, fileupload, directoryPath, FileDirection.Task);
+
             SetFlash(FlashType.success, "Created Task Successfully");
             message = "Created Task Successfully";
             response = new { message = message, status = status };
@@ -136,6 +162,7 @@ namespace ProcessManagement.Areas.API.Controllers
 
         }
         [HttpPost]
+        [GroupAuthorize(Role = new UserRole[] { UserRole.Manager })]
         public JsonResult AddFormTask(string name, int? idRole, string description, string formBuilder)
         {
             var status = HttpStatusCode.OK;
@@ -169,7 +196,12 @@ namespace ProcessManagement.Areas.API.Controllers
 
             }
 
-            taskService.AddFormTask(step.Id, name, idRole, description, formBuilder);
+            var task = taskService.AddFormTask(step.Id, name, idRole, description, formBuilder);
+            //create directory
+            Group group = groupService.findGroup(step.Process.Group.Id);
+            string directoryPath = String.Format("Upload/{0}/{1}/{2}/{3}", group.Id, step.Process.Id, step.Id, task.Id);
+            fileService.createDirectory(directoryPath);
+
             SetFlash(FlashType.success, "Created Task Successfully");
             message = "Created Task Successfully";
             response = new { message = message, status = status };

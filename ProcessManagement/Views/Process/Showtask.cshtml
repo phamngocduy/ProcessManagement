@@ -18,6 +18,8 @@
     }
     var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
     var isManager = userRole.IsManager;
+    var files = ViewData["Files"] as List<ProcessManagement.Models.FileManager>;
+    var maxFileSizeRule = ViewData["FileMaxSize"] as ProcessManagement.Models.ConfigRule;
 }
 
 
@@ -159,6 +161,17 @@
             </div>
         </div>
     </div>
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="body" id="show-task">
+                <div class="row clearfix">
+                    <div class="col-md-12 col-sm-12">
+                        @Html.Partial("~/Views/Shared/Common/_File.cshtml", files)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @section CustomScripts{
     <script src="~/Content/vendor/dropify/js/dropify.min.js"></script>
@@ -267,4 +280,193 @@
         }
     </script>
 
+    <script>
+        $(function () {
+            //fileupload
+            @if (maxFileSizeRule != null)
+            {
+                int value = maxFileSizeRule.Value;
+                string unit = maxFileSizeRule.Unit.ToLower().Trim();
+                int pow;
+                switch (unit)
+                {
+                    case "kb":
+                        pow = 1;
+                        break;
+                    case "mb":
+                        pow = 2;
+                        break;
+                    case "gb":
+                        pow = 3;
+                        break;
+                    default:
+                        pow = 0;
+                        break;
+                }
+                double toByte = value * Math.Pow(1024, pow);
+                @:var maxFileSize = @toByte;
+            }
+            else
+            {
+                @:var maxFileSize = null;
+            }
+            $("#btn-file").on("click", function () {
+                $("#FileUpload").trigger("click");
+            });
+            $(document).on("click", ".btn-file-remove", function () {
+                var id = this.dataset.src;
+                var fileName = $(this).parents("tr").find("td:first-child").text().trim();
+                setConfirm(`Are you sure you want to delete "${fileName}"?`, function () {
+                    removeFile(id);
+                });
+            })
+            $(document).on("click", ".btn-file-changename", function () {
+                var id = this.dataset.src;
+                var fileName = $(this).parents("tr").find("td:first-child").text().trim();
+                var dialog = $.confirm({
+                    title: `Change File Name (${fileName})`,
+                    content:'<div class="form-group">' +
+                        '<label>Filename</label>' +
+                        '<input type="text" placeholder="Enter your new file name" class="name form-control" required />' +
+                        '</div>',
+                    columnClass: 'medium',
+                    closeIcon: true,
+                    closeIconClass: 'fa fa-close',
+                    buttons: {
+                        save: {
+                            btnClass: 'btn-none waves-effect',
+                            action: function () {
+                                var newFileName = this.$content.find('input').val().trim();
+                                if (newFileName == "") {
+                                    showToastr("error", "File Name is required");
+                                } else {
+                                    dialog.close();
+                                    setConfirm(`Are you sure you want to change from <b>${fileName}</b> to <b>${newFileName}</b>?`, function () {
+                                        changeFileName(id, newFileName);
+                                    });
+
+                                }
+                                return false;
+                            }
+                        },
+                        cancel: {
+                            btnClass: 'btn-none waves-effect',
+                        }
+                    },
+                    onContentReady: function () {
+                        this.$content.find("input").val(fileName);
+                    },
+                });
+            })
+            $("#FileUpload").on("change", function () {
+                //var fileName = e.target.files[0].name;
+                var file = this.files[0];
+                var fileName = file.name;
+                var fileSize = file.size;
+                if (maxFileSize != null && fileSize > maxFileSize) {
+                    showToastr("error", `This file is too big (@maxFileSizeRule.Value @maxFileSizeRule.Unit maximum)`);
+                } else {
+                    setConfirm(`Are you sure you want to upload "${fileName}"?`, function () {
+                        addFile(file);
+                    });
+                }
+                $(this).val("");
+
+            });
+        });
+        function addFile(file) {
+            var data = new FormData();
+            data.append("FileUpload", file);
+            data.append("groupid", @group.Id);
+            data.append("taskid",@Model.Id)
+            data.append("direction", "@FileDirection.Task");
+            $.ajax({
+                url: "@Url.Action("uploadfile", "file", new { area = "api"})",
+                type: "POST",
+                data: data,
+                contentType: false,
+                processData: false,
+                dataType: "json",
+                success: function (response) {
+                    //thanh cong thi no tra du lieu ve
+                    console.log(response);
+                    if (response.status == 200) {
+                        showToastr("success", response.message, "toast-bottom-left");
+                        var file = renderFile(response.data)
+                        $("#file-list tbody").append(file);
+                    } else {
+                        showToastr("error", response.message, "toast-bottom-left");
+                        console.error(response);
+                    }
+                }
+            })
+        }
+        function removeFile(id) {
+            var data = {
+                id: id,
+                groupid : @group.Id
+            }
+
+            $.ajax({
+                url: "@Url.Action("removefile", "file", new { area = "api"})",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        showToastr("success", response.message, "toast-bottom-left");
+                        $(`[data-src="${id}"]`).parents("tr").fadeOut(500, function () {
+                            $(this).remove();
+                        })
+                    } else {
+                        showToastr("error", response.message, "toast-bottom-left");
+                        console.error(response);
+                    }
+                }
+            })
+        }
+        function renderFile(file) {
+            return `<tr>
+                        <td>
+                            <a href="href="/file/download/${file.id}">
+                                ${file.name}
+                            </a>
+                        </td>
+                        <td style="text-align:center">
+                            <button class="btn btn-primary-theme waves-effect btn-file-changename" data-src="${file.id}" data-toggle="tooltip" data-placement="top" title="Change Name">
+                                <i class=" icon-pencil"></i>
+                            </button>
+                            <button class="btn btn-danger waves-effect btn-file-remove" data-src="${file.id}" data-toggle="tooltip" data-placement="top" title="Remove">
+                                <i class="icon-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`
+
+        }
+        function changeFileName(id,filename) {
+            var data = {
+                id: id,
+                groupid: @group.Id,
+                filename: filename
+            }
+
+            $.ajax({
+                url: "@Url.Action("changefilename", "file", new { area = "api"})",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        showToastr("success", response.message, "toast-bottom-left");
+                        $(`[data-src="${id}"]`).parents("tr").find('td:first-child a').text(response.data.name);
+                    } else {
+                        showToastr("error", response.message, "toast-bottom-left");
+                        console.error(response);
+                    }
+                }
+            })
+        }
+    </script>
 }
