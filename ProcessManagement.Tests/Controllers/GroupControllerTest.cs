@@ -265,7 +265,6 @@ namespace ProcessManagement.Tests.Controllers
 			//act
 			var result = controller.AddRole(role) as RedirectResult;
 			//assert
-			//Assert.AreEqual(role.IdProcess, controller.Session[137]);
 			Assert.IsNotNull(result);
 			Assert.IsTrue(role.Name.ToString().Equals("Role Unittest"));
 			Assert.IsTrue(role.Description.ToString().Equals("This is a role unit test"));
@@ -318,11 +317,6 @@ namespace ProcessManagement.Tests.Controllers
 			mockHttpContext.Setup(ctx => ctx.Session).Returns(session.Object);
 			controllerContext.Setup(ctx => ctx.HttpContext).Returns(mockHttpContext.Object);
 			controllerContext.Setup(p => p.HttpContext.Session["IdOwner"]).Returns(groupId);
-			//controllerContext.Setup(p => p.HttpContext.Session["Process"]).Returns(new Process
-			//{
-			//	Id = 200,
-			//	IdGroup = 4104,
-			//});
 			controllerContext.Setup(p => p.HttpContext.Session["idUser"]).Returns("64e10037-6c10-4544-a853-a2952330bf8e");
 			//Arrange
 			TestControllerBuilder testControllerBuilder = new TestControllerBuilder();
@@ -337,7 +331,6 @@ namespace ProcessManagement.Tests.Controllers
 			process.Description = "Demo test create process is correct";
 			process.Avatar = "image.png";
 			controller.ControllerContext = new ControllerContext(mockHttpContext.Object, new RouteData(), controller);
-			//var validationResults = TestModelHelper.ValidateModel(controller, group);
 			//get user id
 			var principal = new Moq.Mock<IPrincipal>();
 			principal.Setup(p => p.IsInRole("owner")).Returns(true);
@@ -533,22 +526,6 @@ namespace ProcessManagement.Tests.Controllers
 			Assert.IsNull(result);
 			System.Diagnostics.Trace.WriteLine("HTTP not found");
 		}
-
-		//[TestMethod]
-		//      public void TestMultipleLanguage()
-		//      {
-		//          // Arrange
-		//          HttpContext.Current = new HttpContext(new HttpRequest(null, "http://localhost:54325", null), new HttpResponse(null));
-		//          LocalizedControllerActivator IControllerActivator = new LocalizedControllerActivator();
-
-		//          var requestContext = HttpContext.Current.Request.RequestContext;
-		//          var controllerType = HttpContext.Current.Request.RequestType.GetType();
-		//          // Act
-		//          IController result = IControllerActivator.Create(requestContext,controllerType) as IController;
-		//          //Assert
-		//          Assert.IsNull(result);
-		//      }
-
 		/// <summary>
 		/// Purpose of TC: 
 		/// - Return Step View
@@ -835,10 +812,10 @@ namespace ProcessManagement.Tests.Controllers
 		}
 		/// <summary>
 		/// Purpose of TC: 
-		/// - Hanle Edit Process		
+		/// - Hanle Edit Information Process about Name, Description		
 		/// </summary>
 		[TestMethod]
-		public void EditProcess_WithValidModel_ExpectValidNavigation()
+		public void EditProcess1_WithValidModel_ExpectValidNavigation()
 		{
 			TestControllerBuilder testControllerBuilder = new TestControllerBuilder();
 			var controller = new ProcessController();
@@ -848,6 +825,29 @@ namespace ProcessManagement.Tests.Controllers
 			Process editprocess = db.Processes.First();
 			editprocess.Name = "Process UnitTest";
 			editprocess.Description = "This is process unittest";
+
+			using (var scope = new TransactionScope())
+			{
+				var results = controller.EditProcess(140) as ViewResult;
+				//assert
+				Assert.IsNotNull(results);
+			}
+		}
+		/// <summary>
+		/// Purpose of TC: 
+		/// - Hanle Edit Process		
+		/// </summary>
+		[TestMethod]
+		public void EditProcess2_WithValidModel_ExpectValidNavigation()
+		{
+			TestControllerBuilder testControllerBuilder = new TestControllerBuilder();
+			var controller = new ProcessController();
+			testControllerBuilder.InitializeController(controller);
+			var process = new Process();
+			var db = new PMSEntities();
+			Process editprocess = db.Processes.First();
+			editprocess.DataJson = "";
+			editprocess.IsRun = false;
 
 			using (var scope = new TransactionScope())
 			{
@@ -1018,12 +1018,41 @@ namespace ProcessManagement.Tests.Controllers
 		}
 		/// <summary>
 		/// Purpose of TC: 
-		/// - Return View TaskForm	
+		/// - ShowFormTask	
 		/// </summary>
 		[TestMethod]
-		public void ReturnTaskFormView_WithValidModel_ExpectValidNavigation()
+		public void ReturnShowFormTask_WithValidModel_ExpectValidNavigation()
 		{
 			
+		}
+		/// <summary>
+		/// Purpose of TC: 
+		/// - Return view FileManager
+		/// </summary>
+		[TestMethod]
+		public void FileManager1_WithValidModel_ExpectValidNavigation()
+		{
+
+		}
+		/// <summary>
+		/// Purpose of TC: 
+		/// - FileManager
+		/// </summary>
+		[TestMethod]
+		public void FileManager2_WithValidModel_ExpectValidNavigation()
+		{
+
+		}
+		[TestMethod]
+		public void TestMultipleLanguage()
+		{
+			// Arrange
+			var coll = new GlobalFilterCollection();
+			// Act
+			FilterConfig.RegisterGlobalFilters(coll);
+			var authorized = coll.Any(x => x.Instance is HandleErrorAttribute);
+			//Assert
+			Assert.IsTrue(authorized);
 		}
 	}
 }
