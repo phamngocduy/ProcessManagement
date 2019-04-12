@@ -2,6 +2,23 @@
     <input type="file" id="FileUpload" name="FileUpload" style="display:none" />
     <button class="btn btn-default waves-effect" id="btn-file"><i class="icon-cloud-upload"></i> Upload</button>
 </div>
+<style>
+    #file-list table {
+        table-layout: fixed;
+    }
+    #file-list table tbody tr td {
+        display: inline-block;
+        height:59px;
+    }
+    #file-list table tbody tr td:first-child {
+        width: 80%;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+    }
+    #file-list table tbody tr td:last-child {
+        width: 20%;
+    }
+</style>
 <div class="table-responsive m-t-15" style="overflow-x:unset" id="file-list">
     <table class="table table-hover">
         <tbody>
@@ -9,7 +26,7 @@
             {
                 <tr>
                     <td>
-                        <a href="@Url.Action("download", "file", new { file = file.Id })">
+                        <a href="@Url.Action("download", "file", new { file = file.Id })" title="@file.Name">
                             @file.Name
                         </a>
                     </td>

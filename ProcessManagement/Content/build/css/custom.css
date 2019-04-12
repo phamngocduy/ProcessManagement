@@ -59,8 +59,15 @@ body::before, body::after, #wrapper::before, #wrapper::after {
   font-family: unset !important;
 }
 
+.icon-pencil:before {
+  content: "" !important;
+}
+
 .form-wrap.form-builder [class^=icon-]:before, .form-wrap.form-builder [class*=" icon-"]:before {
   font-family: fb-icons !important;
+}
+.form-wrap.form-builder .icon-pencil:before {
+  content: "" !important;
 }
 
 .form-group.error label {
@@ -88,6 +95,9 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 }
 .form-group.error .dropify-wrapper .dropify-preview .dropify-render .dropify-extension {
   color: #ff0101;
+}
+.form-group.error #build-wrap .form-builder > ul.stage-wrap, .form-group.error #build-wrap .form-wrap > ul.stage-wrap {
+  border-color: #ff0101;
 }
 
 .hide {

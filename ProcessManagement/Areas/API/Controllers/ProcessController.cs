@@ -163,7 +163,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
         [HttpPost]
         [GroupAuthorize(Role = new UserRole[] { UserRole.Manager })]
-        public JsonResult AddFormTask(string name, int? idRole, string description, string formBuilder)
+        public JsonResult AddFormTask(string name, int? idRole, string description, string formBuilder, HttpPostedFileBase fileupload)
         {
             var status = HttpStatusCode.OK;
             string message;
@@ -201,6 +201,8 @@ namespace ProcessManagement.Areas.API.Controllers
             Group group = groupService.findGroup(step.Process.Group.Id);
             string directoryPath = String.Format("Upload/{0}/{1}/{2}/{3}", group.Id, step.Process.Id, step.Id, task.Id);
             fileService.createDirectory(directoryPath);
+
+            fileService.saveFile(group.Id, fileupload, directoryPath, FileDirection.Task);
 
             SetFlash(FlashType.success, "Created Task Successfully");
             message = "Created Task Successfully";

@@ -59,12 +59,18 @@ body, #wrapper{
         font-family: unset !important;
     }
 }
+.icon-pencil:before {
+    content: "\e05f" !important;
+}
 .form-wrap{
     &.form-builder{
         [class^=icon-],[class*=" icon-"]{
             &:before{
                 font-family: fb-icons !important;
             }
+        }
+        .icon-pencil:before {
+            content: "\E809" !important;
         }
     }
 }
@@ -103,7 +109,13 @@ body, #wrapper{
                 }
             }
         }
-        
+        #build-wrap{
+            .form-builder,.form-wrap{
+                &>ul.stage-wrap{
+                    border-color: #ff0101;
+                }
+            }
+        }
     }
 }
 .hide{

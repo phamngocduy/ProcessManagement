@@ -69,12 +69,23 @@
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="card">
-            <div class="body" id="show-task">
+            <div class="body">
+                <div class="row clearfix">
+                    <div class="col-md-12 col-sm-12">
+                        @Html.Partial("~/Views/Shared/Common/_File.cshtml", files)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="body cw-validation" id="show-task">
                 <div class="row clearfix">
                     <div class="col-sm-8">
                         <div class="form-group">
                             <label for="task-name" class="required">Task Name</label>
-                            <input type="text" class="form-control" id="task-name" name="@Html.NameFor(m => m.Name)" value="@Model.Name" disabled>
+                            <input type="text" class="form-control" id="task-name" name="@Html.NameFor(m => m.Name)" value="@Model.Name" cw-required disabled>
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -152,22 +163,11 @@
                     {
                         <div class="col-sm-12">
                             <div class="mt-2" id="button-action">
-                                <button id="btn-edit" class="btn btn-primary-theme">Edit</button>
-                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "deletetask", taskid = Model.Id })" class="btn btn-outline-danger" id="btn-remove-task">Delete</a>
+                                <button id="btn-edit" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing...">Edit</button>
+                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "deletetask", taskid = Model.Id })" class="btn btn-danger waves-effect" id="btn-remove-task" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing...">Delete</a>
                             </div>
                         </div>
                     }
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="card">
-            <div class="body" id="show-task">
-                <div class="row clearfix">
-                    <div class="col-md-12 col-sm-12">
-                        @Html.Partial("~/Views/Shared/Common/_File.cshtml", files)
-                    </div>
                 </div>
             </div>
         </div>
@@ -182,8 +182,8 @@
     <script>
         $(function () {
 
-            var bAction = `<button id="btn-save" class="btn btn-primary-theme">Save</button>
-                            <button id="btn-back" class="btn btn-outline-secondary">Back</button>`;
+            var bAction = `<button id="btn-save" class="btn btn-primary-theme waves-effect">Save</button>
+                            <button id="btn-back" class="btn btn-outline-secondary waves-effect">Back</button>`;
             var showForm = $("#show-task").html();
             var switchArr = createSwitch();
             switchArr.forEach(item => item.disable());
@@ -191,7 +191,7 @@
                 placeholder: "Select Role",
                 allowClear: true,
             }).select2('val', @Model.IdRole);
-
+            var form = $(".cw-validation").formValidation();
             //Button edit
             $("body").on("click", "#btn-edit",function () {
                 var temp = bAction;
@@ -211,6 +211,11 @@
             $("body").on("click", "#btn-save", function () {
                 $this = $(this);
                 toggleLoading($this);
+                var isHaveError = form.validates();
+                if (isHaveError) {
+                    toggleLoading($this);
+                    return false;
+                }
 
                 var name = $('#task-name').val();
                 var role = $('#task-role').val();
@@ -246,12 +251,7 @@
                     inputConfig: JSON.stringify(inputConfig1),
                     fileConfig: JSON.stringify(fileConfig1)
                 }
-                if (name == "") {
-                    showToastr("error", "Task name not null", "toast-bottom-left");
-                    toggleLoading($this);
-                } else {
-                    editTask(data);
-                }
+                editTask(data);
             });
             $("body").on("click", "#btn-remove-task", function () {
                 var con = confirm("bạn muốn xóa task này không?");
