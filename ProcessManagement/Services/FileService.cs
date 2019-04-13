@@ -147,7 +147,7 @@ namespace ProcessManagement.Services
         {
             string AppPath = AppDomain.CurrentDomain.BaseDirectory;
             string filePath = AppPath + path;
-            Directory.Delete(filePath);
+            Directory.Delete(filePath,true);
         }
         public bool checkFileOverSize(HttpPostedFileBase file)
         {

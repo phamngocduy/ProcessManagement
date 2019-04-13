@@ -645,6 +645,7 @@ namespace ProcessManagement.Controllers
         [GroupAuthorize]
         public ActionResult DeleteTask(int taskid)
         {
+            //TODO: Check lại
             TaskProcess task = taskService.findTask(taskid);
             if (task == null) return HttpNotFound();
             Step step = stepService.findStep(task.Step.Id);
@@ -656,6 +657,10 @@ namespace ProcessManagement.Controllers
             //check xem có thuộc process trong group
             Participate user = participateService.findMemberInGroup(idUser, idGroup);
             if (user == null) return HttpNotFound();
+
+            string taskPath = string.Format("Upload/{0}/{1}/{2}/{3}", task.Step.Process.Group.Id, task.Step.Process.Id, task.Step.Id,task.Id);
+            fileService.removeDirectory(taskPath);
+
             taskService.deletetask(task);
             
             SetFlash(FlashType.success, "Delete Successfully");

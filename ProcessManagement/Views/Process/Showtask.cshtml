@@ -164,7 +164,7 @@
                         <div class="col-sm-12">
                             <div class="mt-2" id="button-action">
                                 <button id="btn-edit" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing...">Edit</button>
-                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "deletetask", taskid = Model.Id })" class="btn btn-danger waves-effect" id="btn-remove-task" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing...">Delete</a>
+                                <button data-action="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "deletetask", taskid = Model.Id })" class="btn btn-danger waves-effect" id="btn-remove-task" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing...">Delete</button>
                             </div>
                         </div>
                     }
@@ -183,7 +183,7 @@
         $(function () {
 
             var bAction = `<button id="btn-save" class="btn btn-primary-theme waves-effect">Save</button>
-                            <button id="btn-back" class="btn btn-outline-secondary waves-effect">Back</button>`;
+                            <button id="btn-back" class="btn btn-default waves-effect">Back</button>`;
             var showForm = $("#show-task").html();
             var switchArr = createSwitch();
             switchArr.forEach(item => item.disable());
@@ -254,11 +254,15 @@
                 editTask(data);
             });
             $("body").on("click", "#btn-remove-task", function () {
-                var con = confirm("bạn muốn xóa task này không?");
-                if (con) {
+                var $this = $(this);
+                var action = $this[0].dataset.action;
+                setConfirm(`Are you sure you want to delete this task ?`, function () {
+                    toggleLoading($this);
                     localStorage.setItem("showStep", @step.Id);
-                }
-                return con;
+                    setTimeout(function () {
+                        window.location.href = action;
+                    },1000);
+                });
             })
         });
         function editTask(data) {
