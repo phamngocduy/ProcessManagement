@@ -103,44 +103,57 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     @{
-                                        string textLabel;
-                                        if ((string)inputConfig["label"] == "")
-                                        {
-                                            textLabel = "Response Label";
-                                        }
-                                        else
-                                        {
-                                            textLabel = (string)inputConfig["label"];
+                                    string textLabel;
+                                    if ((string)inputConfig["label"] == "")
+                                    {
+                                    textLabel = "Response Label";
+                                    }
+                                    else
+                                    {
+                                    textLabel = (string)inputConfig["label"];
 
-                                        }
+                                    }
                                     }
                                     @{
-                                        bool required = (bool)inputConfig["required"];
-                                        int maxlength = (string)inputConfig["maxlength"] != "" ? (int)inputConfig["maxlength"] : textLength.Value;
+                                    bool required = (bool)inputConfig["required"];
+                                    int maxlength = (string)inputConfig["maxlength"] != "" ? (int)inputConfig["maxlength"] : textLength.Value;
                                     }
-                                    <label @if (required) { WriteLiteral("class='required'"); } for="task-inputtext">@textLabel</label>
-                                    <input type="text" class="form-control" id="task-inputtext" @if (required) { WriteLiteral("cw-required"); } cw-maxlength="@maxlength" value="@inputConfig["value"]">
+                                    <label @if (required) { WriteLiteral("class='required' "); } for="task-inputtext">@textLabel</label>
+                                    <input type="text" class="form-control" id="task-inputtext" @if (required) { WriteLiteral("cw-required"); } cw-maxlength="@maxlength" value="@inputConfig[" value"]">
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group">
 
                                     @{
-                                        string fileLabel;
-                                        if ((string)inputConfig["label"] == "")
-                                        {
-                                            fileLabel = "Response File";
-                                        }
-                                        else
-                                        {
-                                            fileLabel = (string)inputConfig["label"];
-
-                                        }
+                                    string fileLabel;
+                                    if ((string)inputConfig["label"] == "")
+                                    {
+                                    fileLabel = "Response File";
                                     }
-                                    <label @if ((bool)fileConfig["required"]) { WriteLiteral("class='required'"); } for="task-inputfile">@fileLabel</label>
-                                    <input type="file" id="task-inputfile" class="dropify" cw-required value="@fileConfig["value"]" />
+                                    else
+                                    {
+                                    fileLabel = (string)inputConfig["label"];
+
+                                    }
+                                    }
+                                    <label @if ((bool)fileConfig["required"]) { WriteLiteral("class='required' "); } for="task-inputfile">@fileLabel</label>
+                                    <input type="file" id="task-inputfile" class="dropify" cw-required value="@fileConfig[" value"]" />
                                 </div>
                             </div>
+                            @if (Model.Status1.Name == "Finish")
+                            {
+                            <div class="col-sm-8">
+                                <div class="form-group">
+                                    <label for="">Approve By</label>
+                                    <input type="text" class="form-control" id="task-name" name="" value="@Model.AspNetUser.UserName" disabled>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="">Date</label>
+                                <input type="text" class="form-control" id="task-name" name="" value="@Model.Approve_At" disabled>
+                            </div>
+                            }
                             <div class="col-sm-12">
                                 <div class="mt-2" id="button-action">
                                     @if (Model.Status1.Name == "Open")

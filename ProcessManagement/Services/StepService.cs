@@ -108,32 +108,65 @@ namespace ProcessManagement.Services
             return steprun;
         }
 
-        public void changestatustep(int idstep)
+        public void changestatustep(int idstep, string IdUser)
         {
             Status status = db.Status.Where(y => y.Name == "Done").FirstOrDefault();
             StepRun steprun = findsteprun(idstep);
+            steprun.ApproveBy = IdUser;
+            steprun.Approve_At = DateTime.Now;
             steprun.Status = status.Id;
             db.SaveChanges();
         }
 
-        public StepRun addrunnextstep(int idrunprocess, List<Step> liststeprun)
+        public StepRun addrunnextstep(int idrunprocess, Step liststeprun)
         {
             Status status = db.Status.Where(y => y.Name == "Running").FirstOrDefault();
             StepRun steprun = new StepRun();
-            foreach (var item in liststeprun)
-            {
+            //foreach (var item in liststeprun)
+            //{
                 steprun.idProcess = idrunprocess;
-                steprun.Name = item.Name;
-                steprun.StartStep = item.StartStep;
-                steprun.NextStep1 = item.NextStep1;
-                steprun.NextStep2 = item.NextStep2;
-                steprun.Key = item.Key;
-                steprun.Figure = item.Figure;
+                steprun.Name = liststeprun.Name;
+                steprun.StartStep = liststeprun.StartStep;
+                steprun.NextStep1 = liststeprun.NextStep1;
+                steprun.NextStep2 = liststeprun.NextStep2;
+                steprun.Key = liststeprun.Key;
+                steprun.Figure = liststeprun.Figure;
                 steprun.Status = status.Id;
                 steprun.Created_at = DateTime.Now;
                 steprun.Updated_At = DateTime.Now;
                 db.StepRuns.Add(steprun);
                 db.SaveChanges();
+            //}
+            return steprun;
+        }
+
+        public void deletenextsteprun(StepRun runstep, List<TaskProcessRun> listtaskrun, StepRun stepback)
+        {
+            db.TaskProcessRuns.RemoveRange(listtaskrun);
+            db.StepRuns.Remove(runstep);
+            Status status = db.Status.Where(y => y.Name == "Running").FirstOrDefault();
+            stepback.Status = status.Id;
+            db.SaveChanges();
+        }
+
+        public StepRun completestepinrunprocess(int idrunprocess, List<Step> liststeprun)
+        {
+            Status status = db.Status.Where(y => y.Name == "Running").FirstOrDefault();
+            StepRun steprun = new StepRun();
+            foreach (var item in liststeprun)
+            {
+            steprun.idProcess = idrunprocess;
+            steprun.Name = item.Name;
+            steprun.StartStep = item.StartStep;
+            steprun.NextStep1 = item.NextStep1;
+            steprun.NextStep2 = item.NextStep2;
+            steprun.Key = item.Key;
+            steprun.Figure = item.Figure;
+            steprun.Status = status.Id;
+            steprun.Created_at = DateTime.Now;
+            steprun.Updated_At = DateTime.Now;
+            db.StepRuns.Add(steprun);
+            db.SaveChanges();
             }
             return steprun;
         }

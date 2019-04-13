@@ -8,6 +8,7 @@
     var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
     var listRoleRuns = ViewData["ListRoleRuns"] as List<ProcessManagement.Models.RoleRun>;
     var listRole = ViewData["ListRole"] as List<ProcessManagement.Models.Role>;
+    var runnextstep = ViewData["StepisNext"] as ProcessManagement.Models.StepRun;
     var isManager = userRole.IsManager;
 }
 
@@ -107,21 +108,72 @@
                                             <div class="step @if (taskList.Any()) { WriteLiteral("step-has-task"); }" style="border: 2px solid; border-left:7px solid;">
                                                 <div class="step-name">
                                                     <span data-toggle="tooltip" data-placement="top" title="">@step.Name (@taskList.Count())</span>
+                                                    @if (step.Status1.Name == "Done")
+                                                    {
+                                                        <span style="float: right">Approve: @step.AspNetUser.UserName ( Date: @step.Approve_At )</span>
+                                                    }
                                                     @if (isManager)
                                                     {
                                                         if (step.Status1.Name == "Running" && listtaskclose.Count == taskList.Count)
                                                         {
                                                             if (step.NextStep1 != 0)
                                                             {
-                                                                <button id="btn-nextstep" value="@step.Id" class="btn btn-primary-theme btn-sm" style="float: right">Next</button>
+                                                                <button id="btn-choosenextstep" value="@step.Id" data-toggle="modal" data-target="#myModal" class="btn btn-primary-theme btn-sm" style="float: right">Next</button>
+                                                                if (step.StartStep == false)
+                                                                {
+                                                                    <button id="btn-deletestep" value="@step.Id" class="btn btn-primary-theme btn-sm" style="float: right; margin-right: 5px;">Delete</button>
+                                                                }
                                                             }
                                                             else
                                                             {
-                                                                <button id="btn-nextstep" value="@step.Id" class="btn btn-primary-theme btn-sm" style="float: right">Complete</button>
+                                                                <button id="btn-complete" value="@step.Id" class="btn btn-primary-theme btn-sm" style="float: right">Complete</button>
+                                                                if (step.StartStep == false)
+                                                                {
+                                                                    <button id="btn-deletestep" value="@step.Id" class="btn btn-primary-theme btn-sm" style="float: right; margin-right: 5px;">Delete</button>
+                                                                }
                                                             }
                                                         }
                                                     }
                                                 </div>
+
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="myModal" role="dialog">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title">List Next Steps</h4>
+                                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p style="margin: 0;">Choose next step! </p>
+                                                                <form action="">
+                                                                    @if (Model != null)
+                                                                    {
+                                                                            foreach (Step steps in Model.Where(x => x.Key == runnextstep.NextStep1))
+                                                                            {
+                                                                                if (steps.Figure == "Diamond")
+                                                                                {
+                                                                                    List<Step> liststepdk = Model.Where(x => x.Key == steps.NextStep1 || x.Key == steps.NextStep2).ToList();
+                                                                                    foreach (Step nextstepdk in liststepdk)
+                                                                                    {
+                                                                                        <input type="radio" name="stepnext" id="myRadiostep" value="@nextstepdk.Id" /> @nextstepdk.Name <br />
+                                                                                    }
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <input type="radio" name="stepnext" id="myRadiostep" value="@steps.Id" /> @steps.Name
+                                                                                }
+                                                                            }
+                                                                    }
+                                                                </form>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button id="btn-nextstep" type="button" class="btn btn-default" data-dismiss="modal">Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                             <div class="task">
                                                 <table class="table table-striped">
@@ -353,11 +405,11 @@
                                                     <li class="task-item" style="background-color:@task.Color" data-id="@task.Id">
                                                         @if (task.ValueFormJson == null)
                                                         {
-                                                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showtask", taskid = task.Id })">@task.Name</a>
+                                                            @task.Name
                                                         }
                                                         else
                                                         {
-                                                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showformtask", taskid = task.Id })">@task.Name</a>
+                                                            @task.Name
                                                         }
                                                     </li>
                                                 }
@@ -465,19 +517,54 @@
                 runprocess(data);
             })
         });
+        
 
         $(function () {
-            var idstep = $('#btn-nextstep').val();
+            var idstep = $('#btn-choosenextstep').val();
             $('#btn-nextstep').on('click', function () {
+                var idnextstep = $('input[name="stepnext"]:checked').val();
+                if (idnextstep != null) {
                     let check = confirm("Next step?");
                     if (check) {
                         let data = {
-                            idStep: idstep
+                            idStep: idstep,
+                            idnextstep: idnextstep
                         }
                         addnextstepinrunprocess(data);
                     }
+                } else {
+                    alert('Please choose next step!');
+                    return false;
+                }
             })
         });
+
+        $(function () {
+            var idstep = $('#btn-complete').val();
+            $('#btn-complete').on('click', function () {
+                let check = confirm("Next step?");
+                if (check) {
+                        let data = {
+                            idStep: idstep
+                        }
+                        completestepinrunprocess(data);
+                }
+            })
+        });
+
+        $(function () {
+            var idstep = $('#btn-deletestep').val();
+            $('#btn-deletestep').on('click', function () {
+                let check = confirm("Delete step?");
+                if (check) {
+                    let data = {
+                        idStep: idstep
+                    }
+                    deletenextsteprun(data);
+                }
+            })
+        })
+
         function runprocess(data) {
             $.ajax({
                 url: "@Url.Action("runprocess", "process",new { area = "api"})",
@@ -512,6 +599,39 @@
             });
         }
 
+        function deletenextsteprun(data) {
+            $.ajax({
+                url: "@Url.Action("deletenextsteprun", "process",new { area = "api"})",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        //showToastr("error", "Error!!", "toast-bottom-left")
+                        window.location.reload();
+                        console.error(response)
+                    }
+                }
+            });
+        }
+
+        function completestepinrunprocess(data) {
+            $.ajax({
+                url: "@Url.Action("completestepinrunprocess", "process",new { area = "api"})",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        //showToastr("error", "Error!!", "toast-bottom-left")
+                        window.location.reload();
+                        console.error(response)
+                    }
+                }
+            });
+        }
 
     </script>
 }
