@@ -305,13 +305,13 @@ namespace ProcessManagement.Controllers
             {
 			    SetFlash(FlashType.error, "Name is required");
 
-                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id });
+                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "addrole", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id });
             }
             var check = db.Roles.Where(x => x.Name.ToLower() == role.Name.ToLower().Trim() && x.IdProcess == processId).FirstOrDefault();
             if (check != null)
             {
                 SetFlash(FlashType.error, "Name is exist in db");
-                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "createrole", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id });
+                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "addrole", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id });
             }
 
             role.IdProcess = process.Id;

@@ -318,12 +318,16 @@ namespace ProcessManagement.Areas.API.Controllers
             var status = HttpStatusCode.OK;
             string message;
             object response;
-            Process prorun = processService.findProcess(processid);
-            int idprocessrun = processService.createProcessRun(prorun, name, des);
+            Process process = processService.findProcess(processid);
+            Process processrun = processService.createProcessRun(process, name, des);
+            //copy folder process
+            string processPath = string.Format("Upload/{0}/{1}", process.IdGroup, process.Id);
+            string processRunPath = string.Format("Upload/{0}/{1}", processrun.IdGroup, processrun.Id);
+            fileService.copyDirectory(processPath, processRunPath);
             List<Role> roler = roleService.findListRoleOfProcess(processid);
-            List<Role> rolerun = roleService.addrolerun(roler, idprocessrun);
+            List<Role> rolerun = roleService.addrolerun(roler, processrun.Id);
             List<Step> liststep = stepService.findStepsOfProcess(processid);
-            List<Step> liststeprun = stepService.addliststeprun(liststep, idprocessrun);
+            List<Step> liststeprun = stepService.addliststeprun(liststep, processrun.Id);
             foreach (var item in liststep)
             {
                 List<TaskProcess> listtaskrun = taskService.findtaskofstep(item.Id);

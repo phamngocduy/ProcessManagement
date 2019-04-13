@@ -121,7 +121,7 @@ namespace ProcessManagement.Services
 			db.SaveChanges();
 		}
 
-        public int createProcessRun(Process process, string name, string des)
+        public Process createProcessRun(Process process, string name, string des)
         {
             Process procrun = new Process();
             procrun.Name = name.Trim();
@@ -135,7 +135,7 @@ namespace ProcessManagement.Services
             procrun.Updated_At = DateTime.Now;
             db.Processes.Add(procrun);
             db.SaveChanges();
-            return procrun.Id;
+            return procrun;
         }
 
         public void addrunprocess(Process process)

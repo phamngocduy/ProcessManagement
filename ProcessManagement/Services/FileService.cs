@@ -99,6 +99,7 @@ namespace ProcessManagement.Services
             db.SaveChanges();
 
         }
+       
         public FileManager changeFileName(FileManager file,string filename)
         {
             string AppPath = AppDomain.CurrentDomain.BaseDirectory;
@@ -148,6 +149,25 @@ namespace ProcessManagement.Services
             string AppPath = AppDomain.CurrentDomain.BaseDirectory;
             string filePath = AppPath + path;
             Directory.Delete(filePath,true);
+        }
+        public void copyDirectory(string path, string destination)
+        {
+            string AppPath = AppDomain.CurrentDomain.BaseDirectory;
+            string currentPath = AppPath + path;
+            string destinationPath = AppPath + destination;
+            if (!Directory.Exists(destinationPath))
+            {
+                createDirectory(destination);
+            }
+            DirectoryInfo currentDirectory = new DirectoryInfo(currentPath);
+            DirectoryInfo destinationDirectory = new DirectoryInfo(destinationPath);
+
+            FileInfo[] files = currentDirectory.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                file.CopyTo(Path.Combine(destinationDirectory.FullName, file.Name));
+            }
+
         }
         public bool checkFileOverSize(HttpPostedFileBase file)
         {

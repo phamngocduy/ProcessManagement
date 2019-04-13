@@ -71,7 +71,14 @@
                         <div class="form-group">
                             <label for="task-role">Select Role</label>
                             <select id="task-role" class="form-control show-tick ms select2">
-                                <option>@Model.Role.Name</option>
+                                @if (Model.IdRole == null)
+                                {
+                                    <option></option>
+                                }
+                                else
+                                {
+                                    <option>@Model.Role.Name</option>
+                                }
                             </select>
                         </div>
                     </div>
@@ -131,18 +138,27 @@
                                         }
                                     }
                                     <label @if ((bool)fileConfig["required"]) { WriteLiteral("class='required'"); } for="task-inputfile">@fileLabel</label>
-                                    <input type="file" id="task-inputfile" class="dropify" cw-required value="@fileConfig["value"]"/>
+                                    <input type="file" id="task-inputfile" class="dropify" cw-required value="@fileConfig["value"]" />
                                 </div>
                             </div>
-                            @if (isOpen)
-                            {
-                                <div class="col-sm-12">
-                                    <div class="mt-2" id="button-action">
-                                        <button id="btn-savetask" class="btn btn-primary-theme waves-effect"><i class="fa fa-save"></i> Save</button>
-                                        <button id="btn-donetask" class="btn btn-primary-theme waves-effect"><i class="fa fa-check"></i> Done</button>
-                                    </div>
+                            <div class="col-sm-12">
+                                <div class="mt-2" id="button-action">
+                                    @if (Model.Status1.Name == "Open")
+                                    {
+                                        <button id="btn-savetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving..."><i class="fa fa-save"></i> Save</button>
+                                        <button id="btn-donetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Submiting..."><i class="fa fa-check"></i> Submit</button>
+                                    }
+                                    @if (Model.Status1.Name == "Done" && isManager)
+                                    {
+                                        <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect">Open</button>
+                                        <button id="btn-finishtask" value="@Model.Id" class="btn btn-primary-theme waves-effect">Finish </button>
+                                    }
+                                    @if (Model.Status1.Name == "Finish")
+                                    {
+                                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success waves-effect">Back</a>
+                                    }
                                 </div>
-                            }
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -166,6 +182,8 @@
                 });
                 //TODO: Add TaskRun Authenticate
                 $("#btn-savetask").on("click", function () {
+                    var $this = $(this);
+                    toggleLoading($this);
                     var valuetext = $("#task-inputtext").val();
                     var valuefile = $("#task-inputfile").val();
 
@@ -174,13 +192,18 @@
                         valuefile: valuefile,
                         idtaskrun: @Model.Id
                     }
-                    saveTaskRun(data);
+                    setTimeout(function () {
+                        saveTaskRun(data);
+                        toggleLoading($this);
+                    }, 1000);
                 });
                 //TODO: Add TaskRun Authenticate
                 $("#btn-donetask").on("click", function () {
+                    var $this = $(this);
                     var isFormHaveError = form.validates();
                     if (isFormHaveError) {
                         showToastr("error", "Error!!");
+
                     } else {
                         var valuetext = $("#task-inputtext").val();
                         var valuefile = $("#task-inputfile").val();
@@ -190,42 +213,47 @@
                             valuefile: valuefile,
                             idtaskrun: @Model.Id
                         }
-                        submitTaskRun(data)
+                        setConfirm(`Are you sure you want to submit this task?`, function () {
+                            toggleLoading($this);
+                            setTimeout(function () {
+                                submitTaskRun(data);
+                                toggleLoading($this);
+                            }, 1000);
+                        });
                     }
                 });
-                function saveTaskRun(data) {
-                    $.ajax({
-                        url: "@Url.Action("savetaskrun", "processrun",new { area = "api"})",
-                        type: "POST",
-                        data: data,
-                        dataType: "json",
-                        success: function (response) {
-                            console.log(response);
-                            if (response.status == 200) {
-                                //showToastr("error", "Error!!", "toast-bottom-left")
-                                window.location.reload();
-                                console.error(response)
-                            }
-                        }
-                    });
-                }
-                function submitTaskRun(data) {
-                    $.ajax({
-                        url: "@Url.Action("submittaskrun", "processrun",new { area = "api"})",
-                        type: "POST",
-                        data: data,
-                        dataType: "json",
-                        success: function (response) {
-                            console.log(response);
-                            if (response.status == 200) {
-                                //showToastr("error", "Error!!", "toast-bottom-left")
-                                window.location.reload();
-                                console.error(response)
-                            }
-                        }
-                    });
-                }
-                
             });
+            function saveTaskRun(data) {
+                $.ajax({
+                    url: "@Url.Action("savetaskrun", "processrun",new { area = "api"})",
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+                        if (response.status == 200) {
+                            showToastr("success", response.message, "toast-bottom-left")
+                        } else {
+                            showToastr("error", response.message, "toast-bottom-left")
+                        }
+                    }
+                });
+            }
+            function submitTaskRun(data) {
+                $.ajax({
+                    url: "@Url.Action("submittaskrun", "processrun",new { area = "api"})",
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+                        if (response.status == 200) {
+                            //showToastr("error", "Error!!", "toast-bottom-left")
+                            window.location.reload();
+                            console.error(response)
+                        }
+                    }
+                });
+            }
         </script>
     }
