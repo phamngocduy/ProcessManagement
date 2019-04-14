@@ -149,21 +149,22 @@
                                                                 <form action="">
                                                                     @if (Model != null)
                                                                     {
-                                                                            foreach (Step steps in Model.Where(x => x.Key == runnextstep.NextStep1))
+                                                                        foreach (Step steps in Model.Where(x => x.Key == runnextstep.NextStep1))
+                                                                        {
+                                                                            if (steps.Figure == "Diamond")
                                                                             {
-                                                                                if (steps.Figure == "Diamond")
+                                                                                <button style="display: none" id="myRadiostep" type="button" value="@steps.Id" class="btn btn-default"></button>
+                                                                                List<Step> liststepdk = Model.Where(x => x.Key == steps.NextStep1 || x.Key == steps.NextStep2).ToList();
+                                                                                foreach (Step nextstepdk in liststepdk)
                                                                                 {
-                                                                                    List<Step> liststepdk = Model.Where(x => x.Key == steps.NextStep1 || x.Key == steps.NextStep2).ToList();
-                                                                                    foreach (Step nextstepdk in liststepdk)
-                                                                                    {
-                                                                                        <input type="radio" name="stepnext" id="myRadiostep" value="@nextstepdk.Id" /> @nextstepdk.Name <br />
-                                                                                    }
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    <input type="radio" name="stepnext" id="myRadiostep" value="@steps.Id" /> @steps.Name
+                                                                                    <input type="radio" name="stepnext" value="@nextstepdk.Id" /> @nextstepdk.Name <br />
                                                                                 }
                                                                             }
+                                                                            else
+                                                                            {
+                                                                                <input type="radio" name="stepnext" value="@steps.Id" /> @steps.Name
+                                                                            }
+                                                                        }
                                                                     }
                                                                 </form>
                                                             </div>
@@ -522,13 +523,15 @@
         $(function () {
             var idstep = $('#btn-choosenextstep').val();
             $('#btn-nextstep').on('click', function () {
+                var idstepdiamond = $('#myRadiostep').val();
                 var idnextstep = $('input[name="stepnext"]:checked').val();
                 if (idnextstep != null) {
                     let check = confirm("Next step?");
                     if (check) {
                         let data = {
                             idStep: idstep,
-                            idnextstep: idnextstep
+                            idnextstep: idnextstep,
+                            idstepdiamond: idstepdiamond
                         }
                         addnextstepinrunprocess(data);
                     }

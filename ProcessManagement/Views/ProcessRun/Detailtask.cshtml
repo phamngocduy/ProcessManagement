@@ -9,6 +9,8 @@
     var fileConfig = ViewData["ValueFile"] as JObject;
     var textLength = ViewData["TextMaxLength"] as ProcessManagement.Models.ConfigRule;
     var TaskStatus = Model.Status;
+    var idUser = ViewData["UserId"];
+    var role = ViewData["Rolerun"] as ProcessManagement.Models.RoleRun;
     var isOpen = TaskStatus == 6 ? true : false;
 }
 
@@ -93,83 +95,86 @@
         </div>
     </div>
 </div>
-<div class="row clearfix">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="card">
-            <div class="body" id="show-taskrun">
-                <div class="row clearfix @if (!isOpen) { WriteLiteral("disable-all"); } ">
-                    <div class="col-sm-12 ">
-                        <div class="row cw-validation">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    @{
-                                    string textLabel;
-                                    if ((string)inputConfig["label"] == "")
-                                    {
-                                    textLabel = "Response Label";
-                                    }
-                                    else
-                                    {
-                                    textLabel = (string)inputConfig["label"];
+@if (idUser.ToString() == role.IdUser || isManager == true)
+{
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="card">
+                <div class="body" id="show-taskrun">
+                    <div class="row clearfix @if (!isOpen) { WriteLiteral("disable-all"); } ">
+                        <div class="col-sm-12 ">
+                            <div class="row cw-validation">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        @{
+                                            string textLabel;
+                                            if ((string)inputConfig["label"] == "")
+                                            {
+                                                textLabel = "Response Label";
+                                            }
+                                            else
+                                            {
+                                                textLabel = (string)inputConfig["label"];
 
-                                    }
-                                    }
-                                    @{
-                                    bool required = (bool)inputConfig["required"];
-                                    int maxlength = (string)inputConfig["maxlength"] != "" ? (int)inputConfig["maxlength"] : textLength.Value;
-                                    }
-                                    <label @if (required) { WriteLiteral("class='required' "); } for="task-inputtext">@textLabel</label>
-                                    <input type="text" class="form-control" id="task-inputtext" @if (required) { WriteLiteral("cw-required"); } cw-maxlength="@maxlength" value="@inputConfig[" value"]">
+                                            }
+                                        }
+                                        @{
+                                            bool required = (bool)inputConfig["required"];
+                                            int maxlength = (string)inputConfig["maxlength"] != "" ? (int)inputConfig["maxlength"] : textLength.Value;
+                                        }
+                                        <label @if (required) { WriteLiteral("class='required' "); } for="task-inputtext">@textLabel</label>
+                                        <input type="text" class="form-control" id="task-inputtext" @if (required) { WriteLiteral("cw-required"); } cw-maxlength="@maxlength" value="@inputConfig[" value"]">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
 
-                                    @{
-                                    string fileLabel;
-                                    if ((string)inputConfig["label"] == "")
-                                    {
-                                    fileLabel = "Response File";
-                                    }
-                                    else
-                                    {
-                                    fileLabel = (string)inputConfig["label"];
+                                        @{
+                                            string fileLabel;
+                                            if ((string)inputConfig["label"] == "")
+                                            {
+                                                fileLabel = "Response File";
+                                            }
+                                            else
+                                            {
+                                                fileLabel = (string)inputConfig["label"];
 
-                                    }
-                                    }
-                                    <label @if ((bool)fileConfig["required"]) { WriteLiteral("class='required' "); } for="task-inputfile">@fileLabel</label>
-                                    <input type="file" id="task-inputfile" class="dropify" cw-required value="@fileConfig[" value"]" />
+                                            }
+                                        }
+                                        <label @if ((bool)fileConfig["required"]) { WriteLiteral("class='required' "); } for="task-inputfile">@fileLabel</label>
+                                        <input type="file" id="task-inputfile" class="dropify" cw-required value="@fileConfig[" value"]" />
+                                    </div>
                                 </div>
-                            </div>
-                            @if (Model.Status1.Name == "Finish")
-                            {
-                            <div class="col-sm-8">
-                                <div class="form-group">
-                                    <label for="">Approve By</label>
-                                    <input type="text" class="form-control" id="task-name" name="" value="@Model.AspNetUser.UserName" disabled>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <label for="">Date</label>
-                                <input type="text" class="form-control" id="task-name" name="" value="@Model.Approve_At" disabled>
-                            </div>
-                            }
-                            <div class="col-sm-12">
-                                <div class="mt-2" id="button-action">
-                                    @if (Model.Status1.Name == "Open")
-                                    {
-                                        <button id="btn-savetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving..."><i class="fa fa-save"></i> Save</button>
-                                        <button id="btn-donetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Submiting..."><i class="fa fa-check"></i> Submit</button>
-                                    }
-                                    @if (Model.Status1.Name == "Done" && isManager)
-                                    {
-                                        <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect">Open</button>
-                                        <button id="btn-finishtask" value="@Model.Id" class="btn btn-primary-theme waves-effect">Finish </button>
-                                    }
-                                    @if (Model.Status1.Name == "Finish")
-                                    {
-                                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success waves-effect">Back</a>
-                                    }
+                                @if (Model.Status1.Name == "Finish")
+                                {
+                                    <div class="col-sm-8">
+                                        <div class="form-group">
+                                            <label for="">Approve By</label>
+                                            <input type="text" class="form-control" id="task-name" name="" value="@Model.AspNetUser.UserName" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label for="">Date</label>
+                                        <input type="text" class="form-control" id="task-name" name="" value="@Model.Approve_At" disabled>
+                                    </div>
+                                }
+                                <div class="col-sm-12">
+                                    <div class="mt-2" id="button-action">
+                                        @if (Model.Status1.Name == "Open")
+                                        {
+                                            <button id="btn-savetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving..."><i class="fa fa-save"></i> Save</button>
+                                            <button id="btn-donetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Submiting..."><i class="fa fa-check"></i> Done</button>
+                                        }
+                                        @if (Model.Status1.Name == "Done" && isManager)
+                                        {
+                                            <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect">Open</button>
+                                            <button id="btn-finishtask" value="@Model.Id" class="btn btn-primary-theme waves-effect">Finish </button>
+                                        }
+                                        @if (Model.Status1.Name == "Finish")
+                                        {
+                                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success waves-effect">Back</a>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -178,14 +183,15 @@
             </div>
         </div>
     </div>
-</div>
+}
 
 
-    @section CustomScripts{
-        <script src="~/Content/vendor/dropify/js/dropify.min.js"></script>
-        <script src="~/Content/build/js/pages/forms/dropify.js"></script>
-        <script src="~/Content/vendor/select2/select2.min.js"></script>
-        <script>
+
+@section CustomScripts{
+    <script src="~/Content/vendor/dropify/js/dropify.min.js"></script>
+    <script src="~/Content/build/js/pages/forms/dropify.js"></script>
+    <script src="~/Content/vendor/select2/select2.min.js"></script>
+    <script>
             $(function () {
                 var form = $(".cw-validation").formValidation();
                 var drEvent = $(".dropify").dropify();
@@ -268,5 +274,5 @@
                     }
                 });
             }
-        </script>
-    }
+    </script>
+}

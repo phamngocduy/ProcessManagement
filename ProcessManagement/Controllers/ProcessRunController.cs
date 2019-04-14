@@ -154,7 +154,7 @@ namespace ProcessManagement.Controllers
             ViewData["ListRole"] = listrole;
             ViewData["ProcessRun"] = process;
             ViewData["ListRoleRuns"] = listroleruns;
-            ViewBag.ListRunStep = liststepofrunprocess;
+            ViewBag.ListRunStep = liststepofrunprocess.Where(x => x.Figure == "Step");
             ViewBag.Checkprocessrun = ktra;
             ViewData["StepisNext"] = runnextstep;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
@@ -167,6 +167,21 @@ namespace ProcessManagement.Controllers
             string idUser = User.Identity.GetUserId();
             TaskProcessRun taskrun = taskService.findTaskRun(idruntask);
             if (taskrun == null) return HttpNotFound();
+            var listrolenotrun = roleService.findListRoleOfProcess(taskrun.StepRun.ProcessRun.IdProcess);
+            var listroleruns = roleService.findlistrolerun(listrolenotrun);
+            RoleRun role = new RoleRun();
+            foreach (var item in listroleruns)
+            {
+                if (taskrun.IdRole != null)
+                {
+                    if (idUser == item.IdUser && item.Role.Id == taskrun.Role.Id)
+                    {
+                        role = item;
+                    }
+                }
+            }
+            ViewData["Rolerun"] = role;
+            ViewData["UserId"] = idUser;
             ViewData["ValueInput"] = JObject.Parse(taskrun.ValueInputText);
             ViewData["ValueFile"] = JObject.Parse(taskrun.ValueInputFile);
             ViewData["TextMaxLength"] = db.ConfigRules.Find("textlength");

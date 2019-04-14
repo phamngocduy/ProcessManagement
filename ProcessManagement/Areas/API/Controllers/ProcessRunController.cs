@@ -47,8 +47,24 @@ namespace ProcessManagement.Areas.API.Controllers
             var status = HttpStatusCode.OK;
             string message;
             object response;
-
-            taskService.submitvaluetask(IdUser, valuetext, valuefile, idtaskrun, true);
+            TaskProcessRun taskrun = taskService.findTaskRun(idtaskrun);
+            List<RoleRun> listrole = roleService.findlistrolerunbyidroleprocess(taskrun.IdRole);
+            Participate useringroup = participateService.findMemberInGroup(IdUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
+            if (useringroup.IsManager == true)
+            {
+                taskService.submitvaluetask(IdUser, valuetext, valuefile, idtaskrun, true);
+            }
+            else
+            {
+                foreach (var item in listrole)
+                {
+                    if (IdUser == item.IdUser)
+                    {
+                        taskService.submitvaluetask(IdUser, valuetext, valuefile, idtaskrun, true);
+                    }
+                }
+            }
+            
             message = "Submit Task Successfully";
             response = new { message = message, status = status };
             SetFlash(FlashType.success, "Submit Task Successfully");

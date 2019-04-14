@@ -387,16 +387,21 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult addnextstepinrunprocess(int idStep, int idnextstep)
+        public JsonResult addnextstepinrunprocess(int idStep, int idnextstep, int idstepdiamond)
         {
             string IdUser = User.Identity.GetUserId();
             var status = HttpStatusCode.OK;
             string message;
             object response;
             Step stepchoosenext = stepService.findStep(idnextstep);
+            Step idstepdk = stepService.findStep(idstepdiamond);
             StepRun runstep = stepService.findsteprun(idStep);
             stepService.changestatustep(runstep.Id, IdUser);
             ProcessRun processrun = processService.findRunProcess(runstep.idProcess);
+            if (idstepdk != null)
+            {
+                stepService.addrunnextstep(processrun.Id, idstepdk);
+            }
             //List<Step> liststep = stepService.findStepsOfProcess(processrun.IdProcess);
             
             List<TaskProcessRun> listruntask = taskService.findruntaskofstep(idStep);

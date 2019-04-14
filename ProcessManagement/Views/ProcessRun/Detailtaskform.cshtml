@@ -112,16 +112,16 @@
                             <div class="mt-2" id="button-action">
                                 @if (Model.Status1.Name == "Open")
                                 {
-                                    <button id="btn-savetask" value="@Model.Id" class="btn btn-primary-theme">Save</button>
-                                    <button id="btn-donetask" value="@Model.Id" class="btn btn-primary-theme">Done</button>
+                                    <button id="btn-savetask" value="@Model.Id" class="btn btn-primary-theme" ><i class="fa fa-save"></i> Save</button>
+                                    <button id="btn-donetask" value="@Model.Id" class="btn btn-primary-theme" ><i class="fa fa-check"></i> Done</button>
                                 }
                                 @if (Model.Status1.Name == "Done")
                                 {
                                     <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
                                     if (isManager)
                                     {
-                                        <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme">Open</button>
-                                        <button id="btn-finishtask" value="@Model.Id" class="btn btn-primary-theme">Finish </button>
+                                        <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect">Open</button>
+                                        <button id="btn-finishtask" value="@Model.Id" class="btn btn-primary-theme waves-effect">Finish </button>
                                     }
                                 }
                                 @if (Model.Status1.Name == "Finish")
@@ -129,7 +129,7 @@
                                     <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
                                     if (isManager)
                                     {
-                                        <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme">Open</button>
+                                        <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect">Open</button>
                                     }
 
                                 }
