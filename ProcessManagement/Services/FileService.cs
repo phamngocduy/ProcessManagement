@@ -166,6 +166,18 @@ namespace ProcessManagement.Services
             foreach (FileInfo file in files)
             {
                 file.CopyTo(Path.Combine(destinationDirectory.FullName, file.Name));
+                FileManager f = db.FileManagers.FirstOrDefault(x => x.Path == path);
+                FileManager fn = new FileManager();
+                fn.Id = commonService.getRandomString(50);
+                fn.IdGroup = f.IdGroup;
+                fn.Name = f.Name;
+                fn.Type = f.Type;
+                fn.Path = destination;
+                fn.Direction = f.Direction;
+                fn.Create_At = DateTime.Now;
+                fn.Update_At = DateTime.Now;
+                db.FileManagers.Add(fn);
+                db.SaveChanges();
             }
 
         }

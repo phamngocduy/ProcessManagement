@@ -313,25 +313,22 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult addprocessrun(int processid, string name,string des)
+        public JsonResult addProcessRun(int processid, string name,string des)
         {
             var status = HttpStatusCode.OK;
             string message;
             object response;
             Process process = processService.findProcess(processid);
             Process processrun = processService.createProcessRun(process, name, des);
-            //copy folder process
-            string processPath = string.Format("Upload/{0}/{1}", process.IdGroup, process.Id);
-            string processRunPath = string.Format("Upload/{0}/{1}", processrun.IdGroup, processrun.Id);
-            fileService.copyDirectory(processPath, processRunPath);
-            List<Role> roler = roleService.findListRoleOfProcess(processid);
-            List<Role> rolerun = roleService.addrolerun(roler, processrun.Id);
+            
+            List<Role> role = roleService.findListRoleOfProcess(processid);
+            List<Role> rolerun = roleService.addRoleRun(role, processrun.Id);
             List<Step> liststep = stepService.findStepsOfProcess(processid);
-            List<Step> liststeprun = stepService.addliststeprun(liststep, processrun.Id);
-            foreach (var item in liststep)
+            List<Step> liststeprun = stepService.addStepRun(liststep, processrun.Id);
+            foreach (var step in liststep)
             {
-                List<TaskProcess> listtaskrun = taskService.findtaskofstep(item.Id);
-                taskService.addlisttaskrun(listtaskrun, rolerun, liststeprun);
+                List<TaskProcess> listtask = taskService.findTaskOfStep(step.Id);
+                taskService.addListTaskRun(listtask, rolerun, liststeprun);
             }
             message = "Created ProcessRun Successfully";
             response = new { message = message, status = status };
@@ -381,7 +378,7 @@ namespace ProcessManagement.Areas.API.Controllers
             processService.addrunprocess(findprocess);
             StepRun runstep = stepService.addstartstep(idprocess);
             Step idsteprunstart = liststep.Where(x => x.Key == runstep.Key && x.StartStep == true).FirstOrDefault();
-            List<TaskProcess> listtaskrun = taskService.findtaskofstep(idsteprunstart.Id);
+            List<TaskProcess> listtaskrun = taskService.findTaskOfStep(idsteprunstart.Id);
             taskService.addlistruntask(listtaskrun, runstep);
             message = "Created ProcessRun Successfully";
             response = new { message = message, status = status };
@@ -423,7 +420,7 @@ namespace ProcessManagement.Areas.API.Controllers
             }
             //foreach (var nexts in nextstep)
             //{
-                List<TaskProcess> listtasknextstep = taskService.findtaskofstep(stepchoosenext.Id);
+                List<TaskProcess> listtasknextstep = taskService.findTaskOfStep(stepchoosenext.Id);
                 taskService.addlistruntask(listtasknextstep, runnextstep);
             //}
 
@@ -501,7 +498,7 @@ namespace ProcessManagement.Areas.API.Controllers
             }
             foreach (var nexts in nextstep)
             {
-                List<TaskProcess> listtasknextstep = taskService.findtaskofstep(nexts.Id);
+                List<TaskProcess> listtasknextstep = taskService.findTaskOfStep(nexts.Id);
             taskService.addlistruntask(listtasknextstep, runnextstep);
             }
 

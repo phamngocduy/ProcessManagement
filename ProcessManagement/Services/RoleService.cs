@@ -20,7 +20,7 @@ namespace ProcessManagement.Services
             List<Role> listrole = db.Roles.Where(x => x.IdProcess == idProcess).ToList();
             return listrole;
         }
-        public List<Role> addrolerun(List<Role> listrole, int idprocessrun)
+        public List<Role> addRoleRun(List<Role> listrole, int idprocessrun)
         {
             foreach (var item in listrole)
             {

@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using ProcessManagement.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using ProcessManagement.Models;
 
 namespace ProcessManagement.Services
 {
@@ -14,8 +12,9 @@ namespace ProcessManagement.Services
         PMSEntities db = new PMSEntities();
         StepService stepService = new StepService();
         CommonService commonService = new CommonService();
+        FileService fileService = new FileService();
         ///=============================================================================================
-        public List<TaskProcess> findtaskofstep(int idStep)
+        public List<TaskProcess> findTaskOfStep(int idStep)
         {
             List<TaskProcess> task = db.TaskProcesses.Where(x => x.IdStep == idStep).ToList();
             return task;
@@ -123,46 +122,58 @@ namespace ProcessManagement.Services
             db.SaveChanges();
         }
 
-        public void addlisttaskrun(List<TaskProcess> listtaskrun, List<Role> rolerun, List<Step> steprun)
+        public void addListTaskRun(List<TaskProcess> listtask, List<Role> rolerun, List<Step> liststep)
         {
-            if (listtaskrun != null)
+
+            if (listtask != null)
             {
-                TaskProcess task = new TaskProcess();
-                foreach (var item in listtaskrun)
+                TaskProcess taskrun = new TaskProcess();
+                foreach (var task in listtask)
                 {
-                    foreach (var role in rolerun)
+                    if (task.IdRole != null)
                     {
-                        if (item.IdRole != null)
+                        foreach (var role in rolerun)
                         {
-                            if (item.Role.Name == role.Name)
+                            if (task.Role.Name == role.Name)
                             {
-                                task.IdRole = role.Id;
+                                taskrun.IdRole = role.Id;
+                                break;
                             }
                         }
-                        else
-                        {
-                            task.IdRole = null;
-                        }
+                        
                     }
-                    foreach (var step in steprun)
+                    else
                     {
-                        if (item.Step.Key == step.Key)
+                        taskrun.IdRole = null;
+                    }
+                    Process processrun = new Process();
+                    foreach (var step in liststep)
+                    {
+                        if (task.Step.Key == step.Key)
                         {
-                            task.IdStep = step.Id;
+                            taskrun.IdStep = step.Id;
+                            processrun = step.Process;
+                            break;
                         }
                     }
-                    task.Name = item.Name;
-                    task.Description = item.Description;
-                    task.ValueInputText = item.ValueInputText;
-                    task.ValueInputFile = item.ValueInputFile;
-                    task.ValueFormJson = item.ValueFormJson;
-                    task.Color = item.Color;
-                    task.Position = item.Position;
-                    task.IsRun = true;
-                    task.Created_At = DateTime.Now;
-                    task.Updated_At = DateTime.Now;
-                    db.TaskProcesses.Add(task);
+                    taskrun.Name = task.Name;
+                    taskrun.Description = task.Description;
+                    taskrun.ValueInputText = task.ValueInputText;
+                    taskrun.ValueInputFile = task.ValueInputFile;
+                    taskrun.ValueFormJson = task.ValueFormJson;
+                    taskrun.Color = task.Color;
+                    taskrun.Position = task.Position;
+                    taskrun.IsRun = true;
+                    taskrun.Created_At = DateTime.Now;
+                    taskrun.Updated_At = DateTime.Now;
+                    db.TaskProcesses.Add(taskrun);
                     db.SaveChanges();
+
+                    
+                    //copy folder task
+                    string taskPath = string.Format("Upload/{0}/{1}/{2}/{3}", task.Step.Process.IdGroup, task.Step.IdProcess, task.IdStep, task.Id);
+                    string taskRunPath = string.Format("Upload/{0}/{1}/{2}/{3}", processrun.IdGroup, processrun.Id, taskrun.IdStep, taskrun.Id);
+                    fileService.copyDirectory(taskPath, taskRunPath);
                 }
             }
         }

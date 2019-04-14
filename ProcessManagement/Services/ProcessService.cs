@@ -17,6 +17,7 @@ namespace ProcessManagement.Services
 		///=============================================================================================
 		PMSEntities db = new PMSEntities();
 		StepService stepService = new StepService();
+        FileService fileService = new FileService();
 		///=============================================================================================
 
 		public Process findProcess(int idProcess)
@@ -123,19 +124,25 @@ namespace ProcessManagement.Services
 
         public Process createProcessRun(Process process, string name, string des)
         {
-            Process procrun = new Process();
-            procrun.Name = name.Trim();
-            procrun.IdGroup = process.IdGroup;
-            procrun.IdOwner = process.IdOwner;
-            procrun.Description = des.Trim();
-            procrun.DataJson = process.DataJson;
-            procrun.Avatar = process.Avatar;
-            procrun.IsRun = true;
-            procrun.Created_At = DateTime.Now;
-            procrun.Updated_At = DateTime.Now;
-            db.Processes.Add(procrun);
+            Process processrun = new Process();
+            processrun.Name = name.Trim();
+            processrun.IdGroup = process.IdGroup;
+            processrun.IdOwner = process.IdOwner;
+            processrun.Description = des.Trim();
+            processrun.DataJson = process.DataJson;
+            processrun.Avatar = process.Avatar;
+            processrun.IsRun = true;
+            processrun.Created_At = DateTime.Now;
+            processrun.Updated_At = DateTime.Now;
+            db.Processes.Add(processrun);
             db.SaveChanges();
-            return procrun;
+
+            //copy folder process
+            string processPath = string.Format("Upload/{0}/{1}", process.IdGroup, process.Id);
+            string processRunPath = string.Format("Upload/{0}/{1}", processrun.IdGroup, processrun.Id);
+            fileService.copyDirectory(processPath, processRunPath);
+
+            return processrun;
         }
 
         public void addrunprocess(Process process)

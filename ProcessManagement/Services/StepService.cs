@@ -9,6 +9,7 @@ namespace ProcessManagement.Services
     {
         ///=============================================================================================
         PMSEntities db = new PMSEntities();
+        FileService fileService = new FileService();
         ///=============================================================================================
 
 
@@ -61,25 +62,33 @@ namespace ProcessManagement.Services
             db.Steps.Remove(step);
             db.SaveChanges();
         }
-        public List<Step> addliststeprun(List<Step> liststep, int idprocessrun)
+        public List<Step> addStepRun(List<Step> liststep, int idprocessrun)
         {
-            foreach (var item in liststep)
+
+            Process process = db.Processes.Find(liststep.First().Process.Id);
+            Process processrun = db.Processes.Find(idprocessrun); 
+            foreach (var step in liststep)
             {
-                Step step = new Step();
-                step.IdProcess = idprocessrun;
-                step.Name = item.Name;
-                step.Description = item.Description;
-                step.StartStep = item.StartStep;
-                step.NextStep1 = item.NextStep1;
-                step.NextStep2 = item.NextStep2;
-                step.Figure = item.Figure;
-                step.Key = item.Key;
-                step.Color = item.Color;
-                step.IsRun = true;
-                step.Created_At = DateTime.Now;
-                step.Updated_At = DateTime.Now;
-                db.Steps.Add(step);
+                Step stepRun = new Step();
+                stepRun.IdProcess = processrun.Id;
+                stepRun.Name = step.Name;
+                stepRun.Description = step.Description;
+                stepRun.StartStep = step.StartStep;
+                stepRun.NextStep1 = step.NextStep1;
+                stepRun.NextStep2 = step.NextStep2;
+                stepRun.Figure = step.Figure;
+                stepRun.Key = step.Key;
+                stepRun.Color = step.Color;
+                stepRun.IsRun = true;
+                stepRun.Created_At = DateTime.Now;
+                stepRun.Updated_At = DateTime.Now;
+                db.Steps.Add(stepRun);
                 db.SaveChanges();
+
+                //copy folder step
+                string stepPath = string.Format("Upload/{0}/{1}/{2}", process.IdGroup, process.Id, step.Id);
+                string stepRunPath = string.Format("Upload/{0}/{1}/{2}", processrun.IdGroup, processrun.Id, stepRun.Id);
+                fileService.copyDirectory(stepPath, stepRunPath);
             }
             return findStepsOfProcess(idprocessrun);
         }
@@ -155,18 +164,18 @@ namespace ProcessManagement.Services
             StepRun steprun = new StepRun();
             foreach (var item in liststeprun)
             {
-            steprun.idProcess = idrunprocess;
-            steprun.Name = item.Name;
-            steprun.StartStep = item.StartStep;
-            steprun.NextStep1 = item.NextStep1;
-            steprun.NextStep2 = item.NextStep2;
-            steprun.Key = item.Key;
-            steprun.Figure = item.Figure;
-            steprun.Status = status.Id;
-            steprun.Created_at = DateTime.Now;
-            steprun.Updated_At = DateTime.Now;
-            db.StepRuns.Add(steprun);
-            db.SaveChanges();
+                steprun.idProcess = idrunprocess;
+                steprun.Name = item.Name;
+                steprun.StartStep = item.StartStep;
+                steprun.NextStep1 = item.NextStep1;
+                steprun.NextStep2 = item.NextStep2;
+                steprun.Key = item.Key;
+                steprun.Figure = item.Figure;
+                steprun.Status = status.Id;
+                steprun.Created_at = DateTime.Now;
+                steprun.Updated_At = DateTime.Now;
+                db.StepRuns.Add(steprun);
+                db.SaveChanges();
             }
             return steprun;
         }
