@@ -171,6 +171,10 @@ namespace ProcessManagement.Controllers
             ViewData["ValueFile"] = JObject.Parse(taskrun.ValueInputFile);
             ViewData["TextMaxLength"] = db.ConfigRules.Find("textlength");
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
+            if (taskrun.ValueFormJson != null)
+            {
+                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "processrun", action = "Detailtaskform", taskid = idruntask });
+            }
             return View(taskrun);
         }
 
@@ -195,6 +199,10 @@ namespace ProcessManagement.Controllers
             ViewData["Rolerun"] = role;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
             ViewData["UserId"] = idUser;
+            if (taskrun.ValueFormJson == null)
+            {
+                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "processrun", action = "Detailtask", taskid = idruntask });
+            }
             return View(taskrun);
         }
     }
