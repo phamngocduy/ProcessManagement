@@ -144,6 +144,11 @@ namespace ProcessManagement.Controllers
             {
                 listnextstep1.Add(item);
             }
+            StepRun runnextstep = new StepRun();
+            foreach (StepRun steprun in liststepofrunprocess.Where(x => x.Status1.Name == "Running"))
+            {
+                runnextstep = steprun;
+            }
 
 
             ViewData["ListRole"] = listrole;
@@ -151,6 +156,7 @@ namespace ProcessManagement.Controllers
             ViewData["ListRoleRuns"] = listroleruns;
             ViewBag.ListRunStep = liststepofrunprocess;
             ViewBag.Checkprocessrun = ktra;
+            ViewData["StepisNext"] = runnextstep;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             return View(listnextstep1);
         }
@@ -173,8 +179,22 @@ namespace ProcessManagement.Controllers
         {
             string idUser = User.Identity.GetUserId();
             TaskProcessRun taskrun = taskService.findTaskRun(idruntask);
-            if (taskrun == null) return HttpNotFound();
+            var listrolenotrun = roleService.findListRoleOfProcess(taskrun.StepRun.ProcessRun.IdProcess);
+            var listroleruns = roleService.findlistrolerun(listrolenotrun);
+            RoleRun role = new RoleRun();
+            foreach (var item in listroleruns)
+            {
+                if (taskrun.IdRole != null)
+                {
+                    if (idUser == item.IdUser && item.Role.Id == taskrun.Role.Id)
+                    {
+                        role = item;
+                    }
+                }
+            }
+            ViewData["Rolerun"] = role;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
+            ViewData["UserId"] = idUser;
             return View(taskrun);
         }
     }

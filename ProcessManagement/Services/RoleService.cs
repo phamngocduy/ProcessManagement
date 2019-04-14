@@ -114,5 +114,11 @@ namespace ProcessManagement.Services
             var role = db.RoleRuns.FirstOrDefault(x => x.IdRole == roleid && x.IdUser == userid);
             return role != null ? true : false;
         }
+
+        public List<RoleRun> findlistrolerunbyidroleprocess(int? idrole)
+        {
+            List<RoleRun> listrolerun = db.RoleRuns.Where(x => x.IdRole == idrole).ToList();
+            return listrolerun;
+        }
     }
 }

@@ -64,7 +64,7 @@ namespace ProcessManagement.Areas.API.Controllers
 
             taskService.savevaluetaskform(idtaskrun, formrender);
 
-            message = "Created ProcessRun Successfully";
+            message = "Save Task";
             response = new { message = message, status = status };
             SetFlash(FlashType.success, "Save Task");
             return Json(response, JsonRequestBehavior.AllowGet);
@@ -78,11 +78,27 @@ namespace ProcessManagement.Areas.API.Controllers
             string message;
             object response;
 
-            taskService.donetaskform(idtaskrun, formrender, IdUser);
+            TaskProcessRun taskrun = taskService.findTaskRun(idtaskrun);
+            List<RoleRun> listrole = roleService.findlistrolerunbyidroleprocess(taskrun.IdRole);
+            Participate useringroup = participateService.findMemberInGroup(IdUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
+            if (useringroup.IsManager == true)
+            {
+                taskService.donetaskform(idtaskrun, formrender, IdUser);
+            }
+            else
+            {
+                foreach (var item in listrole)
+                {
+                    if (IdUser == item.IdUser)
+                    {
+                        taskService.donetaskform(idtaskrun, formrender, IdUser);
+                    }
+                }
+            }
 
-            message = "Created ProcessRun Successfully";
+            message = "Done Task";
             response = new { message = message, status = status };
-            SetFlash(FlashType.success, "Save Task");
+            SetFlash(FlashType.success, "Done Task");
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
@@ -97,7 +113,7 @@ namespace ProcessManagement.Areas.API.Controllers
             TaskProcessRun taskrun = taskService.findTaskRun(idtask);
             taskService.submitclosetask(taskrun.Id, IdUser);
 
-            message = "Created ProcessRun Successfully";
+            message = "Close Task";
             response = new { message = message, status = status };
             SetFlash(FlashType.success, "Close Task");
             return Json(response, JsonRequestBehavior.AllowGet);
@@ -113,7 +129,7 @@ namespace ProcessManagement.Areas.API.Controllers
             TaskProcessRun taskrun = taskService.findTaskRun(idtask);
             taskService.submitopentask(taskrun.Id, formrender);
 
-            message = "Created ProcessRun Successfully";
+            message = "Open Task";
             response = new { message = message, status = status };
             SetFlash(FlashType.success, "Open Task");
             return Json(response, JsonRequestBehavior.AllowGet);

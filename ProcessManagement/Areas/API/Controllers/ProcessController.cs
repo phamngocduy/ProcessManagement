@@ -390,40 +390,42 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult addnextstepinrunprocess(int idStep)
+        public JsonResult addnextstepinrunprocess(int idStep, int idnextstep)
         {
+            string IdUser = User.Identity.GetUserId();
             var status = HttpStatusCode.OK;
             string message;
             object response;
+            Step stepchoosenext = stepService.findStep(idnextstep);
             StepRun runstep = stepService.findsteprun(idStep);
-            stepService.changestatustep(runstep.Id);
+            stepService.changestatustep(runstep.Id, IdUser);
             ProcessRun processrun = processService.findRunProcess(runstep.idProcess);
-            List<Step> liststep = stepService.findStepsOfProcess(processrun.IdProcess);
+            //List<Step> liststep = stepService.findStepsOfProcess(processrun.IdProcess);
             
             List<TaskProcessRun> listruntask = taskService.findruntaskofstep(idStep);
             List<TaskProcessRun> listtaskclose = listruntask.Where(x => x.Status1.Name == "Finish").ToList();
 
-            List<Step> nextstep = new List<Step>();
+            //List<Step> nextstep = new List<Step>();
             StepRun runnextstep = new StepRun();
-            foreach (var item in liststep)
-            {
-                if (runstep.NextStep1 == item.Key && item.StartStep == false)
-                {
-                    nextstep.Add(item);
-                }
-            }
-            if (nextstep != null)
+            //foreach (var item in liststep)
+            //{
+            //    if (runstep.NextStep1 == item.Key && item.StartStep == false)
+            //    {
+            //        nextstep.Add(item);
+            //    }
+            //}
+            if (stepchoosenext != null)
             {
                 if (listtaskclose.Count == listruntask.Count)
                 {
-                   runnextstep = stepService.addrunnextstep(processrun.Id, nextstep);
+                   runnextstep = stepService.addrunnextstep(processrun.Id, stepchoosenext);
                 }
             }
-            foreach (var nexts in nextstep)
-            {
-                List<TaskProcess> listtasknextstep = taskService.findtaskofstep(nexts.Id);
+            //foreach (var nexts in nextstep)
+            //{
+                List<TaskProcess> listtasknextstep = taskService.findtaskofstep(stepchoosenext.Id);
                 taskService.addlistruntask(listtasknextstep, runnextstep);
-            }
+            //}
 
             message = "Created ProcessRun Successfully";
             response = new { message = message, status = status };
@@ -447,5 +449,66 @@ namespace ProcessManagement.Areas.API.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
         
+        [HttpPost]
+        public JsonResult deletenextsteprun(int idStep)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+            //to do xoa step khi trc con dk
+            StepRun runstep = stepService.findsteprun(idStep);
+            List<TaskProcessRun> listtaskrun = taskService.findruntaskofstep(runstep.Id);
+            List<StepRun> liststeprun = stepService.findStepsOfRunProcess(runstep.idProcess);
+            StepRun stepback = liststeprun.Where(x => x.NextStep1 == runstep.Key).FirstOrDefault();
+            stepService.deletenextsteprun(runstep, listtaskrun, stepback);
+
+            message = "Created ProcessRun Successfully";
+            response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Delete Step");
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult completestepinrunprocess(int idStep)
+        {
+            string IdUser = User.Identity.GetUserId();
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+            StepRun runstep = stepService.findsteprun(idStep);
+            stepService.changestatustep(runstep.Id, IdUser);
+            ProcessRun processrun = processService.findRunProcess(runstep.idProcess);
+            List<Step> liststep = stepService.findStepsOfProcess(processrun.IdProcess);
+
+            List<TaskProcessRun> listruntask = taskService.findruntaskofstep(idStep);
+            List<TaskProcessRun> listtaskclose = listruntask.Where(x => x.Status1.Name == "Finish").ToList();
+
+            List<Step> nextstep = new List<Step>();
+            StepRun runnextstep = new StepRun();
+            foreach (var item in liststep)
+            {
+                if (runstep.NextStep1 == item.Key && item.StartStep == false)
+                {
+                    nextstep.Add(item);
+                }
+            }
+            if (nextstep != null)
+            {
+                if (listtaskclose.Count == listruntask.Count)
+                {
+                    runnextstep = stepService.completestepinrunprocess(processrun.Id, nextstep);
+                }
+            }
+            foreach (var nexts in nextstep)
+            {
+                List<TaskProcess> listtasknextstep = taskService.findtaskofstep(nexts.Id);
+            taskService.addlistruntask(listtasknextstep, runnextstep);
+            }
+
+            message = "Created ProcessRun Successfully";
+            response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Next step success");
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
     }
 }

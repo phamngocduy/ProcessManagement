@@ -1,10 +1,13 @@
 ﻿@model ProcessManagement.Models.TaskProcessRun
-
+@using ProcessManagement.Models;
 @{
+    PMSEntities db = new PMSEntities();
     ViewBag.Title = "Detailtaskform";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
     var isManager = userRole.IsManager;
+    var idUser = ViewData["UserId"];
+    var role = ViewData["Rolerun"] as ProcessManagement.Models.RoleRun;
 }
 
 @section CustomCss{
@@ -82,38 +85,62 @@
         </div>
     </div>
 </div>
-<div class="row clearfix">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="card">
-            <div class="body" id="show-taskrun">
-                <div class="row clearfix">
-                    <div class="col-sm-12 setDataWrap">
-                        <form class="render-wrap" id="render-wrap" ></form>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="mt-2" id="button-action">
-                            @if (Model.Status1.Name == "Open")
-                            {
-                                <button id="btn-savetask" value="@Model.Id" class="btn btn-primary-theme">Save</button>
-                                <button id="btn-donetask" value="@Model.Id" class="btn btn-primary-theme">Done</button>
-                            }
-                            @if (Model.Status1.Name == "Done" && isManager)
-                            {
-                                <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme">Open</button>
-                                <button id="btn-finishtask" value="@Model.Id" class="btn btn-primary-theme">Finish </button>
-                            }
-                            @if (Model.Status1.Name == "Finish")
-                            {
-                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
-                            }
+@if (idUser.ToString() == role.IdUser || isManager == true)
+{
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="card">
+                <div class="body" id="show-taskrun">
+                    <div class="row clearfix">
+                        <div class="col-sm-12 setDataWrap">
+                            <form class="render-wrap" id="render-wrap"></form>
+                        </div>
+                        @if (Model.Status1.Name == "Finish")
+                        {
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <label for="">Approve By</label>
+                                <input type="text" class="form-control" id="task-name" name="" value="@Model.AspNetUser.UserName" disabled>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="">Date</label>
+                            <input type="text" class="form-control" id="task-name" name="" value="@Model.Approve_At" disabled>
+                        </div>
+                        }
+                        <div class="col-sm-12">
+                            <div class="mt-2" id="button-action">
+                                @if (Model.Status1.Name == "Open")
+                                {
+                                    <button id="btn-savetask" value="@Model.Id" class="btn btn-primary-theme">Save</button>
+                                    <button id="btn-donetask" value="@Model.Id" class="btn btn-primary-theme">Done</button>
+                                }
+                                @if (Model.Status1.Name == "Done")
+                                {
+                                    <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
+                                    if (isManager)
+                                    {
+                                        <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme">Open</button>
+                                        <button id="btn-finishtask" value="@Model.Id" class="btn btn-primary-theme">Finish </button>
+                                    }
+                                }
+                                @if (Model.Status1.Name == "Finish")
+                                {
+                                    <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
+                                    if (isManager)
+                                    {
+                                        <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme">Open</button>
+                                    }
 
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+}
 
 
 @section CustomScripts{
@@ -177,7 +204,7 @@
                 let form = JSON.parse(formData);
                 for (let i = 0; i < formrender.length; i++) {
                     for (let k = 0; k < form.length; k++) {
-                        if (form[k]["name"] == formrender[i]["name"] && formrender[i]["required"] == true && formrender[i]["userData"] == "") {
+                        if (form[k]["name"] == formrender[i]["name"] && formrender[i]["required"] == true && (formrender[i]["userData"] == "" /*|| formrender[i]["userData"] == undefined*/)) {
                             j++;
                         }
                         if (form[k]["name"] == formrender[i]["name"] && form[k]["required"] == formrender[i]["required"] && form[k]["userData"] == formrender[i]["userData"]) {
@@ -278,7 +305,7 @@
 
                 })
             })
-        
+
             function submitfinishtask(data) {
                 $.ajax({
                     url: "@Url.Action("submitfinishtask", "processrun",new { area = "api"})",
