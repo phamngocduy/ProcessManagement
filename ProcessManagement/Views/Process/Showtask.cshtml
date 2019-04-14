@@ -163,8 +163,8 @@
                     {
                         <div class="col-sm-12">
                             <div class="mt-2" id="button-action">
-                                <button id="btn-edit" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing...">Edit</button>
-                                <button data-action="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "deletetask", taskid = Model.Id })" class="btn btn-danger waves-effect" id="btn-remove-task" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing...">Delete</button>
+                                <button id="btn-edit" class="btn btn-primary-theme waves-effect">Edit</button>
+                                <button data-action="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "deletetask", taskid = Model.Id })" class="btn btn-danger waves-effect" id="btn-remove-task" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Deleting...">Delete</button>
                             </div>
                         </div>
                     }
@@ -182,7 +182,7 @@
     <script>
         $(function () {
 
-            var bAction = `<button id="btn-save" class="btn btn-primary-theme waves-effect">Save</button>
+            var bAction = `<button id="btn-save" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving...">Save</button>
                             <button id="btn-back" class="btn btn-default waves-effect">Back</button>`;
             var showForm = $("#show-task").html();
             var switchArr = createSwitch();

@@ -73,6 +73,42 @@ namespace ProcessManagement.Services
                 db.SaveChanges();
             }
         }
+        /// <summary>
+        /// Tìm Role dựa trên id
+        /// </summary>
+        /// <param name="idRole">Id Role</param>
+        /// <return>Return một object role</return>
+        public Role findRole(int idRole)
+        {
+            Role role = db.Roles.Find(idRole);
+            return role;
+        }
+        /// <summary>
+		/// Thay đổi role của một process
+		/// </summary>
+		/// <param name="model">Role model</param>
+		public void editRole(Role model)
+        {
+            Role role = findRole(model.Id);
+            role.Name = model.Name;
+            role.Description = model.Description;
+            role.Update_At = DateTime.Now;
+            db.SaveChanges();
+        }
+        // <summary>
+        /// Xóa role ra khỏi process
+        /// </summary>
+        /// <param name="role">Oarticipate Model</param>
+        public void removeRole(Role role)
+        {
+            db.Roles.Remove(role);
+            db.SaveChanges();
+        }
+        public bool isNameExist(Role role,int processid)
+        {
+            Role r = db.Roles.FirstOrDefault(x => x.Name.ToLower() == role.Name.ToLower().Trim() && x.IdProcess == processid);
+            return r != null ? true : false;
+        }
         public bool isAssigned(int roleid, string userid)
         {
             var role = db.RoleRuns.FirstOrDefault(x => x.IdRole == roleid && x.IdUser == userid);

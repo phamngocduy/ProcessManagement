@@ -307,10 +307,10 @@ namespace ProcessManagement.Controllers
 
                 return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "addrole", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id });
             }
-            var check = db.Roles.Where(x => x.Name.ToLower() == role.Name.ToLower().Trim() && x.IdProcess == processId).FirstOrDefault();
-            if (check != null)
+            var isExist = roleService.isNameExist(role, process.Id);
+            if (isExist)
             {
-                SetFlash(FlashType.error, "Name is exist in db");
+                SetFlash(FlashType.error, "This name is exist in process");
                 return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "addrole", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id });
             }
 
@@ -322,19 +322,20 @@ namespace ProcessManagement.Controllers
         [GroupAuthorize]
         public ActionResult DeleteRole(int roleid)
         {
-            Role role = participateService.findRoleInProcess(roleid);
+            Role role = roleService.findRole(roleid);
             if (role == null) return HttpNotFound();
             var roleId = role.Id;
             Process process = processService.findProcess(role.IdProcess);
             Group group = groupService.findGroup(process.IdGroup);
-            participateService.removeRoleInProcess(role);
+            roleService.removeRole(role);
             SetFlash(FlashType.success, "Removed " + roleId + " Successfully");
 
             return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
         }
+        [GroupAuthorize]
         public ActionResult EditRole(int roleid)
         {
-            Role role = participateService.findRoleInProcess(roleid);
+            Role role = roleService.findRole(roleid);
             if (role == null) return HttpNotFound();
             var group = groupService.findGroup(role.Process.Group.Id);
             ViewData["Group"] = group;
@@ -345,13 +346,26 @@ namespace ProcessManagement.Controllers
 
         [GroupAuthorize]
         [HttpPost]
-        public ActionResult EditRole(Role model)
+        public ActionResult EditRole(Role role)
         {
-            model.Id = (int)Session["roleid"];
+            role.Id = (int)Session["roleid"];
             var processid = (int)Session["processid"];
             Process process = processService.findProcess(processid);
             Group group = groupService.findGroup(process.Group.Id);
-            participateService.editRole(model);
+
+            if (role.Name == null)
+            {
+                SetFlash(FlashType.error, "Name is required");
+                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "editrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
+            }
+            var isExist = roleService.isNameExist(role,process.Id);
+            if (isExist)
+            {
+                SetFlash(FlashType.error, "This name is exist in process");
+                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "editrole", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id });
+            }
+
+            roleService.editRole(role);
             SetFlash(FlashType.success, "Edited Role Successfully");
             return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
         }
