@@ -652,6 +652,12 @@ namespace ProcessManagement.Controllers
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             ViewData["Files"] = files;
             ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
+
+            if (task.ValueFormJson != null)
+            {
+                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "ShowFormTask", taskid = taskid });
+            }
+            
             return View(task);
         }
 
@@ -723,6 +729,10 @@ namespace ProcessManagement.Controllers
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             ViewData["Files"] = files;
             ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
+            if (task.ValueFormJson == null)
+            {
+                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "ShowTask", taskid = taskid });
+            }
             return View(task);
         }
     }
