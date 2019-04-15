@@ -457,13 +457,19 @@ namespace ProcessManagement.Areas.API.Controllers
             var status = HttpStatusCode.OK;
             string message;
             object response;
-            //to do xoa step khi trc con dk
             StepRun runstep = stepService.findsteprun(idStep);
-            List<TaskProcessRun> listtaskrun = taskService.findruntaskofstep(runstep.Id);
             List<StepRun> liststeprun = stepService.findStepsOfRunProcess(runstep.idProcess);
             StepRun stepback = liststeprun.Where(x => x.NextStep1 == runstep.Key).FirstOrDefault();
-            stepService.deletenextsteprun(runstep, listtaskrun, stepback);
-
+            if (stepback.Figure == "Diamond")
+            {
+                StepRun stepbacknotdiamond = liststeprun.Where(x => x.NextStep1 == stepback.Key).FirstOrDefault();
+                stepService.removeStepRun(stepback);
+                stepService.deletenextsteprun(runstep, stepbacknotdiamond);
+            }
+            else
+            {
+                stepService.deletenextsteprun(runstep, stepback);
+            }
             message = "Created ProcessRun Successfully";
             response = new { message = message, status = status };
             SetFlash(FlashType.success, "Delete Step");

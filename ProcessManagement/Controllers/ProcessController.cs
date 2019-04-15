@@ -508,7 +508,7 @@ namespace ProcessManagement.Controllers
                 step.Name = nodeArray[i]["text"].ToString();
                 step.Key = key;
                 step.StartStep = (int)idfirstStep["to"] == (int)nodeArray[i]["key"] ? true : false;
-
+                step.IsRun = false;
                 step.Figure = nodeArray[i]["figure"] == null ? "Step" : nodeArray[i]["figure"].ToString();
                 step.Created_At = DateTime.Now;
                 step.Updated_At = DateTime.Now;

@@ -62,6 +62,11 @@ namespace ProcessManagement.Services
             db.Steps.Remove(step);
             db.SaveChanges();
         }
+        public void removeStepRun(StepRun step)
+        {
+            db.StepRuns.Remove(step);
+            db.SaveChanges();
+        }
         public List<Step> addStepRun(List<Step> liststep, int idprocessrun)
         {
 
@@ -151,9 +156,10 @@ namespace ProcessManagement.Services
             return steprun;
         }
 
-        public void deletenextsteprun(StepRun runstep, List<TaskProcessRun> listtaskrun, StepRun stepback)
+        public void deletenextsteprun(StepRun runstep, /*List<TaskProcessRun> listtaskrun,*/ StepRun stepback)
         {
-            db.TaskProcessRuns.RemoveRange(listtaskrun);
+            List<TaskProcessRun> taskrun = db.TaskProcessRuns.Where(x =>x.IdStep == runstep.Id).ToList();
+            db.TaskProcessRuns.RemoveRange(taskrun);
             db.StepRuns.Remove(runstep);
             Status status = db.Status.Where(y => y.Name == "Running").FirstOrDefault();
             stepback.Status = status.Id;

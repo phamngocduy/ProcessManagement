@@ -130,19 +130,16 @@
                                                             if (step.NextStep1 != 0)
                                                             {
                                                                 <button id="btn-choosenextstep" value="@step.Id" data-toggle="modal" data-target="#myModal" class="btn btn-primary-theme btn-sm" style="float: right">Next</button>
-                                                                if (step.StartStep == false)
-                                                                {
-                                                                    <button id="btn-deletestep" value="@step.Id" class="btn btn-primary-theme btn-sm" style="float: right; margin-right: 5px;">Delete</button>
-                                                                }
+
                                                             }
                                                             else
                                                             {
                                                                 <button id="btn-complete" value="@step.Id" class="btn btn-primary-theme btn-sm" style="float: right">Complete</button>
-                                                                if (step.StartStep == false)
-                                                                {
-                                                                    <button id="btn-deletestep" value="@step.Id" class="btn btn-primary-theme btn-sm" style="float: right; margin-right: 5px;">Delete</button>
-                                                                }
                                                             }
+                                                        }
+                                                        if (step.StartStep == false && step.Status1.Name == "Running")
+                                                        {
+                                                            <button id="btn-deletestep" value="@step.Id" class="btn btn-primary-theme btn-sm" style="float: right; margin-right: 5px;">Delete</button>
                                                         }
                                                     }
                                                 </div>
@@ -538,12 +535,21 @@
                 if (idnextstep != null) {
                     let check = confirm("Next step?");
                     if (check) {
-                        let data = {
-                            idStep: idstep,
-                            idnextstep: idnextstep,
-                            idstepdiamond: idstepdiamond
+                        if (idstepdiamond == undefined) {
+                            let data = {
+                                idStep: idstep,
+                                idnextstep: idnextstep,
+                                idstepdiamond: 0
+                            }
+                            addnextstepinrunprocess(data);
+                        } else {
+                            let data = {
+                                idStep: idstep,
+                                idnextstep: idnextstep,
+                                idstepdiamond: idstepdiamond
+                            }
+                            addnextstepinrunprocess(data);
                         }
-                        addnextstepinrunprocess(data);
                     }
                 } else {
                     alert('Please choose next step!');

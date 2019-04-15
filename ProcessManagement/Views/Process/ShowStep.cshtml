@@ -171,7 +171,7 @@
                     {
                         foreach (var step in listnextstep1.Where(x => x.Figure == "Step" && (x.IsRun == false || x.IsRun == null)))
                         {
-                            if (step != null && step.Figure == "Step" && step.IsRun == false)
+                            if (step != null && step.Figure == "Step" && (step.IsRun == false || step.IsRun == null))
                             {
                                 List<TaskProcess> taskList = db.TaskProcesses.Where(x => x.IdStep == step.Id).OrderBy(x => x.Position).ToList();
                                 <li>
