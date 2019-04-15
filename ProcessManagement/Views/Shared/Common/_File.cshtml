@@ -1,44 +1,63 @@
-﻿<div id="uploadfile">
-    <input type="file" id="FileUpload" name="FileUpload" style="display:none" />
-    <button class="btn btn-default waves-effect" id="btn-file"><i class="icon-cloud-upload"></i> Upload</button>
-</div>
+﻿@{ 
+    var files = ViewData["filess"] as List<ProcessManagement.Models.FileManager>;
+    bool isRun = ViewData.ContainsKey("isRun") && (bool)ViewData["isRun"] ? true : false;
+    var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
+}
 <style>
     #file-list table {
         table-layout: fixed;
     }
+
     #file-list table tbody tr td {
         display: inline-block;
-        height:59px;
+        height: 59px;
     }
+
     #file-list table tbody tr td:first-child {
         width: 75%;
         overflow-x: hidden;
         text-overflow: ellipsis;
     }
+
     #file-list table tbody tr td:last-child {
         width: 20%;
     }
 </style>
+@if (!isRun && (userRole.IsOwner || userRole.IsManager))
+{
+    <div id="uploadfile">
+        <input type="file" id="FileUpload" name="FileUpload" style="display:none" />
+        <button class="btn btn-default waves-effect" id="btn-file"><i class="icon-cloud-upload"></i> Upload</button>
+    </div>
+}
+
+
 <div class="table-responsive m-t-15" style="overflow-x:unset" id="file-list">
     <table class="table table-hover">
         <tbody>
-            @foreach (var file in Model)
+            @if (files != null)
             {
-                <tr>
-                    <td>
-                        <a href="@Url.Action("download", "file", new { file = file.Id })" title="@file.Name">
-                            @file.Name
-                        </a>
-                    </td>
-                    <td style="text-align:center">
-                        <button class="btn btn-primary-theme waves-effect btn-file-changename" data-src="@file.Id" data-toggle="tooltip" data-placement="top" title="Change Name">
-                            <i class=" icon-pencil"></i>
-                        </button>
-                        <button class="btn btn-danger waves-effect btn-file-remove" data-src="@file.Id" data-toggle="tooltip" data-placement="top" title="Remove">
-                            <i class="icon-trash"></i>
-                        </button>
-                    </td>
-                </tr>
+                foreach (var file in files)
+                {
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("download", "file", new { file = file.Id })" title="@file.Name">
+                                @file.Name
+                            </a>
+                        </td>
+                        <td style="text-align:center">
+                            @if (!isRun && (userRole.IsOwner || userRole.IsManager))
+                            {
+                                <button class="btn btn-primary-theme waves-effect btn-file-changename" data-src="@file.Id" data-toggle="tooltip" data-placement="top" title="Change Name">
+                                    <i class=" icon-pencil"></i>
+                                </button>
+                                <button class="btn btn-danger waves-effect btn-file-remove" data-src="@file.Id" data-toggle="tooltip" data-placement="top" title="Remove">
+                                    <i class="icon-trash"></i>
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
             }
         </tbody>
     </table>

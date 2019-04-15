@@ -77,12 +77,12 @@
         <div class="card">
             <div class="body">
                 @*<ul class=" list-unstyled basic-list">
-                    <li>Create At:<span class="badge badge-primary">@process.Created_At</span></li>
-                    <li>Update_at:<span class="badge badge-info">@process.Updated_At</span></li>
-                    <li>Total Step:<span class="badge badge-danger">@statistic.totalstep steps</span></li>
-                    <li>Total Role:<span class="badge badge-warning">@statistic.totalrole roles</span></li>
-                </ul>*@
-                @Html.Partial("~/Views/Shared/Common/_File.cshtml", files)
+            <li>Create At:<span class="badge badge-primary">@process.Created_At</span></li>
+            <li>Update_at:<span class="badge badge-info">@process.Updated_At</span></li>
+            <li>Total Step:<span class="badge badge-danger">@statistic.totalstep steps</span></li>
+            <li>Total Role:<span class="badge badge-warning">@statistic.totalrole roles</span></li>
+        </ul>*@
+                @Html.Partial("~/Views/Shared/Common/_File.cshtml", new ViewDataDictionary { { "filess", files }, { "UserRoles", userRole } })
             </div>
         </div>
         <div class="card">

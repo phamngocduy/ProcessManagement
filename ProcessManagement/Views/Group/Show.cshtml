@@ -146,7 +146,7 @@
                         <a class="btn-circle btn-primary-theme btn-switch-tab" style="float:right" href="#setting-tab"><i class="icon-settings"></i> Settings</a>
                         <h5>@Model.Name</h5>
                         <p>@Model.Description</p>
-                        @Html.Partial("~/Views/Shared/Common/_File.cshtml", files)
+                        @Html.Partial("~/Views/Shared/Common/_File.cshtml", new ViewDataDictionary { {"filess", files}, {"UserRoles", userRole } })
                         @*<div id="uploadfile">
                                 <input type="file" id="FileUpload" name="FileUpload" style="display:none" />
                                 <button class="btn btn-default waves-effect" id="btn-file"><i class="icon-cloud-upload"></i> Upload</button>
