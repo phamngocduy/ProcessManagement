@@ -365,6 +365,9 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\build\js\button-ripple.js" />
+    <Content Include="Old\Database\dbo.sql" />
+    <Content Include="Old\Database\Diagram 1.png" />
     <Content Include="Content\build\bundles\chartist.bundle.js" />
     <Content Include="Content\build\bundles\datatablescripts.bundle.js" />
     <Content Include="Content\build\bundles\easypiechart.bundle.js" />
@@ -434,6 +437,7 @@
     <Content Include="Content\build\fonts\weathericons-regular-webfont.woff" />
     <Content Include="Content\build\fonts\weathericons-regular-webfontd41d.eot" />
     <Content Include="Areas\API\Views\web.config" />
+    <Content Include="Old\Database\Diagram 1.pdf" />
     <None Include="Content\build\scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Content\build\scripts\jquery-3.3.1.js" />
     <Content Include="Content\build\scripts\jquery-3.3.1.min.js" />
@@ -8429,8 +8433,13 @@
     <Content Include="Models\PMS.edmx.diagram">
       <DependentUpon>PMS.edmx</DependentUpon>
     </Content>
-    <Content Include="Upload\4111\1204\35679842_p0.jpg" />
-    <Content Include="Upload\4111\35679842_p0.jpg" />
+    <Content Include="Upload\4114\1226\1554\2377\1.png" />
+    <Content Include="Upload\4114\1226\1554\35679842_p0.jpg" />
+    <Content Include="Upload\4114\1226\35679842_p0.jpg" />
+    <Content Include="Upload\4114\1227\1559\2379\1.png" />
+    <Content Include="Upload\4114\1227\1559\35679842_p0.jpg" />
+    <Content Include="Upload\4114\1227\35679842_p0.jpg" />
+    <Content Include="Upload\4114\Cái cần phải nộp.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -8522,8 +8531,6 @@
     <Folder Include="Areas\API\Views\ProcessRun\" />
     <Folder Include="Areas\API\Views\Process\" />
     <Folder Include="Areas\API\Views\Shared\" />
-    <Folder Include="Backup\Database\" />
-    <Folder Include="Backup\View\" />
     <Folder Include="Content\images\imageProcess\" />
     <Folder Include="Content\vendor\jquery.file.upload\cors\" />
     <Folder Include="Content\vendor\jquery.file.upload\css\" />
@@ -8534,9 +8541,17 @@
     <Folder Include="Content\vendor\jquery.file.upload\server\gae-python\static\" />
     <Folder Include="Content\vendor\jquery.file.upload\server\php\files\" />
     <Folder Include="Content\vendor\jquery.file.upload\test\" />
-    <Folder Include="Upload\4111\1204\1507\" />
-    <Folder Include="Upload\4111\1204\1508\" />
-    <Folder Include="Upload\4111\run\" />
+    <Folder Include="Upload\4114\1226\1554\2376\" />
+    <Folder Include="Upload\4114\1226\1555\" />
+    <Folder Include="Upload\4114\1226\1556\" />
+    <Folder Include="Upload\4114\1226\1557\" />
+    <Folder Include="Upload\4114\1226\1558\" />
+    <Folder Include="Upload\4114\1227\1559\2378\" />
+    <Folder Include="Upload\4114\1227\1560\" />
+    <Folder Include="Upload\4114\1227\1561\" />
+    <Folder Include="Upload\4114\1227\1562\" />
+    <Folder Include="Upload\4114\1227\1563\" />
+    <Folder Include="Upload\4114\run\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\build\scripts\jquery-3.3.1.min.map" />

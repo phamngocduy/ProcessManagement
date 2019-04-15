@@ -23,7 +23,7 @@
         width: 20%;
     }
 </style>
-@if (!isRun && (userRole.IsOwner || userRole.IsManager))
+@if (!isRun && userRole.IsManager)
 {
     <div id="uploadfile">
         <input type="file" id="FileUpload" name="FileUpload" style="display:none" />
@@ -46,7 +46,7 @@
                             </a>
                         </td>
                         <td style="text-align:center">
-                            @if (!isRun && (userRole.IsOwner || userRole.IsManager))
+                            @if (!isRun && userRole.IsManager)
                             {
                                 <button class="btn btn-primary-theme waves-effect btn-file-changename" data-src="@file.Id" data-toggle="tooltip" data-placement="top" title="Change Name">
                                     <i class=" icon-pencil"></i>

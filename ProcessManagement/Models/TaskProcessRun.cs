@@ -37,6 +37,7 @@ namespace ProcessManagement.Models
         public Nullable<System.DateTime> Approve_At { get; set; }
         public System.DateTime Created_At { get; set; }
         public System.DateTime Updated_At { get; set; }
+        public Nullable<int> CloneForm { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
         public virtual AspNetUser AspNetUser1 { get; set; }

@@ -71,13 +71,15 @@ namespace ProcessManagement.Controllers
         public ActionResult Detail(int processid)
         {
             string idUser = User.Identity.GetUserId();
-            var process = processService.findProcess(processid);
+            var processrun = processService.findProcess(processid,true);
+            if (processrun == null) return HttpNotFound();
+
             var listrole = roleService.findListRoleOfProcess(processid);
-            var group = groupService.findGroup(process.IdGroup);
+            var group = groupService.findGroup(processrun.IdGroup);
             var listroleruns = roleService.findlistrolerun(listrole);
             var listStep = stepService.findStepsOfProcess(processid);
-            var runprocess = processService.findRunProcessbyidprorun(process.Id);
-            var ktra = db.ProcessRuns.Where(x => x.IdProcess == process.Id).FirstOrDefault();
+            var runprocess = processService.findRunProcessbyidprorun(processrun.Id);
+            var ktra = db.ProcessRuns.Where(x => x.IdProcess == processrun.Id).FirstOrDefault();
             List<StepRun> liststepofrunprocess = new List<StepRun>();
             if (runprocess != null)
             {
@@ -150,14 +152,19 @@ namespace ProcessManagement.Controllers
                 runnextstep = steprun;
             }
 
+            //get processrun file 
+            string processRunPath = string.Format("Upload/{0}/{1}", group.Id, processrun.Id);
+            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id, processRunPath);
 
             ViewData["ListRole"] = listrole;
-            ViewData["ProcessRun"] = process;
+            ViewData["ProcessRun"] = processrun;
             ViewData["ListRoleRuns"] = listroleruns;
             ViewBag.ListRunStep = liststepofrunprocess.Where(x => x.Figure == "Step");
             ViewBag.Checkprocessrun = ktra;
             ViewData["StepisNext"] = runnextstep;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
+            //file 
+            ViewData["Files"] = files;
             return View(listnextstep1);
         }
 
@@ -184,6 +191,13 @@ namespace ProcessManagement.Controllers
                     }
                 }
             }
+            //get taskrun file 
+            //var groupId = taskrun.StepRun.ProcessRun.Process.IdGroup;
+            //var processrunId = taskrun.StepRun.ProcessRun.Process.id;
+            //string processRunPath = string.Format("Upload/{0}/{1}/{2}", groupId, processrunId);
+            //List<FileManager> files = fileService.getAllFileNameFromFolder(groupId, processRunPath);
+
+
             ViewData["Rolerun"] = role;
             ViewData["UserId"] = idUser;
             ViewData["ValueInput"] = JObject.Parse(taskrun.ValueInputText);

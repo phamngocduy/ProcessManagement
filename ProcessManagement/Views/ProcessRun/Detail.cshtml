@@ -10,6 +10,7 @@
     var listRole = ViewData["ListRole"] as List<ProcessManagement.Models.Role>;
     var runnextstep = ViewData["StepisNext"] as ProcessManagement.Models.StepRun;
     var isManager = userRole.IsManager;
+    var files = ViewData["Files"] as List<ProcessManagement.Models.FileManager>;
 }
 
 @section CustomCss{
@@ -56,9 +57,9 @@
     </div>
 </div>
 
-<div class="row clearfix">
+<div class="row clearfix display-flex">
     <div class="col-lg-4 col-md-12">
-        <div class="card">
+        <div class="card" style="height:100%">
             <div class="body">
                 <h5>@processrun.Name</h5>
                 <p>@processrun.Description</p>
@@ -77,6 +78,17 @@
                     </div>
                 }
                 <div class="clearfix"></div>
+                @Html.Partial("~/Views/Shared/Common/_File.cshtml", new ViewDataDictionary { { "filess", files }, { "UserRoles", userRole }, { "isRun", true } })
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8 col-md-12">
+        <div class="card">
+            <div class="header">
+                <h2>Process Flow</h2>
+            </div>
+            <div class="body">
+                <img style="display: block; margin: 0 auto; max-width: 100%" src="@processrun.Avatar" />
             </div>
         </div>
     </div>
@@ -89,7 +101,7 @@
                         <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#steprun-tab">Running</a></li>
                     }
                     <li class="nav-item"><a class="nav-link @if (ViewBag.Checkprocessrun == null) { WriteLiteral("active show"); }" data-toggle="tab" href="#role-tab">Role</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Activity-tab">Diagram</a></li>
+                    @*<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Activity-tab">Diagram</a></li>*@
                     <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#step-tab">Step</a></li>
 
                 </ul>
@@ -381,11 +393,11 @@
                             </table>
                         </div>
                     </div>
-                    <div class="tab-pane" id="Activity-tab">
+                    @*<div class="tab-pane" id="Activity-tab">
                         <div class="body">
                             <img style="display: block;margin: 0 auto; max-width: 100%" src="@processrun.Avatar"/>
                         </div>
-                    </div>
+                    </div>*@
                     <div class="tab-pane" id="step-tab">
                         <ul class="step-list">
                             @if (Model != null)

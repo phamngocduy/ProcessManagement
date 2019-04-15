@@ -7,9 +7,10 @@
     var isManager = userRole.IsManager;
     var inputConfig = ViewData["ValueInput"] as JObject;
     var fileConfig = ViewData["ValueFile"] as JObject;
-    var textLength = ViewData["TextMaxLength"] as ProcessManagement.Models.ConfigRule;
     var idUser = ViewData["UserId"];
     var role = ViewData["Rolerun"] as ProcessManagement.Models.RoleRun;
+    //rule
+    var textLength = ViewData["TextMaxLength"] as ProcessManagement.Models.ConfigRule;
     var maxFileSizeRule = ViewData["FileMaxSize"] as ProcessManagement.Models.ConfigRule;
 }
 

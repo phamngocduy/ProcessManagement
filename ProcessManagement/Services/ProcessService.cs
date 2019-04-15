@@ -25,7 +25,11 @@ namespace ProcessManagement.Services
 			Process process = db.Processes.Find(idProcess);
 			return process;
 		}
-
+        public Process findProcess(int idProcess,bool isRun)
+        {
+            Process process = db.Processes.FirstOrDefault(x =>x.Id == idProcess && x.IsRun == isRun);
+            return process;
+        }
         public ProcessRun findRunProcess(int idProcess)
         {
             ProcessRun process = db.ProcessRuns.Find(idProcess);
