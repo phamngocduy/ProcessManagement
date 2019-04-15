@@ -167,6 +167,10 @@ namespace ProcessManagement.Controllers
             string idUser = User.Identity.GetUserId();
             TaskProcessRun taskrun = taskService.findTaskRun(idruntask);
             if (taskrun == null) return HttpNotFound();
+            if (taskrun.ValueFormJson != null)
+            {
+                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "processrun", action = "Detailtaskform", taskid = idruntask });
+            }
             var listrolenotrun = roleService.findListRoleOfProcess(taskrun.StepRun.ProcessRun.IdProcess);
             var listroleruns = roleService.findlistrolerun(listrolenotrun);
             RoleRun role = new RoleRun();
@@ -186,10 +190,7 @@ namespace ProcessManagement.Controllers
             ViewData["ValueFile"] = JObject.Parse(taskrun.ValueInputFile);
             ViewData["TextMaxLength"] = db.ConfigRules.Find("textlength");
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
-            if (taskrun.ValueFormJson != null)
-            {
-                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "processrun", action = "Detailtaskform", taskid = idruntask });
-            }
+            ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
             return View(taskrun);
         }
 
@@ -198,6 +199,10 @@ namespace ProcessManagement.Controllers
         {
             string idUser = User.Identity.GetUserId();
             TaskProcessRun taskrun = taskService.findTaskRun(idruntask);
+            if (taskrun.ValueFormJson == null)
+            {
+                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "processrun", action = "Detailtask", taskid = idruntask });
+            }
             var listrolenotrun = roleService.findListRoleOfProcess(taskrun.StepRun.ProcessRun.IdProcess);
             var listroleruns = roleService.findlistrolerun(listrolenotrun);
             RoleRun role = new RoleRun();
@@ -214,10 +219,7 @@ namespace ProcessManagement.Controllers
             ViewData["Rolerun"] = role;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
             ViewData["UserId"] = idUser;
-            if (taskrun.ValueFormJson == null)
-            {
-                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "processrun", action = "Detailtask", taskid = idruntask });
-            }
+           
             return View(taskrun);
         }
     }

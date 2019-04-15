@@ -136,14 +136,14 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult submitopentask(int idtask, string formrender)
+        public JsonResult submitopentask(int idtask)
         {
             var status = HttpStatusCode.OK;
             string message;
             object response;
 
             TaskProcessRun taskrun = taskService.findTaskRun(idtask);
-            taskService.submitopentask(taskrun.Id, formrender);
+            taskService.submitopentask(taskrun.Id);
 
             message = "Open Task";
             response = new { message = message, status = status };

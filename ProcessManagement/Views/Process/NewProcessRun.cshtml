@@ -271,6 +271,12 @@
                 onFinishing: function (event, currentIndex) {
                     var name = $("#step-info #name").val().trim();
                     var des = $("#step-info #description").val().trim();
+                    var actionButton = $(event.currentTarget).find('[role="menu"] li a[href="#finish"]');
+                    toggleLoading(actionButton);
+                    setTimeout(function () {
+                        addProcessRun(selectProcess, name, des);
+                        toggleLoading(actionButton);
+                    }, 3000);
                     addProcessRun(selectProcess, name, des);
                     return form.valid();
                     
@@ -337,6 +343,7 @@
             //$(event.currentTarget).find('[role="menu"] li a').removeClass('waves-effect');
             //$(event.currentTarget).find('[role="menu"] li:not(.disabled) a').addClass('waves-effect');
             $(event.currentTarget).find('[role="menu"] li a').addClass('waves-effect');
+            $(event.currentTarget).find('[role="menu"] li a[href="#finish"]').attr("data-loading-text","<i class='fa fa-circle-o-notch fa-spin'></i> Activing...");
         }
         
         function renderProcessLayout() {

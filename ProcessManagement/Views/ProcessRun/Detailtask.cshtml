@@ -8,10 +8,9 @@
     var inputConfig = ViewData["ValueInput"] as JObject;
     var fileConfig = ViewData["ValueFile"] as JObject;
     var textLength = ViewData["TextMaxLength"] as ProcessManagement.Models.ConfigRule;
-    var TaskStatus = Model.Status;
     var idUser = ViewData["UserId"];
     var role = ViewData["Rolerun"] as ProcessManagement.Models.RoleRun;
-    var isOpen = TaskStatus == 6 ? true : false;
+    var maxFileSizeRule = ViewData["FileMaxSize"] as ProcessManagement.Models.ConfigRule;
 }
 
 @section CustomCss{
@@ -101,82 +100,87 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="body" id="show-taskrun">
-                    <div class="row clearfix @if (!isOpen) { WriteLiteral("disable-all"); } ">
-                        <div class="col-sm-12 ">
-                            <div class="row cw-validation">
-                                <div class="col-sm-12">
-                                    <div class="form-group">
-                                        @{
-                                            string textLabel;
-                                            if ((string)inputConfig["label"] == "")
-                                            {
-                                                textLabel = "Response Label";
-                                            }
-                                            else
-                                            {
-                                                textLabel = (string)inputConfig["label"];
+                    <div class="row clearfix cw-validation @if (Model.Status1.Name != "Open") { WriteLiteral("disable-all"); } ">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                @{
+                                    string textLabel;
+                                    if ((string)inputConfig["label"] == "")
+                                    {
+                                        textLabel = "Response Label";
+                                    }
+                                    else
+                                    {
+                                        textLabel = (string)inputConfig["label"];
 
-                                            }
-                                        }
-                                        @{
-                                            bool required = (bool)inputConfig["required"];
-                                            int maxlength = (string)inputConfig["maxlength"] != "" ? (int)inputConfig["maxlength"] : textLength.Value;
-                                        }
-                                        <label @if (required) { WriteLiteral("class='required' "); } for="task-inputtext">@textLabel</label>
-                                        <input type="text" class="form-control" id="task-inputtext" @if (required) { WriteLiteral("cw-required"); } cw-maxlength="@maxlength" value="@inputConfig[" value"]">
-                                    </div>
-                                </div>
-                                <div class="col-sm-12">
-                                    <div class="form-group">
-
-                                        @{
-                                            string fileLabel;
-                                            if ((string)inputConfig["label"] == "")
-                                            {
-                                                fileLabel = "Response File";
-                                            }
-                                            else
-                                            {
-                                                fileLabel = (string)inputConfig["label"];
-
-                                            }
-                                        }
-                                        <label @if ((bool)fileConfig["required"]) { WriteLiteral("class='required' "); } for="task-inputfile">@fileLabel</label>
-                                        <input type="file" id="task-inputfile" class="dropify" cw-required value="@fileConfig[" value"]" />
-                                    </div>
-                                </div>
-                                @if (Model.Status1.Name == "Finish")
-                                {
-                                    <div class="col-sm-8">
-                                        <div class="form-group">
-                                            <label for="">Approve By</label>
-                                            <input type="text" class="form-control" id="task-name" name="" value="@Model.AspNetUser.UserName" disabled>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label for="">Date</label>
-                                        <input type="text" class="form-control" id="task-name" name="" value="@Model.Approve_At" disabled>
-                                    </div>
+                                    }
+                                    bool textRequired = (bool)inputConfig["required"];
+                                    int maxlength = (string)inputConfig["maxlength"] != "" ? (int)inputConfig["maxlength"] : textLength.Value;
                                 }
-                                <div class="col-sm-12">
-                                    <div class="mt-2" id="button-action">
-                                        @if (Model.Status1.Name == "Open")
-                                        {
-                                            <button id="btn-savetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving..."><i class="fa fa-save"></i> Save</button>
-                                            <button id="btn-donetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Submiting..."><i class="fa fa-check"></i> Done</button>
-                                        }
-                                        @if (Model.Status1.Name == "Done" && isManager)
-                                        {
-                                            <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect">Open</button>
-                                            <button id="btn-finishtask" value="@Model.Id" class="btn btn-primary-theme waves-effect">Finish </button>
-                                        }
-                                        @if (Model.Status1.Name == "Finish")
-                                        {
-                                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success waves-effect">Back</a>
-                                        }
-                                    </div>
+                                <label @if (textRequired) { WriteLiteral("class='required' "); } for="task-inputtext">@textLabel</label>
+                                <input type="text" class="form-control" id="task-inputtext" @if (textRequired) { WriteLiteral("cw-required"); } cw-maxlength="@maxlength" value="@inputConfig["value"]">
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+
+                                @{
+                                    string fileLabel;
+                                    if ((string)fileConfig["label"] == "")
+                                    {
+                                        fileLabel = "Response File";
+                                    }
+                                    else
+                                    {
+                                        fileLabel = (string)fileConfig["label"];
+
+                                    }
+                                    bool fileRequired = (bool)fileConfig["required"];
+                                    string maxSize = (string)fileConfig["size"] != "" ? (string)fileConfig["size"] : string.Format("{0}{1}", maxFileSizeRule.Value,maxFileSizeRule.Unit);
+                                }
+                                <label @if (fileRequired) { WriteLiteral("class='required' "); } for="task-inputfile">@fileLabel</label>
+                                <input type="file" id="task-inputfile" class="dropify" @if (fileRequired) { WriteLiteral("cw-required"); } cw-maxsize="@maxSize"/>
+                            </div>
+                        </div>
+                        @if (Model.Status1.Name == "Finish")
+                        {
+                            <div class="col-sm-8">
+                                <div class="form-group">
+                                    <label for="">Approve By</label>
+                                    <input type="text" class="form-control" id="task-name" name="" value="@Model.AspNetUser.UserName" disabled>
                                 </div>
                             </div>
+                            <div class="col-sm-4">
+                                <label for="">Date</label>
+                                <input type="text" class="form-control" id="task-name" name="" value="@Model.Approve_At" disabled>
+                            </div>
+                        }
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-sm-12" id="button-action">
+                            @if (Model.Status1.Name == "Open")
+                            {
+                                <button id="btn-savetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving..."><i class="fa fa-save"></i> Save</button>
+                                <button id="btn-donetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Submiting..."><i class="fa fa-check"></i> Submit</button>
+                            }
+                            @if (Model.Status1.Name == "Done")
+                            {
+                                if (isManager)
+                                {
+                                    <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Opening...">Open</button>
+                                    <button id="btn-finishtask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Finishing...">Finish </button>
+                                }
+                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
+
+                            }
+                            @if (Model.Status1.Name == "Finish")
+                            {
+                                if (isManager)
+                                {
+                                    <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Opening...">Open</button>
+                                }
+                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
+                            }
                         </div>
                     </div>
                 </div>
@@ -241,6 +245,32 @@
                         });
                     }
                 });
+                $('#btn-opentask').on('click', function () {
+                    let data = {
+                        idtask: @Model.Id
+                    };
+                    var $this = $(this);
+                    setConfirm(`Are you sure you want to open this task?`, function () {
+                        toggleLoading($this);
+                        setTimeout(function () {
+                            submitopentask(data);
+                            toggleLoading($this);
+                        }, 1000);
+                    });
+                });
+                $('#btn-finishtask').on('click', function () {
+                    var $this = $(this);
+                    let data = {
+                        idtask: @Model.Id
+                    }
+                    setConfirm(`Are you sure you want to open this task?`, function () {
+                        toggleLoading($this);
+                        setTimeout(function () {
+                            submitfinishtask(data);
+                            toggleLoading($this);
+                        }, 1000);
+                    });
+                });
             });
             function saveTaskRun(data) {
                 $.ajax({
@@ -261,6 +291,39 @@
             function submitTaskRun(data) {
                 $.ajax({
                     url: "@Url.Action("submittaskrun", "processrun",new { area = "api"})",
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+                        if (response.status == 200) {
+                            //showToastr("error", "Error!!", "toast-bottom-left")
+                            window.location.reload();
+                            console.error(response)
+                        }
+                    }
+                });
+            }
+            function submitfinishtask(data) {
+                $.ajax({
+                    url: "@Url.Action("submitfinishtask", "processrun",new { area = "api"})",
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+                        if (response.status == 200) {
+                            //showToastr("error", "Error!!", "toast-bottom-left")
+                            window.location.reload();
+                            console.error(response)
+                        }
+                    }
+                });
+            }
+
+            function submitopentask(data) {
+                $.ajax({
+                    url: "@Url.Action("submitopentask", "processrun",new { area = "api"})",
                     type: "POST",
                     data: data,
                     dataType: "json",

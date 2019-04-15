@@ -219,11 +219,10 @@ namespace ProcessManagement.Services
             taskrun.Updated_At = DateTime.Now;
             db.SaveChanges();
         }
-        public void submitopentask(int idtaskrun, string formrender)
+        public void submitopentask(int idtaskrun)
         {
             Status status = db.Status.Where(y => y.Name == "Open").FirstOrDefault();
             TaskProcessRun taskrun = findTaskRun(idtaskrun);
-            taskrun.ValueFormJson = formrender;
             taskrun.Status = status.Id;
             taskrun.Updated_At = DateTime.Now;
             db.SaveChanges();
