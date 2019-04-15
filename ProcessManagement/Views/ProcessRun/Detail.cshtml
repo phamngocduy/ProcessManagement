@@ -72,13 +72,13 @@
                         }
                         else
                         {
-                            <button id="btn-runprocess" class="btn btn-primary-theme btn-sm">Run Process</button>
+                            <button class="btn btn-primary-theme btn-sm" id="btn-runprocess">Run Process</button>
                         }
                         <a class="btn btn-default btn-sm waves-effect" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "assignrole", processid = processrun.Id })">Assign Roles</a>
                     </div>
                 }
                 <div class="clearfix"></div>
-                @Html.Partial("~/Views/Shared/Common/_File.cshtml", new ViewDataDictionary { { "filess", files }, { "UserRoles", userRole }, { "isRun", true } })
+                @Html.Partial("~/Views/Shared/Common/_File.cshtml", new ViewDataDictionary { { "filess", files }, { "isRun", true } })
             </div>
         </div>
     </div>
@@ -103,7 +103,6 @@
                     <li class="nav-item"><a class="nav-link @if (ViewBag.Checkprocessrun == null) { WriteLiteral("active show"); }" data-toggle="tab" href="#role-tab">Role</a></li>
                     @*<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Activity-tab">Diagram</a></li>*@
                     <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#step-tab">Step</a></li>
-
                 </ul>
                 <div class="tab-content">
                     @if (ViewBag.Checkprocessrun != null)
@@ -147,7 +146,6 @@
                                                         }
                                                     }
                                                 </div>
-
                                                 <!-- Modal -->
                                                 <div class="modal fade" id="myModal" role="dialog">
                                                     <div class="modal-dialog modal-lg">
@@ -313,7 +311,7 @@
                                                                         <td>@task.Status1.Name</td>
                                                                         if (task.ApproveBy != null)
                                                                         {
-                                                                            <td>@task.AspNetUser.UserName</td>
+                                                                            <td>@task.AspNetUser1.UserName</td>
                                                                             <td>@task.Approve_At</td>
                                                                         }
                                                                         else

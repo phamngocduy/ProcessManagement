@@ -6,20 +6,20 @@
     <edmx:Diagrams>
       <Diagram DiagramId="e433c0bab1ea45d682be887da5d82725" Name="Diagram1" ZoomLevel="63">
         <EntityTypeShape EntityType="PMSModel.AspNetUser" Width="1.5" PointX="0.75" PointY="13.875" />
-        <EntityTypeShape EntityType="PMSModel.Comment" Width="1.5" PointX="6" PointY="15.25" />
+        <EntityTypeShape EntityType="PMSModel.Comment" Width="1.5" PointX="3" PointY="14.25" />
         <EntityTypeShape EntityType="PMSModel.ConfigRule" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="PMSModel.FileManager" Width="1.5" PointX="5.25" PointY="34.25" />
-        <EntityTypeShape EntityType="PMSModel.Group" Width="1.5" PointX="3" PointY="21.625" />
-        <EntityTypeShape EntityType="PMSModel.Participate" Width="1.5" PointX="8.25" PointY="18" />
-        <EntityTypeShape EntityType="PMSModel.Process" Width="1.5" PointX="5.25" PointY="19.5" />
-        <EntityTypeShape EntityType="PMSModel.ProcessRun" Width="1.5" PointX="10.5" PointY="19.875" />
-        <EntityTypeShape EntityType="PMSModel.Role" Width="1.5" PointX="7.5" PointY="22.375" />
-        <EntityTypeShape EntityType="PMSModel.RoleRun" Width="1.5" PointX="3" PointY="15.5" />
-        <EntityTypeShape EntityType="PMSModel.Status" Width="1.5" PointX="12.75" PointY="21.5" />
-        <EntityTypeShape EntityType="PMSModel.Step" Width="1.5" PointX="7.5" PointY="27.375" />
-        <EntityTypeShape EntityType="PMSModel.StepRun" Width="1.5" PointX="12.75" PointY="16.25" />
-        <EntityTypeShape EntityType="PMSModel.TaskProcess" Width="1.5" PointX="9.75" PointY="24.875" />
-        <EntityTypeShape EntityType="PMSModel.TaskProcessRun" Width="1.5" PointX="15" PointY="17" />
+        <EntityTypeShape EntityType="PMSModel.FileManager" Width="1.5" PointX="5.25" PointY="31.125" />
+        <EntityTypeShape EntityType="PMSModel.Group" Width="1.5" PointX="3" PointY="18.5" />
+        <EntityTypeShape EntityType="PMSModel.Participate" Width="1.5" PointX="5.25" PointY="16.375" />
+        <EntityTypeShape EntityType="PMSModel.Process" Width="1.5" PointX="8.25" PointY="15.875" />
+        <EntityTypeShape EntityType="PMSModel.ProcessRun" Width="1.5" PointX="13.5" PointY="16.25" />
+        <EntityTypeShape EntityType="PMSModel.Role" Width="1.5" PointX="10.5" PointY="22.375" />
+        <EntityTypeShape EntityType="PMSModel.RoleRun" Width="1.5" PointX="6" PointY="12.5" />
+        <EntityTypeShape EntityType="PMSModel.Status" Width="1.5" PointX="15.75" PointY="20.5" />
+        <EntityTypeShape EntityType="PMSModel.Step" Width="1.5" PointX="10.5" PointY="13.875" />
+        <EntityTypeShape EntityType="PMSModel.StepRun" Width="1.5" PointX="15.75" PointY="14.375" />
+        <EntityTypeShape EntityType="PMSModel.TaskProcess" Width="1.5" PointX="12.75" PointY="20.875" />
+        <EntityTypeShape EntityType="PMSModel.TaskProcessRun" Width="1.5" PointX="18" PointY="17" />
         <AssociationConnector Association="PMSModel.FK_AssignRole_AspNetUsers" />
         <AssociationConnector Association="PMSModel.FK_Comment_AspNetUsers" />
         <AssociationConnector Association="PMSModel.FK_Group_AspNetUsers" />

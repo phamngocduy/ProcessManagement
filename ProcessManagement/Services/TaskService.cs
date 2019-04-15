@@ -178,22 +178,23 @@ namespace ProcessManagement.Services
             }
         }
 
-        public void addlistruntask(List<TaskProcess> listtaskrun, StepRun runstep)
+        public void addlistruntask(List<TaskProcess> listtask, StepRun runstep)
         {
             Status status = db.Status.Where(y => y.Name == "Open").FirstOrDefault();
-            foreach (var item in listtaskrun)
+            foreach (var task in listtask)
             {
                 TaskProcessRun runtask = new TaskProcessRun();
                 runtask.IdStep = runstep.Id;
-                runtask.IdRole = item.IdRole;
-                runtask.Name = item.Name;
-                runtask.Description = item.Description;
+                runtask.IdRole = task.IdRole;
+                runtask.Name = task.Name;
+                runtask.Description = task.Description;
                 runtask.Status = status.Id;
-                runtask.ValueInputText = item.ValueInputText;
-                runtask.ValueInputFile = item.ValueInputFile;
-                runtask.ValueFormJson = item.ValueFormJson;
-                runtask.Color = item.Color;
-                runtask.Position = item.Position;
+                runtask.ValueInputText = task.ValueInputText;
+                runtask.ValueInputFile = task.ValueInputFile;
+                runtask.ValueFormJson = task.ValueFormJson;
+                runtask.Color = task.Color;
+                runtask.Position = task.Position;
+                runtask.CloneForm = task.Id;
                 runtask.Created_At = DateTime.Now;
                 runtask.Updated_At = DateTime.Now;
                 db.TaskProcessRuns.Add(runtask);

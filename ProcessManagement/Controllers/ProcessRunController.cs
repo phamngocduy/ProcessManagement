@@ -192,19 +192,23 @@ namespace ProcessManagement.Controllers
                 }
             }
             //get taskrun file 
-            //var groupId = taskrun.StepRun.ProcessRun.Process.IdGroup;
-            //var processrunId = taskrun.StepRun.ProcessRun.Process.id;
-            //string processRunPath = string.Format("Upload/{0}/{1}/{2}", groupId, processrunId);
-            //List<FileManager> files = fileService.getAllFileNameFromFolder(groupId, processRunPath);
+            var groupId = taskrun.StepRun.ProcessRun.Process.IdGroup;
+            var processrunId = taskrun.StepRun.ProcessRun.Process.Id;
+            var stepId = taskrun.StepRun.CloneFrom;
+            var taskId = taskrun.CloneForm;
+            string processRunPath = string.Format("Upload/{0}/{1}/{2}/{3}", groupId, processrunId, stepId, taskId);
+            List<FileManager> files = fileService.getAllFileNameFromFolder(groupId, processRunPath);
 
 
             ViewData["Rolerun"] = role;
             ViewData["UserId"] = idUser;
             ViewData["ValueInput"] = JObject.Parse(taskrun.ValueInputText);
             ViewData["ValueFile"] = JObject.Parse(taskrun.ValueInputFile);
-            ViewData["TextMaxLength"] = db.ConfigRules.Find("textlength");
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
+            //file 
             ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
+            ViewData["TextMaxLength"] = db.ConfigRules.Find("textlength");
+            ViewData["Files"] = files;
             return View(taskrun);
         }
 
@@ -230,10 +234,22 @@ namespace ProcessManagement.Controllers
                     }
                 }
             }
+
+            //get taskrun file 
+            var groupId = taskrun.StepRun.ProcessRun.Process.IdGroup;
+            var processrunId = taskrun.StepRun.ProcessRun.Process.Id;
+            var stepId = taskrun.StepRun.CloneFrom;
+            var taskId = taskrun.CloneForm;
+            string processRunPath = string.Format("Upload/{0}/{1}/{2}/{3}", groupId, processrunId, stepId, taskId);
+            List<FileManager> files = fileService.getAllFileNameFromFolder(groupId, processRunPath);
+
             ViewData["Rolerun"] = role;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
             ViewData["UserId"] = idUser;
-           
+            //file 
+            ViewData["Files"] = files;
+            ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
+            ViewData["TextMaxLength"] = db.ConfigRules.Find("textlength");
             return View(taskrun);
         }
     }

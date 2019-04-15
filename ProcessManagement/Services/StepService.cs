@@ -109,6 +109,7 @@ namespace ProcessManagement.Services
                 steprun.Key = item.Key;
                 steprun.Figure = item.Figure;
                 steprun.Status = status.Id;
+                steprun.CloneFrom = item.Id;
                 steprun.Created_at = DateTime.Now;
                 steprun.Updated_At = DateTime.Now;
                 db.StepRuns.Add(steprun);
@@ -127,20 +128,21 @@ namespace ProcessManagement.Services
             db.SaveChanges();
         }
 
-        public StepRun addrunnextstep(int idrunprocess, Step liststeprun)
+        public StepRun addrunnextstep(int idrunprocess, Step step)
         {
             Status status = db.Status.Where(y => y.Name == "Running").FirstOrDefault();
             StepRun steprun = new StepRun();
             //foreach (var item in liststeprun)
             //{
                 steprun.idProcess = idrunprocess;
-                steprun.Name = liststeprun.Name;
-                steprun.StartStep = liststeprun.StartStep;
-                steprun.NextStep1 = liststeprun.NextStep1;
-                steprun.NextStep2 = liststeprun.NextStep2;
-                steprun.Key = liststeprun.Key;
-                steprun.Figure = liststeprun.Figure;
+                steprun.Name = step.Name;
+                steprun.StartStep = step.StartStep;
+                steprun.NextStep1 = step.NextStep1;
+                steprun.NextStep2 = step.NextStep2;
+                steprun.Key = step.Key;
+                steprun.Figure = step.Figure;
                 steprun.Status = status.Id;
+                steprun.CloneFrom = step.Id;
                 steprun.Created_at = DateTime.Now;
                 steprun.Updated_At = DateTime.Now;
                 db.StepRuns.Add(steprun);
@@ -158,19 +160,19 @@ namespace ProcessManagement.Services
             db.SaveChanges();
         }
 
-        public StepRun completestepinrunprocess(int idrunprocess, List<Step> liststeprun)
+        public StepRun completestepinrunprocess(int idrunprocess, List<Step> liststep)
         {
             Status status = db.Status.Where(y => y.Name == "Running").FirstOrDefault();
             StepRun steprun = new StepRun();
-            foreach (var item in liststeprun)
+            foreach (var step in liststep)
             {
                 steprun.idProcess = idrunprocess;
-                steprun.Name = item.Name;
-                steprun.StartStep = item.StartStep;
-                steprun.NextStep1 = item.NextStep1;
-                steprun.NextStep2 = item.NextStep2;
-                steprun.Key = item.Key;
-                steprun.Figure = item.Figure;
+                steprun.Name = step.Name;
+                steprun.StartStep = step.StartStep;
+                steprun.NextStep1 = step.NextStep1;
+                steprun.NextStep2 = step.NextStep2;
+                steprun.Key = step.Key;
+                steprun.Figure = step.Figure;
                 steprun.Status = status.Id;
                 steprun.Created_at = DateTime.Now;
                 steprun.Updated_At = DateTime.Now;

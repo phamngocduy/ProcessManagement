@@ -12,6 +12,7 @@
     //rule
     var textLength = ViewData["TextMaxLength"] as ProcessManagement.Models.ConfigRule;
     var maxFileSizeRule = ViewData["FileMaxSize"] as ProcessManagement.Models.ConfigRule;
+    var files = ViewData["Files"] as List<ProcessManagement.Models.FileManager>;
 }
 
 @section CustomCss{
@@ -89,6 +90,9 @@
                             <label for="task-description">Description</label>
                             <textarea class="form-control" rows="5" placeholder="Write something about your task (optional)" id="task-description" name="@Html.NameFor(m => m.Description)">@Model.Description</textarea>
                         </div>
+                    </div>
+                    <div class="col-sm-12">
+                        @Html.Partial("~/Views/Shared/Common/_File.cshtml", new ViewDataDictionary { { "filess", files }, { "isRun", true } })
                     </div>
                 </div>
             </div>
