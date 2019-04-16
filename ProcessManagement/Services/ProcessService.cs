@@ -118,11 +118,12 @@ namespace ProcessManagement.Services
 		/// Edit thông tin một process
 		/// </summary>
 		/// <param name="model">Process Model</param>
-		public void EditProcess(Process model)
+		public void EditProcess(int processId, Process model)
 		{
-			Process ps = findProcess(model.Id);
+			Process ps = findProcess(processId);
 			ps.Name = model.Name;
 			ps.Description = model.Description;
+            ps.Updated_At = DateTime.Now;
 			db.SaveChanges();
 		}
 

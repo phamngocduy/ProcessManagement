@@ -71,7 +71,7 @@
                         </div>
                         <div class="col-sm-12">
                             <div class="mt-2">
-                                <button type="submit" class="btn btn-primary-theme waves-effect">Create</button>
+                                <button type="submit" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Creating..." id="btn-process-create">Create</button>
                                 <a href="#" class="btn btn-default waves-effect">Go Back</a>
                             </div>
                         </div>
@@ -93,7 +93,12 @@
                     showToastr("error", "Error!!");
                     return false;
                 }
-                return true;
+                var buttonaction = $("#btn-process-create");
+                toggleLoading(buttonaction);
+                setTimeout(function () {
+                    toggleLoading(buttonaction);
+                    return true;
+                }, 2000);
             })
         })
     </script>

@@ -67,8 +67,8 @@
                             </div>
                         </div>
                         <div class="col-sm-12">
-                                <button class="btn btn-primary-theme waves-effect" type="submit">Add</button>
-                                <button class="btn btn-default waves-effect" type="button">Back</button>
+                            <button class="btn btn-primary-theme waves-effect" type="submit">Create</button>
+                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = Model.Id })" class="btn btn-default waves-effect" type="button">Back</a>
                         </div>
                     </div>
                 </form>

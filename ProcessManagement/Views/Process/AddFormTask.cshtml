@@ -101,7 +101,8 @@
                     <div class="col-sm-12">
                         <div class="mt-2">
                             <button id="btn-save" class="btn btn-primary-theme" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Creating...">Create</button>
-                            <a href="#" class="btn btn-outline-secondary">Go Back</a>
+                            <button id="btn-save-new" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Creating...">Create & New</button>
+                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })" class="btn btn-default">Go Back</a>
                         </div>
                     </div>
                 </div>
@@ -151,7 +152,7 @@
                 placeholder: "Select Role",
                 allowClear: true
             });
-            $('#btn-save').on('click', function () {
+            $("#btn-save, #btn-save-new").on("click", function () {
                 $this = $(this);
                 toggleLoading($this);
                 
@@ -186,11 +187,15 @@
                 data.append("fileupload", file);
                 data.append("formBuilder", JSON.stringify(tempArr));
 
-                AddFormTask(data);
-                toggleLoading($this);
+                if ($this.attr("id") == "btn-save-new") {
+                    AddFormTask(data, true)
+
+                } else {
+                    AddFormTask(data)
+                }
             })
         });
-        function AddFormTask(data) {
+        function AddFormTask(data, reload = false) {
             $.ajax({
                 url: "@Url.Action("AddFormTask", "process", new { area = "api" })",
                 type: "POST",
@@ -202,7 +207,11 @@
                     console.log(response);
                     if (response.status == 200) {
                         localStorage.setItem("showStep", @step.Id);
-                        location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })';
+                        if (reload) {
+                            location.reload();
+                        } else {
+                            location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })';
+                        }
                     } else {
                         showToastr("error", response.message, "toast-bottom-left")
                         console.error(response)

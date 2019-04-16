@@ -405,10 +405,12 @@ namespace ProcessManagement.Controllers
             int processId = (int)Session["processid"];
             Process process = processService.findProcess(processId);
 			if (process == null) return HttpNotFound();
-			//edit
-			processService.EditProcess(model);
-			SetFlash(FlashType.success, "Edited Information of " + process.Name + " Successfully");
-			return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "EditInforProcess", processid = process.Id });
+            //edit
+            Group group = groupService.findGroup(process.IdGroup);
+            
+			processService.EditProcess(process.Id, model);
+			SetFlash(FlashType.success, "Edit Process Successfully");
+			return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
 
 		}
 		[Authorize]
