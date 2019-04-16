@@ -14,7 +14,7 @@ namespace ProcessManagement.Services
         CommonService commonService = new CommonService();
         ///=============================================================================================
         ///
-        public FileManager saveFile(int idGroup, HttpPostedFileBase file, string savePath, FileDirection Derection)
+        public FileManager saveFile(int idGroup, HttpPostedFileBase file, string savePath, FileDirection Direction)
         {
             FileManager f = new FileManager();
             if (file != null)
@@ -27,21 +27,23 @@ namespace ProcessManagement.Services
                     string fileName = Path.GetFileName(file.FileName);
                     string path = Path.Combine(filePath, fileName);
                     string extension = Path.GetExtension(path);
-                    if (File.Exists(path))
+                    if (!File.Exists(path))
                     {
-                        string fileNameWithOutExtension = Path.GetFileNameWithoutExtension(file.FileName);
-                        DirectoryInfo d = new DirectoryInfo(filePath);
-                        FileInfo[] files = d.GetFiles(string.Format("*{0}", extension));
-                        int count = 0;
-                        foreach (FileInfo fs in files)
-                        {
-                            
-                            if (fs.Name.Replace(extension,"").StartsWith(fileNameWithOutExtension))
-                                count++;
-                        }
-                        fileName = string.Format("{0} ({1}){2}", fileNameWithOutExtension, count, extension);
-                        path = Path.Combine(filePath, fileName);
+                        createDirectory(savePath);
                     }
+
+                    string fileNameWithOutExtension = Path.GetFileNameWithoutExtension(file.FileName);
+                    DirectoryInfo d = new DirectoryInfo(filePath);
+                    FileInfo[] files = d.GetFiles(string.Format("*{0}", extension));
+                    int count = 0;
+                    foreach (FileInfo fs in files)
+                    {
+                            
+                        if (fs.Name.Replace(extension,"").StartsWith(fileNameWithOutExtension))
+                            count++;
+                    }
+                    fileName = string.Format("{0} ({1}){2}", fileNameWithOutExtension, count, extension);
+                    path = Path.Combine(filePath, fileName);
                     file.SaveAs(path);
 
 
@@ -50,7 +52,7 @@ namespace ProcessManagement.Services
                     f.Name = fileName;
                     f.Path = savePath;
                     f.Type = extension;
-                    f.Direction = Derection.ToString();
+                    f.Direction = Direction.ToString();
                     f.Create_At = DateTime.Now;
                     f.Update_At = DateTime.Now;
                     db.FileManagers.Add(f);

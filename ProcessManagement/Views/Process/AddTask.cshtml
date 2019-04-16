@@ -171,10 +171,8 @@
             var form = $(".cw-validation").formValidation();
             $('#btn-save, #btn-save-new').on('click', function () {
                 $this = $(this);
-                toggleLoading($this);
                 var isHaveError = form.validates();
                 if (isHaveError) {
-                    toggleLoading($this);
                     return false;
                 }
                 var name = $('#task-name').val();
@@ -210,12 +208,15 @@
                 data.append("fileupload", file);
                 data.append("inputConfig", JSON.stringify(inputConfig));
                 data.append("fileConfig", JSON.stringify(fileConfig));
-                if ($this.attr("id") == "btn-save-new") {
-                    addTask(data, true)
-
-                } else {
-                    addTask(data)
-                }
+                toggleLoading($this);
+                setTimeout(function () {
+                    if ($this.attr("id") == "btn-save-new") {
+                        addTask(data, true)
+                    } else {
+                        addTask(data)
+                    }
+                    toggleLoading($this);
+                },1000)
             })
         });
         function addTask(data, reload = false) {

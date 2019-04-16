@@ -154,7 +154,6 @@
             });
             $("#btn-save, #btn-save-new").on("click", function () {
                 $this = $(this);
-                toggleLoading($this);
                 
                 var name = $('#task-name').val();
                 var role = $('#task-role').val();
@@ -174,7 +173,6 @@
                     isHaveError = true;
                 }
                 if (isHaveError) {
-                    toggleLoading($this);
                     showToastr("error", "Error!!", "toast-bottom-left")
                     return false;
                 }
@@ -187,12 +185,16 @@
                 data.append("fileupload", file);
                 data.append("formBuilder", JSON.stringify(tempArr));
 
-                if ($this.attr("id") == "btn-save-new") {
-                    AddFormTask(data, true)
-
-                } else {
-                    AddFormTask(data)
-                }
+                toggleLoading($this);
+                setTimeout(function () {
+                    if ($this.attr("id") == "btn-save-new") {
+                        AddFormTask(data, true)
+                    } else {
+                        AddFormTask(data)
+                    }
+                    toggleLoading($this);
+                },1000)
+                
             })
         });
         function AddFormTask(data, reload = false) {

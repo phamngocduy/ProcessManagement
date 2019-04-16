@@ -235,12 +235,12 @@
                     } else {
                         var valuetext = $("#task-inputtext").val();
                         var valuefile = $("#task-inputfile").val();
-
-                        let data = {
-                            valuetext: valuetext,
-                            valuefile: valuefile,
-                            idtaskrun: @Model.Id
-                        }
+                        var file = $("#task-inputfile")[0].files[0];
+                        var data = new FormData();
+                        data.append("idtaskrun", @Model.Id);
+                        data.append("valuetext", valuetext);
+                        data.append("valuefile", valuefile);
+                        data.append("fileupload", file);
                         setConfirm(`Are you sure you want to submit this task?`, function () {
                             toggleLoading($this);
                             setTimeout(function () {
@@ -298,6 +298,8 @@
                     url: "@Url.Action("submittaskrun", "processrun",new { area = "api"})",
                     type: "POST",
                     data: data,
+                    contentType: false,
+                    processData: false,
                     dataType: "json",
                     success: function (response) {
                         console.log(response);

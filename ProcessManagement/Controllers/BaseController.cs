@@ -30,20 +30,15 @@ namespace ProcessManagement.Controllers
         TopCenter,
         BottomCenter
     }
-    public enum TabType
-    {
-        GeneralSetting,
-        UserSetting,
-        AdvancedSetting,
-        VisibilitySetting
-    }
-
     public enum FileDirection
     {
         Group,
         Process,
         Step,
-        Task
+        Task,
+        ProcessRun,
+        StepRun,
+        TaskRun
     }
     public class BaseController : Controller
     {

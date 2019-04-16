@@ -8520,8 +8520,8 @@
     <Content Include="Views\Process\Setting.cshtml" />
     <Content Include="Views\File\FileManager.cshtml" />
     <Content Include="Views\Shared\Common\_File.cshtml" />
-    <Content Include="Views\ProcessRun\Detailtask.cshtml" />
-    <Content Include="Views\ProcessRun\Detailtaskform.cshtml" />
+    <Content Include="Views\ProcessRun\DetailTask.cshtml" />
+    <Content Include="Views\ProcessRun\DetailTaskForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

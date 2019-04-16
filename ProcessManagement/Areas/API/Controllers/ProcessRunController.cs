@@ -15,19 +15,19 @@ namespace ProcessManagement.Areas.API.Controllers
 {
     public class ProcessRunController : ProcessManagement.Controllers.BaseController
     {
-
         ///=============================================================================================
-        CommonService commonService = new CommonService();
         ProcessService processService = new ProcessService();
         StepService stepService = new StepService();
         RoleService roleService = new RoleService();
         TaskService taskService = new TaskService();
         ParticipateService participateService = new ParticipateService();
+        FileService fileService = new FileService();
         ///=============================================================================================
 
         [HttpPost]
         public JsonResult savetaskrun(string valuetext, string valuefile, int idtaskrun)
         {
+            //TODO: Chưa phân quyền
             string IdUser = User.Identity.GetUserId();
             var status = HttpStatusCode.OK;
             string message;
@@ -41,33 +41,46 @@ namespace ProcessManagement.Areas.API.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult submittaskrun(string valuetext, string valuefile, int idtaskrun)
+        public JsonResult submittaskrun(int idtaskrun, string valuetext, string valuefile, HttpPostedFileBase fileupload)
         {
             string IdUser = User.Identity.GetUserId();
             var status = HttpStatusCode.OK;
             string message;
             object response;
             TaskProcessRun taskrun = taskService.findTaskRun(idtaskrun);
-            List<RoleRun> listrole = roleService.findlistrolerunbyidroleprocess(taskrun.IdRole);
-            Participate useringroup = participateService.findMemberInGroup(IdUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
-            if (useringroup.IsManager == true)
+            if (taskrun == null)
             {
-                taskService.submitvaluetask(IdUser, valuetext, valuefile, idtaskrun, true);
+                status = HttpStatusCode.NotFound;
+                message = "TaskRun Not Found";
+                response = new { message = message, status = status };
+                SetFlash(FlashType.error, message);
+                return Json(response, JsonRequestBehavior.AllowGet);
             }
-            else
+            List<RoleRun> listrole = roleService.findlistrolerunbyidroleprocess(taskrun.IdRole);
+            Participate user = participateService.findMemberInGroup(IdUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
+            bool haveRole = false;
+            foreach (var role in listrole)
             {
-                foreach (var item in listrole)
+                if (IdUser == role.IdUser)
                 {
-                    if (IdUser == item.IdUser)
-                    {
-                        taskService.submitvaluetask(IdUser, valuetext, valuefile, idtaskrun, true);
-                    }
+                    haveRole = true;
+                    break;
                 }
             }
+
+            if (user.IsManager == true || haveRole)
+            {
+                taskService.submitvaluetask(IdUser, valuetext, valuefile, idtaskrun, true);
+                int groupid = taskrun.StepRun.ProcessRun.Process.IdGroup;
+                string taskRunPath = string.Format("Upload/{0}/run/{1}/{2}/{3}", groupid, taskrun.StepRun.ProcessRun.Id, taskrun.StepRun.Id, taskrun.Id);
+                fileService.createDirectory(taskRunPath);
+                fileService.saveFile(groupid, fileupload, taskRunPath, FileDirection.TaskRun);   
+            }
+            
             
             message = "Submit Task Successfully";
             response = new { message = message, status = status };
-            SetFlash(FlashType.success, "Submit Task Successfully");
+            SetFlash(FlashType.success, message);
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
