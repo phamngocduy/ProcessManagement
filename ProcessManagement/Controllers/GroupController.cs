@@ -128,7 +128,7 @@ namespace ProcessManagement.Controllers
 
             //tìm file group
             string groupPath = string.Format("Upload/{0}",group.Id);
-            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id,groupPath);
+            List<FileManager> files = fileService.findFiles(group.Id,groupPath);
 
             ////Tìm tất cả member thuộc group đó
             //var ListParticipant = participateService.findMembersInGroup(group.Id);

@@ -13,6 +13,7 @@
     var textLength = ViewData["TextMaxLength"] as ProcessManagement.Models.ConfigRule;
     var maxFileSizeRule = ViewData["FileMaxSize"] as ProcessManagement.Models.ConfigRule;
     var files = ViewData["Files"] as List<ProcessManagement.Models.FileManager>;
+    var userFile = ViewData["UserFile"] as ProcessManagement.Models.FileManager;
 }
 
 @section CustomCss{
@@ -144,7 +145,10 @@
                                     string maxSize = (string)fileConfig["size"] != "" ? (string)fileConfig["size"] : string.Format("{0}{1}", maxFileSizeRule.Value,maxFileSizeRule.Unit);
                                 }
                                 <label @if (fileRequired) { WriteLiteral("class='required' "); } for="task-inputfile">@fileLabel</label>
-                                <input type="file" id="task-inputfile" class="dropify" @if (fileRequired) { WriteLiteral("cw-required"); } cw-maxsize="@maxSize"/>
+                                @{
+                                    var filepath = Url.Content(string.Format("~/{0}/{1}", userFile.Path, userFile.Name));
+                                }
+                                <input type="file" id="task-inputfile" class="dropify" @if (fileRequired) { WriteLiteral("cw-required"); } cw-maxsize="@maxSize" @if (userFile != null) { WriteLiteral(string.Format("data-default-file=/{0}/{1}",userFile.Path, userFile.Name)); }>
                             </div>
                         </div>
                         @if (Model.Status1.Name == "Finish")

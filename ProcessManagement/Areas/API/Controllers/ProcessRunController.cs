@@ -73,6 +73,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 taskService.submitvaluetask(IdUser, valuetext, valuefile, idtaskrun, true);
                 int groupid = taskrun.StepRun.ProcessRun.Process.IdGroup;
                 string taskRunPath = string.Format("Upload/{0}/run/{1}/{2}/{3}", groupid, taskrun.StepRun.ProcessRun.Id, taskrun.StepRun.Id, taskrun.Id);
+                fileService.emptyDirectory(taskRunPath);
                 fileService.createDirectory(taskRunPath);
                 fileService.saveFile(groupid, fileupload, taskRunPath, FileDirection.TaskRun);   
             }

@@ -42,8 +42,11 @@ namespace ProcessManagement.Services
                         if (fs.Name.Replace(extension,"").StartsWith(fileNameWithOutExtension))
                             count++;
                     }
-                    fileName = string.Format("{0} ({1}){2}", fileNameWithOutExtension, count, extension);
-                    path = Path.Combine(filePath, fileName);
+                    if (count > 0)
+                    {
+                        fileName = string.Format("{0} ({1}){2}", fileNameWithOutExtension, count, extension);
+                        path = Path.Combine(filePath, fileName);
+                    }
                     file.SaveAs(path);
 
 
@@ -78,16 +81,21 @@ namespace ProcessManagement.Services
         //    return f;
 
         //}
-        public List<FileManager> getAllFileNameFromFolder(int idGroup,string path)
-        {
-            var file = db.FileManagers.Where(x => x.IdGroup == idGroup && x.Path == path).ToList();
-            return file;
-
-        }
         public FileManager findFile(string id)
         {
             FileManager file = db.FileManagers.Find(id);
             return file;
+        }
+        public FileManager findFile(int idGroup, string path)
+        {
+            FileManager file = db.FileManagers.FirstOrDefault(x => x.IdGroup == idGroup &&  x.Path == path);
+            return file;
+        }
+        public List<FileManager> findFiles(int idGroup, string path)
+        {
+            var file = db.FileManagers.Where(x => x.IdGroup == idGroup && x.Path == path).ToList();
+            return file;
+
         }
         public void removeFile(FileManager file)
         {
@@ -150,7 +158,31 @@ namespace ProcessManagement.Services
         {
             string AppPath = AppDomain.CurrentDomain.BaseDirectory;
             string filePath = AppPath + path;
-            Directory.Delete(filePath,true);
+            if (Directory.Exists(filePath))
+            {
+                Directory.Delete(filePath,true);
+                var filemanager = db.FileManagers.Where(x => x.Path == path);
+                db.FileManagers.RemoveRange(filemanager);
+                db.SaveChanges();
+            }
+
+        }
+        public void emptyDirectory(string path)
+        {
+            string AppPath = AppDomain.CurrentDomain.BaseDirectory;
+            string filePath = AppPath + path;
+            DirectoryInfo fileDirectory = new DirectoryInfo(filePath);
+            if (fileDirectory.Exists)
+            {
+                FileInfo[] files = fileDirectory.GetFiles();
+                foreach (var file in files)
+                {
+                    file.Delete();
+                }
+                var filemanager = db.FileManagers.FirstOrDefault(x => x.Path == path);
+                db.FileManagers.Remove(filemanager);
+                db.SaveChanges();
+            }
         }
         public void copyDirectory(string path, string destination)
         {

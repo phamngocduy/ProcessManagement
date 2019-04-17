@@ -181,7 +181,7 @@ namespace ProcessManagement.Controllers
 
             //tìm file group
             string processPath = string.Format("Upload/{0}/{1}", group.Id, process.Id);
-            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id, processPath);
+            List<FileManager> files = fileService.findFiles(group.Id, processPath);
 
             List<Step> listnextstep1 = new List<Step>();
             List<Step> listnextstep2 = new List<Step>();
@@ -265,7 +265,7 @@ namespace ProcessManagement.Controllers
 
             //file 
             string stepPath = string.Format("Upload/{0}/{1}/{2}", group.Id, step.Process.Id, step.Id);
-            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id, stepPath);
+            List<FileManager> files = fileService.findFiles(group.Id, stepPath);
 
             ViewData["Group"] = group;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
@@ -644,7 +644,7 @@ namespace ProcessManagement.Controllers
 
             //file 
             string taskPath = string.Format("Upload/{0}/{1}/{2}/{3}", group.Id, task.Step.Process.Id, task.Step.Id, task.Id);
-            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id, taskPath);
+            List<FileManager> files = fileService.findFiles(group.Id, taskPath);
 
 
             ViewData["Step"] = step;
@@ -722,7 +722,7 @@ namespace ProcessManagement.Controllers
             
             //file
             string taskPath = string.Format("Upload/{0}/{1}/{2}/{3}", group.Id, task.Step.Process.Id, task.Step.Id, task.Id);
-            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id, taskPath);
+            List<FileManager> files = fileService.findFiles(group.Id, taskPath);
 
             ViewData["Step"] = step;
             ViewData["ListRole"] = role;

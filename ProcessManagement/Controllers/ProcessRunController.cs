@@ -154,7 +154,7 @@ namespace ProcessManagement.Controllers
 
             //get processrun file 
             string processRunPath = string.Format("Upload/{0}/{1}", group.Id, processrun.Id);
-            List<FileManager> files = fileService.getAllFileNameFromFolder(group.Id, processRunPath);
+            List<FileManager> files = fileService.findFiles(group.Id, processRunPath);
 
             ViewData["ListRole"] = listrole;
             ViewData["ProcessRun"] = processrun;
@@ -196,9 +196,10 @@ namespace ProcessManagement.Controllers
             var processrunId = taskrun.StepRun.ProcessRun.Process.Id;
             var stepId = taskrun.StepRun.CloneFrom;
             var taskId = taskrun.CloneForm;
-            string processRunPath = string.Format("Upload/{0}/{1}/{2}/{3}", groupId, processrunId, stepId, taskId);
-            List<FileManager> files = fileService.getAllFileNameFromFolder(groupId, processRunPath);
-
+            string taskRunPath = string.Format("Upload/{0}/{1}/{2}/{3}", groupId, processrunId, stepId, taskId);
+            List<FileManager> files = fileService.findFiles(groupId, taskRunPath);
+            string userTaskRunPath = string.Format("Upload/{0}/run/{1}/{2}/{3}", groupId, taskrun.StepRun.idProcess, taskrun.IdStep, taskrun.Id);
+            FileManager userFile = fileService.findFile(groupId, userTaskRunPath);
 
             ViewData["Rolerun"] = role;
             ViewData["UserId"] = idUser;
@@ -209,6 +210,7 @@ namespace ProcessManagement.Controllers
             ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
             ViewData["TextMaxLength"] = db.ConfigRules.Find("textlength");
             ViewData["Files"] = files;
+            ViewData["UserFile"] = userFile;
             return View(taskrun);
         }
 
@@ -241,7 +243,7 @@ namespace ProcessManagement.Controllers
             var stepId = taskrun.StepRun.CloneFrom;
             var taskId = taskrun.CloneForm;
             string processRunPath = string.Format("Upload/{0}/{1}/{2}/{3}", groupId, processrunId, stepId, taskId);
-            List<FileManager> files = fileService.getAllFileNameFromFolder(groupId, processRunPath);
+            List<FileManager> files = fileService.findFiles(groupId, processRunPath);
 
             ViewData["Rolerun"] = role;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
