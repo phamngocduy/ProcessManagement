@@ -142,13 +142,18 @@
 
                                     }
                                     bool fileRequired = (bool)fileConfig["required"];
-                                    string maxSize = (string)fileConfig["size"] != "" ? (string)fileConfig["size"] : string.Format("{0}{1}", maxFileSizeRule.Value,maxFileSizeRule.Unit);
+                                    string maxSize = (string)fileConfig["size"] != "" ? (string)fileConfig["size"] : string.Format("{0}{1}", maxFileSizeRule.Value, maxFileSizeRule.Unit);
                                 }
                                 <label @if (fileRequired) { WriteLiteral("class='required' "); } for="task-inputfile">@fileLabel</label>
-                                @{
+                                @if (userFile != null)
+                                {
                                     var filepath = Url.Content(string.Format("~/{0}/{1}", userFile.Path, userFile.Name));
+                                    <input type="file" id="task-inputfile" class="dropify" @if (fileRequired) { WriteLiteral("cw-required"); } cw-maxsize="@maxSize" data-default-file="@filepath">
                                 }
-                                <input type="file" id="task-inputfile" class="dropify" @if (fileRequired) { WriteLiteral("cw-required"); } cw-maxsize="@maxSize" @if (userFile != null) { WriteLiteral(string.Format("data-default-file=/{0}/{1}",userFile.Path, userFile.Name)); }>
+                                else
+                                {
+                                    <input type="file" id="task-inputfile" class="dropify" @if (fileRequired) { WriteLiteral("cw-required"); } cw-maxsize="@maxSize">
+                                }
                             </div>
                         </div>
                         @if (Model.Status1.Name == "Finish")
@@ -208,50 +213,51 @@
             $(function () {
                 var form = $(".cw-validation").formValidation();
                 var drEvent = $(".dropify").dropify();
-                drEvent.on('dropify.afterClear', function (event, element) {
+                drEvent.on('dropify.afterClear, change', function (event, element) {
                     var element = $(this);
+                    $(this).removeAttr("data-default-file");
+                    $(".dropify-download").remove();
                     form.validate(element);
                 });
+                @if(userFile != null){
+                    @:$(`<a href="@Url.Action("download", "file", new { file = userFile.Id })" class="dropify-download">Download</a>`).insertAfter($("#task-inputfile"));
+                }
                 //TODO: Add TaskRun Authenticate
-                $("#btn-savetask").on("click", function () {
+                $("#btn-savetask, #btn-donetask").on("click", function () {
                     var $this = $(this);
-                    toggleLoading($this);
-                    var valuetext = $("#task-inputtext").val();
-                    var valuefile = $("#task-inputfile").val();
-
-                    let data = {
-                        valuetext: valuetext,
-                        valuefile: valuefile,
-                        idtaskrun: @Model.Id
-                    }
-                    setTimeout(function () {
-                        saveTaskRun(data);
-                        toggleLoading($this);
-                    }, 1000);
-                });
-                //TODO: Add TaskRun Authenticate
-                $("#btn-donetask").on("click", function () {
-                    var $this = $(this);
+                    var actionButton = $this.attr("id");
                     var isFormHaveError = form.validates();
                     if (isFormHaveError) {
                         showToastr("error", "Error!!");
-
                     } else {
                         var valuetext = $("#task-inputtext").val();
                         var valuefile = $("#task-inputfile").val();
                         var file = $("#task-inputfile")[0].files[0];
+                        var isEdit = $("#task-inputfile")[0].hasAttribute("data-default-file") ? true : false;
                         var data = new FormData();
                         data.append("idtaskrun", @Model.Id);
                         data.append("valuetext", valuetext);
                         data.append("valuefile", valuefile);
+                        data.append("isEdit", isEdit);
                         data.append("fileupload", file);
-                        setConfirm(`Are you sure you want to submit this task?`, function () {
+                        if (actionButton == "btn-savetask") {
+                            //save task
                             toggleLoading($this);
                             setTimeout(function () {
-                                submitTaskRun(data);
+                                saveTaskRun(data);
                                 toggleLoading($this);
                             }, 1000);
-                        });
+                        } else {
+                            //submit task
+                            setConfirm(`Are you sure you want to submit this task?`, function () {
+                                toggleLoading($this);
+                                setTimeout(function () {
+                                    submitTaskRun(data);
+                                    toggleLoading($this);
+                                }, 1000);
+                            });
+                        }
+                        
                     }
                 });
                 $('#btn-opentask').on('click', function () {
@@ -271,7 +277,7 @@
                     var $this = $(this);
                     let data = {
                         idtask: @Model.Id
-                    }
+                    } 
                     setConfirm(`Are you sure you want to open this task?`, function () {
                         toggleLoading($this);
                         setTimeout(function () {
@@ -286,6 +292,8 @@
                     url: "@Url.Action("savetaskrun", "processrun",new { area = "api"})",
                     type: "POST",
                     data: data,
+                    contentType: false,
+                    processData: false,
                     dataType: "json",
                     success: function (response) {
                         console.log(response);

@@ -17,50 +17,47 @@ namespace ProcessManagement.Services
         public FileManager saveFile(int idGroup, HttpPostedFileBase file, string savePath, FileDirection Direction)
         {
             FileManager f = new FileManager();
-            if (file != null)
+            if (file != null && file.ContentLength > 0)
             {
-                if (file.ContentLength > 0)
+                string AppPath = AppDomain.CurrentDomain.BaseDirectory;
+                string filePath = AppPath + savePath;
+
+                string fileName = Path.GetFileName(file.FileName);
+                string path = Path.Combine(filePath, fileName);
+                string extension = Path.GetExtension(path);
+                if (!File.Exists(path))
                 {
-                    string AppPath = AppDomain.CurrentDomain.BaseDirectory;
-                    string filePath = AppPath + savePath;
-
-                    string fileName = Path.GetFileName(file.FileName);
-                    string path = Path.Combine(filePath, fileName);
-                    string extension = Path.GetExtension(path);
-                    if (!File.Exists(path))
-                    {
-                        createDirectory(savePath);
-                    }
-
-                    string fileNameWithOutExtension = Path.GetFileNameWithoutExtension(file.FileName);
-                    DirectoryInfo d = new DirectoryInfo(filePath);
-                    FileInfo[] files = d.GetFiles(string.Format("*{0}", extension));
-                    int count = 0;
-                    foreach (FileInfo fs in files)
-                    {
-                            
-                        if (fs.Name.Replace(extension,"").StartsWith(fileNameWithOutExtension))
-                            count++;
-                    }
-                    if (count > 0)
-                    {
-                        fileName = string.Format("{0} ({1}){2}", fileNameWithOutExtension, count, extension);
-                        path = Path.Combine(filePath, fileName);
-                    }
-                    file.SaveAs(path);
-
-
-                    f.Id = commonService.getRandomString(50);
-                    f.IdGroup = idGroup;
-                    f.Name = fileName;
-                    f.Path = savePath;
-                    f.Type = extension;
-                    f.Direction = Direction.ToString();
-                    f.Create_At = DateTime.Now;
-                    f.Update_At = DateTime.Now;
-                    db.FileManagers.Add(f);
-                    db.SaveChanges();
+                    createDirectory(savePath);
                 }
+
+                string fileNameWithOutExtension = Path.GetFileNameWithoutExtension(file.FileName);
+                DirectoryInfo d = new DirectoryInfo(filePath);
+                FileInfo[] files = d.GetFiles(string.Format("*{0}", extension));
+                int count = 0;
+                foreach (FileInfo fs in files)
+                {
+                            
+                    if (fs.Name.Replace(extension,"").StartsWith(fileNameWithOutExtension))
+                        count++;
+                }
+                if (count > 0)
+                {
+                    fileName = string.Format("{0} ({1}){2}", fileNameWithOutExtension, count, extension);
+                    path = Path.Combine(filePath, fileName);
+                }
+                file.SaveAs(path);
+
+
+                f.Id = commonService.getRandomString(50);
+                f.IdGroup = idGroup;
+                f.Name = fileName;
+                f.Path = savePath;
+                f.Type = extension;
+                f.Direction = Direction.ToString();
+                f.Create_At = DateTime.Now;
+                f.Update_At = DateTime.Now;
+                db.FileManagers.Add(f);
+                db.SaveChanges();
             }
             return f;
 
@@ -152,7 +149,10 @@ namespace ProcessManagement.Services
         {
             string AppPath = AppDomain.CurrentDomain.BaseDirectory;
             string filePath = AppPath + path;
-            DirectoryInfo introDirectory = Directory.CreateDirectory(filePath);
+            if (!Directory.Exists(filePath))
+            {
+                DirectoryInfo introDirectory = Directory.CreateDirectory(filePath);
+            }
         }
         public void removeDirectory(string path)
         {
@@ -180,8 +180,11 @@ namespace ProcessManagement.Services
                     file.Delete();
                 }
                 var filemanager = db.FileManagers.FirstOrDefault(x => x.Path == path);
-                db.FileManagers.Remove(filemanager);
-                db.SaveChanges();
+                if (filemanager != null)
+                {
+                    db.FileManagers.Remove(filemanager);
+                    db.SaveChanges();
+                }
             }
         }
         public void copyDirectory(string path, string destination)

@@ -70,11 +70,11 @@
                 var container = element.closest("div.form-group");
                 var val = element.val().trim();
                 var error = {}
-                if (val == "") {
+                if (val != "" || element[0].hasAttribute("data-default-file")) {
+                    error["isError"] = false;
+                } else {
                     error["isError"] = true;
                     error["message"] = "This field is required";
-                } else {
-                    error["isError"] = false;
                 }
                 return error;
             },

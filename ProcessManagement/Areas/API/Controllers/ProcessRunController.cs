@@ -25,15 +25,45 @@ namespace ProcessManagement.Areas.API.Controllers
         ///=============================================================================================
 
         [HttpPost]
-        public JsonResult savetaskrun(string valuetext, string valuefile, int idtaskrun)
+        public JsonResult savetaskrun(int idtaskrun, string valuetext, string valuefile, HttpPostedFileBase fileupload, bool isEdit)
         {
             //TODO: Chưa phân quyền
             string IdUser = User.Identity.GetUserId();
             var status = HttpStatusCode.OK;
             string message;
             object response;
-            
-            taskService.submitvaluetask(IdUser,valuetext, valuefile, idtaskrun);
+            TaskProcessRun taskrun = taskService.findTaskRun(idtaskrun);
+            if (taskrun == null)
+            {
+                status = HttpStatusCode.NotFound;
+                message = "TaskRun Not Found";
+                response = new { message = message, status = status };
+                SetFlash(FlashType.error, message);
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+            List<RoleRun> listrole = roleService.findlistrolerunbyidroleprocess(taskrun.IdRole);
+            Participate user = participateService.findMemberInGroup(IdUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
+            bool haveRole = false;
+            foreach (var role in listrole)
+            {
+                if (IdUser == role.IdUser)
+                {
+                    haveRole = true;
+                    break;
+                }
+            }
+            if (user.IsManager == true || haveRole)
+            {
+                taskService.submitvaluetask(IdUser, valuetext, valuefile, idtaskrun);
+                int groupid = taskrun.StepRun.ProcessRun.Process.IdGroup;
+                string taskRunPath = string.Format("Upload/{0}/run/{1}/{2}/{3}", groupid, taskrun.StepRun.ProcessRun.Id, taskrun.StepRun.Id, taskrun.Id);
+                if (!isEdit)
+                {
+                    fileService.emptyDirectory(taskRunPath);
+                }
+                fileService.createDirectory(taskRunPath);
+                fileService.saveFile(groupid, fileupload, taskRunPath, FileDirection.TaskRun);
+            }
 
             message = "Save Task Successfully";
             response = new { message = message, status = status };
@@ -41,7 +71,7 @@ namespace ProcessManagement.Areas.API.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult submittaskrun(int idtaskrun, string valuetext, string valuefile, HttpPostedFileBase fileupload)
+        public JsonResult submittaskrun(int idtaskrun, string valuetext, string valuefile, HttpPostedFileBase fileupload,bool isEdit)
         {
             string IdUser = User.Identity.GetUserId();
             var status = HttpStatusCode.OK;
@@ -67,13 +97,15 @@ namespace ProcessManagement.Areas.API.Controllers
                     break;
                 }
             }
-
             if (user.IsManager == true || haveRole)
             {
                 taskService.submitvaluetask(IdUser, valuetext, valuefile, idtaskrun, true);
                 int groupid = taskrun.StepRun.ProcessRun.Process.IdGroup;
                 string taskRunPath = string.Format("Upload/{0}/run/{1}/{2}/{3}", groupid, taskrun.StepRun.ProcessRun.Id, taskrun.StepRun.Id, taskrun.Id);
-                fileService.emptyDirectory(taskRunPath);
+                if (!isEdit)
+                {
+                    fileService.emptyDirectory(taskRunPath);
+                }
                 fileService.createDirectory(taskRunPath);
                 fileService.saveFile(groupid, fileupload, taskRunPath, FileDirection.TaskRun);   
             }
