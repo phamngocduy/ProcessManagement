@@ -95,51 +95,67 @@ namespace ProcessManagement.Controllers
             int t = 0;
             for (int j = 0; j < listStep.Count; j++)
             {
-                if (listnextstep1[j].NextStep1 == 0)
+                if (j < listnextstep1.Count())
                 {
-                    break;
-                }
-                do
-                {
-                    if (listStep[z].Key == listnextstep1[j].NextStep2 && listStep[z].StartStep == false)
-                    {
-                        listnextstep2.Add(listStep[z]);
-                        z = 0;
-                        break;
-                    }
-                    if (listStep[z].Key == listnextstep1[j].NextStep1 && listStep[z].StartStep == false)
-                    {
-                        listnextstep1.Add(listStep[z]);
-                        if (listnextstep1[j].Figure == "Diamond")
-                        {
-                        }
-                        else
-                        {
-                            z = 0;
-                            break;
-                        }
-                    }
-                    z++;
-                } while (z < listStep.Count);
-            }
-            if (listnextstep2.Count() > 0)
-            {
-                for (int j = 0; j < listStep.Count; j++)
-                {
-                    if (listnextstep2[j].NextStep1 == 0)
+                    if (listnextstep1[j].NextStep1 == 0)
                     {
                         break;
                     }
                     do
                     {
-                        if (listStep[t].Key == listnextstep2[j].NextStep1 && listStep[t].StartStep == false)
+                        if (z == listStep.Count)
                         {
-                            listnextstep2.Add(listStep[t]);
-                            t = 0;
+                            z = 0;
+                        }
+                        if (listStep[z].Key == listnextstep1[j].NextStep2 && listStep[z].StartStep == false)
+                        {
+                            listnextstep2.Add(listStep[z]);
+                            if (listnextstep1[j].Figure == "Diamond")
+                            {
+                            }
+                            else
+                            {
+                                z = 0;
+                                break;
+                            }
+                        }
+                        if (listStep[z].Key == listnextstep1[j].NextStep1 && listStep[z].StartStep == false)
+                        {
+                            listnextstep1.Add(listStep[z]);
+                            if (listnextstep1[j].Figure == "Diamond")
+                            {
+                            }
+                            else
+                            {
+                                z = 0;
+                                break;
+                            }
+                        }
+                        z++;
+                    } while (z < listStep.Count);
+                }
+            }
+            if (listnextstep2.Count() > 0)
+            {
+                for (int j = 0; j < listStep.Count; j++)
+                {
+                    if (j < listnextstep2.Count())
+                    {
+                        if (listnextstep2[j].NextStep1 == 0)
+                        {
                             break;
                         }
-                        t++;
-                    } while (t < listStep.Count);
+                        do
+                        {
+                            if (listStep[t].Key == listnextstep2[j].NextStep1 && listStep[t].StartStep == false)
+                            {
+                                listnextstep2.Add(listStep[t]);
+                                t = 0;
+                                break;
+                            }
+                            t++;
+                        } while (t < listStep.Count);
+                    }
                 }
             }
             foreach (var item in listnextstep2)

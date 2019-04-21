@@ -59,7 +59,7 @@ namespace ProcessManagement.Controllers
             processService.createProcess(group.Id, idUser, pro);
 
             //create directory
-            string directoryPath = String.Format("Upload/{0}/{1}", group.Id,pro.Id);
+            string directoryPath = String.Format("Upload/{0}/{1}", group.Id, pro.Id);
             fileService.createDirectory(directoryPath);
             //save file 
             //string savePath = Server.MapPath(String.Format("~/App_Data/{0}/{1}", group.Id,pro.Id));
@@ -191,58 +191,74 @@ namespace ProcessManagement.Controllers
             int t = 0;
             for (int j = 0; j < listStep.Count; j++)
             {
-                if (listnextstep1[j].NextStep1 == 0)
+                if (j < listnextstep1.Count())
                 {
-                    break;
-                }
-                do
-                {
-                    if (listStep[z].Key == listnextstep1[j].NextStep2 && listStep[z].StartStep == false)
-                    {
-                        listnextstep2.Add(listStep[z]);
-                        z = 0;
-                        break;
-                    }
-                    if (listStep[z].Key == listnextstep1[j].NextStep1 && listStep[z].StartStep == false)
-                    {
-                        listnextstep1.Add(listStep[z]);
-                        if (listnextstep1[j].Figure == "Diamond")
-                        {
-                        }
-                        else
-                        {
-                            z = 0;
-                            break;
-                        }
-                    }
-                    z++;
-                } while (z < listStep.Count);
-            }
-            if (listnextstep2.Count() > 0)
-            {
-                for (int j = 0; j < listStep.Count; j++)
-                {
-                    if (listnextstep2[j].NextStep1 == 0)
+                    if (listnextstep1[j].NextStep1 == 0)
                     {
                         break;
                     }
                     do
                     {
-                        if (listStep[t].Key == listnextstep2[j].NextStep1 && listStep[t].StartStep == false)
+                        if (z == listStep.Count)
                         {
-                            listnextstep2.Add(listStep[t]);
-                            t = 0;
+                            z = 0;
+                        }
+                        if (listStep[z].Key == listnextstep1[j].NextStep2 && listStep[z].StartStep == false)
+                        {
+                            listnextstep2.Add(listStep[z]);
+                            if (listnextstep1[j].Figure == "Diamond")
+                            {
+                            }
+                            else
+                            {
+                                z = 0;
+                                break;
+                            }
+                        }
+                        if (listStep[z].Key == listnextstep1[j].NextStep1 && listStep[z].StartStep == false)
+                        {
+                            listnextstep1.Add(listStep[z]);
+                            if (listnextstep1[j].Figure == "Diamond")
+                            {
+                            }
+                            else
+                            {
+                                z = 0;
+                                break;
+                            }
+                        }
+                        z++;
+                    } while (z < listStep.Count);
+                }
+            }
+            if (listnextstep2.Count() > 0)
+            {
+                for (int j = 0; j < listStep.Count; j++)
+                {
+                    if (j < listnextstep2.Count())
+                    {
+                        if (listnextstep2[j].NextStep1 == 0)
+                        {
                             break;
                         }
-                        t++;
-                    } while (t < listStep.Count);
+                        do
+                        {
+                            if (listStep[t].Key == listnextstep2[j].NextStep1 && listStep[t].StartStep == false)
+                            {
+                                listnextstep2.Add(listStep[t]);
+                                t = 0;
+                                break;
+                            }
+                            t++;
+                        } while (t < listStep.Count);
+                    }
                 }
             }
             foreach (var item in listnextstep2)
             {
                 listnextstep1.Add(item);
             }
-                
+
 
             ViewData["Group"] = group;
             ViewData["Process"] = process;
@@ -303,7 +319,7 @@ namespace ProcessManagement.Controllers
             Process process = processService.findProcess(processId);
             if (role.Name == null)
             {
-			    SetFlash(FlashType.error, "Name is required");
+                SetFlash(FlashType.error, "Name is required");
 
                 return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "addrole", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id });
             }
@@ -316,9 +332,9 @@ namespace ProcessManagement.Controllers
 
             role.IdProcess = process.Id;
             processService.createRole(role);
-			SetFlash(FlashType.success, "Created Role Successfully");
-			return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id });
-		}
+            SetFlash(FlashType.success, "Created Role Successfully");
+            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id });
+        }
         [GroupAuthorize]
         public ActionResult DeleteRole(int roleid)
         {
@@ -358,7 +374,7 @@ namespace ProcessManagement.Controllers
                 SetFlash(FlashType.error, "Name is required");
                 return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "editrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
             }
-            var isExist = roleService.isNameExist(role,process.Id);
+            var isExist = roleService.isNameExist(role, process.Id);
             if (isExist)
             {
                 SetFlash(FlashType.error, "This name is exist in process");
@@ -388,20 +404,20 @@ namespace ProcessManagement.Controllers
             }
             return View(ps);
         }
-		public ActionResult Setting(int processid)
-		{
-			Process process = processService.findProcess(processid);
-			if (process == null) return HttpNotFound();
+        public ActionResult Setting(int processid)
+        {
+            Process process = processService.findProcess(processid);
+            if (process == null) return HttpNotFound();
 
             Group group = groupService.findGroup(process.Group.Id);
             ViewData["Group"] = group;
             Session["processid"] = process.Id;
             return View(process);
-		}
-		[HttpPost]
-		[GroupAuthorize]
-		public ActionResult Setting(Process model)
-		{
+        }
+        [HttpPost]
+        [GroupAuthorize]
+        public ActionResult Setting(Process model)
+        {
             int processId = (int)Session["processid"];
             Process process = processService.findProcess(processId);
 			if (process == null) return HttpNotFound();
@@ -412,8 +428,8 @@ namespace ProcessManagement.Controllers
 			SetFlash(FlashType.success, "Edit Process Successfully");
 			return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
 
-		}
-		[Authorize]
+        }
+        [Authorize]
         [HttpPost]
         public JsonResult EditProcess(int processId, string data, string nodeData, string linkData, string imageprocess)
         {
@@ -530,9 +546,9 @@ namespace ProcessManagement.Controllers
                             {
                                 db.TaskProcesses.Remove(listtaskofstep[s]);
                                 db.SaveChanges();
-                                
+
                             }
-                            string stepPath = string.Format("Upload/{0}/{1}/{2}", ps.Group.Id, ps.Id,ste.Id);
+                            string stepPath = string.Format("Upload/{0}/{1}/{2}", ps.Group.Id, ps.Id, ste.Id);
                             fileService.removeDirectory(stepPath);
                             stepService.removeStep(ste);
                         }
@@ -630,7 +646,7 @@ namespace ProcessManagement.Controllers
             ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
             return View(pr);
         }
-       
+
         [Authorize]
         [GroupAuthorize]
         public ActionResult ShowTask(int taskid)
@@ -659,7 +675,7 @@ namespace ProcessManagement.Controllers
             {
                 return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "ShowFormTask", taskid = taskid });
             }
-            
+
             return View(task);
         }
 
@@ -680,11 +696,11 @@ namespace ProcessManagement.Controllers
             Participate user = participateService.findMemberInGroup(idUser, idGroup);
             if (user == null) return HttpNotFound();
 
-            string taskPath = string.Format("Upload/{0}/{1}/{2}/{3}", task.Step.Process.Group.Id, task.Step.Process.Id, task.Step.Id,task.Id);
+            string taskPath = string.Format("Upload/{0}/{1}/{2}/{3}", task.Step.Process.Group.Id, task.Step.Process.Id, task.Step.Id, task.Id);
             fileService.removeDirectory(taskPath);
 
             taskService.deletetask(task);
-            
+
             SetFlash(FlashType.success, "Delete Successfully");
             return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "Process", action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess });
         }
@@ -719,7 +735,7 @@ namespace ProcessManagement.Controllers
             Step step = stepService.findStep(task.IdStep);
             Group group = groupService.findGroup(step.Process.Group.Id);
             List<Role> role = db.Roles.Where(x => x.IdProcess == task.Step.Process.Id).ToList();
-            
+
             //file
             string taskPath = string.Format("Upload/{0}/{1}/{2}/{3}", group.Id, task.Step.Process.Id, task.Step.Id, task.Id);
             List<FileManager> files = fileService.findFiles(group.Id, taskPath);
