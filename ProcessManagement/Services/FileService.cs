@@ -198,23 +198,25 @@ namespace ProcessManagement.Services
             }
             DirectoryInfo currentDirectory = new DirectoryInfo(currentPath);
             DirectoryInfo destinationDirectory = new DirectoryInfo(destinationPath);
-
-            FileInfo[] files = currentDirectory.GetFiles();
-            foreach (FileInfo file in files)
+            if (currentDirectory.Exists)
             {
-                file.CopyTo(Path.Combine(destinationDirectory.FullName, file.Name));
-                FileManager f = db.FileManagers.FirstOrDefault(x => x.Path == path);
-                FileManager fn = new FileManager();
-                fn.Id = commonService.getRandomString(50);
-                fn.IdGroup = f.IdGroup;
-                fn.Name = f.Name;
-                fn.Type = f.Type;
-                fn.Path = destination;
-                fn.Direction = f.Direction;
-                fn.Create_At = DateTime.Now;
-                fn.Update_At = DateTime.Now;
-                db.FileManagers.Add(fn);
-                db.SaveChanges();
+                FileInfo[] files = currentDirectory.GetFiles();
+                foreach (FileInfo file in files)
+                {
+                    file.CopyTo(Path.Combine(destinationDirectory.FullName, file.Name));
+                    FileManager f = db.FileManagers.FirstOrDefault(x => x.Path == path);
+                    FileManager fn = new FileManager();
+                    fn.Id = commonService.getRandomString(50);
+                    fn.IdGroup = f.IdGroup;
+                    fn.Name = f.Name;
+                    fn.Type = f.Type;
+                    fn.Path = destination;
+                    fn.Direction = f.Direction;
+                    fn.Create_At = DateTime.Now;
+                    fn.Update_At = DateTime.Now;
+                    db.FileManagers.Add(fn);
+                    db.SaveChanges();
+                }
             }
 
         }

@@ -406,7 +406,7 @@
             data.append("FileUpload", file);
             data.append("groupid", @group.Id);
             data.append("processid",@process.Id)
-            data.append("direction", "@FileDirection.Process");
+            data.append("direction", "@Direction.Process");
             $.ajax({
                 url: "@Url.Action("uploadfile", "file", new { area = "api"})",
                 type: "POST",
