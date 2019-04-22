@@ -320,6 +320,20 @@
                             }
                         </div>
                     </div>
+                    @if (Model.Status1.Name == "Finish" || Model.Status1.Name == "Done")
+                    {
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <label for="">Done By</label>
+                                <input type="text" class="form-control" id="task-name" name="" value="@Model.AspNetUser1.UserName" disabled>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <label for="">Date</label>
+                            <input type="text" class="form-control" id="task-name" name="" value="@Model.Done_At" disabled>
+                        </div>
+                    }
                     @if (Model.Status1.Name == "Finish")
                     {
                         <div class="col-sm-8">
@@ -336,28 +350,31 @@
                 </div>
                 <div class="row clearfix">
                     <div class="col-sm-12" id="button-action">
-                        @if (Model.Status1.Name == "Open")
+                        @if (Model.StepRun.Status1.Name == "Running")
                         {
-                            <button id="btn-savetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving..."><i class="fa fa-save"></i> Save</button>
-                            <button id="btn-donetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Submiting..."><i class="fa fa-check"></i> Submit</button>
-                        }
-                        @if (Model.Status1.Name == "Done")
-                        {
-                            if (isManager)
+                            if (Model.Status1.Name == "Open")
                             {
-                                <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Opening...">Open</button>
-                                <button id="btn-finishtask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Finishing...">Finish </button>
+                                <button id="btn-savetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving..."><i class="fa fa-save"></i> Save</button>
+                                <button id="btn-donetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Submiting..."><i class="fa fa-check"></i> Submit</button>
                             }
-                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
+                            if (Model.Status1.Name == "Done")
+                            {
+                                if (isManager)
+                                {
+                                    <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Opening...">Open</button>
+                                    <button id="btn-finishtask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Finishing...">Finish </button>
+                                }
+                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
 
-                        }
-                        @if (Model.Status1.Name == "Finish")
-                        {
-                            if (isManager)
-                            {
-                                <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Opening...">Open</button>
                             }
-                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
+                            if (Model.Status1.Name == "Finish")
+                            {
+                                if (isManager)
+                                {
+                                    <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Opening...">Open</button>
+                                }
+                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
+                            }
                         }
                     </div>
                 </div>

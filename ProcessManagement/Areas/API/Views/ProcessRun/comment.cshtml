@@ -1,0 +1,28 @@
+﻿@{
+    var comments = ViewData["comments"] as List<ProcessManagement.Models.Comment>;
+}
+@if (comments.Any())
+{
+    <div class="comments">
+        @foreach (var comment in comments)
+        {
+            <div class="comment">
+                <div class="comment-avatar">
+                    <img src="http://lorempixel.com/200/200/people/">
+                </div>
+                <div class="comment-box">
+                    <div class="comment-text">@comment.Content</div>
+                    <div class="comment-footer">
+                        <div class="comment-info">
+                            <span class="comment-author">
+                                <a href="#">@comment.AspNetUser.UserName</a>
+                            </span>
+
+                            <span class="comment-date">@comment.Create_At.ToLongDateString() @@ @comment.Create_At.ToShortTimeString()</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
