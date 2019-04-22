@@ -377,18 +377,11 @@ namespace ProcessManagement.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                ExternalLoginInfo loginInfo = (ExternalLoginInfo) Session["loginInfor"];
-                //create avatar
-                var defaultavatar = userService.createAvatar(loginInfo.ExternalIdentity.GetUserName());
-                //set new user
-                var user = new ApplicationUser { UserName = model.UserName, Email = loginInfo.Email,
-                    NickName = loginInfo.ExternalIdentity.GetUserName(), AvatarDefault = defaultavatar,
-                    Avatar = ""};
-                var result = await UserManager.CreateAsync(user);
-                if (result.Succeeded)
+                var user = await UserManager.FindByEmailAsync(info.Email);
+                if (user != null)
                 {
-                    result = await UserManager.AddLoginAsync(user.Id, info.Login);
-                    if (result.Succeeded)
+                    var addLoginResult = await UserManager.AddLoginAsync(user.Id, info.Login);
+                    if (addLoginResult.Succeeded)
                     {
                         Session.Remove("loginInfor");
                         Session["user.email"] = user.Email;
@@ -396,7 +389,34 @@ namespace ProcessManagement.Controllers
                         return RedirectToLocal(returnUrl);
                     }
                 }
-                AddErrors(result);
+                else
+                {
+                    ExternalLoginInfo loginInfo = (ExternalLoginInfo)Session["loginInfor"];
+                    //create avatar
+                    var defaultavatar = userService.createAvatar(loginInfo.ExternalIdentity.GetUserName());
+                    //set new user
+                    user = new ApplicationUser
+                    {
+                        UserName = model.UserName,
+                        Email = loginInfo.Email,
+                        NickName = loginInfo.ExternalIdentity.GetUserName(),
+                        AvatarDefault = defaultavatar,
+                        Avatar = ""
+                    };
+                    var result = await UserManager.CreateAsync(user);
+                    if (result.Succeeded)
+                    {
+                        result = await UserManager.AddLoginAsync(user.Id, info.Login);
+                        if (result.Succeeded)
+                        {
+                            Session.Remove("loginInfor");
+                            Session["user.email"] = user.Email;
+                            await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                            return RedirectToLocal(returnUrl);
+                        }
+                    }
+                    AddErrors(result);
+                }
             }
 
             ViewBag.ReturnUrl = returnUrl;
