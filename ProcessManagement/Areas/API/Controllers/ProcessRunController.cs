@@ -13,6 +13,7 @@ using ProcessManagement.Filters;
 
 namespace ProcessManagement.Areas.API.Controllers
 {
+    [AjaxAuthorize]
     public class ProcessRunController : ProcessManagement.Controllers.BaseController
     {
         ///=============================================================================================
@@ -22,6 +23,7 @@ namespace ProcessManagement.Areas.API.Controllers
         TaskService taskService = new TaskService();
         ParticipateService participateService = new ParticipateService();
         FileService fileService = new FileService();
+        PMSEntities db = new PMSEntities();
         ///=============================================================================================
 
         [HttpPost]
@@ -62,7 +64,7 @@ namespace ProcessManagement.Areas.API.Controllers
                     fileService.emptyDirectory(taskRunPath);
                 }
                 fileService.createDirectory(taskRunPath);
-                fileService.saveFile(groupid, fileupload, taskRunPath, FileDirection.TaskRun);
+                fileService.saveFile(groupid, fileupload, taskRunPath, Direction.TaskRun);
             }
 
             message = "Save Task Successfully";
@@ -71,7 +73,7 @@ namespace ProcessManagement.Areas.API.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult submittaskrun(int idtaskrun, string valuetext, string valuefile, HttpPostedFileBase fileupload,bool isEdit)
+        public JsonResult submittaskrun(int idtaskrun, string valuetext, string valuefile, HttpPostedFileBase fileupload, bool isEdit)
         {
             string IdUser = User.Identity.GetUserId();
             var status = HttpStatusCode.OK;
@@ -107,10 +109,10 @@ namespace ProcessManagement.Areas.API.Controllers
                     fileService.emptyDirectory(taskRunPath);
                 }
                 fileService.createDirectory(taskRunPath);
-                fileService.saveFile(groupid, fileupload, taskRunPath, FileDirection.TaskRun);   
+                fileService.saveFile(groupid, fileupload, taskRunPath, Direction.TaskRun);
             }
-            
-            
+
+
             message = "Submit Task Successfully";
             response = new { message = message, status = status };
             SetFlash(FlashType.success, message);
@@ -118,7 +120,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult savetaskform(int idtaskrun,string formrender)
+        public JsonResult savetaskform(int idtaskrun, string formrender)
         {
             var status = HttpStatusCode.OK;
             string message;
@@ -133,7 +135,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult donetaskform(int idtaskrun,string formrender)
+        public JsonResult donetaskform(int idtaskrun, string formrender)
         {
             string IdUser = User.Identity.GetUserId();
             var status = HttpStatusCode.OK;
@@ -195,6 +197,36 @@ namespace ProcessManagement.Areas.API.Controllers
             response = new { message = message, status = status };
             SetFlash(FlashType.success, "Open Task");
             return Json(response, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult addComment(int id, Direction direction, string content)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+            string IdUser = User.Identity.GetUserId();
+            Comment com = new Comment();
+            com.IdUser = IdUser;
+            com.IdDirection = id;
+            com.Direction = direction.ToString();
+            com.Content = content;
+            com.Create_At = DateTime.Now;
+            com.Update_At = DateTime.Now;
+            db.Comments.Add(com);
+
+            db.SaveChanges();
+            message = "Comment sucessfully";
+            response = new { message = message, status = status };
+            SetFlash(FlashType.success, message);
+            return Json(response, JsonRequestBehavior.AllowGet);
+
+        }
+        [HttpGet]
+        public PartialViewResult getComments(int id, string direction)
+        {
+            var comments = db.Comments.Where(x => x.IdDirection == id && x.Direction == direction.Trim()).OrderByDescending(x => x.Create_At).ToList();
+            ViewData["comments"] = comments;
+            return PartialView("~/Areas/API/Views/ProcessRun/Comment.cshtml");
         }
     }
 }

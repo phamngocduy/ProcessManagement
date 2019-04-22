@@ -678,7 +678,7 @@
             var data = new FormData();
             data.append("FileUpload", file);
             data.append("groupid", @group.Id);
-            data.append("direction", "@FileDirection.Group");
+            data.append("direction", "@Direction.Group");
             $.ajax({
                 url: "@Url.Action("uploadfile", "file", new { area = "api"})",
                 type: "POST",

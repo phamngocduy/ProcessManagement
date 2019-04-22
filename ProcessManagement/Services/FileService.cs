@@ -14,7 +14,7 @@ namespace ProcessManagement.Services
         CommonService commonService = new CommonService();
         ///=============================================================================================
         ///
-        public FileManager saveFile(int idGroup, HttpPostedFileBase file, string savePath, FileDirection Direction)
+        public FileManager saveFile(int idGroup, HttpPostedFileBase file, string savePath, Direction Direction)
         {
             FileManager f = new FileManager();
             if (file != null && file.ContentLength > 0)
@@ -123,7 +123,7 @@ namespace ProcessManagement.Services
             db.SaveChanges();
             return file;
         }
-        public bool checkFileExist(int idGroup,string name, FileDirection direction, string path)
+        public bool checkFileExist(int idGroup,string name, Direction direction, string path)
         {
             var file = db.FileManagers.FirstOrDefault(x => x.IdGroup == idGroup && x.Direction == direction.ToString() && x.Path == path && x.Name == name);
             return file != null ? true : false;

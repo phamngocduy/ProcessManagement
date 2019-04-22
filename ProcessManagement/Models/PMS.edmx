@@ -30,12 +30,12 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="IdUser" Type="nvarchar" MaxLength="128" />
-          <Property Name="IdType" Type="int" />
-          <Property Name="Type" Type="int" />
-          <Property Name="Content" Type="nvarchar(max)" />
-          <Property Name="Create_At" Type="datetime" />
-          <Property Name="Update_At" Type="datetime" />
+          <Property Name="IdUser" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="IdDirection" Type="int" Nullable="false" />
+          <Property Name="Direction" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Create_At" Type="datetime" Nullable="false" />
+          <Property Name="Update_At" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="ConfigRule">
           <Key>
@@ -253,7 +253,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Comment_AspNetUsers">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
           <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AspNetUsers">
@@ -261,18 +261,6 @@
             </Principal>
             <Dependent Role="Comment">
               <PropertyRef Name="IdUser" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Comment_TaskProcessRun">
-          <End Role="TaskProcessRun" Type="Self.TaskProcessRun" Multiplicity="0..1" />
-          <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TaskProcessRun">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Comment">
-              <PropertyRef Name="IdType" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -544,10 +532,6 @@
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="Comment" EntitySet="Comment" />
           </AssociationSet>
-          <AssociationSet Name="FK_Comment_TaskProcessRun" Association="Self.FK_Comment_TaskProcessRun">
-            <End Role="TaskProcessRun" EntitySet="TaskProcessRun" />
-            <End Role="Comment" EntitySet="Comment" />
-          </AssociationSet>
           <AssociationSet Name="FK_FileManager_Group" Association="Self.FK_FileManager_Group">
             <End Role="Group" EntitySet="Group" />
             <End Role="FileManager" EntitySet="FileManager" />
@@ -681,10 +665,6 @@
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="TaskProcessRun" EntitySet="TaskProcessRuns" />
           </AssociationSet>
-          <AssociationSet Name="FK_Comment_TaskProcessRun" Association="PMSModel.FK_Comment_TaskProcessRun">
-            <End Role="TaskProcessRun" EntitySet="TaskProcessRuns" />
-            <End Role="Comment" EntitySet="Comments" />
-          </AssociationSet>
           <AssociationSet Name="FK_FileManager_Group" Association="PMSModel.FK_FileManager_Group">
             <End Role="Group" EntitySet="Groups" />
             <End Role="FileManager" EntitySet="FileManagers" />
@@ -779,14 +759,13 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdUser" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="IdType" Type="Int32" />
-          <Property Name="Type" Type="Int32" />
-          <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Create_At" Type="DateTime" Precision="3" />
-          <Property Name="Update_At" Type="DateTime" Precision="3" />
+          <Property Name="IdUser" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="IdDirection" Type="Int32" Nullable="false" />
+          <Property Name="Direction" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Create_At" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Update_At" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="AspNetUser" Relationship="PMSModel.FK_Comment_AspNetUsers" FromRole="Comment" ToRole="AspNetUser" />
-          <NavigationProperty Name="TaskProcessRun" Relationship="PMSModel.FK_Comment_TaskProcessRun" FromRole="Comment" ToRole="TaskProcessRun" />
         </EntityType>
         <EntityType Name="ConfigRule">
           <Key>
@@ -1012,7 +991,6 @@
           <Property Name="CloneForm" Type="Int32" />
           <NavigationProperty Name="AspNetUser" Relationship="PMSModel.FK_TaskProcessRun_AspNetUsers" FromRole="TaskProcessRun" ToRole="AspNetUser" />
           <NavigationProperty Name="AspNetUser1" Relationship="PMSModel.FK_TaskProcessRun_AspNetUsers1" FromRole="TaskProcessRun" ToRole="AspNetUser" />
-          <NavigationProperty Name="Comments" Relationship="PMSModel.FK_Comment_TaskProcessRun" FromRole="TaskProcessRun" ToRole="Comment" />
           <NavigationProperty Name="Role" Relationship="PMSModel.FK_TaskProcessRun_Role" FromRole="TaskProcessRun" ToRole="Role" />
           <NavigationProperty Name="Status1" Relationship="PMSModel.FK_TaskProcessRun_Status" FromRole="TaskProcessRun" ToRole="Status" />
           <NavigationProperty Name="StepRun" Relationship="PMSModel.FK_TaskProcessRun_StepRun" FromRole="TaskProcessRun" ToRole="StepRun" />
@@ -1030,7 +1008,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Comment_AspNetUsers">
-          <End Type="PMSModel.AspNetUser" Role="AspNetUser" Multiplicity="0..1" />
+          <End Type="PMSModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
           <End Type="PMSModel.Comment" Role="Comment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AspNetUser">
@@ -1110,18 +1088,6 @@
             </Principal>
             <Dependent Role="TaskProcessRun">
               <PropertyRef Name="DoneBy" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Comment_TaskProcessRun">
-          <End Type="PMSModel.TaskProcessRun" Role="TaskProcessRun" Multiplicity="0..1" />
-          <End Type="PMSModel.Comment" Role="Comment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TaskProcessRun">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Comment">
-              <PropertyRef Name="IdType" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1338,8 +1304,8 @@
                 <ScalarProperty Name="Update_At" ColumnName="Update_At" />
                 <ScalarProperty Name="Create_At" ColumnName="Create_At" />
                 <ScalarProperty Name="Content" ColumnName="Content" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="IdType" ColumnName="IdType" />
+                <ScalarProperty Name="Direction" ColumnName="Direction" />
+                <ScalarProperty Name="IdDirection" ColumnName="IdDirection" />
                 <ScalarProperty Name="IdUser" ColumnName="IdUser" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>

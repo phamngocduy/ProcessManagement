@@ -20,6 +20,171 @@
     <link rel="stylesheet" href="~/Content/vendor/dropify/css/dropify.min.css">
     <link rel="stylesheet" href="~/Content/vendor/select2/select2.css" />
     <link rel="stylesheet" href="~/Content/vendor/switchery/dist/switchery.min.css" />
+    <style>
+        .comments-app {
+            margin: 50px auto;
+            max-width: 680px;
+            padding: 0 50px;
+            width: 100%;
+        }
+
+        .comments-app h1 {
+            color: #191919;
+            margin-bottom: 1.5em;
+            text-align: center;
+            text-shadow: 0 0 2px rgba(152, 152, 152, 1);
+        }
+
+        .comment-form {
+        }
+
+        .comment-form .comment-avatar {
+        }
+
+        .comment-form .form {
+            margin-left: 100px;
+        }
+
+        .comment-form .form .form-row {
+            margin-bottom: 10px;
+        }
+
+        .comment-form .form .form-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .comment-form .form .input {
+            background-color: #fcfcfc;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, .15);
+            color: #555f77;
+            font-family: inherit;
+            font-size: 14px;
+            padding: 5px 10px;
+            outline: none;
+            width: 100%;
+            -webkit-transition: 350ms box-shadow;
+            -moz-transition: 350ms box-shadow;
+            -ms-transition: 350ms box-shadow;
+            -o-transition: 350ms box-shadow;
+            transition: 350ms box-shadow;
+        }
+
+        .comment-form .form textarea.input {
+            height: 100px;
+            padding: 15px;
+        }
+
+        .comment-form .form label {
+            color: #555f77;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .comment-form .form .input:focus{
+            box-shadow: 0 2px 6px rgba(121, 137, 148, .55);
+        }
+
+        
+
+        .comment-form,
+        .comment {
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 0;
+        }
+
+        .comment-form .comment-avatar,
+        .comment .comment-avatar {
+            border: 2px solid #fff;
+            border-radius: 50%;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+            height: 80px;
+            left: 0;
+            overflow: hidden;
+            position: absolute;
+            top: 0;
+            width: 80px;
+        }
+
+        .comment-form .comment-avatar img,
+        .comment .comment-avatar img {
+            display: block;
+            height: auto;
+            width: 100%;
+        }
+
+        .comment .comment-box {
+            background-color: #fcfcfc;
+            border-radius: 4px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, .15);
+            margin-left: 100px;
+            min-height: 60px;
+            position: relative;
+            padding: 15px;
+        }
+
+        .comment .comment-box:before,
+        .comment .comment-box:after {
+            border-width: 10px 10px 10px 0;
+            border-style: solid;
+            border-color: transparent #FCFCFC;
+            content: "";
+            left: -10px;
+            position: absolute;
+            top: 20px;
+        }
+
+        .comment .comment-box:before {
+            border-color: transparent rgba(0, 0, 0, .05);
+            top: 22px;
+        }
+
+        .comment .comment-text {
+            color: #555f77;
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
+
+        .comment .comment-footer {
+            color: #acb4c2;
+            font-size: 13px;
+        }
+
+        .comment .comment-footer:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .comment .comment-footer a {
+            color: #acb4c2;
+            text-decoration: none;
+            -webkit-transition: 350ms color;
+            -moz-transition: 350ms color;
+            -ms-transition: 350ms color;
+            -o-transition: 350ms color;
+            transition: 350ms color;
+        }
+
+        .comment .comment-footer a:hover {
+            color: #555f77;
+            text-decoration: underline;
+        }
+
+        .comment .comment-info {
+            float: left;
+            width: 100%;
+        }
+
+            
+
+        .comment .comment-date:before {
+            content: "|";
+            margin: 0 10px;
+        }
+    </style>
 }
 
 <div class="block-header">
@@ -100,78 +265,63 @@
         </div>
     </div>
 </div>
-@if (idUser.ToString() == role.IdUser || isManager == true)
-{
-    <div class="row clearfix">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="card">
-                <div class="body" id="show-taskrun">
-                    <div class="row clearfix cw-validation @if (Model.Status1.Name != " Open") { WriteLiteral("disable-all"); } ">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                @{
+@if (idUser.ToString() == role.IdUser || isManager == true){
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="body" id="show-taskrun">
+                <div class="row clearfix cw-validation @if (Model.Status1.Name != "Open") { WriteLiteral("disable-all"); } ">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            @{
                                 string textLabel;
                                 if ((string)inputConfig["label"] == "")
                                 {
-                                textLabel = "Response Text";
+                                    textLabel = "Response Text";
                                 }
                                 else
                                 {
-                                textLabel = (string)inputConfig["label"];
+                                    textLabel = (string)inputConfig["label"];
 
                                 }
                                 bool textRequired = (bool)inputConfig["required"];
                                 int maxlength = (string)inputConfig["maxlength"] != "" ? (int)inputConfig["maxlength"] : textLength.Value;
-                                }
-                                <label @if (textRequired) { WriteLiteral("class='required' "); } for="task-inputtext">@textLabel</label>
-                                <input type="text" class="form-control" id="task-inputtext" @if (textRequired) { WriteLiteral("cw-required"); } cw-maxlength="@maxlength" value="@inputConfig[" value"]">
-                            </div>
+                            }
+                            <label @if (textRequired) { WriteLiteral("class='required' "); } for="task-inputtext">@textLabel</label>
+                            <input type="text" class="form-control" id="task-inputtext" @if (textRequired) { WriteLiteral("cw-required"); } cw-maxlength="@maxlength" value="@inputConfig["value"]">
                         </div>
-                        <div class="col-sm-12">
-                            <div class="form-group">
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
 
-                                @{
+                            @{
                                 string fileLabel;
                                 if ((string)fileConfig["label"] == "")
                                 {
-                                fileLabel = "Upload File";
+                                    fileLabel = "Upload File";
                                 }
                                 else
                                 {
-                                fileLabel = (string)fileConfig["label"];
+                                    fileLabel = (string)fileConfig["label"];
 
                                 }
                                 bool fileRequired = (bool)fileConfig["required"];
                                 string maxSize = (string)fileConfig["size"] != "" ? (string)fileConfig["size"] : string.Format("{0}{1}", maxFileSizeRule.Value, maxFileSizeRule.Unit);
-                                }
-                                <label @if (fileRequired) { WriteLiteral("class='required' "); } for="task-inputfile">@fileLabel</label>
-                                @if (userFile != null)
-                                {
+                            }
+                            <label @if (fileRequired) { WriteLiteral("class='required' "); } for="task-inputfile">@fileLabel</label>
+                            @if (userFile != null)
+                            {
                                 var filepath = Url.Content(string.Format("~/{0}/{1}", userFile.Path, userFile.Name));
                                 <input type="file" id="task-inputfile" class="dropify" @if (fileRequired) { WriteLiteral("cw-required"); } cw-maxsize="@maxSize" data-default-file="@filepath">
-                                }
-                                else
-                                {
+                            }
+                            else
+                            {
                                 <input type="file" id="task-inputfile" class="dropify" @if (fileRequired) { WriteLiteral("cw-required"); } cw-maxsize="@maxSize">
-                                }
-                            </div>
+                            }
                         </div>
-                        @if (Model.Status1.Name == "Finish" || Model.Status1.Name == "Done")
-                        {
-                        <div class="col-sm-8">
-                            <div class="form-group">
-                                <label for="">Done By</label>
-                                <input type="text" class="form-control" id="task-name" name="" value="@Model.AspNetUser1.UserName" disabled>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <label for="">Date</label>
-                            <input type="text" class="form-control" id="task-name" name="" value="@Model.Done_At" disabled>
-                        </div>
-                        }
-                        @if (Model.Status1.Name == "Finish")
-                        {
+                    </div>
+                    @if (Model.Status1.Name == "Finish")
+                    {
                         <div class="col-sm-8">
                             <div class="form-group">
                                 <label for="">Approve By</label>
@@ -182,42 +332,83 @@
                             <label for="">Date</label>
                             <input type="text" class="form-control" id="task-name" name="" value="@Model.Approve_At" disabled>
                         </div>
+                    }
+                </div>
+                <div class="row clearfix">
+                    <div class="col-sm-12" id="button-action">
+                        @if (Model.Status1.Name == "Open")
+                        {
+                            <button id="btn-savetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving..."><i class="fa fa-save"></i> Save</button>
+                            <button id="btn-donetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Submiting..."><i class="fa fa-check"></i> Submit</button>
                         }
-                    </div>
-                    <div class="row clearfix">
-                        <div class="col-sm-12" id="button-action">
-                            @if (Model.StepRun.Status1.Name == "Running")
+                        @if (Model.Status1.Name == "Done")
+                        {
+                            if (isManager)
                             {
-                                if (Model.Status1.Name == "Open")
-                                {
-                                    <button id="btn-savetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving..."><i class="fa fa-save"></i> Save</button>
-                                    <button id="btn-donetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Submiting..."><i class="fa fa-check"></i> Submit</button>
-                                }
-                                if (Model.Status1.Name == "Done")
-                                {
-                                    if (isManager)
-                                    {
-                                        <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Opening...">Open</button>
-                                        <button id="btn-finishtask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Finishing...">Finish </button>
-                                    }
-                                    <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
-
-                                }
-                                if (Model.Status1.Name == "Finish")
-                                {
-                                    if (isManager)
-                                    {
-                                        <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Opening...">Open</button>
-                                    }
-                                    <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
-                                }
+                                <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Opening...">Open</button>
+                                <button id="btn-finishtask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Finishing...">Finish </button>
                             }
-                        </div>
+                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
+
+                        }
+                        @if (Model.Status1.Name == "Finish")
+                        {
+                            if (isManager)
+                            {
+                                <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Opening...">Open</button>
+                            }
+                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
+                        }
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="header">
+                <h2>Comments</h2>
+            </div>
+            <div class="body">
+                <!-- Comment -->
+                <div class="task-comment">
+                    <div class="comment-form">
+                        <div class="comment-avatar">
+                            <img src="http://lorempixel.com/200/200/people">
+                        </div>
+                        <div class="form">
+                            <div class="form-row">
+                                <textarea class="input" placeholder="Add comment..." id="comment-content"></textarea>
+                            </div>
+                            <div class="form-row clearfix">
+                                <button class="btn btn-primary-theme waves-effect" id="btn-comment-add" style="display:block; margin-left:auto" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Commenting...">Comment</button>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="comments">
+                        <div class="comment">
+                            <div class="comment-avatar">
+                                <img src="http://lorempixel.com/200/200/people/">
+                            </div>
+                            <div class="comment-box">
+                                <div class="comment-text ng-binding">sdasdsa</div>
+                                <div class="comment-footer">
+                                    <div class="comment-info">
+                                        <span class="comment-author">
+                                            <a href="#">annguyen115</a>
+                                        </span>
+                                        <span class="comment-date">Apr 21, 2019 @@ 3:45:02 PM</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+                </div>
+                <!-- Comment -->
+            </div>
+        </div>
+    </div>
+</div>
 }
 
 
@@ -227,7 +418,14 @@
     <script src="~/Content/build/js/pages/forms/dropify.js"></script>
     <script src="~/Content/vendor/select2/select2.min.js"></script>
     <script>
-            $(function () {
+        $(function () {
+                //get comments
+                var t = {
+                    id:@Model.Id,
+                    direction: "@Direction.TaskRun"
+                };
+                getComments(t);
+
                 var form = $(".cw-validation").formValidation();
                 var drEvent = $(".dropify").dropify();
                 drEvent.on('dropify.afterClear, change', function (event, element) {
@@ -303,6 +501,22 @@
                         }, 1000);
                     });
                 });
+                $("#btn-comment-add").on("click", function () {
+                    var content = $("#comment-content").val();
+                    var $this = $(this);
+                    if (content.trim() != "") {
+                        toggleLoading($this);
+                        setTimeout(() => {
+                            var data = {
+                                content: content.trim(),
+                                id: @Model.Id,
+                                direction: "@Direction.TaskRun"
+                            };
+                            addComment(data);
+                            toggleLoading($this);
+                        },1000)
+                    }
+                });
             });
             function saveTaskRun(data) {
                 $.ajax({
@@ -370,6 +584,39 @@
                             window.location.reload();
                             console.error(response)
                         }
+                    }
+                });
+            }
+            function addComment(data) {
+                $.ajax({
+                    url: "@Url.Action("addcomment", "processrun",new { area = "api"})",
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+                        if (response.status == 200) {
+                            var t = {
+                                id:@Model.Id,
+                                direction: "@Direction.TaskRun"
+                            };
+                            getComments(t);
+                        }
+                    }
+                });
+            }
+            function getComments(data) {
+                $.ajax({
+                    url: "@Url.Action("getcomments", "processrun",new { area = "api"})",
+                    type: "GET",
+                    data: data,
+                    dataType: "html",
+                    success: function (response) {
+                        console.log(response);
+                        $(".comments").hide("slow", function () {
+                            $(this).remove();
+                        });
+                        $(".task-comment").append(response);
                     }
                 });
             }

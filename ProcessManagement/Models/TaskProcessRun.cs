@@ -14,12 +14,6 @@ namespace ProcessManagement.Models
     
     public partial class TaskProcessRun
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public TaskProcessRun()
-        {
-            this.Comments = new HashSet<Comment>();
-        }
-    
         public int Id { get; set; }
         public int IdStep { get; set; }
         public Nullable<int> IdRole { get; set; }
@@ -41,8 +35,6 @@ namespace ProcessManagement.Models
     
         public virtual AspNetUser AspNetUser { get; set; }
         public virtual AspNetUser AspNetUser1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Comment> Comments { get; set; }
         public virtual Role Role { get; set; }
         public virtual Status Status1 { get; set; }
         public virtual StepRun StepRun { get; set; }

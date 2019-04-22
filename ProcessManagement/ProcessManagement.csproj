@@ -437,6 +437,7 @@
     <Content Include="Content\build\fonts\weathericons-regular-webfontd41d.eot" />
     <Content Include="Areas\API\Views\web.config" />
     <Content Include="Old\Database\Diagram 1.pdf" />
+    <Content Include="Areas\API\Views\ProcessRun\Comment.cshtml" />
     <None Include="Content\build\scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Content\build\scripts\jquery-3.3.1.js" />
     <Content Include="Content\build\scripts\jquery-3.3.1.min.js" />
@@ -8527,7 +8528,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\API\Models\" />
     <Folder Include="Areas\API\Views\File\" />
-    <Folder Include="Areas\API\Views\ProcessRun\" />
     <Folder Include="Areas\API\Views\Process\" />
     <Folder Include="Areas\API\Views\Shared\" />
     <Folder Include="Content\images\imageProcess\" />

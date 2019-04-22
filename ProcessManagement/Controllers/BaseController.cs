@@ -30,7 +30,7 @@ namespace ProcessManagement.Controllers
         TopCenter,
         BottomCenter
     }
-    public enum FileDirection
+    public enum Direction
     {
         Group,
         Process,

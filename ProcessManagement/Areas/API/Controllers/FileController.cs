@@ -27,7 +27,7 @@ namespace ProcessManagement.Areas.API.Controllers
 
         [GroupAuthorize]
         [HttpPost]
-        public JsonResult uploadFile(int groupid, int? processid, int? stepid, int? taskid, HttpPostedFileBase FileUpload, FileDirection direction)
+        public JsonResult uploadFile(int groupid, int? processid, int? stepid, int? taskid, HttpPostedFileBase FileUpload, Direction direction)
         {
             var status = HttpStatusCode.OK;
             string message;
@@ -49,7 +49,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
             string filePath;
-            if (direction == FileDirection.Process)
+            if (direction == Direction.Process)
             {
                 Process pr = processService.findProcess(processid.GetValueOrDefault());
                 if (pr == null)
@@ -61,7 +61,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 }
                 filePath = String.Format("Upload/{0}/{1}", pr.IdGroup, pr.Id);
             }
-            else if (direction == FileDirection.Step)
+            else if (direction == Direction.Step)
             {
                 Step st = stepService.findStep(stepid.GetValueOrDefault());
                 if (st == null)
@@ -74,7 +74,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 filePath = String.Format("Upload/{0}/{1}/{2}", st.Process.Group.Id, st.Process.Id, st.Id);
 
             }
-            else if (direction == FileDirection.Task)
+            else if (direction == Direction.Task)
             {
                 TaskProcess tp = taskService.findTask(taskid.GetValueOrDefault());
                 if (tp == null)
@@ -143,7 +143,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 response = new { message = message, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
-            var isFileExisted = fileService.checkFileExist(groupid, filename, (FileDirection)Enum.Parse(typeof(FileDirection), file.Direction), file.Path);
+            var isFileExisted = fileService.checkFileExist(groupid, filename, (Direction)Enum.Parse(typeof(Direction), file.Direction), file.Path);
             if (isFileExisted)
             {
                 status = HttpStatusCode.InternalServerError;

@@ -84,7 +84,7 @@ namespace ProcessManagement.Areas.API.Controllers
             string directoryPath = String.Format("Upload/{0}/{1}/{2}/{3}", group.Id, step.Process.Id, step.Id, task.Id);
             fileService.createDirectory(directoryPath);
             //file 
-            fileService.saveFile(group.Id, fileupload, directoryPath, FileDirection.Task);
+            fileService.saveFile(group.Id, fileupload, directoryPath, Direction.Task);
 
             SetFlash(FlashType.success, "Created Task Successfully"); 
             message = "Created Task Successfully";
@@ -202,7 +202,7 @@ namespace ProcessManagement.Areas.API.Controllers
             string directoryPath = String.Format("Upload/{0}/{1}/{2}/{3}", group.Id, step.Process.Id, step.Id, task.Id);
             fileService.createDirectory(directoryPath);
 
-            fileService.saveFile(group.Id, fileupload, directoryPath, FileDirection.Task);
+            fileService.saveFile(group.Id, fileupload, directoryPath, Direction.Task);
 
             SetFlash(FlashType.success, "Created Task Successfully");
             message = "Created Task Successfully";

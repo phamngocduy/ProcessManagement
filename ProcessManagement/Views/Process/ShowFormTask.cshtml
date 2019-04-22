@@ -348,7 +348,7 @@
             data.append("FileUpload", file);
             data.append("groupid", @group.Id);
             data.append("taskid",@Model.Id)
-            data.append("direction", "@FileDirection.Task");
+            data.append("direction", "@Direction.Task");
             $.ajax({
                 url: "@Url.Action("uploadfile", "file", new { area = "api"})",
                 type: "POST",

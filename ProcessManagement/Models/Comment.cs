@@ -16,13 +16,12 @@ namespace ProcessManagement.Models
     {
         public int Id { get; set; }
         public string IdUser { get; set; }
-        public Nullable<int> IdType { get; set; }
-        public Nullable<int> Type { get; set; }
+        public int IdDirection { get; set; }
+        public string Direction { get; set; }
         public string Content { get; set; }
-        public Nullable<System.DateTime> Create_At { get; set; }
-        public Nullable<System.DateTime> Update_At { get; set; }
+        public System.DateTime Create_At { get; set; }
+        public System.DateTime Update_At { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
-        public virtual TaskProcessRun TaskProcessRun { get; set; }
     }
 }

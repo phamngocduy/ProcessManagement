@@ -70,7 +70,7 @@ namespace ProcessManagement.Controllers
             //save file 
             //string savePath = Server.MapPath(String.Format("~/App_Data/{0}", group.Id));
             string filePath = String.Format("Upload/{0}", group.Id);
-            fileService.saveFile(group.Id, FileUpload, filePath, FileDirection.Group);
+            fileService.saveFile(group.Id, FileUpload, filePath, Direction.Group);
 
 
             //create new participate

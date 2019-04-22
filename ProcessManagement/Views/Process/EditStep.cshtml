@@ -202,7 +202,7 @@
             data.append("FileUpload", file);
             data.append("groupid", @group.Id);
             data.append("stepid",@Model.Id)
-            data.append("direction", "@FileDirection.Step");
+            data.append("direction", "@Direction.Step");
             $.ajax({
                 url: "@Url.Action("uploadfile", "file", new { area = "api"})",
                 type: "POST",
