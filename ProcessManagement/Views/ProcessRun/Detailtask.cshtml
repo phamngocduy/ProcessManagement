@@ -481,8 +481,10 @@
                             }, 1000);
                         } else {
                             //submit task
-                            setConfirm(`Are you sure you want to submit this task?`, function () {
+                            setConfirm(`Are you sure you want to submit this task?`, `<textarea class="form-control" id="comment-action-content" placeholder="Your comment (optional)" rows="6"></textarea>`, function () {
                                 toggleLoading($this);
+                                var content = this.$content.find("#comment-action-content").val().trim();
+                                data.append("comment", content);
                                 setTimeout(function () {
                                     submitTaskRun(data);
                                     toggleLoading($this);
@@ -497,7 +499,7 @@
                         idtask: @Model.Id
                     };
                     var $this = $(this);
-                    setConfirm(`Are you sure you want to open this task?`, function () {
+                    setConfirm(null, `Are you sure you want to open this task?`, function () {
                         toggleLoading($this);
                         setTimeout(function () {
                             submitopentask(data);
@@ -510,7 +512,7 @@
                     let data = {
                         idtask: @Model.Id
                     } 
-                    setConfirm(`Are you sure you want to open this task?`, function () {
+                    setConfirm(null, `Are you sure you want to open this task?`, function () {
                         toggleLoading($this);
                         setTimeout(function () {
                             submitfinishtask(data);
@@ -604,7 +606,7 @@
                     }
                 });
             }
-            function addComment(data) {
+        function addComment(data) {
                 $.ajax({
                     url: "@Url.Action("addcomment", "processrun",new { area = "api"})",
                     type: "POST",

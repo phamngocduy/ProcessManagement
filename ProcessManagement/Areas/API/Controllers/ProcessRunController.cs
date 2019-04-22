@@ -73,7 +73,7 @@ namespace ProcessManagement.Areas.API.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult submittaskrun(int idtaskrun, string valuetext, string valuefile, HttpPostedFileBase fileupload, bool isEdit)
+        public JsonResult submittaskrun(int idtaskrun, string valuetext, string valuefile, HttpPostedFileBase fileupload, string comment, bool isEdit)
         {
             string IdUser = User.Identity.GetUserId();
             var status = HttpStatusCode.OK;
@@ -107,6 +107,19 @@ namespace ProcessManagement.Areas.API.Controllers
                 if (!isEdit)
                 {
                     fileService.emptyDirectory(taskRunPath);
+                }
+                if (comment.Trim() != "")
+                {
+                    Comment cm = new Comment();
+                    cm.IdUser = IdUser;
+                    cm.IdDirection = taskrun.Id;
+                    cm.Direction = Direction.TaskRun.ToString();
+                    cm.Content = comment;
+                    cm.isAction = true;
+                    cm.Create_At = DateTime.Now;
+                    cm.Update_At = DateTime.Now;
+                    db.Comments.Add(cm);
+                    db.SaveChanges();
                 }
                 fileService.createDirectory(taskRunPath);
                 fileService.saveFile(groupid, fileupload, taskRunPath, Direction.TaskRun);
@@ -210,10 +223,10 @@ namespace ProcessManagement.Areas.API.Controllers
             com.IdDirection = id;
             com.Direction = direction.ToString();
             com.Content = content;
+            com.isAction = false;
             com.Create_At = DateTime.Now;
             com.Update_At = DateTime.Now;
             db.Comments.Add(com);
-
             db.SaveChanges();
             message = "Comment sucessfully";
             response = new { message = message, status = status };

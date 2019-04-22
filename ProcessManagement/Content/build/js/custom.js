@@ -1,12 +1,12 @@
 ﻿$(function () {
     //tooltip
-    $('body').tooltip({
-        selector: '[data-toggle=tooltip]',
-        trigger: 'hover'
+    $("body").tooltip({
+        selector: "[data-toggle=tooltip]",
+        trigger: "hover"
     });
 
     //var lang = CapstoneProject.Cookies.getCookie("LangFOrLangForProcessManagementSystem");
-    //$('.setLang[data-lang="' + lang + '"]').addClass('active-lang');
+    //$(".setLang[data-lang="" + lang + ""]").addClass("active-lang");
     var pathHaveLang = window.location.pathname;
     var path = pathHaveLang.replace("/vi", "").replace("/en", "");
     console.log(path);
@@ -19,16 +19,16 @@
     var themeOptions = $("ul.choose-skin>li");
     themeOptions.each(function (i, option) {
         let colorData = option.getAttribute("data-theme");
-        let color = getCookie('colortheme');
+        let color = getCookie("colortheme");
         if (colorData == color) {
             option.classList.add("active")
             return false;
         }
     });
-    $('.choose-skin li').on('click', function () {
-        let color = $(this).attr('data-theme');
-        setCookie('colortheme', color, 7);
-        $('body').removeClass();
+    $(".choose-skin li").on("click", function () {
+        let color = $(this).attr("data-theme");
+        setCookie("colortheme", color, 7);
+        $("body").removeClass();
         setTheme();
     });
 
@@ -37,8 +37,8 @@
     menuItem.each(function () {
         var href = $(this).attr("href");
         if (pathHaveLang == href) {
-            $(this).parent('li').addClass('active');
-            var parent = $(this).parents('ul');
+            $(this).parent("li").addClass("active");
+            var parent = $(this).parents("ul");
             if (parent.hasClass("collapse")) {
                 parent.addClass("in");
                 parent.parent("li").addClass("active");
@@ -58,7 +58,7 @@
     })
     //limit length input
     $(".limit-length").on("keypress", function (e) {
-        var maxlengthNumber = parseInt($(this).attr('maxlength'));
+        var maxlengthNumber = parseInt($(this).attr("maxlength"));
         var inputValueLength = $(this).val().length + 1;
         if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
 
@@ -98,10 +98,10 @@ function setCookie(cname, cvalue, exdays) {
 function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
+    var ca = decodedCookie.split(";");
     for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
-        while (c.charAt(0) == ' ') {
+        while (c.charAt(0) == " ") {
             c = c.substring(1);
         }
         if (c.indexOf(name) == 0) {
@@ -111,45 +111,45 @@ function getCookie(cname) {
     return "";
 }
 function deleteCookie(name) {
-    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
 }
 function setTheme() {
     let theme = "theme-";
     let defaultColor = "blue";
-    let color = getCookie('colortheme');
+    let color = getCookie("colortheme");
     color = color == "" ? defaultColor : color;
 
     switch (color) {
-        case 'blue':
-            theme += 'blue';
+        case "blue":
+            theme += "blue";
             break;
-        case 'purple':
-            theme += 'purple';
+        case "purple":
+            theme += "purple";
             break;
-        case 'cyan':
-            theme += 'cyan';
+        case "cyan":
+            theme += "cyan";
             break;
-        case 'green':
-            theme += 'green';
+        case "green":
+            theme += "green";
             break;
-        case 'orange':
-            theme += 'orange';
+        case "orange":
+            theme += "orange";
             break;
-        case 'blush':
-            theme += 'blush';
+        case "blush":
+            theme += "blush";
             break;
 
         default:
             theme += defaultColor;
     }
-    $('body').removeClass().addClass(theme);
+    $("body").removeClass().addClass(theme);
 }
 function createSwitch() {
     var switchArr = [];
-    let el = $('.checkbox-switch');
+    let el = $(".checkbox-switch");
     el.each(function (index, e) {
         switchArr[index] = new Switchery(e, {
-            size: 'small',
+            size: "small",
         });
     })
     return switchArr;
@@ -167,7 +167,7 @@ function toggleLoading(element) {
     var text = element.html();
     //tooggle disable
     //see more: https://stackoverflow.com/a/9489400
-    element.prop('disabled', function (i, v) { return !v; });
+    element.prop("disabled", function (i, v) { return !v; });
     var loadingConfig = element.attr("data-loading-text");
     element.html(loadingConfig).attr("data-loading-text", text);
 }
@@ -185,25 +185,28 @@ function showToastr(type, message, position) {
     toastr[type](message);
 }
 //confirm
-function setConfirm(content, okfunction, cancelfunction) {
-    $.confirm({
-        title: 'Confirm!',
-        type: 'primary-theme',
-        theme: 'material',
-        icon: 'fa fa-question',
+function setConfirm(title, content, okfunction, cancelfunction) {
+    var option = {
+        type: "primary-theme",
+        theme: "material",
+        icon: "fa fa-question",
         closeIcon: true,
-        closeIconClass: 'fa fa-close',
+        backgroundDismiss: true,
+        closeIconClass: "fa fa-close",
         content: content,
-        columnClass: 'medium',
+        columnClass: "medium",
         buttons: {
             ok: {
-                btnClass: 'btn-none waves-effect',
+                btnClass: "btn-none waves-effect",
                 action: okfunction
             },
             cancel: {
-                btnClass: 'btn-none waves-effect',
+                btnClass: "btn-none waves-effect",
                 action: cancelfunction
             }
         },
-    });
+    };
+    if (title != null) option.title = title;
+    else option.title = "Confirm!"; 
+    $.confirm(option);
 }

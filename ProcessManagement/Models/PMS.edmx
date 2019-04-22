@@ -36,6 +36,7 @@
           <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Create_At" Type="datetime" Nullable="false" />
           <Property Name="Update_At" Type="datetime" Nullable="false" />
+          <Property Name="isAction" Type="bit" />
         </EntityType>
         <EntityType Name="ConfigRule">
           <Key>
@@ -765,6 +766,7 @@
           <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Create_At" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Update_At" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="isAction" Type="Boolean" />
           <NavigationProperty Name="AspNetUser" Relationship="PMSModel.FK_Comment_AspNetUsers" FromRole="Comment" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="ConfigRule">
@@ -1301,6 +1303,7 @@
           <EntitySetMapping Name="Comments">
             <EntityTypeMapping TypeName="PMSModel.Comment">
               <MappingFragment StoreEntitySet="Comment">
+                <ScalarProperty Name="isAction" ColumnName="isAction" />
                 <ScalarProperty Name="Update_At" ColumnName="Update_At" />
                 <ScalarProperty Name="Create_At" ColumnName="Create_At" />
                 <ScalarProperty Name="Content" ColumnName="Content" />

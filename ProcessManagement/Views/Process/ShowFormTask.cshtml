@@ -222,7 +222,7 @@
             $("body").on("click", "#btn-remove-task", function () {
                 var $this = $(this);
                 var action = $this[0].dataset.action;
-                setConfirm(`Are you sure you want to delete this task ?`, function () {
+                setConfirm(null, `Are you sure you want to delete this task ?`, function () {
                     toggleLoading($this);
                     localStorage.setItem("showStep", @step.Id);
                     setTimeout(function () {
@@ -285,7 +285,7 @@
             $(document).on("click", ".btn-file-remove", function () {
                 var id = this.dataset.src;
                 var fileName = $(this).parents("tr").find("td:first-child").text().trim();
-                setConfirm(`Are you sure you want to delete "${fileName}"?`, function () {
+                setConfirm(null, `Are you sure you want to delete "${fileName}"?`, function () {
                     removeFile(id);
                 });
             })
@@ -310,7 +310,7 @@
                                     showToastr("error", "File Name is required");
                                 } else {
                                     dialog.close();
-                                    setConfirm(`Are you sure you want to change from <b>${fileName}</b> to <b>${newFileName}</b>?`, function () {
+                                    setConfirm(null, `Are you sure you want to change from <b>${fileName}</b> to <b>${newFileName}</b>?`, function () {
                                         changeFileName(id, newFileName);
                                     });
 
@@ -335,7 +335,7 @@
                 if (maxFileSize != null && fileSize > maxFileSize) {
                     showToastr("error", `This file is too big (@maxFileSizeRule.Value @maxFileSizeRule.Unit maximum)`);
                 } else {
-                    setConfirm(`Are you sure you want to upload "${fileName}"?`, function () {
+                    setConfirm(null, `Are you sure you want to upload "${fileName}"?`, function () {
                         addFile(file);
                     });
                 }

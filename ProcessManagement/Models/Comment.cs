@@ -21,6 +21,7 @@ namespace ProcessManagement.Models
         public string Content { get; set; }
         public System.DateTime Create_At { get; set; }
         public System.DateTime Update_At { get; set; }
+        public Nullable<bool> isAction { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
     }

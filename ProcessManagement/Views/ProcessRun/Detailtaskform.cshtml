@@ -308,7 +308,7 @@
                     let data = {
                         idtask: idtask
                     }
-                    setConfirm(`Are you sure you want to open this task?`, function () {
+                    setConfirm(null, `Are you sure you want to open this task?`, function () {
                         toggleLoading($this);
                         setTimeout(function () {
                             submitfinishtask(data);
@@ -341,7 +341,7 @@
                         idtask: idtask
                     };
                     var $this = $(this);
-                    setConfirm(`Are you sure you want to open this task?`, function () {
+                    setConfirm(null, `Are you sure you want to open this task?`, function () {
                         toggleLoading($this);
                         setTimeout(function () {
                             submitopentask(data);
