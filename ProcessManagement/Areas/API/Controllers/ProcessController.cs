@@ -467,8 +467,7 @@ namespace ProcessManagement.Areas.API.Controllers
                     stepback = item;
                 }
             }
-            //StepRun stepback = liststeprun.OrderByDescending(x => x.Created_at).FirstOrDefault();
-            
+           
             if (stepback.Figure == "Diamond")
             {
                 StepRun stepbacknotdiamond = liststeprun.Where(x => x.NextStep1 == stepback.Key).OrderByDescending(x => x.Created_at).FirstOrDefault();

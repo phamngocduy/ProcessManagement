@@ -102,7 +102,7 @@ namespace ProcessManagement.Controllers
             {
                 if (nodeArray[i]["figure"] != null)
                 {
-                    if (nodeArray[i]["figure"].ToString() == circle && nodeArray[i]["fill"].ToString() == "#CE0620")
+                    if (nodeArray[i]["figure"].ToString() == circle && nodeArray[i]["fill"].ToString() == "#f20000")
                     {
                         b.Add((int)nodeArray[i]["key"]);
                     }
@@ -447,7 +447,7 @@ namespace ProcessManagement.Controllers
             {
                 if (nodeArray[i]["figure"] != null)
                 {
-                    if (nodeArray[i]["figure"].ToString() == circle && nodeArray[i]["fill"].ToString() == "#CE0620")
+                    if (nodeArray[i]["figure"].ToString() == circle && nodeArray[i]["fill"].ToString() == "#f20000")
                     {
                         b.Add((int)nodeArray[i]["key"]);
                     }

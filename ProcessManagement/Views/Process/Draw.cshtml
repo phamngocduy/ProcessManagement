@@ -420,7 +420,7 @@
                             {
                                 text: "Start",
                                 figure: "Circle",
-                                fill: "#00AD5F"
+                                fill: "#1aff1a"
                             },
                             {
                                 text: "Step"
@@ -433,12 +433,7 @@
                             {
                                 text: "End",
                                 figure: "Circle",
-                                fill: "#CE0620"
-                            },
-                            {
-                                text: "Comment",
-                                figure: "RoundedRectangle",
-                                fill: "lightyellow"
+                                fill: "#f20000"
                             }
                         ], [
                                 // the Palette also has a disconnected Link, which the user can drag-and-drop
@@ -564,7 +559,7 @@
 
             var count = 0;
             for (var i = 0; i < Nodes.length; i++) {
-                if (Nodes[i].figure == 'Circle' && Nodes[i].fill == '#00AD5F') {
+                if (Nodes[i].figure == 'Circle' && Nodes[i].fill == '#1aff1a') {
                     count++;
                     if (count > 1) {
                         alert('Has too many Start Step');
@@ -609,7 +604,7 @@
                 }
             }
             for (var i = 0; i < myDiagram.model.nodeDataArray.length; i++) {
-                if (myDiagram.model.nodeDataArray[i].fill == '#CE0620') {
+                if (myDiagram.model.nodeDataArray[i].fill == '#f20000') {
                     if (Nodes[i].output > 0) {
                         alert(Nodes[i].text + ' structure wrong');
                         return false;
@@ -620,10 +615,10 @@
             let stepend = [];
             let stepdiamond = [];
             for (var i = 0; i < Nodes.length; i++) {
-                if (Nodes[i].figure == 'Circle' && Nodes[i].fill == '#00AD5F') {
+                if (Nodes[i].figure == 'Circle' && Nodes[i].fill == '#1aff1a') {
                     stepstart = Nodes[i];
                 }
-                if (Nodes[i].figure == 'Circle' && Nodes[i].fill == '#CE0620') {
+                if (Nodes[i].figure == 'Circle' && Nodes[i].fill == '#f20000') {
                     stepend.push(Nodes[i]);
                 }
                 if (Nodes[i].figure == 'Diamond') {

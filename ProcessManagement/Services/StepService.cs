@@ -156,9 +156,14 @@ namespace ProcessManagement.Services
             return steprun;
         }
 
-        public void deletenextsteprun(StepRun runstep, /*List<TaskProcessRun> listtaskrun,*/ StepRun stepback)
+        public void deletenextsteprun(StepRun runstep, StepRun stepback)
         {
             List<TaskProcessRun> taskrun = db.TaskProcessRuns.Where(x =>x.IdStep == runstep.Id).ToList();
+            foreach (var item in taskrun)
+            {
+                List<Comment> comment = db.Comments.Where(x => x.IdDirection == item.Id).ToList();
+                db.Comments.RemoveRange(comment);
+            }
             db.TaskProcessRuns.RemoveRange(taskrun);
             db.StepRuns.Remove(runstep);
             Status status = db.Status.Where(y => y.Name == "Running").FirstOrDefault();
