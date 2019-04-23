@@ -495,12 +495,15 @@
                     }
                 });
                 $('#btn-opentask').on('click', function () {
-                    let data = {
-                        idtask: @Model.Id
-                    };
+                   
                     var $this = $(this);
-                    setConfirm(null, `Are you sure you want to open this task?`, function () {
+                    setConfirm(`Are you sure you want to open this task?`, `<textarea class="form-control" id="comment-action-content" placeholder="Your comment (optional)" rows="6"></textarea>`, function () {
                         toggleLoading($this);
+                        var content = this.$content.find("#comment-action-content").val().trim();
+                        let data = {
+                             idtask: @Model.Id,
+                             comment: content
+                         };
                         setTimeout(function () {
                             submitopentask(data);
                             toggleLoading($this);
@@ -511,9 +514,14 @@
                     var $this = $(this);
                     let data = {
                         idtask: @Model.Id
-                    } 
-                    setConfirm(null, `Are you sure you want to open this task?`, function () {
+                    };
+                    setConfirm(`Are you sure you want to finish this task?`, `<textarea class="form-control" id="comment-action-content" placeholder="Your comment (optional)" rows="6"></textarea>`, function () {
                         toggleLoading($this);
+                        var content = this.$content.find("#comment-action-content").val().trim();
+                        let data = {
+                             idtask: @Model.Id,
+                             comment: content
+                         };
                         setTimeout(function () {
                             submitfinishtask(data);
                             toggleLoading($this);
@@ -606,7 +614,7 @@
                     }
                 });
             }
-        function addComment(data) {
+            function addComment(data) {
                 $.ajax({
                     url: "@Url.Action("addcomment", "processrun",new { area = "api"})",
                     type: "POST",

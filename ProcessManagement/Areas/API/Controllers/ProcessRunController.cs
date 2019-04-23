@@ -180,7 +180,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult submitfinishtask(int idtask)
+        public JsonResult submitfinishtask(int idtask, string comment)
         {
             string IdUser = User.Identity.GetUserId();
             var status = HttpStatusCode.OK;
@@ -189,26 +189,51 @@ namespace ProcessManagement.Areas.API.Controllers
 
             TaskProcessRun taskrun = taskService.findTaskRun(idtask);
             taskService.submitclosetask(taskrun.Id, IdUser);
-
-            message = "Close Task";
+            if (comment.Trim() != "")
+            {
+                Comment cm = new Comment();
+                cm.IdUser = IdUser;
+                cm.IdDirection = taskrun.Id;
+                cm.Direction = Direction.TaskRun.ToString();
+                cm.Content = comment;
+                cm.isAction = true;
+                cm.Create_At = DateTime.Now;
+                cm.Update_At = DateTime.Now;
+                db.Comments.Add(cm);
+                db.SaveChanges();
+            }
+            message = "Close Task Sucessfully";
             response = new { message = message, status = status };
-            SetFlash(FlashType.success, "Close Task");
+            SetFlash(FlashType.success, message);
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public JsonResult submitopentask(int idtask)
+        public JsonResult submitopentask(int idtask,string comment)
         {
             var status = HttpStatusCode.OK;
             string message;
             object response;
+            string IdUser = User.Identity.GetUserId();
 
             TaskProcessRun taskrun = taskService.findTaskRun(idtask);
             taskService.submitopentask(taskrun.Id);
-
-            message = "Open Task";
+            if (comment.Trim() != "")
+            {
+                Comment cm = new Comment();
+                cm.IdUser = IdUser;
+                cm.IdDirection = taskrun.Id;
+                cm.Direction = Direction.TaskRun.ToString();
+                cm.Content = comment;
+                cm.isAction = true;
+                cm.Create_At = DateTime.Now;
+                cm.Update_At = DateTime.Now;
+                db.Comments.Add(cm);
+                db.SaveChanges();
+            }
+            message = "Open Task Sucessfully";
             response = new { message = message, status = status };
-            SetFlash(FlashType.success, "Open Task");
+            SetFlash(FlashType.success, message);
             return Json(response, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
