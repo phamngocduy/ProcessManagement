@@ -11,6 +11,7 @@
     var runnextstep = ViewData["StepisNext"] as ProcessManagement.Models.StepRun;
     var isManager = userRole.IsManager;
     var files = ViewData["Files"] as List<ProcessManagement.Models.FileManager>;
+    var count = 0;
 }
 
 @section CustomCss{
@@ -113,6 +114,7 @@
                                 {
                                     foreach (StepRun step in ViewBag.ListRunStep)
                                     {
+                                        count++;
                                         List<TaskProcessRun> taskList = db.TaskProcessRuns.Where(z => z.IdStep == step.Id).OrderBy(x => x.Position).ToList();
                                         List<TaskProcessRun> listtaskclose = taskList.Where(x => x.Status1.Name == "Finish").ToList();
                                         <li>
@@ -137,7 +139,7 @@
                                                                 <button id="btn-complete" value="@step.Id" class="btn btn-primary-theme btn-sm" style="float: right">Complete</button>
                                                             }
                                                         }
-                                                        if (step.StartStep == false && step.Status1.Name == "Running")
+                                                        if (count > 1 && step.Status1.Name == "Running")
                                                         {
                                                             <button id="btn-deletestep" value="@step.Id" class="btn btn-primary-theme btn-sm" style="float: right; margin-right: 5px;">Delete</button>
                                                         }
@@ -148,11 +150,10 @@
                                                     <div class="modal-dialog modal-lg">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h4 class="modal-title">List Next Steps</h4>
+                                                                <h4 class="modal-title">Choose next step!</h4>
                                                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <p style="margin: 0;">Choose next step! </p>
                                                                 <form action="">
                                                                     @if (Model != null)
                                                                     {

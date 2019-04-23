@@ -459,10 +459,19 @@ namespace ProcessManagement.Areas.API.Controllers
             object response;
             StepRun runstep = stepService.findsteprun(idStep);
             List<StepRun> liststeprun = stepService.findStepsOfRunProcess(runstep.idProcess);
-            StepRun stepback = liststeprun.Where(x => x.NextStep1 == runstep.Key).FirstOrDefault();
+            StepRun stepback = new StepRun();
+            foreach (var item in liststeprun)
+            {
+                if (item.Id != runstep.Id)
+                {
+                    stepback = item;
+                }
+            }
+            //StepRun stepback = liststeprun.OrderByDescending(x => x.Created_at).FirstOrDefault();
+            
             if (stepback.Figure == "Diamond")
             {
-                StepRun stepbacknotdiamond = liststeprun.Where(x => x.NextStep1 == stepback.Key).FirstOrDefault();
+                StepRun stepbacknotdiamond = liststeprun.Where(x => x.NextStep1 == stepback.Key).OrderByDescending(x => x.Created_at).FirstOrDefault();
                 stepService.removeStepRun(stepback);
                 stepService.deletenextsteprun(runstep, stepbacknotdiamond);
             }

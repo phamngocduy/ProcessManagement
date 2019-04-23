@@ -55,10 +55,10 @@
 
     <div>
         <div>
-            <button id="SaveButton" onclick="save()" style="display: none">Save</button>
-            <button onclick="load()" style="display: none">Load</button>
+            <button id="SaveButton" onclick="save()" @*style="display: none"*@>Save</button>
+            <button onclick="load()" @*style="display: none"*@>Load</button>
         </div>
-        <textarea id="mySavedModel" style="width:100%;height:300px; display: none">
+        <textarea id="mySavedModel" style="width:100%;height:300px;">
         { 
         "nodeDataArray": [
         ],
@@ -338,7 +338,7 @@
                         relinkableTo: true,
                         reshapable: true
                     }, {
-                        routing: go.Link.AvoidsNodes,
+                        routing: go.Link.Orthogonal,
                         curve: go.Link.JumpOver,
                         corner: 5,
                         toShortLength: 4
@@ -462,6 +462,8 @@
         //    }
         //}
 
+
+
         function TopRotatingTool() {
             go.RotatingTool.call(this);
         }
@@ -564,7 +566,7 @@
             for (var i = 0; i < Nodes.length; i++) {
                 if (Nodes[i].figure == 'Circle' && Nodes[i].fill == '#00AD5F') {
                     count++;
-                    if (count == 2) {
+                    if (count > 1) {
                         alert('Has too many Start Step');
                         return false;
                     }
@@ -609,11 +611,44 @@
             for (var i = 0; i < myDiagram.model.nodeDataArray.length; i++) {
                 if (myDiagram.model.nodeDataArray[i].fill == '#CE0620') {
                     if (Nodes[i].output > 0) {
-                        alert(Nodes[i].text + ' wrong structure');
+                        alert(Nodes[i].text + ' structure wrong');
                         return false;
                     }
                 }
             }
+            let stepstart = [];
+            let stepend = [];
+            let stepdiamond = [];
+            for (var i = 0; i < Nodes.length; i++) {
+                if (Nodes[i].figure == 'Circle' && Nodes[i].fill == '#00AD5F') {
+                    stepstart = Nodes[i];
+                }
+                if (Nodes[i].figure == 'Circle' && Nodes[i].fill == '#CE0620') {
+                    stepend.push(Nodes[i]);
+                }
+                if (Nodes[i].figure == 'Diamond') {
+                    stepdiamond.push(Nodes[i]);
+                }
+            }
+            for (var i = 0; i < Links.length; i++) {
+                for (var j = 0; j < stepend.length; j++) {
+                    if (Links[i].from == stepstart.key && Links[i].to == stepend[j].key) {
+                        alert('Process structure wrong');
+                        return false;
+                    }
+                    for (var k = 0; k < stepdiamond.length; k++) {
+                        if (Links[i].from == stepdiamond[k].key && Links[i].to == stepend[j].key) {
+                            alert('Process structure wrong');
+                            return false;
+                        }
+                        if (Links[i].from == stepstart.key && Links[i].to == stepdiamond[k].key) {
+                            alert('Process structure wrong');
+                            return false;
+                        }
+                    }
+                }
+            }
+
             let data = $("#mySavedModel").val();
             let img = myDiagram.makeImageData({
                 scale: 1,

@@ -155,7 +155,7 @@ namespace ProcessManagement.Controllers
                 step.Figure = nodeArray[i]["figure"] == null ? "Step" : nodeArray[i]["figure"].ToString();
                 step.Created_At = DateTime.Now;
                 step.Updated_At = DateTime.Now;
-                if (step.Figure != "Circle")
+                if (step.Figure != "Circle" || step.Figure != "RoundedRectangle")
                 {
                     db.Steps.Add(step);
                     db.SaveChanges();
@@ -568,7 +568,7 @@ namespace ProcessManagement.Controllers
                 step.NextStep1 = item3.NextStep1;
                 step.NextStep2 = item3.NextStep2;
                 step.Color = commonService.getRandomColor();
-                if (step.Figure != "Circle")
+                if (step.Figure != "Circle" || step.Figure != "RoundedRectangle")
                 {
                     db.Steps.Add(step);
                     db.SaveChanges();
