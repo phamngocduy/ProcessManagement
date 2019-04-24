@@ -113,8 +113,14 @@
             var formb;
             var optionRender = {
                 uploadFile: function (fieldData) {
+                    var template;
+                    if ( fieldData.value == "undefined" || fieldData.val == "") {
+                        template = `<input type="file" id="${fieldData.name}" data-default-file=${fieldData.value} cw-maxsize= ${fieldData.maxfilesize + fieldData.unit}>`;
+                    } else {
+                        template = `<input type="file" id="${fieldData.name}"  cw-maxsize= ${fieldData.maxfilesize + fieldData.unit}>`;
+                    }
                     return {
-                        field: '<input type="file" id="' + fieldData.name + '">',
+                        field: template,
                         onRender: function () {
                             var inputfile = $(`#${fieldData.name}`);
                             inputfile.dropify();
