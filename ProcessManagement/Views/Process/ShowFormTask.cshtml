@@ -98,10 +98,9 @@
 </div>
 @section CustomScripts{
     <script src="~/Content/vendor/dropify/js/dropify.min.js"></script>
-    <script src="~/Content/build/js/pages/forms/dropify.js"></script>
     <script src="~/Content/vendor/select2/select2.min.js"></script>
     <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script src="~/Content/vendor/jquery-ui-custom/jquery-ui.min.js"></script>
     <script src="~/Content/vendor/FormBuilder/form-builder.min.js"></script>
     <script src="~/Content/vendor/FormBuilder/form-render.min.js"></script>
 
@@ -111,12 +110,21 @@
                             <button id="btn-back" class="btn btn-default waves-effect">Back</button>`;
             var showForm = $("#show-task").html();
             var taskform = '@Model.ValueFormJson'.replace(/&quot;/g, "\"");
-            var formData = taskform;
-            if (taskform != null) {
-               $("#render-wrap").formRender({formData});
-            }
             var formb;
-
+            var optionRender = {
+                uploadFile: function (fieldData) {
+                    return {
+                        field: '<input type="file" id="' + fieldData.name + '">',
+                        onRender: function () {
+                            var inputfile = $(`#${fieldData.name}`);
+                            inputfile.dropify();
+                        }
+                    };
+                }
+            }
+            if (taskform != null) {
+                $("#render-wrap").formRender({ templates: optionRender, formData: taskform });
+            }
             var switchArr = createSwitch();
             switchArr.forEach(item => item.disable());
 
@@ -136,7 +144,8 @@
                         'header',
                         'hidden',
                         'paragraph',
-                        'autocomplete'
+                        'autocomplete',
+                        'file'
                     ],
                     disabledAttrs: [
                         'access',
@@ -149,12 +158,54 @@
                         'step',
                         'toggle'
                     ],
-                    fieldRemoveWarn: true,
-                    formData
+                    fields: [{
+                        label: 'Upload File',
+                        attrs: {
+                            type: 'uploadFile'
+                        },
+                        icon: `<img src="https://img.icons8.com/ios/16/000000/upload.png">`
+                    }],
+                    templates: {
+                        uploadFile: function (fieldData) {
+                            return {
+                                field: '<input type="file" id="' + fieldData.name + '">',
+                                onRender: function () {
+                                    var inputfile = $(`#${fieldData.name}`);
+                                    inputfile.dropify();
+                                }
+                            };
+                        }
+                    },
+                    typeUserAttrs: {
+                        uploadFile: {
+                            maxfilesize: {
+                                label: 'Max Size',
+                                value: '10',
+                                type: 'number'
+                            },
+                            unit: {
+                                label: 'Unit',
+                                options: {
+                                    'b': 'Byte',
+                                    'mb': 'Megabyte',
+                                    'kb': 'Kilobyte',
+                                    'gb': 'Gigabyte'
+                                },
+                            }
+
+                        },
+                        text: {
+                            a: {
+                                label: 'a',
+                                value: 'aaa'
+                            }
+                        }
+                    },
+                    formData: taskform,
+                    showActionButtons: false
                 };
                 if (taskform != null) {
-                    var fbEditor = document.getElementById('build-wrap');
-                    formb = $(fbEditor).formBuilder(options);
+                    formb = $("#build-wrap").formBuilder(options);
                 }
 
                 var actionButton = $this.parents("#button-action");
@@ -176,7 +227,7 @@
                 $("#show-task").html(showForm);
                 switchArr = createSwitch();
                 if (taskform != null) {
-                    $("#render-wrap").formRender({ formData });
+                    $("#render-wrap").formRender({ templates: optionRender, formData: taskform });
                     $("#build-wrap").empty();
                 }
             });
