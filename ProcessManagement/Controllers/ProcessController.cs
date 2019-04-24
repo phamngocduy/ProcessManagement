@@ -155,7 +155,7 @@ namespace ProcessManagement.Controllers
                 step.Figure = nodeArray[i]["figure"] == null ? "Step" : nodeArray[i]["figure"].ToString();
                 step.Created_At = DateTime.Now;
                 step.Updated_At = DateTime.Now;
-                if (step.Figure != "Circle" || step.Figure != "RoundedRectangle")
+                if (step.Figure != "Circle")
                 {
                     db.Steps.Add(step);
                     db.SaveChanges();
@@ -186,7 +186,10 @@ namespace ProcessManagement.Controllers
             List<Step> listnextstep1 = new List<Step>();
             List<Step> listnextstep2 = new List<Step>();
             Step start = listStep.Where(x => x.StartStep == true).FirstOrDefault();
-            listnextstep1.Add(start);
+            if (start != null)
+            {
+                listnextstep1.Add(start);
+            }
             int z = 0;
             int t = 0;
             for (int j = 0; j < listStep.Count; j++)
@@ -258,15 +261,15 @@ namespace ProcessManagement.Controllers
             {
                 listnextstep1.Add(item);
             }
-
-
+            List<Step> liststepshow = listnextstep1.Where(x => x.Figure == "Step" && (x.IsRun == false || x.IsRun == null)).ToList();
+            
             ViewData["Group"] = group;
             ViewData["Process"] = process;
             ViewData["ListRole"] = listRole;
             //ViewData["Statistic"] = processStatisticModel;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             ViewData["Files"] = files;
-            ViewData["listnextstep1"] = listnextstep1;
+            ViewData["listnextstep1"] = liststepshow;
             //get maximum file config
             ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
             return View();
@@ -568,7 +571,7 @@ namespace ProcessManagement.Controllers
                 step.NextStep1 = item3.NextStep1;
                 step.NextStep2 = item3.NextStep2;
                 step.Color = commonService.getRandomColor();
-                if (step.Figure != "Circle" || step.Figure != "RoundedRectangle")
+                if (step.Figure != "Circle")
                 {
                     db.Steps.Add(step);
                     db.SaveChanges();
