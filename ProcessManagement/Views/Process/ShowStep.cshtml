@@ -169,7 +169,7 @@
                 <ul class="step-list">
                     @if (listnextstep1 != null)
                     {
-                        foreach (var step in listnextstep1.Where(x => x.Figure == "Step" && (x.IsRun == false || x.IsRun == null)))
+                        foreach (var step in listnextstep1)
                         {
                             if (step != null && step.Figure == "Step" && (step.IsRun == false || step.IsRun == null))
                             {
