@@ -1,5 +1,4 @@
 ﻿@model ProcessManagement.Models.TaskProcess
-
 @{
     ViewBag.Title = "AddTaskFormProcess";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -113,14 +112,16 @@
             var formb;
             var optionRender = {
                 uploadFile: function (fieldData) {
-                    var template;
-                    if ( fieldData.value == "undefined" || fieldData.val == "") {
-                        template = `<input type="file" id="${fieldData.name}" data-default-file=${fieldData.value} cw-maxsize= ${fieldData.maxfilesize + fieldData.unit}>`;
-                    } else {
-                        template = `<input type="file" id="${fieldData.name}"  cw-maxsize= ${fieldData.maxfilesize + fieldData.unit}>`;
+                    var attr = [];
+                    if (fieldData.required) {
+                        attr.push("cw-required");
                     }
+                    attr.push(`cw-maxsize= ${fieldData.maxfilesize}${fieldData.unit}`);  
+                    if (fieldData.value == "undefined" || fieldData.val == "") {
+                        attr.push(`data-default-file=${fieldData.value}`);
+                    } 
                     return {
-                        field: template,
+                        field: `<input type="file" id="${fieldData.name}" ${attr.join(" ")}>`,
                         onRender: function () {
                             var inputfile = $(`#${fieldData.name}`);
                             inputfile.dropify();
