@@ -12,10 +12,11 @@
     var textLength = ViewData["TextMaxLength"] as ProcessManagement.Models.ConfigRule;
     var maxFileSizeRule = ViewData["FileMaxSize"] as ProcessManagement.Models.ConfigRule;
     var files = ViewData["Files"] as List<ProcessManagement.Models.FileManager>;
-}
+
 }
 
 @section CustomCss{
+    <link rel="stylesheet" href="~/Content/vendor/dropify/css/dropify.min.css">
     <style>
         .comments-app {
             margin: 50px auto;
@@ -30,8 +31,6 @@
             text-align: center;
             text-shadow: 0 0 2px rgba(152, 152, 152, 1);
         }
-
-        
 
         .comment-form .comment-avatar {
         }
@@ -81,8 +80,6 @@
             box-shadow: 0 2px 6px rgba(121, 137, 148, .55);
         }
 
-
-
         .comment-form,
         .comment {
             margin-bottom: 20px;
@@ -102,7 +99,6 @@
             top: 0;
             width: 80px;
         }
-
         .comment-form .comment-avatar img,
         .comment .comment-avatar img {
             display: block;
@@ -167,14 +163,10 @@
             color: #555f77;
             text-decoration: underline;
         }
-
         .comment .comment-info {
             float: left;
             width: 100%;
         }
-
-
-
         .comment .comment-date:before {
             content: "|";
             margin: 0 10px;
@@ -266,7 +258,7 @@
                 <div class="body" id="show-taskrun">
                     <div class="row clearfix">
                         <div class="col-sm-12 setDataWrap">
-                            <form class="render-wrap @if (Model.Status1.Name != "Open") { WriteLiteral("disable-all"); }" id="render-wrap"></form>
+                            <div class="render-wrap form-validation @if (Model.Status1.Name != "Open") { WriteLiteral("disable-all"); }" id="render-wrap"></div>
                         </div>
                         @if (Model.Status1.Name == "Finish" || Model.Status1.Name == "Done")
                         {
@@ -357,27 +349,48 @@
 
 
 @section CustomScripts{
-    <script src="~/Content/vendor/FormBuilder/form-builder.min.js"></script>
+    <script src="~/Content/vendor/dropify/js/dropify.min.js"></script>
     <script src="~/Content/vendor/FormBuilder/form-render.min.js"></script>
 
     <script>
-        var taskform = '@Model.ValueFormJson'.replace(/&quot;/g, "\"").replace(/&#244;/gi, "ô").replace(/&#224;/gi, "à");
-        var formData = taskform;
-        if (taskform != null) {
-            $("#render-wrap").formRender({formData});
-        }
-        //get comments
-        var t = {
-            id:@Model.Id,
-            direction: "@Direction.TaskRun"
-        };
-        getComments(t);
+
         $(function () {
+            var taskform = '@Model.ValueFormJson'.replace(/&quot;/g, "\"").replace(/&#244;/gi, "ô").replace(/&#224;/gi, "à");
+            var optionRender = {
+                uploadFile: function (fieldData) {
+                    var attr = [];
+                    if (fieldData.required) {
+                        attr.push("required");
+                    }
+                    attr.push(`maxsize= ${fieldData.maxfilesize}${fieldData.unit}`);
+                    if (fieldData.value == "undefined" || fieldData.val == "") {
+                        attr.push(`data-default-file=${fieldData.value}`);
+                    }
+                    return {
+                        field: `<input type="file" id="${fieldData.name}" ${attr.join(" ")}>`,
+                        onRender: function () {
+                            var inputfile = $(`#${fieldData.name}`);
+                            inputfile.dropify();
+                        }
+                    };
+                }
+            }
+            if (taskform != null) {
+                $("#render-wrap").formRender({templates: optionRender, formData: taskform });
+            }
+            var form = $(".form-validation").formValidation();
+            //get comments
+            var t = {
+                id:@Model.Id,
+                direction: "@Direction.TaskRun"
+            };
+            getComments(t);
+
             $('#btn-savetask').on('click', function () {
                 let formrender = $("#render-wrap").formRender("userData");
                 let j = 0;
                 let tempArr = [];
-                let form = JSON.parse(formData);
+                let form = JSON.parse(taskform);
                 for (let i = 0; i < formrender.length; i++) {
                     for (let k = 0; k < form.length; k++) {
                         if (form[k]["name"] == formrender[i]["name"] && formrender[i]["required"] == true && (formrender[i]["userData"] == "" /*|| formrender[i]["userData"] == undefined*/)) {
@@ -416,7 +429,7 @@
                 let formrender = $("#render-wrap").formRender("userData");
                 let j = 0;
                 let tempArr = [];
-                let form = JSON.parse(formData);
+                let form = JSON.parse(taskform);
                 for (let i = 0; i < formrender.length; i++) {
                     for (let k = 0; k < form.length; k++) {
                         if (form[k]["name"] == formrender[i]["name"] && formrender[i]["required"] == true && (formrender[i]["userData"] == "" /*|| formrender[i]["userData"] == undefined*/)) {

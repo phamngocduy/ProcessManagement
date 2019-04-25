@@ -47,12 +47,12 @@
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="card">
-            <div class="body cw-validation" id="show-task">
+            <div class="body form-validation" id="show-task">
                 <div class="row clearfix">
                     <div class="col-sm-8">
                         <div class="form-group">
                             <label for="task-name" class="required">Task Name</label>
-                            <input type="text" class="form-control" id="task-name" name="@Html.NameFor(m => m.Name)" value="@Model.Name" cw-required disabled>
+                            <input type="text" class="form-control" id="task-name" name="@Html.NameFor(m => m.Name)" value="@Model.Name" required disabled>
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -114,9 +114,9 @@
                 uploadFile: function (fieldData) {
                     var attr = [];
                     if (fieldData.required) {
-                        attr.push("cw-required");
+                        attr.push("required");
                     }
-                    attr.push(`cw-maxsize= ${fieldData.maxfilesize}${fieldData.unit}`);  
+                    attr.push(`maxsize= ${fieldData.maxfilesize}${fieldData.unit}`);  
                     if (fieldData.value == "undefined" || fieldData.val == "") {
                         attr.push(`data-default-file=${fieldData.value}`);
                     } 
@@ -198,14 +198,9 @@
                                     'kb': 'Kilobyte',
                                     'gb': 'Gigabyte'
                                 },
+                                value: 'mb'
                             }
 
-                        },
-                        text: {
-                            a: {
-                                label: 'a',
-                                value: 'aaa'
-                            }
                         }
                     },
                     formData: taskform,
@@ -228,7 +223,7 @@
                 formContainer.find(".error-message").remove();
                 formContainer.removeClass("error");
             });
-            var form = $(".cw-validation").formValidation();
+            var form = $(".form-validation").formValidation();
             //Button back
             $("body").on("click", "#btn-back", function () {
                 $("#show-task").html(showForm);

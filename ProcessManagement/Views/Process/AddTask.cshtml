@@ -57,12 +57,12 @@
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="card">
-            <div class="body cw-validation">
+            <div class="body form-validation">
                 <div class="row clearfix">
                     <div class="col-sm-8">
                         <div class="form-group">
                             <label for="task-name" class="required">Task Name</label>
-                            <input type="text" class="form-control" id="task-name" cw-required>
+                            <input type="text" class="form-control" id="task-name" required>
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -78,7 +78,7 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label for="task-file">Upload File</label>
-                            <input type="file" class="dropify" id="task-file" cw-maxsize="@maxSize">
+                            <input type="file" class="dropify" id="task-file" maxsize="@maxSize">
                             <div class="mt-3"></div>
                         </div>
                     </div>
@@ -168,7 +168,7 @@
                 placeholder: "Select Role",
                 allowClear: true
             });
-            var form = $(".cw-validation").formValidation();
+            var form = $(".form-validation").formValidation();
             $('#btn-save, #btn-save-new').on('click', function () {
                 $this = $(this);
                 var isHaveError = form.validates();

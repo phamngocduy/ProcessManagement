@@ -10,13 +10,13 @@
                     var check,
                         validationType = validationArr[i];
                     switch (validationType.name) {
-                        case "cw-required":
+                        case "required":
                             check = method.checkRequire(element);
                             break;
-                        case "cw-maxlength":
+                        case "maxlength":
                             check = method.checkMaxLength(element, validationType.value)
                             break;
-                        case "cw-maxsize":
+                        case "maxsize":
                             check = method.checkMaxSize(element, validationType.value)
                             break;
                         default:
@@ -53,14 +53,15 @@
             getFormValidateAttributes: function ($node) {
                 var attrs = [];
                 $.each($node[0].attributes, function (index, attribute) {
-                    if (attribute.name.startsWith("cw")) {
+                    var validateAttr = ["required", "maxlength", "maxsize"]
+                    if (validateAttr.includes(attribute.name)) {
                         //attrs[attribute.name] = attribute.value;
                         var attr = {
                             name: attribute.name,
                             value: attribute.value
                         }
                         attrs.push(attr);
-                    }
+                    } 
                 });
 
                 return attrs;
@@ -146,7 +147,7 @@
             }
 
         }
-        $(formContainer).find(`input[type=text]`).on("change paste keyup focusout", function () {
+        $(formContainer).find(`input[type=text], textarea, input[type=number], input[type=tel]`).on("change paste keyup focusout", function () {
             var element = $(this);
             method.validate(element);
         });
