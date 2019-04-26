@@ -151,10 +151,10 @@
             var element = $(this);
             method.validate(element);
         });
-        $(formContainer).find(`input[type=file]`).on("change", function () {
-            var element = $(this);
-            method.validate(element);
-        })
+        //$(formContainer).find(`input[type=file]`).on("change", function () {
+        //    var element = $(this);
+        //    method.validate(element);
+        //})
         return method;
 
     }

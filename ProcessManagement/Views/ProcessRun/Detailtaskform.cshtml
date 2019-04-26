@@ -355,6 +355,12 @@
     <script>
 
         $(function () {
+            //get comments
+            var t = {
+                id:@Model.Id,
+                direction: "@Direction.TaskRun"
+            };
+            getComments(t);
             var taskform = '@Model.ValueFormJson'.replace(/&quot;/g, "\"").replace(/&#244;/gi, "ô").replace(/&#224;/gi, "à");
             var optionRender = {
                 uploadFile: function (fieldData) {
@@ -370,7 +376,38 @@
                         field: `<input type="file" id="${fieldData.name}" ${attr.join(" ")}>`,
                         onRender: function () {
                             var inputfile = $(`#${fieldData.name}`);
-                            inputfile.dropify();
+                            var dropify = inputfile.dropify({
+                                messages: {
+                                    'default': 'Drag and drop a file here or click',
+                                    'replace': 'Drag and drop or click to replace',
+                                    'remove': 'Remove',
+                                    'error': 'Ooops, something wrong happended.'
+                                },
+                                error: {
+                                    'fileSize': 'The file size is too big ({{ value }} max).',
+                                    'minWidth': 'The image width is too small ({{ value }}}px min).',
+                                    'maxWidth': 'The image width is too big ({{ value }}}px max).',
+                                    'minHeight': 'The image height is too small ({{ value }}}px min).',
+                                    'maxHeight': 'The image height is too big ({{ value }}px max).',
+                                    'imageFormat': 'The image format is not allowed ({{ value }} only).'
+                                }
+                            });
+                            dropify.on('dropify.beforeClear', function (event, element) {
+                                return confirm("Do you really want to delete \"" + element.file.name + "\" ?");
+                            });
+                            dropify.on('dropify.afterClear', function (event, element) {
+                                var element = $(this);
+                                element.removeAttr("data-default-file");
+                                element.find(".dropify-download").remove();
+                                form.validate(element);
+                            });
+                            inputfile.on('change', function () {
+                                var element = $(this);
+                                element.removeAttr("data-default-file");
+                                element.find(".dropify-download").remove();
+                                form.validate(element);
+                            });
+
                         }
                     };
                 }
@@ -379,13 +416,6 @@
                 $("#render-wrap").formRender({templates: optionRender, formData: taskform });
             }
             var form = $(".form-validation").formValidation();
-            //get comments
-            var t = {
-                id:@Model.Id,
-                direction: "@Direction.TaskRun"
-            };
-            getComments(t);
-
             $('#btn-savetask').on('click', function () {
                 let formrender = $("#render-wrap").formRender("userData");
                 let j = 0;
