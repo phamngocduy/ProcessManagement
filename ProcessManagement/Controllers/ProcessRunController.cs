@@ -158,6 +158,28 @@ namespace ProcessManagement.Controllers
                     }
                 }
             }
+            List<Step> liststepgiong = new List<Step>();
+            for (int i = 0; i < listnextstep1.Count; i++)
+            {
+                for (int j = 0; j < listnextstep2.Count; j++)
+                {
+                    if (listnextstep1[i].Key == listnextstep2[j].Key)
+                    {
+                        liststepgiong.Add(listnextstep2[j]);
+                    }
+                }
+            }
+
+            for (int i = 0; i < listnextstep2.Count; i++)
+            {
+                for (int j = 0; j < liststepgiong.Count; j++)
+                {
+                    if (listnextstep2[i].Key == liststepgiong[j].Key)
+                    {
+                        listnextstep2.Remove(listnextstep2[i]);
+                    }
+                }
+            }
             foreach (var item in listnextstep2)
             {
                 listnextstep1.Add(item);
