@@ -99,6 +99,9 @@ body::before, body::after, #wrapper::before, #wrapper::after {
 .form-group.error #build-wrap .form-builder > ul.stage-wrap, .form-group.error #build-wrap .form-wrap > ul.stage-wrap {
   border-color: #ff0101;
 }
+.form-group.error .mce-tinymce {
+  border-color: #ff0101;
+}
 
 .dropify-wrapper .dropify-download {
   display: none;

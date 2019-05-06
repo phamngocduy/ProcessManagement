@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
 using ProcessManagement.Controllers;
 using ProcessManagement.Models;
 namespace ProcessManagement.Services
@@ -251,6 +252,14 @@ namespace ProcessManagement.Services
                 return fileSize > toByte ? true : false; 
             }
             return false;
+        }
+        public void createJsonFile(string path,object content)
+        {
+            string AppPath = AppDomain.CurrentDomain.BaseDirectory;
+            string copyPath = AppPath + path + "data.json";
+
+            string json = JsonConvert.SerializeObject(content);
+            System.IO.File.WriteAllText(copyPath, json);
         }
     }
 }

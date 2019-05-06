@@ -258,7 +258,7 @@
                 <div class="body" id="show-taskrun">
                     <div class="row clearfix">
                         <div class="col-sm-12 setDataWrap">
-                            <div class="render-wrap form-validation @if (Model.Status1.Name != "Open") { WriteLiteral("disable-all"); }" id="render-wrap"></div>
+                            <form class="render-wrap form-validation @if (Model.Status1.Name != "Open") { WriteLiteral("disable-all"); }" id="render-wrap" novalidate></form>
                         </div>
                         @if (Model.Status1.Name == "Finish" || Model.Status1.Name == "Done")
                         {
@@ -361,7 +361,8 @@
                 direction: "@Direction.TaskRun"
             };
             getComments(t);
-            var taskform = '@Model.ValueFormJson'.replace(/&quot;/g, "\"").replace(/&#244;/gi, "ô").replace(/&#224;/gi, "à");
+            var taskform = `@Model.ValueFormJson`.replace(/&quot;/g, "\"").replace(/&#244;/gi, "ô").replace(/&#224;/gi, "à");
+            taskform = taskform.replace(/maxlength/g,"maxtextlength");
             var optionRender = {
                 uploadFile: function (fieldData) {
                     var attr = [];
@@ -457,7 +458,35 @@
             });
             $('#btn-donetask').on('click', function () {
                 let formrender = $("#render-wrap").formRender("userData");
-                let j = 0;
+                let isFormHaveError = form.validates();
+                let files = [];
+                formrender.forEach(function (input) {
+                    if (input["type"] == "textarea" && input["subtype"] == "tinymce") {
+                        let textarea = $(`#${input["name"]}`);
+                        isFormHaveError = form.validate(textarea) ? true : isFormHaveError;
+                    }
+                    if (input["uploadFile"]) {
+                        var fileElement = $(`#${input["name"]}`);
+                        var filevalue = fileElement[0].files[0];
+                        var isEdit = fileElement[0].hasAttribute("data-default-file") ? true : false;
+                    }
+                });
+
+                if (isFormHaveError) {
+                    showToastr("error", "Error!!");
+                } else {
+                    let data = new FormData();
+                    data.append("idtaskrun", @Model.Id);
+                    data.append("formRender", JSON.stringify(tempArr));
+
+                    let data = {
+                        idtaskrun: @Model.Id,
+                        formrender: JSON.stringify(tempArr)
+                    };
+                    donetaskform(data);
+                }
+
+                @*let j = 0;
                 let tempArr = [];
                 let form = JSON.parse(taskform);
                 for (let i = 0; i < formrender.length; i++) {
@@ -490,7 +519,7 @@
                 } else {
                     alert('Some required not null!');
                     return false;
-                }
+                }*@
             });
             $('#btn-finishtask').on('click', function () {
                 //let check = confirm("Finish task?");

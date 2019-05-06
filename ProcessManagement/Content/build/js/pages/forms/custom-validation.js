@@ -13,7 +13,7 @@
                         case "required":
                             check = method.checkRequire(element);
                             break;
-                        case "maxlength":
+                        case "maxtextlength":
                             check = method.checkMaxLength(element, validationType.value)
                             break;
                         case "maxsize":
@@ -53,7 +53,7 @@
             getFormValidateAttributes: function ($node) {
                 var attrs = [];
                 $.each($node[0].attributes, function (index, attribute) {
-                    var validateAttr = ["required", "maxlength", "maxsize"]
+                    var validateAttr = ["required", "maxtextlength", "maxsize"]
                     if (validateAttr.includes(attribute.name)) {
                         //attrs[attribute.name] = attribute.value;
                         var attr = {
@@ -81,7 +81,14 @@
             },
             checkMaxLength: function ($node, length) {
                 var element = $node;
-                var val = element.val().trim();
+                var val;
+                if (element.attr("type") == "tinymce") {
+                    var id = element.attr("id");
+                    val = tinyMCE.get(id).getContent({ format: 'text' }).replace(/\r?\n|\r/g, "");
+                } else {
+                    val = element.val().trim();
+                }
+                
                 var error = {}
                 if (val.length > length) {
                     error["isError"] = true;
