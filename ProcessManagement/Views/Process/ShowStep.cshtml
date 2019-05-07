@@ -67,9 +67,10 @@
                 @if (isManager)
                 {
                     <div class="progress-container progress-info m-b-25 clearfix" style="margin: 0; text-align:right">
-                    
+
                         <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "EditProcess", processid = process.Id })" class="btn btn-xs btn-primary-theme waves-effect">Edit Process</a>
                         <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "Setting", processid = process.Id })" class="btn btn-xs btn-default waves-effect"><i class="icon-settings"></i></a>
+                        <button class="btn btn-default" id="btn-process-copy" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Copping...">Copy</button>
                     </div>
                 }
             </div>
@@ -77,11 +78,11 @@
         <div class="card">
             <div class="body">
                 @*<ul class=" list-unstyled basic-list">
-            <li>Create At:<span class="badge badge-primary">@process.Created_At</span></li>
-            <li>Update_at:<span class="badge badge-info">@process.Updated_At</span></li>
-            <li>Total Step:<span class="badge badge-danger">@statistic.totalstep steps</span></li>
-            <li>Total Role:<span class="badge badge-warning">@statistic.totalrole roles</span></li>
-        </ul>*@
+                        <li>Create At:<span class="badge badge-primary">@process.Created_At</span></li>
+                        <li>Update_at:<span class="badge badge-info">@process.Updated_At</span></li>
+                        <li>Total Step:<span class="badge badge-danger">@statistic.totalstep steps</span></li>
+                        <li>Total Role:<span class="badge badge-warning">@statistic.totalrole roles</span></li>
+                    </ul>*@
                 @Html.Partial("~/Views/Shared/Common/_File.cshtml", new ViewDataDictionary { { "filess", files }, { "UserRoles", userRole } })
             </div>
         </div>
@@ -158,7 +159,7 @@
                 <h2>Process Flow</h2>
             </div>
             <div class="body process-flow">
-                <img src="@process.Avatar" style="max-width: 100%"/>
+                <img src="@process.Avatar" style="max-width: 100%" />
             </div>
         </div>
         <div class="card">
@@ -280,7 +281,7 @@
                         var newPositionList = [];
                         for (var i = 0; i < newTaskOrder.length; i++) {
                             var temp = {
-                                idTask : newTaskOrder[i].dataset.id,
+                                idTask: newTaskOrder[i].dataset.id,
                                 position: (i + 1)
                             }
                             newPositionList.push(temp);
@@ -289,6 +290,11 @@
                         changePosition(JSON.stringify(newPositionList));
                     }
                 });
+            });
+            $("#btn-process-copy").on("click", function () {
+                var copyButton = $(this);
+                toggleLoading(copyButton);
+                copyProcess(copyButton,@process.Id);
             })
         });
         function changePosition(position) {
@@ -305,6 +311,25 @@
                     }
                 }
             });
+        }
+
+        function copyProcess(element,processid){
+            $.ajax({
+                url: "@Url.Action("createprocesscopy", "process", new { area = "api"})",
+                type: "POST",
+                data: { processid: processid},
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status != 200) {
+                        showToastr("error", response.message, "toast-bottom-left");
+                        console.error(response);
+                    } else {
+                        toggleLoading(element);
+                        window.open(window.origin + "/file/download/" + response.data);
+                    }
+                }
+            })
         }
     </script>
     <script>

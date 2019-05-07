@@ -18,8 +18,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <Use64BitIISExpress>
-    </Use64BitIISExpress>
+    <Use64BitIISExpress>true</Use64BitIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -38,7 +37,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vs8086.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vs2A9B.tmp\Debug\</IntermediateOutputPath>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,9 +48,13 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vs8086.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vs2A9B.tmp\Release\</IntermediateOutputPath>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotNetZip, Version=1.13.3.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.13.3\lib\net40\DotNetZip.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.TelemetryCorrelation.1.0.5\lib\net45\Microsoft.AspNet.TelemetryCorrelation.dll</HintPath>
     </Reference>
@@ -62,7 +66,7 @@
       <HintPath>..\packages\Vanlanguni.Authentication.VanlangAccount.1.0.0\lib\Microsoft.Owin.Security.VanLangAccount.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Ninject, Version=3.3.3.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.3.3\lib\net45\Ninject.dll</HintPath>
@@ -83,6 +87,8 @@
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.6.0-preview.18571.3\lib\net45\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
@@ -366,8 +372,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\build\js\button-ripple.js" />
-    <Content Include="Old\Database\dbo.sql" />
-    <Content Include="Old\Database\Diagram 1.png" />
     <Content Include="Content\build\bundles\chartist.bundle.js" />
     <Content Include="Content\build\bundles\datatablescripts.bundle.js" />
     <Content Include="Content\build\bundles\easypiechart.bundle.js" />
@@ -437,7 +441,6 @@
     <Content Include="Content\build\fonts\weathericons-regular-webfont.woff" />
     <Content Include="Content\build\fonts\weathericons-regular-webfontd41d.eot" />
     <Content Include="Areas\API\Views\web.config" />
-    <Content Include="Old\Database\Diagram 1.pdf" />
     <Content Include="Areas\API\Views\ProcessRun\Comment.cshtml" />
     <None Include="Content\build\scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Content\build\scripts\jquery-3.3.1.js" />
@@ -8434,13 +8437,6 @@
     <Content Include="Models\PMS.edmx.diagram">
       <DependentUpon>PMS.edmx</DependentUpon>
     </Content>
-    <Content Include="Upload\4114\1226\1554\2377\1.png" />
-    <Content Include="Upload\4114\1226\1554\35679842_p0.jpg" />
-    <Content Include="Upload\4114\1226\35679842_p0.jpg" />
-    <Content Include="Upload\4114\1227\1559\2379\1.png" />
-    <Content Include="Upload\4114\1227\1559\35679842_p0.jpg" />
-    <Content Include="Upload\4114\1227\35679842_p0.jpg" />
-    <Content Include="Upload\4114\Cái cần phải nộp.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -8541,17 +8537,6 @@
     <Folder Include="Content\vendor\jquery.file.upload\server\gae-python\static\" />
     <Folder Include="Content\vendor\jquery.file.upload\server\php\files\" />
     <Folder Include="Content\vendor\jquery.file.upload\test\" />
-    <Folder Include="Upload\4114\1226\1554\2376\" />
-    <Folder Include="Upload\4114\1226\1555\" />
-    <Folder Include="Upload\4114\1226\1556\" />
-    <Folder Include="Upload\4114\1226\1557\" />
-    <Folder Include="Upload\4114\1226\1558\" />
-    <Folder Include="Upload\4114\1227\1559\2378\" />
-    <Folder Include="Upload\4114\1227\1560\" />
-    <Folder Include="Upload\4114\1227\1561\" />
-    <Folder Include="Upload\4114\1227\1562\" />
-    <Folder Include="Upload\4114\1227\1563\" />
-    <Folder Include="Upload\4114\run\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\build\scripts\jquery-3.3.1.min.map" />
@@ -9958,7 +9943,9 @@
     <Content Include="Content\vendor\sortable\ISSUE_TEMPLATE.md" />
     <Content Include="Content\vendor\sortable\package.json" />
     <Content Include="Content\vendor\sortable\README.md" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Group\Index.cshtml" />

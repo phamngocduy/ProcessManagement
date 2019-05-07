@@ -188,7 +188,7 @@ namespace ProcessManagement.Services
                 }
             }
         }
-        public void copyDirectory(string path, string destination)
+        public void copyDirectory(string path, string destination,bool copyOnly = false,bool copySubDirs = false)
         {
             string AppPath = AppDomain.CurrentDomain.BaseDirectory;
             string currentPath = AppPath + path;
@@ -204,22 +204,34 @@ namespace ProcessManagement.Services
                 FileInfo[] files = currentDirectory.GetFiles();
                 foreach (FileInfo file in files)
                 {
-                    file.CopyTo(Path.Combine(destinationDirectory.FullName, file.Name));
-                    FileManager f = db.FileManagers.FirstOrDefault(x => x.Path == path);
-                    FileManager fn = new FileManager();
-                    fn.Id = commonService.getRandomString(50);
-                    fn.IdGroup = f.IdGroup;
-                    fn.Name = f.Name;
-                    fn.Type = f.Type;
-                    fn.Path = destination;
-                    fn.Direction = f.Direction;
-                    fn.Create_At = DateTime.Now;
-                    fn.Update_At = DateTime.Now;
-                    db.FileManagers.Add(fn);
-                    db.SaveChanges();
+                    file.CopyTo(Path.Combine(destinationDirectory.FullName, file.Name), overwrite:true);
+                    if (!copyOnly)
+                    {
+                        FileManager f = db.FileManagers.FirstOrDefault(x => x.Path == path);
+                        FileManager fn = new FileManager();
+                        fn.Id = commonService.getRandomString(50);
+                        fn.IdGroup = f.IdGroup;
+                        fn.Name = f.Name;
+                        fn.Type = f.Type;
+                        fn.Path = destination;
+                        fn.Direction = f.Direction;
+                        fn.Create_At = DateTime.Now;
+                        fn.Update_At = DateTime.Now;
+                        db.FileManagers.Add(fn);
+                        db.SaveChanges();
+                    }
                 }
             }
-
+            if (copySubDirs)
+            {
+                DirectoryInfo[] dirs = currentDirectory.GetDirectories();
+                foreach (DirectoryInfo subdir in dirs)
+                {
+                    string subPath = Path.Combine(path, subdir.Name);
+                    string subDestination = Path.Combine(destination, subdir.Name);
+                    copyDirectory(path:subPath, destination:subDestination, copyOnly,copySubDirs);
+                }
+            }
         }
         public bool checkFileOverSize(HttpPostedFileBase file)
         {
@@ -256,7 +268,7 @@ namespace ProcessManagement.Services
         public void createJsonFile(string path,object content)
         {
             string AppPath = AppDomain.CurrentDomain.BaseDirectory;
-            string copyPath = AppPath + path + "data.json";
+            string copyPath = AppPath + path + "/data.json";
 
             string json = JsonConvert.SerializeObject(content);
             System.IO.File.WriteAllText(copyPath, json);

@@ -11,6 +11,8 @@ using ProcessManagement.Services;
 using ProcessManagement.Controllers;
 using ProcessManagement.Filters;
 using Newtonsoft.Json;
+using System.IO;
+using Ionic.Zip;
 
 namespace ProcessManagement.Areas.API.Controllers
 {
@@ -528,109 +530,154 @@ namespace ProcessManagement.Areas.API.Controllers
             SetFlash(FlashType.success, "Next step success");
             return Json(response, JsonRequestBehavior.AllowGet);
         }
-        public void createProcessCopy(int processid)
+        [HttpPost]
+        public JsonResult createProcessCopy(int processid)
         {
             string IdUser = User.Identity.GetUserId();
-            //var status = HttpStatusCode.OK;
-            //string message;
-            //object response;
-            //if (pr == null)
-            //{
-            //    status = HttpStatusCode.InternalServerError;
-            //    message = "process not found";
-            //    response = new { message = message, status = status };
-            //    return Json(response, JsonRequestBehavior.AllowGet);
-            //}
-
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
             var process = processService.findProcess(processid);
-
-            //create folder
-            string copyPath = string.Format("Upload/{0}/copy/{1}/", process.IdGroup, process.Id);
-            fileService.createDirectory(copyPath);
-            
-            //role
-            var roles = roleService.findListRoleOfProcess(processid);
-            List<object> copyRoles = new List<object>();
-            foreach (var role in roles)
+            if (process == null)
             {
-                object copyRole = new
-                {
-                    roleid = role.Id,
-                    rolename = role.Name
-                };
-                copyRoles.Add(copyRole);
+                status = HttpStatusCode.InternalServerError;
+                message = "process not found";
+                response = new { message = message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
             }
-            //step
-            var steps = stepService.findStepsOfProcess(processid);
-            List<object> copySteps = new List<object>();
-            foreach (var step in steps)
-            {
-                //task
-                var tasks = taskService.findTaskOfStep(step.Id);
-                List<object> copyTasks = new List<object>();
-                foreach (var task in tasks)
-                {
-                    object input, file, form;
-                    if (task.ValueInputText != null)
-                    {
-                        input = JObject.Parse(task.ValueInputText);
-                        file = JObject.Parse(task.ValueInputFile);
-                        form = task.ValueFormJson;
-                    }
-                    else
-                    {
-                        input = task.ValueInputText;
-                        file = task.ValueInputFile;
-                        form = JObject.Parse(task.ValueFormJson);
-                    }
 
-                    object copyTask = new
+
+            try
+            {
+                //create folder
+                string copyPath = string.Format("Copy/{0}", process.Id);
+                fileService.removeDirectory(copyPath);
+                fileService.createDirectory(copyPath);
+
+                //role
+                var roles = roleService.findListRoleOfProcess(processid);
+                List<object> copyRoles = new List<object>();
+                foreach (var role in roles)
+                {
+                    object copyRole = new
                     {
-                        taskid = task.Id,
-                        taskname = task.Name,
-                        description = task.Description,
-                        role = task.IdRole,
-                        position = task.Position,
-                        config = new
-                        {
-                            input = input,
-                            file = file,
-                            form = form
-                        }
+                        roleid = role.Id,
+                        rolename = role.Name
                     };
-                    copyTasks.Add(copyTask);
+                    copyRoles.Add(copyRole);
                 }
                 //step
-                object copyStep = new
+                var steps = stepService.findStepsOfProcess(processid);
+                List<object> copySteps = new List<object>();
+                foreach (var step in steps)
                 {
-                    stepid = step.Id,
-                    stepname = step.Name,
-                    description = step.Description,
-                    draw = new
+                    //task
+                    var tasks = taskService.findTaskOfStep(step.Id);
+                    List<object> copyTasks = new List<object>();
+                    foreach (var task in tasks)
                     {
-                        isStartStep = step.StartStep,
-                        key = step.Key,
-                        figure = step.Figure,
-                        nextstep1 = step.NextStep1,
-                        nextstep2 = step.NextStep2
-                    },
-                    tasks = copyTasks
-                };
-                copySteps.Add(copyStep);
-            }
+                        object input, file, form;
+                        if (task.ValueInputText != null)
+                        {
+                            input = JObject.Parse(task.ValueInputText);
+                            file = JObject.Parse(task.ValueInputFile);
+                            form = task.ValueFormJson;
+                        }
+                        else
+                        {
+                            input = task.ValueInputText;
+                            file = task.ValueInputFile;
+                            form = JObject.Parse(task.ValueFormJson);
+                        }
 
-            //process 
-            object copyProcess = new
+                        object copyTask = new
+                        {
+                            taskid = task.Id,
+                            taskname = task.Name,
+                            description = task.Description,
+                            role = task.IdRole,
+                            position = task.Position,
+                            config = new
+                            {
+                                input = input,
+                                file = file,
+                                form = form
+                            }
+                        };
+                        copyTasks.Add(copyTask);
+                    }
+                    //step
+                    object copyStep = new
+                    {
+                        stepid = step.Id,
+                        stepname = step.Name,
+                        description = step.Description,
+                        draw = new
+                        {
+                            isStartStep = step.StartStep,
+                            key = step.Key,
+                            figure = step.Figure,
+                            nextstep1 = step.NextStep1,
+                            nextstep2 = step.NextStep2
+                        },
+                        tasks = copyTasks
+                    };
+                    copySteps.Add(copyStep);
+                }
+
+                //process 
+                object copyProcess = new
+                {
+                    processid = process.Id,
+                    processname = process.Name,
+                    description = process.Description,
+                    draw = JObject.Parse(process.DataJson),
+                    avatar = process.Avatar,
+                    steps = copySteps,
+                    roles = copyRoles
+                };
+                //create jsonfile
+                fileService.createJsonFile(copyPath, copyProcess);
+                //copy dirs and sub-dirs
+                string processPath = string.Format("Upload/{0}/{1}", process.IdGroup, process.Id);
+                fileService.copyDirectory(processPath, Path.Combine(copyPath, string.Format("upload/{0}", process.Id)), copyOnly: true, copySubDirs: true);
+                string AppPath = AppDomain.CurrentDomain.BaseDirectory;
+
+
+                //zip
+                string fileName = string.Format("{0}.copy.zip", process.Name);
+                string filePath = Path.Combine(AppPath, copyPath, fileName);
+                using (ZipFile zip = new ZipFile())
+                {
+                    
+                    zip.AlternateEncoding = System.Text.Encoding.Unicode;
+                    zip.AddDirectory(Path.Combine(AppPath, copyPath));
+                    zip.Save(filePath);
+                }
+
+                //create filemangement
+                FileManager fn = new FileManager();
+                fn.Id = commonService.getRandomString(50);
+                fn.IdGroup = process.IdGroup;
+                fn.Name = fileName;
+                fn.Type = ".zip";
+                fn.Path = copyPath;
+                fn.Direction = Direction.Zip.ToString();
+                fn.Create_At = DateTime.Now;
+                fn.Update_At = DateTime.Now;
+                db.FileManagers.Add(fn);
+                db.SaveChanges();
+
+                response = new { data = fn.Id, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
             {
-                processid = process.Id,
-                processname = process.Name,
-                description = process.Description,
-                draw = JObject.Parse(process.DataJson),
-                avatar = process.Avatar,
-                steps = copySteps,
-                roles = copyRoles
-            };
-            fileService.createJsonFile(copyPath, copyProcess);
+                status = HttpStatusCode.InternalServerError;
+                message = "Something not right";
+                response = new { message = message, detail = e, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }
