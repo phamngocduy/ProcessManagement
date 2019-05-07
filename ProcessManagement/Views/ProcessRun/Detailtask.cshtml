@@ -263,12 +263,12 @@
         </div>
     </div>
 </div>
-@if (idUser.ToString() == role.IdUser || isManager == true){
+
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="card">
             <div class="body" id="show-taskrun">
-                <div class="row clearfix form-validation @if (Model.Status1.Name != "Open") { WriteLiteral("disable-all"); } ">
+                <div class="row clearfix form-validation @if (Model.Status1.Name != "Open" || (idUser.ToString() != role.IdUser || isManager != true)) { WriteLiteral("disable-all"); } ">
                     <div class="col-sm-12">
                         <div class="form-group">
                             @{
@@ -346,36 +346,38 @@
                         </div>
                     }
                 </div>
-                <div class="row clearfix">
-                    <div class="col-sm-12" id="button-action">
-                        @if (Model.StepRun.Status1.Name == "Running")
-                        {
-                            if (Model.Status1.Name == "Open")
+                @if (idUser.ToString() == role.IdUser || isManager == true) { 
+                    <div class="row clearfix">
+                        <div class="col-sm-12" id="button-action">
+                            @if (Model.StepRun.Status1.Name == "Running")
                             {
-                                <button id="btn-savetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving..."><i class="fa fa-save"></i> Save</button>
-                                <button id="btn-donetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Submiting..."><i class="fa fa-check"></i> Submit</button>
-                            }
-                            if (Model.Status1.Name == "Done")
-                            {
-                                if (isManager)
+                                if (Model.Status1.Name == "Open")
                                 {
-                                    <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Opening...">Open</button>
-                                    <button id="btn-finishtask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Finishing...">Finish </button>
+                                    <button id="btn-savetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving..."><i class="fa fa-save"></i> Save</button>
+                                    <button id="btn-donetask" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Submiting..."><i class="fa fa-check"></i> Submit</button>
                                 }
-                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
+                                if (Model.Status1.Name == "Done")
+                                {
+                                    if (isManager)
+                                    {
+                                        <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Opening...">Open</button>
+                                        <button id="btn-finishtask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Finishing...">Finish </button>
+                                    }
+                                    <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
 
-                            }
-                            if (Model.Status1.Name == "Finish")
-                            {
-                                if (isManager)
-                                {
-                                    <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Opening...">Open</button>
                                 }
-                                <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
+                                if (Model.Status1.Name == "Finish")
+                                {
+                                    if (isManager)
+                                    {
+                                        <button id="btn-opentask" value="@Model.Id" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Opening...">Open</button>
+                                    }
+                                    <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = Model.StepRun.ProcessRun.IdProcess })" class="btn btn-success">Back</a>
+                                }
                             }
-                        }
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         </div>
     </div>
@@ -387,44 +389,48 @@
             <div class="body">
                 <!-- Comment -->
                 <div class="task-comment">
-                    <div class="comment-form">
-                        <div class="comment-avatar">
-                            <img src="http://lorempixel.com/200/200/people">
-                        </div>
-                        <div class="form">
-                            <div class="form-row">
-                                <textarea class="input" placeholder="Add comment..." id="comment-content"></textarea>
-                            </div>
-                            <div class="form-row clearfix">
-                                <button class="btn btn-primary-theme waves-effect" id="btn-comment-add" style="display:block; margin-left:auto" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Commenting...">Comment</button>
-                            </div>
-                        </div>
-                    </div>
-                    @*<div class="comments">
-                        <div class="comment">
+                    @if (idUser.ToString() == role.IdUser || isManager == true)
+                    {
+                        <div class="comment-form">
                             <div class="comment-avatar">
-                                <img src="http://lorempixel.com/200/200/people/">
+                                <img src="http://lorempixel.com/200/200/people">
                             </div>
-                            <div class="comment-box">
-                                <div class="comment-text ng-binding">sdasdsa</div>
-                                <div class="comment-footer">
-                                    <div class="comment-info">
-                                        <span class="comment-author">
-                                            <a href="#">annguyen115</a>
-                                        </span>
-                                        <span class="comment-date">Apr 21, 2019 @@ 3:45:02 PM</span>
-                                    </div>
+                            <div class="form">
+                                <div class="form-row">
+                                    <textarea class="input" placeholder="Add comment..." id="comment-content"></textarea>
+                                </div>
+                                <div class="form-row clearfix">
+                                    <button class="btn btn-primary-theme waves-effect" id="btn-comment-add" style="display:block; margin-left:auto" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Commenting...">Comment</button>
                                 </div>
                             </div>
                         </div>
-                    </div>*@
+                    }
+
+                    @*<div class="comments">
+            <div class="comment">
+                <div class="comment-avatar">
+                    <img src="http://lorempixel.com/200/200/people/">
+                </div>
+                <div class="comment-box">
+                    <div class="comment-text ng-binding">sdasdsa</div>
+                    <div class="comment-footer">
+                        <div class="comment-info">
+                            <span class="comment-author">
+                                <a href="#">annguyen115</a>
+                            </span>
+                            <span class="comment-date">Apr 21, 2019 @@ 3:45:02 PM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
                 </div>
                 <!-- Comment -->
             </div>
         </div>
     </div>
 </div>
-}
+
 
 
 
