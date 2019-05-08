@@ -568,7 +568,7 @@
             }
             function submitTaskRun(data) {
                 $.ajax({
-                    url: "@Url.Action("submittaskrun", "processrun",new { area = "api"})",
+                    url: "@Url.Action("donetaskrun", "processrun",new { area = "api"})",
                     type: "POST",
                     data: data,
                     contentType: false,

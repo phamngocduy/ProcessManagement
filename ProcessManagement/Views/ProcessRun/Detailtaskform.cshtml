@@ -465,10 +465,14 @@
                         let textarea = $(`#${input["name"]}`);
                         isFormHaveError = form.validate(textarea) ? true : isFormHaveError;
                     }
-                    if (input["uploadFile"]) {
+                    if (input["type"] == "uploadFile") {
                         var fileElement = $(`#${input["name"]}`);
-                        var filevalue = fileElement[0].files[0];
-                        var isEdit = fileElement[0].hasAttribute("data-default-file") ? true : false;
+                        var file = {
+                            id : input["name"],
+                            value : fileElement[0].files[0],
+                            isEdit : fileElement[0].hasAttribute("data-default-file") ? true : false,
+                        };
+                        files.push(file);
                     }
                 });
 
@@ -477,12 +481,8 @@
                 } else {
                     let data = new FormData();
                     data.append("idtaskrun", @Model.Id);
-                    data.append("formRender", JSON.stringify(tempArr));
-
-                    let data = {
-                        idtaskrun: @Model.Id,
-                        formrender: JSON.stringify(tempArr)
-                    };
+                    data.append("formrender", JSON.stringify(formrender));
+                    data.append("files", files);
                     donetaskform(data);
                 }
 
@@ -610,6 +610,8 @@
                     url: "@Url.Action("donetaskform", "processrun", new { area = "api"})",
                     type: "POST",
                     data: data,
+                    contentType: false,
+                    processData: false,
                     dataType: "json",
                     success: function (response) {
                         console.log(response);

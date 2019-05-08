@@ -121,10 +121,9 @@
         $(function () {
             var options = {
                 disableFields: [
-                    'button',
                     'header',
+                    'button',
                     'hidden',
-                    'paragraph',
                     'autocomplete',
                     'file'
                 ],
@@ -139,6 +138,9 @@
                     'step',
                     'toggle'
                 ],
+                disabledSubtypes: {
+                    textarea: ['quill']
+                },
                 fields: [{
                     label: 'Upload File',
                     attrs: {

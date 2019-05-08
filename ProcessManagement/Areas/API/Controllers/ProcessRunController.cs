@@ -73,7 +73,7 @@ namespace ProcessManagement.Areas.API.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult submittaskrun(int idtaskrun, string valuetext, string valuefile, HttpPostedFileBase fileupload, string comment, bool isEdit)
+        public JsonResult donetaskrun(int idtaskrun, string valuetext, string valuefile, HttpPostedFileBase fileupload, string comment, bool isEdit)
         {
             string IdUser = User.Identity.GetUserId();
             var status = HttpStatusCode.OK;
@@ -148,7 +148,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult donetaskform(int idtaskrun, string formrender)
+        public JsonResult donetaskform(int idtaskrun, string formrender,JObject files)
         {
             string IdUser = User.Identity.GetUserId();
             var status = HttpStatusCode.OK;
