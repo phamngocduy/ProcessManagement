@@ -99,5 +99,12 @@ namespace ProcessManagement.Controllers
             TempData["FlashMessage.Text"] = flashMessage;
             TempData["FlashMessage.Position"] = flashPosition;
         }
+        public class ServerSideException : Exception
+        {
+            public ServerSideException(string messase): base(messase)
+            {
+
+            }
+        }
     }
 }

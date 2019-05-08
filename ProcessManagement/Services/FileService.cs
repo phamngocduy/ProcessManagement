@@ -4,8 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
+using Ionic.Zip;
 using ProcessManagement.Controllers;
 using ProcessManagement.Models;
+using System.Text;
+
 namespace ProcessManagement.Services
 {
     public class FileService
@@ -271,7 +274,36 @@ namespace ProcessManagement.Services
             string copyPath = AppPath + path + "/data.json";
 
             string json = JsonConvert.SerializeObject(content);
-            System.IO.File.WriteAllText(copyPath, json);
+            File.WriteAllText(copyPath, json);
+        }
+        public FileManager zipFile(int groupid, string fileName, string path)
+        {
+            string AppPath = AppDomain.CurrentDomain.BaseDirectory;
+            string filePath = Path.Combine(AppPath, path, fileName);
+            using (ZipFile zip = new ZipFile())
+            {
+                zip.AlternateEncoding = Encoding.UTF8;
+                zip.AlternateEncodingUsage = ZipOption.Always;
+                zip.Comment = "This zip was created for copy process,do not change any file\r\nFile này tạo ra dùng để sao chép quy trình, đừng chỉnh sửa gì\r\nDevTeam: ClockWorks";
+                zip.AddDirectory(Path.Combine(AppPath, path, "upload"));
+                zip.Password = "clockworks-pms";
+                zip.AddFile(Path.Combine(AppPath, path, "data.json"), "");
+                zip.Save(filePath);
+            }
+
+            //create filemangement
+            FileManager file = new FileManager();
+            file.Id = commonService.getRandomString(50);
+            file.IdGroup = groupid;
+            file.Name = fileName;
+            file.Type = ".zip";
+            file.Path = path;
+            file.Direction = Direction.Zip.ToString();
+            file.Create_At = DateTime.Now;
+            file.Update_At = DateTime.Now;
+            db.FileManagers.Add(file);
+            db.SaveChanges();
+            return file;
         }
     }
 }

@@ -13,6 +13,7 @@ using ProcessManagement.Filters;
 using Newtonsoft.Json;
 using System.IO;
 using Ionic.Zip;
+using System.Text;
 
 namespace ProcessManagement.Areas.API.Controllers
 {
@@ -537,18 +538,13 @@ namespace ProcessManagement.Areas.API.Controllers
             var status = HttpStatusCode.OK;
             string message;
             object response;
-            var process = processService.findProcess(processid);
-            if (process == null)
-            {
-                status = HttpStatusCode.InternalServerError;
-                message = "process not found";
-                response = new { message = message, status = status };
-                return Json(response, JsonRequestBehavior.AllowGet);
-            }
-
-
             try
             {
+                var process = processService.findProcess(processid);
+                if (process == null)
+                {
+                    throw new ServerSideException("Process not found");
+                }
                 //create folder
                 string copyPath = string.Format("Copy/{0}", process.Id);
                 fileService.removeDirectory(copyPath);
@@ -645,37 +641,16 @@ namespace ProcessManagement.Areas.API.Controllers
 
 
                 //zip
-                string fileName = string.Format("{0}.copy.zip", process.Name);
-                string filePath = Path.Combine(AppPath, copyPath, fileName);
-                using (ZipFile zip = new ZipFile())
-                {
-                    
-                    zip.AlternateEncoding = System.Text.Encoding.Unicode;
-                    zip.AddDirectory(Path.Combine(AppPath, copyPath));
-                    zip.Save(filePath);
-                }
-
-                //create filemangement
-                FileManager fn = new FileManager();
-                fn.Id = commonService.getRandomString(50);
-                fn.IdGroup = process.IdGroup;
-                fn.Name = fileName;
-                fn.Type = ".zip";
-                fn.Path = copyPath;
-                fn.Direction = Direction.Zip.ToString();
-                fn.Create_At = DateTime.Now;
-                fn.Update_At = DateTime.Now;
-                db.FileManagers.Add(fn);
-                db.SaveChanges();
-
-                response = new { data = fn.Id, status = status };
+                string fileName = string.Format("{0}-copy.zip", process.Name);
+                FileManager f = fileService.zipFile(groupid: process.IdGroup, fileName: fileName, copyPath);
+                response = new { data = f.Id, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)
             {
                 status = HttpStatusCode.InternalServerError;
-                message = "Something not right";
-                response = new { message = message, detail = e, status = status };
+                message = e.GetType().Name == "ServerSideException" ? e.Message : "Something not right";
+                response = new { message = message, detail = e.Message, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
         }
