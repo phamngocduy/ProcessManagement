@@ -155,23 +155,23 @@ namespace ProcessManagement.Areas.API.Controllers
             string message;
             object response;
 
-            TaskProcessRun taskrun = taskService.findTaskRun(idtaskrun);
-            List<RoleRun> listrole = roleService.findlistrolerunbyidroleprocess(taskrun.IdRole);
-            Participate useringroup = participateService.findMemberInGroup(IdUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
-            if (useringroup.IsManager == true)
-            {
-                taskService.donetaskform(idtaskrun, formrender, IdUser);
-            }
-            else
-            {
-                foreach (var item in listrole)
-                {
-                    if (IdUser == item.IdUser)
-                    {
-                        taskService.donetaskform(idtaskrun, formrender, IdUser);
-                    }
-                }
-            }
+            //TaskProcessRun taskrun = taskService.findTaskRun(idtaskrun);
+            //List<RoleRun> listrole = roleService.findlistrolerunbyidroleprocess(taskrun.IdRole);
+            //Participate useringroup = participateService.findMemberInGroup(IdUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
+            //if (useringroup.IsManager == true)
+            //{
+            //    taskService.donetaskform(idtaskrun, formrender, IdUser);
+            //}
+            //else
+            //{
+            //    foreach (var item in listrole)
+            //    {
+            //        if (IdUser == item.IdUser)
+            //        {
+            //            taskService.donetaskform(idtaskrun, formrender, IdUser);
+            //        }
+            //    }
+            //}
 
             message = "Done Task";
             response = new { message = message, status = status };
