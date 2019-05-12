@@ -104,6 +104,16 @@ namespace ProcessManagement.Services
             db.Roles.Remove(role);
             db.SaveChanges();
         }
+        public void removelistRole(List<Role> listrole)
+        {
+            db.Roles.RemoveRange(listrole);
+            db.SaveChanges();
+        }
+        public void removelistRoleRun(List<RoleRun> listrolerun)
+        {
+            db.RoleRuns.RemoveRange(listrolerun);
+            db.SaveChanges();
+        }
         public bool isNameExist(Role role,int processid)
         {
             Role r = db.Roles.FirstOrDefault(x => x.Name.ToLower() == role.Name.ToLower().Trim() && x.IdProcess == processid);

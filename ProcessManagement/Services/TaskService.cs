@@ -90,6 +90,16 @@ namespace ProcessManagement.Services
             db.TaskProcesses.Remove(task);
             db.SaveChanges();
         }
+        public void deletelisttask(List<TaskProcess> listtask)
+        {
+            db.TaskProcesses.RemoveRange(listtask);
+            db.SaveChanges();
+        }
+        public void deletelisttaskrun(List<TaskProcessRun> listtaskrun)
+        {
+            db.TaskProcessRuns.RemoveRange(listtaskrun);
+            db.SaveChanges();
+        }
         public int getLastPosition(int idStep)
         {
             TaskProcess task = db.TaskProcesses.Where(x => x.IdStep == idStep).OrderByDescending(x => x.Position).FirstOrDefault();

@@ -62,9 +62,19 @@ namespace ProcessManagement.Services
             db.Steps.Remove(step);
             db.SaveChanges();
         }
+        public void removelistStep(List<Step> liststep)
+        {
+            db.Steps.RemoveRange(liststep);
+            db.SaveChanges();
+        }
         public void removeStepRun(StepRun step)
         {
             db.StepRuns.Remove(step);
+            db.SaveChanges();
+        }
+        public void removelistStepRun(List<StepRun> liststep)
+        {
+            db.StepRuns.RemoveRange(liststep);
             db.SaveChanges();
         }
         public List<Step> addStepRun(List<Step> liststep, int idprocessrun)

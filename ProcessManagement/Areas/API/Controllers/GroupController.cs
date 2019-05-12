@@ -23,6 +23,9 @@ namespace ProcessManagement.Areas.API.Controllers
         UserService userService = new UserService();
         FileService fileService = new FileService();
         TaskService taskService = new TaskService();
+        ProcessService processService = new ProcessService();
+        StepService stepService = new StepService();
+        RoleService roleService = new RoleService();
         ///=============================================================================================
 
         [GroupAuthorize]
@@ -226,6 +229,30 @@ namespace ProcessManagement.Areas.API.Controllers
 
             }
             var response = new { message = message, status = status };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteGroup(int idgroup)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+
+            Group group = groupService.findGroup(idgroup);
+            List<Process> listprocess = processService.findListProcess(idgroup);
+            foreach (var process in listprocess)
+            {
+                processService.removeprocessrun(process.Id);
+            }
+            //todo find file in group and remove files
+
+            groupService.removeGroup(group);
+
+            message = "Delete group Successfully";
+            response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Removed " + group.Name + " Successfully");
+
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 

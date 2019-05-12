@@ -143,32 +143,33 @@
                 <div class="tab-content">
                     <!-- TODO: Không biết để nút remove với nút tranfer owner ở đâu -->
                     <div class="tab-pane animated fadeIn show active clearfix" id="overview-tab">
+                        <button id="btn-deletegroup" title="Delete" style="float:right; margin-left: 5px" value="@Model.Id" class="btn btn-sm btn-outline-danger js-sweetalert" data-loading-text="<i class='icon-trash'></i>"><i class="icon-trash"> Delete Group</i></button>
                         <a class="btn-circle btn-primary-theme btn-switch-tab" style="float:right" href="#setting-tab"><i class="icon-settings"></i> Settings</a>
                         <h5>@Model.Name</h5>
                         <p>@Model.Description</p>
-                        @Html.Partial("~/Views/Shared/Common/_File.cshtml", new ViewDataDictionary { {"filess", files}, {"UserRoles", userRole } })
+                        @Html.Partial("~/Views/Shared/Common/_File.cshtml", new ViewDataDictionary { { "filess", files }, { "UserRoles", userRole } })
                         @*<div id="uploadfile">
-                                <input type="file" id="FileUpload" name="FileUpload" style="display:none" />
-                                <button class="btn btn-default waves-effect" id="btn-file"><i class="icon-cloud-upload"></i> Upload</button>
-                            </div>
-                            <div class="table-responsive m-t-15" style="overflow-x:unset" id="file-list">
-                                <table class="table table-hover">
-                                    <tbody>
-                                        @foreach (var file in files)
-                                        {
-                                            <tr>
-                                                <td>@file.Name</td>
-                                                <td style="text-align:center">
-                                                    <a href="@Url.Action("download", "file", new { file = file.Id })" class="btn btn-primary-theme waves-effect" data-toggle="tooltip" data-placement="top" title="Download">
-                                                        <i class="icon-cloud-download"></i>
-                                                    </a>
-                                                    <button class="btn btn-danger waves-effect btn-file-remove" data-src="@file.Id" data-toggle="tooltip" data-placement="top" title="Remove"><i class="icon-trash"></i></button>
-                                                </td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>*@
+            <input type="file" id="FileUpload" name="FileUpload" style="display:none" />
+            <button class="btn btn-default waves-effect" id="btn-file"><i class="icon-cloud-upload"></i> Upload</button>
+        </div>
+        <div class="table-responsive m-t-15" style="overflow-x:unset" id="file-list">
+            <table class="table table-hover">
+                <tbody>
+                    @foreach (var file in files)
+                    {
+                        <tr>
+                            <td>@file.Name</td>
+                            <td style="text-align:center">
+                                <a href="@Url.Action("download", "file", new { file = file.Id })" class="btn btn-primary-theme waves-effect" data-toggle="tooltip" data-placement="top" title="Download">
+                                    <i class="icon-cloud-download"></i>
+                                </a>
+                                <button class="btn btn-danger waves-effect btn-file-remove" data-src="@file.Id" data-toggle="tooltip" data-placement="top" title="Remove"><i class="icon-trash"></i></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>*@
 
                     </div>
                     <div class="tab-pane animated fadeIn" id="setting-tab">
@@ -767,5 +768,36 @@
                 }
             })
         }
+
+        $(function () {
+            var idgroup = $('#btn-deletegroup').val();
+            $('#btn-deletegroup').on('click', function () {
+                let check = confirm("Delete Group?");
+                if (check) {
+                    let data = {
+                        idgroup: idgroup
+                    }
+                    DeleteGroup(data);
+                }
+            })
+        })
+
+        function DeleteGroup(data) {
+            $.ajax({
+                url: "@Url.Action("DeleteGroup", "group",new { area = "api"})",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        location.href = '@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "index"})';
+                    } else {
+                        console.error(response)
+                    }
+                }
+            });
+        }
+
     </script>
 }

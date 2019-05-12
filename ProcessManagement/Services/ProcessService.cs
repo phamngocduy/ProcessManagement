@@ -14,13 +14,15 @@ namespace ProcessManagement.Services
 {
 	public class ProcessService
 	{
-		///=============================================================================================
-		PMSEntities db = new PMSEntities();
-		StepService stepService = new StepService();
+        ///=============================================================================================
+        PMSEntities db = new PMSEntities();
+        StepService stepService = new StepService();
+        RoleService roleService = new RoleService();
+        TaskService taskService = new TaskService();
         FileService fileService = new FileService();
-		///=============================================================================================
+        ///=============================================================================================
 
-		public Process findProcess(int idProcess)
+        public Process findProcess(int idProcess)
 		{
 			Process process = db.Processes.Find(idProcess);
 			return process;
@@ -85,7 +87,17 @@ namespace ProcessManagement.Services
 			db.Processes.RemoveRange(processes);
 			db.SaveChanges();
 		}
-		public void insertDataJson(Process ps, string data, string imageprocess)
+        public void removeProcess(Process process)
+        {
+            db.Processes.Remove(process);
+            db.SaveChanges();
+        }
+        public void removeProcessRun(ProcessRun processrun)
+        {
+            db.ProcessRuns.Remove(processrun);
+            db.SaveChanges();
+        }
+        public void insertDataJson(Process ps, string data, string imageprocess)
 		{
 			ps.DataJson = data;
             ps.Avatar = imageprocess;
@@ -163,6 +175,58 @@ namespace ProcessManagement.Services
             runpro.Update_At = DateTime.Now;
             db.ProcessRuns.Add(runpro);
             db.SaveChanges();
+        }
+
+        public void removeprocess(int idprocess)
+        {
+            Process process = findProcess(idprocess);
+            List<Role> listrole = roleService.findListRoleOfProcess(idprocess);
+            List<Step> liststep = stepService.findStepsOfProcess(idprocess);
+            foreach (var step in liststep)
+            {
+                List<TaskProcess> listtask = taskService.findTaskOfStep(step.Id);
+                if (listtask.Count != 0)
+                {
+                    taskService.deletelisttask(listtask);
+                }
+            }
+            if (liststep.Count != 0)
+            {
+                stepService.removelistStep(liststep);
+            }
+            if (listrole.Count != 0)
+            {
+                roleService.removelistRole(listrole);
+            }
+            removeProcess(process);
+        }
+        public void removeprocessrun(int idprocess)
+        {
+            ProcessRun processrun = findRunProcessbyidprorun(idprocess);
+            List<Role> listrole = roleService.findListRoleOfProcess(idprocess);
+            List<RoleRun> listrolerun = roleService.findlistrolerun(listrole);
+            if (processrun != null)
+            {
+                List<StepRun> liststeprun = stepService.findStepsOfRunProcess(processrun.Id);
+                foreach (var steprun in liststeprun)
+                {
+                    List<TaskProcessRun> listtaskrun = taskService.findruntaskofstep(steprun.Id);
+                    if (listtaskrun.Count != 0)
+                    {
+                        taskService.deletelisttaskrun(listtaskrun);
+                    }
+                }
+                if (liststeprun.Count != 0)
+                {
+                    stepService.removelistStepRun(liststeprun);
+                }
+                if (listrolerun.Count != 0)
+                {
+                    roleService.removelistRoleRun(listrolerun);
+                }
+                removeProcessRun(processrun);
+            }
+            removeprocess(idprocess);
         }
     }
 }

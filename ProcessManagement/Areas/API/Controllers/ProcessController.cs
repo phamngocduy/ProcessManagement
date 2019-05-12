@@ -455,7 +455,24 @@ namespace ProcessManagement.Areas.API.Controllers
             SetFlash(FlashType.success, "Step Done");
             return Json(response, JsonRequestBehavior.AllowGet);
         }
-        
+
+        [HttpPost]
+        public JsonResult DeleteProcess(int idprocess)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+
+            Process process = processService.findProcess(idprocess);
+            processService.removeprocess(process.Id);
+
+            message = "Delete process Successfully";
+            response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Removed " + process.Name + " Successfully");
+
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public JsonResult deletenextsteprun(int idStep)
         {

@@ -266,5 +266,22 @@ namespace ProcessManagement.Areas.API.Controllers
             ViewData["comments"] = comments;
             return PartialView("~/Areas/API/Views/ProcessRun/Comment.cshtml");
         }
+
+        [HttpPost]
+        public JsonResult DeleteProcessRun(int idprocess)
+        {
+            var status = HttpStatusCode.OK;
+            string message;
+            object response;
+            //find process
+            ProcessRun processrun = processService.findRunProcessbyidprorun(idprocess);
+            processService.removeprocessrun(idprocess);
+
+            message = "Delete process Successfully";
+            response = new { message = message, status = status };
+            SetFlash(FlashType.success, "Removed " + processrun.Name + " Successfully");
+
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
     }
 }

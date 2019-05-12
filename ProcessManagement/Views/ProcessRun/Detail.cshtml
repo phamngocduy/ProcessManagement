@@ -66,17 +66,19 @@
                 <p>@processrun.Description</p>
                 @if (isManager)
                 {
-                    <div class="progress-container progress-info m-b-25" style="margin: 0; float: right">
-                        @if (ViewBag.Checkprocessrun != null)
-                        {
+                <div class="progress-container progress-info m-b-25" style="margin: 0; float: right">
+                    @if (ViewBag.Checkprocessrun != null)
+                    {
 
-                        }
-                        else
-                        {
-                            <button class="btn btn-primary-theme btn-sm" id="btn-runprocess">Run Process</button>
-                        }
-                        <a class="btn btn-default btn-sm waves-effect" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "assignrole", processid = processrun.Id })">Assign Roles</a>
-                    </div>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary-theme btn-sm" id="btn-runprocess">Run Process</button>
+                    }
+                    <a class="btn btn-default btn-sm waves-effect" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "assignrole", processid = processrun.Id })">Assign Roles</a>
+                    <button id="btn-deleteprocess" title="Delete" value="@processrun.Id" class="btn btn-sm btn-outline-danger js-sweetalert" data-loading-text="<i class='icon-trash'></i>"><i class="icon-trash"></i></button>
+
+                </div>
                 }
                 <div class="clearfix"></div>
                 @Html.Partial("~/Views/Shared/Common/_File.cshtml", new ViewDataDictionary { { "filess", files }, { "isRun", true } })
@@ -647,6 +649,36 @@
                     if (response.status == 200) {
                         //showToastr("error", "Error!!", "toast-bottom-left")
                         window.location.reload();
+                        console.error(response)
+                    }
+                }
+            });
+        }
+
+        $(function () {
+            var idprocess = $('#btn-deleteprocess').val();
+            $('#btn-deleteprocess').on('click', function () {
+                let check = confirm("Delete Process?");
+                if (check) {
+                    let data = {
+                        idprocess: idprocess
+                    }
+                    DeleteProcessRun(data);
+                }
+            })
+        })
+
+        function DeleteProcessRun(data) {
+            $.ajax({
+                url: "@Url.Action("DeleteProcessRun", "processrun",new { area = "api"})",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        location.href = '@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "show", groupid = processrun.IdGroup })';
+                    } else {
                         console.error(response)
                     }
                 }
