@@ -90,7 +90,10 @@ namespace ProcessManagement.Controllers
             List<Step> listnextstep1 = new List<Step>();
             List<Step> listnextstep2 = new List<Step>();
             Step start = listStep.Where(x => x.StartStep == true).FirstOrDefault();
-            listnextstep1.Add(start);
+            if (start != null)
+            {
+                listnextstep1.Add(start);
+            }
             int z = 0;
             int t = 0;
             for (int j = 0; j < listStep.Count; j++)
@@ -172,14 +175,25 @@ namespace ProcessManagement.Controllers
 
             for (int i = 0; i < listnextstep2.Count; i++)
             {
-                for (int j = 0; j < liststepgiong.Count; j++)
+                if (liststepgiong.Count != 0 && listnextstep2.Count != 0)
                 {
-                    if (listnextstep2[i].Key == liststepgiong[j].Key)
+                    for (int j = 0; j < liststepgiong.Count; j++)
                     {
-                        listnextstep2.Remove(listnextstep2[i]);
+                        if (listnextstep2[i].Key == liststepgiong[j].Key)
+                        {
+                            listnextstep2.Remove(listnextstep2[i]);
+                        }
                     }
                 }
             }
+            //hàm xóa các phần tử giống nhau trong mảng
+            //cho list 1
+            var gionglist1 = listnextstep1.Distinct();
+            listnextstep1 = gionglist1.ToList();
+            // cho list 2
+            var gionglist2 = listnextstep2.Distinct();
+            listnextstep2 = gionglist2.ToList();
+
             foreach (var item in listnextstep2)
             {
                 listnextstep1.Add(item);
