@@ -459,30 +459,39 @@
             $('#btn-donetask').on('click', function () {
                 let formrender = $("#render-wrap").formRender("userData");
                 let isFormHaveError = form.validates();
-                let files = [];
+                //let files = new FormData();
+                let info = [];
+                let data = new FormData();
                 formrender.forEach(function (input) {
+
                     if (input["type"] == "textarea" && input["subtype"] == "tinymce") {
                         let textarea = $(`#${input["name"]}`);
                         isFormHaveError = form.validate(textarea) ? true : isFormHaveError;
                     }
                     if (input["type"] == "uploadFile") {
                         var fileElement = $(`#${input["name"]}`);
+                        var fileData = fileElement[0].files[0];
+                        if (!fileElement[0].hasAttribute("data-default-file")) {
+                            input["userData"] = fileElement[0].files.length == 0 ? "" : fileData.name;
+                        }
+
                         var file = {
-                            id : input["name"],
-                            value : fileElement[0].files[0],
-                            isEdit : fileElement[0].hasAttribute("data-default-file") ? true : false,
+                            id: input["name"],
+                            isEmpty: fileElement[0].files.length == 0 ? true : false, 
+                            isEdit: fileElement[0].hasAttribute("data-default-file") ? true : false,
                         };
-                        files.push(file);
+                        info.push(file);
+                        data.append("files", fileData);
                     }
                 });
 
                 if (isFormHaveError) {
                     showToastr("error", "Error!!");
                 } else {
-                    let data = new FormData();
+                    //let data = new FormData();
                     data.append("idtaskrun", @Model.Id);
                     data.append("formrender", JSON.stringify(formrender));
-                    data.append("files", JSON.stringify(files));
+                    data.append("info", JSON.stringify(info));
                     donetaskform(data);
                 }
 

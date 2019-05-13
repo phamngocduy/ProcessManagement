@@ -39,6 +39,7 @@ namespace ProcessManagement.Controllers
         ProcessRun,
         StepRun,
         TaskRun,
+        TaskFormRun,
         Zip
     }
     public class BaseController : Controller

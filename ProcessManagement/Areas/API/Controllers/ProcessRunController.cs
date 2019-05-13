@@ -147,36 +147,68 @@ namespace ProcessManagement.Areas.API.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
-        public JsonResult donetaskform(int idtaskrun, string formrender,JObject files)
+        [HttpPost, ValidateInput(false)]
+        public JsonResult donetaskform(int idtaskrun, string formrender, string info, HttpPostedFileBase[] files)
         {
-            string IdUser = User.Identity.GetUserId();
             var status = HttpStatusCode.OK;
             string message;
             object response;
+            try
+            {
+                string IdUser = User.Identity.GetUserId();
+                TaskProcessRun taskrun = taskService.findTaskRun(idtaskrun);
+                if (taskrun == null) throw new ServerSideException("TaskRun Not Found");
+                List<RoleRun> listrole = roleService.findlistrolerunbyidroleprocess(taskrun.IdRole);
+                Participate useringroup = participateService.findMemberInGroup(IdUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
+                if (useringroup == null) throw new ServerSideException("User not in group");
+                bool haveRole = false;
+                foreach (var role in listrole)
+                {
+                    if (IdUser == role.IdUser)
+                    {
+                        haveRole = true;
+                        break;
+                    }
+                }
+                if (useringroup.IsManager == true || haveRole)
+                {
+                    //TODO: Chưa check form rule
+                    //Upload File
+                    int groupid = taskrun.StepRun.ProcessRun.Process.IdGroup;
+                    //parse string to jArray
+                    JArray jInfo = JArray.Parse(info);
+                    JArray jFormRender = JArray.Parse(formrender);
+                    int position = 0;
+                    foreach (var input in jFormRender)
+                    {
+                        if ((string)input["type"] == "uploadFile" && (files[position] != null && files[position].ContentLength > 0))
+                        {
+                            
+                            string taskFormRunPath = string.Format("Upload/{0}/run/{1}/{2}/{3}/{4}", groupid, taskrun.StepRun.ProcessRun.Id, taskrun.StepRun.Id, taskrun.Id,input["userData"]);
+                            fileService.createDirectory(taskFormRunPath);
+                            fileService.saveFile(groupid, files[position], taskFormRunPath, Direction.TaskFormRun);
+                            position++;
+                        }
+                    }
+                    taskService.donetaskform(idtaskrun, formrender, IdUser);
 
-            //TaskProcessRun taskrun = taskService.findTaskRun(idtaskrun);
-            //List<RoleRun> listrole = roleService.findlistrolerunbyidroleprocess(taskrun.IdRole);
-            //Participate useringroup = participateService.findMemberInGroup(IdUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
-            //if (useringroup.IsManager == true)
-            //{
-            //    taskService.donetaskform(idtaskrun, formrender, IdUser);
-            //}
-            //else
-            //{
-            //    foreach (var item in listrole)
-            //    {
-            //        if (IdUser == item.IdUser)
-            //        {
-            //            taskService.donetaskform(idtaskrun, formrender, IdUser);
-            //        }
-            //    }
-            //}
+                }
+                else throw new ServerSideException("It is not your task");
+                
 
-            message = "Done Task";
-            response = new { message = message, status = status };
-            SetFlash(FlashType.success, "Done Task");
-            return Json(response, JsonRequestBehavior.AllowGet);
+
+                message = "Done Task";
+                response = new { message = message, status = status };
+                SetFlash(FlashType.success, "Done Task");
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                status = HttpStatusCode.InternalServerError;
+                message = e.GetType().Name == "ServerSideException" ? e.Message : "Something not right";
+                response = new { message = message, detail = e.Message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
         }
 
         [HttpPost]
