@@ -148,7 +148,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost, ValidateInput(false)]
-        public JsonResult donetaskform(int idtaskrun, string formrender, string info, HttpPostedFileBase[] files)
+        public JsonResult donetaskform(int idtaskrun, string formrender, string comment, string info, HttpPostedFileBase[] files)
         {
             var status = HttpStatusCode.OK;
             string message;
@@ -181,17 +181,30 @@ namespace ProcessManagement.Areas.API.Controllers
                     int position = 0;
                     foreach (var input in jFormRender)
                     {
-                        if ((string)input["type"] == "uploadFile" && (files[position] != null && files[position].ContentLength > 0))
-                        {
-                            
-                            string taskFormRunPath = string.Format("Upload/{0}/run/{1}/{2}/{3}/{4}", groupid, taskrun.StepRun.ProcessRun.Id, taskrun.StepRun.Id, taskrun.Id,input["userData"]);
-                            fileService.createDirectory(taskFormRunPath);
-                            fileService.saveFile(groupid, files[position], taskFormRunPath, Direction.TaskFormRun);
-                            position++;
-                        }
+                        //if ((string)input["type"] == "uploadFile")
+                        //{
+                        //    string taskFormRunPath = string.Format("Upload/{0}/run/{1}/{2}/{3}/{4}", groupid, taskrun.StepRun.ProcessRun.Id, taskrun.StepRun.Id, taskrun.Id,input["userData"]);
+                        //    fileService.createDirectory(taskFormRunPath);
+                        //    fileService.saveFile(groupid, files[position], taskFormRunPath, Direction.TaskFormRun);
+                        //    position++;
+                        //}
                     }
                     taskService.donetaskform(idtaskrun, formrender, IdUser);
 
+                    //comment
+                    if (comment.Trim() != "")
+                    {
+                        Comment cm = new Comment();
+                        cm.IdUser = IdUser;
+                        cm.IdDirection = taskrun.Id;
+                        cm.Direction = Direction.TaskRun.ToString();
+                        cm.Content = comment;
+                        cm.isAction = true;
+                        cm.Create_At = DateTime.Now;
+                        cm.Update_At = DateTime.Now;
+                        db.Comments.Add(cm);
+                        db.SaveChanges();
+                    }
                 }
                 else throw new ServerSideException("It is not your task");
                 

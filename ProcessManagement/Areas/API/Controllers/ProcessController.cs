@@ -555,8 +555,8 @@ namespace ProcessManagement.Areas.API.Controllers
             var status = HttpStatusCode.OK;
             string message;
             object response;
-            try
-            {
+            //try
+            //{
                 var process = processService.findProcess(processid);
                 if (process == null)
                 {
@@ -594,20 +594,20 @@ namespace ProcessManagement.Areas.API.Controllers
                         {
                             input = JObject.Parse(task.ValueInputText);
                             file = JObject.Parse(task.ValueInputFile);
-                            form = task.ValueFormJson;
+                            form = "";
                         }
                         else
                         {
-                            input = task.ValueInputText;
-                            file = task.ValueInputFile;
-                            form = JObject.Parse(task.ValueFormJson);
+                            input = "";
+                            file = "";
+                            form =  JArray.Parse(task.ValueFormJson);
                         }
 
                         object copyTask = new
                         {
                             taskid = task.Id,
                             taskname = task.Name,
-                            description = task.Description,
+                            description = task.Description ?? "",
                             role = task.IdRole,
                             position = task.Position,
                             config = new
@@ -624,7 +624,7 @@ namespace ProcessManagement.Areas.API.Controllers
                     {
                         stepid = step.Id,
                         stepname = step.Name,
-                        description = step.Description,
+                        description = step.Description ?? "",
                         draw = new
                         {
                             isStartStep = step.StartStep,
@@ -643,7 +643,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 {
                     processid = process.Id,
                     processname = process.Name,
-                    description = process.Description,
+                    description = process.Description ?? "",
                     draw = JObject.Parse(process.DataJson),
                     avatar = process.Avatar,
                     steps = copySteps,
@@ -662,14 +662,14 @@ namespace ProcessManagement.Areas.API.Controllers
                 FileManager f = fileService.zipFile(groupid: process.IdGroup, fileName: fileName, copyPath);
                 response = new { data = f.Id, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception e)
-            {
-                status = HttpStatusCode.InternalServerError;
-                message = e.GetType().Name == "ServerSideException" ? e.Message : "Something not right";
-                response = new { message = message, detail = e.Message, status = status };
-                return Json(response, JsonRequestBehavior.AllowGet);
-            }
+            //}
+            //catch (Exception e)
+            //{
+            //    status = HttpStatusCode.InternalServerError;
+            //    message = e.GetType().Name == "ServerSideException" ? e.Message : "Something not right";
+            //    response = new { message = message, detail = e.Message, status = status };
+            //    return Json(response, JsonRequestBehavior.AllowGet);
+            //}
         }
     }
 }

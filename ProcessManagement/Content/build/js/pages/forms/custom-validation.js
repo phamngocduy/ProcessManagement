@@ -38,8 +38,9 @@
             validates: function () {
 
                 var texts = $(formContainer).find(`input[type=text]`),
-                    files = $(formContainer).find(`input[type=file]`)
-                var input = [...texts, ...files];
+                    files = $(formContainer).find(`input[type=file]`),
+                    textarea = $(formContainer).find(`textarea`);
+                var input = [...texts, ...files, ...textarea];
                 var formHasError = false;
                 for (var i = 0; i < input.length; i++) {
                     var element = $(input[i]);

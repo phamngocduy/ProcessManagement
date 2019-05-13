@@ -457,6 +457,7 @@
                 }
             });
             $('#btn-donetask').on('click', function () {
+                var $this = $(this);
                 let formrender = $("#render-wrap").formRender("userData");
                 let isFormHaveError = form.validates();
                 //let files = new FormData();
@@ -488,11 +489,19 @@
                 if (isFormHaveError) {
                     showToastr("error", "Error!!");
                 } else {
+                    setConfirm(`Are you sure you want to submit this task?`, `<textarea class="form-control" id="comment-action-content" placeholder="Your comment (optional)" rows="6"></textarea>`, function () {
+                        toggleLoading($this);
+                        var content = this.$content.find("#comment-action-content").val().trim();
+                        data.append("comment", content);
+                        data.append("idtaskrun", @Model.Id);
+                        data.append("formrender", JSON.stringify(formrender));
+                        data.append("info", JSON.stringify(info));
+                        setTimeout(function () {
+                            submitTaskForm($this,data);
+                        }, 1000);
+                    });
                     //let data = new FormData();
-                    data.append("idtaskrun", @Model.Id);
-                    data.append("formrender", JSON.stringify(formrender));
-                    data.append("info", JSON.stringify(info));
-                    donetaskform(data);
+                    
                 }
 
                 @*let j = 0;
@@ -531,19 +540,17 @@
                 }*@
             });
             $('#btn-finishtask').on('click', function () {
-                //let check = confirm("Finish task?");
-                //if (check) {
-                //    let data = {
-                //        idtask: idtask
-                //    }
-                //    submitfinishtask(data);
-                //}
                 var $this = $(this);
                 let data = {
                     idtask: @Model.Id
-                }
-                setConfirm(null, `Are you sure you want to open this task?`, function () {
+                };
+                setConfirm(`Are you sure you want to finish this task?`, `<textarea class="form-control" id="comment-action-content" placeholder="Your comment (optional)" rows="6"></textarea>`, function () {
                     toggleLoading($this);
+                    var content = this.$content.find("#comment-action-content").val().trim();
+                    let data = {
+                            idtask: @Model.Id,
+                            comment: content
+                        };
                     setTimeout(function () {
                         submitfinishtask(data);
                         toggleLoading($this);
@@ -551,28 +558,14 @@
                 });
             })
             $('#btn-opentask').on('click', function () {
-                //let formrender = $("#render-wrap").formRender("userData");
-                //let tempArr = [];
-                //for (let i = 0; i < formrender.length; i++) {
-                //    tempArr.push(formrender[i]);
-                //}
-                //for (let i = 0; i < tempArr.length; i++) {
-                //    tempArr[i]["disabled"] = "";
-                //}
-                //let check = confirm("Open task?");
-                //if (check) {
-                //    let data = {
-                //        idtask: idtask,
-                //        formrender: JSON.stringify(tempArr)
-                //    }
-                //    submitopentask(data);
-                //}
-                let data = {
-                    idtask: @Model.Id
-                };
                 var $this = $(this);
-                setConfirm(null, `Are you sure you want to open this task?`, function () {
+                setConfirm(`Are you sure you want to open this task?`, `<textarea class="form-control" id="comment-action-content" placeholder="Your comment (optional)" rows="6"></textarea>`, function () {
                     toggleLoading($this);
+                    var content = this.$content.find("#comment-action-content").val().trim();
+                    let data = {
+                        idtask: @Model.Id,
+                        comment: content
+                    };
                     setTimeout(function () {
                         submitopentask(data);
                         toggleLoading($this);
@@ -614,7 +607,7 @@
                 });
         }
 
-        function donetaskform(data) {
+        function submitTaskForm(element,data) {
                 $.ajax({
                     url: "@Url.Action("donetaskform", "processrun", new { area = "api"})",
                     type: "POST",
@@ -627,8 +620,11 @@
                         if (response.status == 200) {
                             //showToastr("error", "Error!!", "toast-bottom-left")
                             window.location.reload();
+                        } else {
+                            showToastr("error", "Error!!", "toast-bottom-left");
                             console.error(response)
                         }
+                        toggleLoading(element);
                     }
                 });
         }
