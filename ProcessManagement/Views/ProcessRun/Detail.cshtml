@@ -309,10 +309,10 @@
                                                                             <td>@task.Role.Name</td>
                                                                         }
                                                                         <td>@task.Status1.Name</td>
-                                                                        if (task.ApproveBy != null)
+                                                                        if (task.DoneBy != null)
                                                                         {
                                                                             <td>@task.AspNetUser1.UserName</td>
-                                                                            <td>@task.Approve_At</td>
+                                                                            <td>@task.Done_At</td>
                                                                         }
                                                                         else
                                                                         {
@@ -333,10 +333,10 @@
                                                                             <td>@task.Role.Name</td>
                                                                         }
                                                                         <td>@task.Status1.Name</td>
-                                                                        if (task.ApproveBy != null)
+                                                                        if (task.DoneBy != null)
                                                                         {
-                                                                            <td>@task.AspNetUser.UserName</td>
-                                                                            <td>@task.Approve_At</td>
+                                                                            <td>@task.AspNetUser1.UserName</td>
+                                                                            <td>@task.Done_At</td>
                                                                         }
                                                                         else
                                                                         {

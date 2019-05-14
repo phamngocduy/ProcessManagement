@@ -68,8 +68,6 @@
             return false;
         }
     })
-    //disable all field
-    disabledAllField();
 })
 
 

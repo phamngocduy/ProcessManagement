@@ -457,6 +457,8 @@
                 @if(userFile != null){
                     @:$(`<a href="@Url.Action("download", "file", new { file = userFile.Id })" class="dropify-download">Download</a>`).insertAfter($("#task-inputfile"));
                 }
+                //disable all field
+                disabledAllField();
                 //TODO: Add TaskRun Authenticate
                 $("#btn-savetask, #btn-donetask").on("click", function () {
                     var $this = $(this);
