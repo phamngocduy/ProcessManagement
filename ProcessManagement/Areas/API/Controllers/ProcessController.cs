@@ -555,8 +555,8 @@ namespace ProcessManagement.Areas.API.Controllers
             var status = HttpStatusCode.OK;
             string message;
             object response;
-            //try
-            //{
+            try
+            {
                 var process = processService.findProcess(processid);
                 if (process == null)
                 {
@@ -653,23 +653,23 @@ namespace ProcessManagement.Areas.API.Controllers
                 fileService.createJsonFile(copyPath, copyProcess);
                 //copy dirs and sub-dirs
                 string processPath = string.Format("Upload/{0}/{1}", process.IdGroup, process.Id);
-                fileService.copyDirectory(processPath, Path.Combine(copyPath, string.Format("upload/{0}", process.Id)), copyOnly: true, copySubDirs: true);
+                fileService.copyDirectory(processPath, Path.Combine(copyPath, string.Format("upload/upload/{0}", process.Id)), copyOnly: true, copySubDirs: true);
                 string AppPath = AppDomain.CurrentDomain.BaseDirectory;
 
 
                 //zip
-                string fileName = string.Format("{0}-copy.zip", process.Name);
+                string fileName = string.Format("{0}-download.zip", process.Name);
                 FileManager f = fileService.zipFile(groupid: process.IdGroup, fileName: fileName, copyPath);
                 response = new { data = f.Id, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);
-            //}
-            //catch (Exception e)
-            //{
-            //    status = HttpStatusCode.InternalServerError;
-            //    message = e.GetType().Name == "ServerSideException" ? e.Message : "Something not right";
-            //    response = new { message = message, detail = e.Message, status = status };
-            //    return Json(response, JsonRequestBehavior.AllowGet);
-            //}
+            }
+            catch (Exception e)
+            {
+                status = HttpStatusCode.InternalServerError;
+                message = e.GetType().Name == "ServerSideException" ? e.Message : "Something not right";
+                response = new { message = message, detail = e.Message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }

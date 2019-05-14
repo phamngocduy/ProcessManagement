@@ -181,15 +181,18 @@ namespace ProcessManagement.Areas.API.Controllers
                     int position = 0;
                     foreach (var input in jFormRender)
                     {
-                        //if ((string)input["type"] == "uploadFile")
-                        //{
-                        //    string taskFormRunPath = string.Format("Upload/{0}/run/{1}/{2}/{3}/{4}", groupid, taskrun.StepRun.ProcessRun.Id, taskrun.StepRun.Id, taskrun.Id,input["userData"]);
-                        //    fileService.createDirectory(taskFormRunPath);
-                        //    fileService.saveFile(groupid, files[position], taskFormRunPath, Direction.TaskFormRun);
-                        //    position++;
-                        //}
+                        if ((string)input["type"] == "uploadFile")
+                        {
+                            string taskFormRunPath = string.Format("Upload/{0}/run/{1}/{2}/{3}/{4}", groupid, taskrun.StepRun.ProcessRun.Id, taskrun.StepRun.Id, taskrun.Id, input["name"]);
+                            fileService.createDirectory(taskFormRunPath);
+                            var file = fileService.saveFile(groupid, files[position], taskFormRunPath, Direction.TaskFormRun);
+                            input["path"] = taskFormRunPath;
+                            input["download"] = file.Id;
+                            position++;
+                        }
                     }
-                    taskService.donetaskform(idtaskrun, formrender, IdUser);
+                    string newFormString = jFormRender.ToString();
+                    taskService.donetaskform(idtaskrun, newFormString, IdUser);
 
                     //comment
                     if (comment.Trim() != "")

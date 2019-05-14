@@ -370,8 +370,9 @@
                         attr.push("required");
                     }
                     attr.push(`maxsize= ${fieldData.maxfilesize}${fieldData.unit}`);
-                    if (fieldData.value == "undefined" || fieldData.val == "") {
-                        attr.push(`data-default-file=${fieldData.value}`);
+                    var haveFile = Boolean(fieldData.userData) && Boolean(fieldData.path);
+                    if (haveFile) {
+                        attr.push(`data-default-file=/${fieldData.path}/${fieldData.userData}`);
                     }
                     return {
                         field: `<input type="file" id="${fieldData.name}" ${attr.join(" ")}>`,
@@ -408,7 +409,10 @@
                                 element.find(".dropify-download").remove();
                                 form.validate(element);
                             });
-
+                            if (haveFile) {
+                                var downloadAction = window.location.origin + "/file/download";
+                                $(`<a href="${downloadAction}/${fieldData.download}" class="dropify-download">Download</a>`).insertAfter($(`#${fieldData.name}`));
+                            }
                         }
                     };
                 }
