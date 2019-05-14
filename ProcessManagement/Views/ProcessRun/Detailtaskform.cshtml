@@ -420,6 +420,7 @@
             if (taskform != null) {
                 $("#render-wrap").formRender({templates: optionRender, formData: taskform });
             }
+            disabledAllField();
             var form = $(".form-validation").formValidation();
             $('#btn-savetask').on('click', function () {
                 let formrender = $("#render-wrap").formRender("userData");
