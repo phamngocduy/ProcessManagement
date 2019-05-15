@@ -29,7 +29,7 @@ namespace ProcessManagement.Areas.API.Controllers
         [HttpPost]
         public JsonResult uploadFile(int groupid, int? processid, int? stepid, int? taskid, HttpPostedFileBase FileUpload, Direction direction)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             if (FileUpload.ContentLength == 0)
@@ -113,7 +113,7 @@ namespace ProcessManagement.Areas.API.Controllers
         [HttpPost]
         public JsonResult removeFile(int groupid, string id)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             FileManager file = fileService.findFile(id);
@@ -131,7 +131,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
         public JsonResult changeFileName(int groupid, string id, string filename)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             FileManager file = fileService.findFile(id);
@@ -143,7 +143,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 response = new { message = message, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
-            var isFileExisted = fileService.checkFileExist(groupid, filename, (Direction)Enum.Parse(typeof(Direction), file.Direction), file.Path);
+            bool isFileExisted = fileService.checkFileExist(groupid, filename, (Direction)Enum.Parse(typeof(Direction), file.Direction), file.Path);
             if (isFileExisted)
             {
                 status = HttpStatusCode.InternalServerError;
@@ -151,7 +151,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 response = new { message = message, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
-            var f = fileService.changeFileName(file, filename);
+            FileManager f = fileService.changeFileName(file, filename);
             object data = new
             {
                 id = f.Id,

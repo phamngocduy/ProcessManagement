@@ -78,14 +78,14 @@ namespace ProcessManagement.Controllers
         {
             if (string.IsNullOrEmpty(lang))
                 lang = GlobalHelper.DefaultCulture;
-            var cultureInfo = new System.Globalization.CultureInfo(lang);
+            System.Globalization.CultureInfo cultureInfo = new System.Globalization.CultureInfo(lang);
             System.Threading.Thread.CurrentThread.CurrentUICulture = cultureInfo;
             System.Threading.Thread.CurrentThread.CurrentCulture = cultureInfo;
         }
 
         public static String GetCultureOnCookie(HttpRequestBase request)
         {
-            var cookie = request.Cookies[_cookieLangName];
+            HttpCookie cookie = request.Cookies[_cookieLangName];
             string culture = string.Empty;
             if (cookie != null)
             {

@@ -43,7 +43,7 @@ namespace ProcessManagement.Filters
 
         private static String GetCultureOnCookie(HttpRequestBase request)
         {
-            var cookie = request.Cookies[_cookieLangName];
+            HttpCookie cookie = request.Cookies[_cookieLangName];
             string culture = string.Empty;
             if (cookie != null)
             {

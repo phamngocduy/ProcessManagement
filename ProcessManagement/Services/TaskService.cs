@@ -114,7 +114,7 @@ namespace ProcessManagement.Services
             {
                 int tId = taskPos["idTask"].ToObject<int>();
                 int tPos = taskPos["position"].ToObject<int>();
-                var task = db.TaskProcesses.Find(tId);
+                TaskProcess task = db.TaskProcesses.Find(tId);
                 task.Position = tPos;
                 task.Updated_At = DateTime.Now;
             }
@@ -138,11 +138,11 @@ namespace ProcessManagement.Services
             if (listtask != null)
             {
                 TaskProcess taskrun = new TaskProcess();
-                foreach (var task in listtask)
+                foreach (TaskProcess task in listtask)
                 {
                     if (task.IdRole != null)
                     {
-                        foreach (var role in rolerun)
+                        foreach (Role role in rolerun)
                         {
                             if (task.Role.Name == role.Name)
                             {
@@ -157,7 +157,7 @@ namespace ProcessManagement.Services
                         taskrun.IdRole = null;
                     }
                     Process processrun = new Process();
-                    foreach (var step in liststep)
+                    foreach (Step step in liststep)
                     {
                         if (task.Step.Key == step.Key)
                         {
@@ -191,7 +191,7 @@ namespace ProcessManagement.Services
         public void addlistruntask(List<TaskProcess> listtask, StepRun runstep)
         {
             Status status = db.Status.Where(y => y.Name == "Open").FirstOrDefault();
-            foreach (var task in listtask)
+            foreach (TaskProcess task in listtask)
             {
                 TaskProcessRun runtask = new TaskProcessRun();
                 runtask.IdStep = runstep.Id;

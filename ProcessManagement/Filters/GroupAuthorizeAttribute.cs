@@ -38,7 +38,7 @@ namespace ProcessManagement.Filters
         }
         private bool isAjaxRequest(ControllerContext controllerContext)
         {
-            var request = controllerContext.RequestContext.HttpContext.Request;
+            HttpRequestBase request = controllerContext.RequestContext.HttpContext.Request;
             return request.IsAjaxRequest();
         }
         public void BaseAuthorize(ActionExecutingContext filterContext, Participate user)
@@ -71,12 +71,12 @@ namespace ProcessManagement.Filters
             }
             if (Role != null)
             {
-                var isOwner = group.IdOwner == idUser ? true : false;
+                bool isOwner = group.IdOwner == idUser ? true : false;
                 UserRole[] userRoles = new UserRole[3];
                 if (isOwner) userRoles[0] = UserRole.Owner;
                 if (user.IsAdmin) userRoles[1] = UserRole.Admin;
                 if (user.IsManager) userRoles[2] = UserRole.Manager;
-                var checkrole = userRoles.Intersect(this.Role).Any();
+                bool checkrole = userRoles.Intersect(this.Role).Any();
                 if (!checkrole)
                 {
                     filterContext.Result = new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
@@ -172,12 +172,12 @@ namespace ProcessManagement.Filters
             }
             if (Role != null)
             {
-                var isOwner = group.IdOwner == idUser ? true : false;
+                bool isOwner = group.IdOwner == idUser ? true : false;
                 UserRole[] userRoles = new UserRole[3];
                 if (isOwner) userRoles[0] = UserRole.Owner;
                 if (user.IsAdmin) userRoles[1] = UserRole.Admin;
                 if (user.IsManager) userRoles[2] = UserRole.Manager;
-                var checkrole = userRoles.Intersect(this.Role).Any();
+                bool checkrole = userRoles.Intersect(this.Role).Any();
                 if (!checkrole)
                 {
                     filterContext.Result = new JsonResult

@@ -31,7 +31,7 @@ namespace ProcessManagement.Areas.API.Controllers
         {
             //TODO: Chưa phân quyền
             string IdUser = User.Identity.GetUserId();
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             TaskProcessRun taskrun = taskService.findTaskRun(idtaskrun);
@@ -46,7 +46,7 @@ namespace ProcessManagement.Areas.API.Controllers
             List<RoleRun> listrole = roleService.findlistrolerunbyidroleprocess(taskrun.IdRole);
             Participate user = participateService.findMemberInGroup(IdUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
             bool haveRole = false;
-            foreach (var role in listrole)
+            foreach (RoleRun role in listrole)
             {
                 if (IdUser == role.IdUser)
                 {
@@ -76,7 +76,7 @@ namespace ProcessManagement.Areas.API.Controllers
         public JsonResult donetaskrun(int idtaskrun, string valuetext, string valuefile, HttpPostedFileBase fileupload, string comment, bool isEdit)
         {
             string IdUser = User.Identity.GetUserId();
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             TaskProcessRun taskrun = taskService.findTaskRun(idtaskrun);
@@ -91,7 +91,7 @@ namespace ProcessManagement.Areas.API.Controllers
             List<RoleRun> listrole = roleService.findlistrolerunbyidroleprocess(taskrun.IdRole);
             Participate user = participateService.findMemberInGroup(IdUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
             bool haveRole = false;
-            foreach (var role in listrole)
+            foreach (RoleRun role in listrole)
             {
                 if (IdUser == role.IdUser)
                 {
@@ -136,7 +136,7 @@ namespace ProcessManagement.Areas.API.Controllers
         [HttpPost]
         public JsonResult savetaskform(int idtaskrun, string formrender)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
 
@@ -149,9 +149,9 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost, ValidateInput(false)]
-        public JsonResult donetaskform(int idtaskrun, string formrender, string comment, string info, HttpPostedFileBase[] files)
+        public JsonResult donetaskform(int idtaskrun, string formrender, string comment, string info)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             try
@@ -163,7 +163,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 Participate useringroup = participateService.findMemberInGroup(IdUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
                 if (useringroup == null) throw new ServerSideException("User not in group");
                 bool haveRole = false;
-                foreach (var role in listrole)
+                foreach (RoleRun role in listrole)
                 {
                     if (IdUser == role.IdUser)
                     {
@@ -173,6 +173,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 }
                 if (useringroup.IsManager == true || haveRole)
                 {
+                    HttpFileCollectionBase files = Request.Files;
                     //TODO: Chưa check form rule
                     //Upload File
                     int groupid = taskrun.StepRun.ProcessRun.Process.IdGroup;
@@ -180,11 +181,12 @@ namespace ProcessManagement.Areas.API.Controllers
                     JArray jInfo = JArray.Parse(info);  
                     JArray jFormRender = JArray.Parse(formrender);
                     int position = 0;
-                    foreach (var input in jFormRender)
+                    int positionFile = 0;
+                    foreach (JToken input in jFormRender)
                     {
                         if ((string)input["type"] == "uploadFile")
                         {
-                            var currentFileInfor = jInfo[position];
+                            JToken currentFileInfor = jInfo[position];
                             string taskFormRunPath = string.Format("Upload/{0}/run/{1}/{2}/{3}/{4}", groupid, taskrun.StepRun.ProcessRun.Id, taskrun.StepRun.Id, taskrun.Id, input["name"]);
                             if ((bool)currentFileInfor["isEdit"] == false)
                             {
@@ -196,14 +198,16 @@ namespace ProcessManagement.Areas.API.Controllers
                                     input["download"] = "";
                                 }
                                 else {
+                                    HttpPostedFileBase file = files[positionFile];
                                     fileService.createDirectory(taskFormRunPath);
-                                    var file = fileService.saveFile(groupid, files[position], taskFormRunPath, Direction.TaskFormRun);
+                                    FileManager f = fileService.saveFile(groupid, file, taskFormRunPath, Direction.TaskFormRun);
                                     input["path"] = taskFormRunPath;
-                                    input["filename"] = files[position].FileName;
-                                    input["download"] = file.Id;
+                                    input["filename"] = file.FileName;
+                                    input["download"] = f.Id;
+                                    positionFile++;
                                 }
+                                position++;
                             }
-                            position++;
                         }
                     }
                     string newFormString = jFormRender.ToString();
@@ -246,7 +250,7 @@ namespace ProcessManagement.Areas.API.Controllers
         public JsonResult submitfinishtask(int idtask, string comment)
         {
             string IdUser = User.Identity.GetUserId();
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
 
@@ -274,7 +278,7 @@ namespace ProcessManagement.Areas.API.Controllers
         [HttpPost]
         public JsonResult submitopentask(int idtask,string comment)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             string IdUser = User.Identity.GetUserId();
@@ -302,7 +306,7 @@ namespace ProcessManagement.Areas.API.Controllers
         [HttpPost]
         public JsonResult addComment(int id, Direction direction, string content)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             string IdUser = User.Identity.GetUserId();
@@ -325,7 +329,7 @@ namespace ProcessManagement.Areas.API.Controllers
         [HttpGet]
         public PartialViewResult getComments(int id, string direction)
         {
-            var comments = db.Comments.Where(x => x.IdDirection == id && x.Direction == direction.Trim()).OrderByDescending(x => x.Create_At).ToList();
+            List<Comment> comments = db.Comments.Where(x => x.IdDirection == id && x.Direction == direction.Trim()).OrderByDescending(x => x.Create_At).ToList();
             ViewData["comments"] = comments;
             return PartialView("~/Areas/API/Views/ProcessRun/Comment.cshtml");
         }
@@ -333,7 +337,7 @@ namespace ProcessManagement.Areas.API.Controllers
         [HttpPost]
         public JsonResult DeleteProcessRun(int idprocess)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             //find process

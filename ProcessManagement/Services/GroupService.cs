@@ -95,7 +95,7 @@ namespace ProcessManagement.Services
         /// <param name="group">Model Group</param>
         public void removeGroup(Group group)
         {
-            var listUser = participateService.findMembersInGroup(group.Id);
+            List<Participate> listUser = participateService.findMembersInGroup(group.Id);
             //remove user in group
             participateService.removeUsersInGroup(listUser);
             //remove tất cả các process của group
@@ -117,14 +117,14 @@ namespace ProcessManagement.Services
         public List<Group> getMyGroup(String id)
         {
             //lấy ra những participant mà user tham gia
-            var ListGroupAttend = db.Participates.Where(m => m.IdUser == id).ToList();
+            List<Participate> ListGroupAttend = db.Participates.Where(m => m.IdUser == id).ToList();
             //tạo 1 list chứa id các group mà user tham gia
             List<int> ListGroupid = new List<int>();
-            foreach (var item in ListGroupAttend)
+            foreach (Participate item in ListGroupAttend)
             {
                 ListGroupid.Add(item.IdGroup);
             }
-            var ListGroup = db.Groups.Where(m => ListGroupid.Contains(m.Id)).OrderByDescending(m => m.Updated_At).ToList();
+            List<Group> ListGroup = db.Groups.Where(m => ListGroupid.Contains(m.Id)).OrderByDescending(m => m.Updated_At).ToList();
             return ListGroup;
         }
     }

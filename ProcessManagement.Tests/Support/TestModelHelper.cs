@@ -11,14 +11,14 @@ namespace ProcessManagement.Tests.Support
         {
             controller.ModelState.Clear();
 
-            var validationContext = new ValidationContext(viewModel, null, null);
-            var validationResults = new List<ValidationResult>();
+            ValidationContext validationContext = new ValidationContext(viewModel, null, null);
+            List<ValidationResult> validationResults = new List<ValidationResult>();
 
             Validator.TryValidateObject(viewModel, validationContext, validationResults, true);
 
-            foreach (var result in validationResults)
+            foreach (ValidationResult result in validationResults)
             {
-                foreach (var name in result.MemberNames)
+                foreach (string name in result.MemberNames)
                 {
                     controller.ModelState.AddModelError(name, result.ErrorMessage);
                 }

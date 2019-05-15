@@ -72,7 +72,7 @@ namespace ProcessManagement.Controllers
         }
         public ActionResult NewProcessRun(int groupid)
         {
-            var group = groupService.findGroup(groupid);
+            Group group = groupService.findGroup(groupid);
             return View(group);
         }
         [Authorize]
@@ -95,7 +95,7 @@ namespace ProcessManagement.Controllers
             processService.insertDataJson(ps, data, imageprocess);
             JArray nodeArray = JArray.Parse(nodeData);
             JArray linkArray = JArray.Parse(linkData);
-            var idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();
+            JToken idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();
             List<int> b = new List<int>();
             string circle = "Circle";
             for (int i = 0; i < nodeArray.Count; i++)
@@ -110,15 +110,15 @@ namespace ProcessManagement.Controllers
             }
             for (int i = 0; i < nodeArray.Count; i++)
             {
-                var key = (int)nodeArray[i]["key"];
-                var from = linkArray.Where(x => (int)x["from"] == key).ToList();
+                int key = (int)nodeArray[i]["key"];
+                List<JToken> from = linkArray.Where(x => (int)x["from"] == key).ToList();
                 Step step = new Step();
                 int j = 1;
                 if (from != null)
                 {
-                    foreach (var item in from)
+                    foreach (JToken item in from)
                     {
-                        var to = (int)item["to"];
+                        int to = (int)item["to"];
                         if (j == 1)
                         {
                             step.NextStep1 = to;
@@ -137,7 +137,7 @@ namespace ProcessManagement.Controllers
                     {
                         step.NextStep2 = 0;
                     }
-                    foreach (var tokey in b)
+                    foreach (int tokey in b)
                     {
                         if (step.NextStep1 == tokey)
                         {
@@ -169,10 +169,10 @@ namespace ProcessManagement.Controllers
         public ActionResult ShowStep(int processid)
         {
             string idUser = User.Identity.GetUserId();
-            var process = processService.findProcess(processid);
-            var group = groupService.findGroup(process.IdGroup);
-            var listStep = stepService.findStepsOfProcess(processid);
-            var listRole = processService.findListRole(process.Id);
+            Process process = processService.findProcess(processid);
+            Group group = groupService.findGroup(process.IdGroup);
+            List<Step> listStep = stepService.findStepsOfProcess(processid);
+            List<Role> listRole = processService.findListRole(process.Id);
             //statics
             //dynamic expando = new ExpandoObject();
             //var processStatisticModel = expando as IDictionary<string, object>;
@@ -284,13 +284,13 @@ namespace ProcessManagement.Controllers
             }
             //hàm xóa các phần tử giống nhau trong mảng
             //cho list 1
-            var gionglist1 = listnextstep1.Distinct();
+            IEnumerable<Step> gionglist1 = listnextstep1.Distinct();
             listnextstep1 = gionglist1.ToList();
             // cho list 2
-            var gionglist2 = listnextstep2.Distinct();
+            IEnumerable<Step> gionglist2 = listnextstep2.Distinct();
             listnextstep2 = gionglist2.ToList();
 
-            foreach (var item in listnextstep2)
+            foreach (Step item in listnextstep2)
             {
                 listnextstep1.Add(item);
             }
@@ -311,7 +311,7 @@ namespace ProcessManagement.Controllers
         public ActionResult EditStep(int stepid)
         {
             string idUser = User.Identity.GetUserId();
-            var step = stepService.findStep(stepid);
+            Step step = stepService.findStep(stepid);
             if (step == null) return HttpNotFound();
             Group group = groupService.findGroup(step.Process.Group.Id);
 
@@ -329,8 +329,8 @@ namespace ProcessManagement.Controllers
         [HttpPost]
         public ActionResult EditStep(int groupid, Step model)
         {
-            var group = groupService.findGroup(groupid);
-            var step = db.Steps.Find(model.Id);
+            Group group = groupService.findGroup(groupid);
+            Step step = db.Steps.Find(model.Id);
             step.Description = model.Description;
             db.SaveChanges();
             return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, processid = step.Process.Id });
@@ -359,7 +359,7 @@ namespace ProcessManagement.Controllers
 
                 return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "addrole", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id });
             }
-            var isExist = roleService.isNameExist(role, process.Id);
+            bool isExist = roleService.isNameExist(role, process.Id);
             if (isExist)
             {
                 SetFlash(FlashType.error, "This name is exist in process");
@@ -376,7 +376,7 @@ namespace ProcessManagement.Controllers
         {
             Role role = roleService.findRole(roleid);
             if (role == null) return HttpNotFound();
-            var roleId = role.Id;
+            int roleId = role.Id;
             Process process = processService.findProcess(role.IdProcess);
             Group group = groupService.findGroup(process.IdGroup);
             roleService.removeRole(role);
@@ -389,7 +389,7 @@ namespace ProcessManagement.Controllers
         {
             Role role = roleService.findRole(roleid);
             if (role == null) return HttpNotFound();
-            var group = groupService.findGroup(role.Process.Group.Id);
+            Group group = groupService.findGroup(role.Process.Group.Id);
             ViewData["Group"] = group;
             Session["roleid"] = role.Id;
             Session["processid"] = role.Process.Id;
@@ -401,7 +401,7 @@ namespace ProcessManagement.Controllers
         public ActionResult EditRole(Role role)
         {
             role.Id = (int)Session["roleid"];
-            var processid = (int)Session["processid"];
+            int processid = (int)Session["processid"];
             Process process = processService.findProcess(processid);
             Group group = groupService.findGroup(process.Group.Id);
 
@@ -410,7 +410,7 @@ namespace ProcessManagement.Controllers
                 SetFlash(FlashType.error, "Name is required");
                 return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "editrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
             }
-            var isExist = roleService.isNameExist(role, process.Id);
+            bool isExist = roleService.isNameExist(role, process.Id);
             if (isExist)
             {
                 SetFlash(FlashType.error, "This name is exist in process");
@@ -430,7 +430,7 @@ namespace ProcessManagement.Controllers
             if (ps == null) return HttpNotFound();
             if (ps.DataJson != null)
             {
-                var loadprocess = ps.DataJson.ToString();
+                string loadprocess = ps.DataJson.ToString();
                 JObject load = JObject.Parse(loadprocess);
                 ViewData["load"] = load;
             }
@@ -473,8 +473,8 @@ namespace ProcessManagement.Controllers
             processService.insertDataJson(ps, data, imageprocess);
             JArray nodeArray = JArray.Parse(nodeData);
             JArray linkArray = JArray.Parse(linkData);
-            var idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();
-            var liststep = db.Steps.Where(z => z.IdProcess == ps.Id).ToList();
+            JToken idfirstStep = linkArray.Where(x => (int)x["from"] == -1).FirstOrDefault();
+            List<Step> liststep = db.Steps.Where(z => z.IdProcess == ps.Id).ToList();
             List<int> keystep = new List<int>();
             List<int> keynode = new List<int>();
             List<int> b = new List<int>();
@@ -496,7 +496,7 @@ namespace ProcessManagement.Controllers
             //nếu 2 list có các phần tử giống nhau sẽ lưu vào 1 mảng khác để sử giá trị của step đó
             //nếu 2 list có các phần tử khác nhau sẽ lưu vào 1 mảng khác để tạo mới step đó
             //sau đó kt lại nếu step nào không có nextstep1 and nextstep2,step đó sẽ đc xóa
-            foreach (var ls in liststep)
+            foreach (Step ls in liststep)
             {
                 ls.StartStep = false;
                 ls.NextStep1 = 0;
@@ -514,7 +514,7 @@ namespace ProcessManagement.Controllers
 
             List<Step> keystepgiong = new List<Step>();
             List<Step> keystepkhac = new List<Step>();
-            foreach (var item in same)
+            foreach (int item in same)
             {
                 Step s = db.Steps.Where(p => p.Key == item && p.IdProcess == ps.Id).FirstOrDefault();
                 keystepgiong.Add(s);
@@ -522,15 +522,15 @@ namespace ProcessManagement.Controllers
 
             for (int i = 0; i < nodeArray.Count; i++)
             {
-                var key = (int)nodeArray[i]["key"];
-                var from = linkArray.Where(x => (int)x["from"] == key).ToList();
+                int key = (int)nodeArray[i]["key"];
+                List<JToken> from = linkArray.Where(x => (int)x["from"] == key).ToList();
                 Step step = new Step();
                 int j = 1;
                 if (from != null)
                 {
-                    foreach (var item1 in from)
+                    foreach (JToken item1 in from)
                     {
-                        var to = (int)item1["to"];
+                        int to = (int)item1["to"];
                         if (j == 1)
                         {
                             step.NextStep1 = to;
@@ -549,7 +549,7 @@ namespace ProcessManagement.Controllers
                     {
                         step.NextStep1 = 0;
                     }
-                    foreach (var tokey in b)
+                    foreach (int tokey in b)
                     {
                         if (step.NextStep1 == tokey)
                         {
@@ -566,7 +566,7 @@ namespace ProcessManagement.Controllers
                 step.Figure = nodeArray[i]["figure"] == null ? "Step" : nodeArray[i]["figure"].ToString();
                 step.Created_At = DateTime.Now;
                 step.Updated_At = DateTime.Now;
-                foreach (var item in diff)
+                foreach (int item in diff)
                 {
                     if (item == key)
                     {
@@ -577,7 +577,7 @@ namespace ProcessManagement.Controllers
                         Step ste = stepService.findStepByKey(ps.Id, item);
                         if (ste != null)
                         {
-                            var listtaskofstep = db.TaskProcesses.Where(s => s.IdStep == ste.Id).ToList();
+                            List<TaskProcess> listtaskofstep = db.TaskProcesses.Where(s => s.IdStep == ste.Id).ToList();
                             for (int s = 0; s < listtaskofstep.Count; s++)
                             {
                                 db.TaskProcesses.Remove(listtaskofstep[s]);
@@ -591,7 +591,7 @@ namespace ProcessManagement.Controllers
                     }
                 }
             }
-            foreach (var item3 in keystepkhac)
+            foreach (Step item3 in keystepkhac)
             {
                 Step step = new Step();
                 step.IdProcess = ps.Id;
@@ -613,19 +613,19 @@ namespace ProcessManagement.Controllers
                 }
             }
 
-            foreach (var listst in keystepgiong)
+            foreach (Step listst in keystepgiong)
             {
                 for (int i = 0; i < nodeArray.Count; i++)
                 {
-                    var key = (int)nodeArray[i]["key"];
+                    int key = (int)nodeArray[i]["key"];
                     if (key == listst.Key)
                     {
-                        var from = linkArray.Where(x => (int)x["from"] == key).ToList();
+                        List<JToken> from = linkArray.Where(x => (int)x["from"] == key).ToList();
                         int j = 1;//if (from != null)
                         {
-                            foreach (var item2 in from)
+                            foreach (JToken item2 in from)
                             {
-                                var to = (int)item2["to"];
+                                int to = (int)item2["to"];
                                 if (j == 1)
                                 {
                                     listst.NextStep1 = to;
@@ -644,7 +644,7 @@ namespace ProcessManagement.Controllers
                             {
                                 listst.NextStep1 = 0;
                             }
-                            foreach (var tokey in b)
+                            foreach (int tokey in b)
                             {
                                 if (listst.NextStep1 == tokey)
                                 {

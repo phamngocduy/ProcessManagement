@@ -48,7 +48,7 @@ namespace ProcessManagement.Services
         /// <param name="idGroup">Id Group</param>
         public List<Process> findListProcess(int idGroup)
 		{
-			var processes = db.Processes.Where(x => x.IdGroup == idGroup).OrderByDescending(x => x.Created_At).ToList();
+            List<Process> processes = db.Processes.Where(x => x.IdGroup == idGroup).OrderByDescending(x => x.Created_At).ToList();
 			return processes;
 		}
 		public Role findRole(int idRole)
@@ -63,7 +63,7 @@ namespace ProcessManagement.Services
 		/// <returns></returns>
 		public List<Role> findListRole(int idProcess)
 		{
-			var roles = db.Roles.Where(x => x.IdProcess == idProcess).ToList();
+            List<Role> roles = db.Roles.Where(x => x.IdProcess == idProcess).ToList();
 			return roles;
 		}
 		public void createProcess(int idGroup, string idUser, Process process)
@@ -82,7 +82,7 @@ namespace ProcessManagement.Services
 		/// <param name="idGroup">Id Group</param>
 		public void removeProcesses(int idGroup)
 		{
-			var processes = findListProcess(idGroup);
+            List<Process> processes = findListProcess(idGroup);
 			stepService.removeSteps(processes);
 			db.Processes.RemoveRange(processes);
 			db.SaveChanges();
@@ -118,7 +118,7 @@ namespace ProcessManagement.Services
 		}
         public int countProcessOfGroup(int idGroup)
         {
-            var count = db.Processes.Where(m => m.IdGroup == idGroup).Count();
+            int count = db.Processes.Where(m => m.IdGroup == idGroup).Count();
             return count;
         }
         public List<Process> getProcess(int idGroup)
@@ -182,7 +182,7 @@ namespace ProcessManagement.Services
             Process process = findProcess(idprocess);
             List<Role> listrole = roleService.findListRoleOfProcess(idprocess);
             List<Step> liststep = stepService.findStepsOfProcess(idprocess);
-            foreach (var step in liststep)
+            foreach (Step step in liststep)
             {
                 List<TaskProcess> listtask = taskService.findTaskOfStep(step.Id);
                 if (listtask.Count != 0)
@@ -208,7 +208,7 @@ namespace ProcessManagement.Services
             if (processrun != null)
             {
                 List<StepRun> liststeprun = stepService.findStepsOfRunProcess(processrun.Id);
-                foreach (var steprun in liststeprun)
+                foreach (StepRun steprun in liststeprun)
                 {
                     List<TaskProcessRun> listtaskrun = taskService.findruntaskofstep(steprun.Id);
                     if (listtaskrun.Count != 0)

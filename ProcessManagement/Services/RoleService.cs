@@ -12,7 +12,7 @@ namespace ProcessManagement.Services
         ///=============================================================================================
         public Role findRoleOfProcess(int idRole, int idProcess)
         {
-            var role = db.Roles.Where(m => m.Id == idRole && m.IdProcess == idProcess).FirstOrDefault();
+            Role role = db.Roles.Where(m => m.Id == idRole && m.IdProcess == idProcess).FirstOrDefault();
             return role;
         }
         public List<Role> findListRoleOfProcess(int idProcess)
@@ -22,7 +22,7 @@ namespace ProcessManagement.Services
         }
         public List<Role> addRoleRun(List<Role> listrole, int idprocessrun)
         {
-            foreach (var item in listrole)
+            foreach (Role item in listrole)
             {
                 Role role = new Role();
                 role.IdProcess = idprocessrun;
@@ -41,10 +41,10 @@ namespace ProcessManagement.Services
         public List<RoleRun> findlistrolerun(List<Role> listrole)
         {
             List<RoleRun> listrolerun = new List<RoleRun>();
-            foreach (var item in listrole)
+            foreach (Role item in listrole)
             {
                 List<RoleRun> role = db.RoleRuns.Where(x => x.IdRole == item.Id).ToList();
-                foreach (var rolerun in role)
+                foreach (RoleRun rolerun in role)
                 {
                     listrolerun.Add(rolerun);
                 }
@@ -121,7 +121,7 @@ namespace ProcessManagement.Services
         }
         public bool isAssigned(int roleid, string userid)
         {
-            var role = db.RoleRuns.FirstOrDefault(x => x.IdRole == roleid && x.IdUser == userid);
+            RoleRun role = db.RoleRuns.FirstOrDefault(x => x.IdRole == roleid && x.IdUser == userid);
             return role != null ? true : false;
         }
 

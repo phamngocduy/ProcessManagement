@@ -29,7 +29,7 @@ namespace ProcessManagement.Filters
         }
         private bool isAjaxRequest(ControllerContext controllerContext)
         {
-            var request = controllerContext.RequestContext.HttpContext.Request;
+            HttpRequestBase request = controllerContext.RequestContext.HttpContext.Request;
             return request.IsAjaxRequest();
         }
     }

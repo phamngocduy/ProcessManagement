@@ -32,7 +32,7 @@ namespace ProcessManagement.Areas.API.Controllers
         [HttpPost]
         public JsonResult editGroup(int groupid, string name, string description)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             object response;
             string message;
             if (name == "")
@@ -60,7 +60,7 @@ namespace ProcessManagement.Areas.API.Controllers
             List<Group> groups = groupService.getMyGroup(IdUser);
 
             List<object> groupList = new List<object>();
-            foreach (var group in groups)
+            foreach (Group group in groups)
             {
                 object jOwner = new
                 {
@@ -78,7 +78,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 int memberTotalInGroup = participateService.countMemberInGroup(group.Id);
                 List<object> memberList = new List<object>();
 
-                foreach (var member in ListParticipate)
+                foreach (Participate member in ListParticipate)
                 {
                     if (member.IdUser != group.IdOwner)
                     {
@@ -135,7 +135,7 @@ namespace ProcessManagement.Areas.API.Controllers
             List<AspNetUser> memberNotInGroup = participateService.searchMembersNotInGroup(ListParticipant, key, 5);
             if (memberNotInGroup.Any())
             {
-                foreach (var member in memberNotInGroup)
+                foreach (AspNetUser member in memberNotInGroup)
                 {
                     object tempData = new
                     {
@@ -154,7 +154,7 @@ namespace ProcessManagement.Areas.API.Controllers
             Group group = groupService.findGroup(groupid);
             List<Participate> participates = participateService.findMembersInGroup(group.Id);
             List<object> jMember = new List<object>();
-            foreach (var user in participates)
+            foreach (Participate user in participates)
             {
                 object tempdata = new
                 {
@@ -179,7 +179,7 @@ namespace ProcessManagement.Areas.API.Controllers
         [HttpPost]
         public JsonResult addMember(string id)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             int groupid = (int)Session["groupid"];
             Group group = groupService.findGroup(groupid);
@@ -191,7 +191,7 @@ namespace ProcessManagement.Areas.API.Controllers
             }
             else
             {
-                var checkExist = participateService.checkMemberExist(user.Id, group.Id);
+                Participate checkExist = participateService.checkMemberExist(user.Id, group.Id);
                 if (checkExist != null)
                 {
                     status = HttpStatusCode.InternalServerError;
@@ -209,7 +209,7 @@ namespace ProcessManagement.Areas.API.Controllers
         [HttpPost]
         public JsonResult editRole(int id, string roles)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             JObject jRoles = JObject.Parse(roles);
             Participate user = participateService.findMemberInGroup(id);
@@ -235,13 +235,13 @@ namespace ProcessManagement.Areas.API.Controllers
         [HttpPost]
         public JsonResult DeleteGroup(int idgroup)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
 
             Group group = groupService.findGroup(idgroup);
             List<Process> listprocess = processService.findListProcess(idgroup);
-            foreach (var process in listprocess)
+            foreach (Process process in listprocess)
             {
                 processService.removeprocessrun(process.Id);
             }

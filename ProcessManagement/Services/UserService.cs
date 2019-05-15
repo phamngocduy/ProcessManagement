@@ -18,7 +18,7 @@ namespace ProcessManagement.Services
         {
             string charName = chara.Substring(0, 1).ToUpper();
             string background = commonService.getRandomColor();
-            var DefaultBackground = new JavaScriptSerializer().Serialize(new { name = charName, background = background });
+            string DefaultBackground = new JavaScriptSerializer().Serialize(new { name = charName, background = background });
             return DefaultBackground;
         }
         /// <summary>
@@ -37,7 +37,7 @@ namespace ProcessManagement.Services
         }
         public AspNetUser findUser(string idUser)
         {
-            var user = db.AspNetUsers.FirstOrDefault(x => x.Id == idUser);
+            AspNetUser user = db.AspNetUsers.FirstOrDefault(x => x.Id == idUser);
             return user;    
         }
     }

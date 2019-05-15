@@ -94,7 +94,7 @@ namespace ProcessManagement.Services
         }
         public List<FileManager> findFiles(int idGroup, string path)
         {
-            var file = db.FileManagers.Where(x => x.IdGroup == idGroup && x.Path == path).ToList();
+            List<FileManager> file = db.FileManagers.Where(x => x.IdGroup == idGroup && x.Path == path).ToList();
             return file;
 
         }
@@ -129,7 +129,7 @@ namespace ProcessManagement.Services
         }
         public bool checkFileExist(int idGroup,string name, Direction direction, string path)
         {
-            var file = db.FileManagers.FirstOrDefault(x => x.IdGroup == idGroup && x.Direction == direction.ToString() && x.Path == path && x.Name == name);
+            FileManager file = db.FileManagers.FirstOrDefault(x => x.IdGroup == idGroup && x.Direction == direction.ToString() && x.Path == path && x.Name == name);
             return file != null ? true : false;
         }
         /// <summary>
@@ -165,7 +165,7 @@ namespace ProcessManagement.Services
             if (Directory.Exists(filePath))
             {
                 Directory.Delete(filePath,true);
-                var filemanager = db.FileManagers.Where(x => x.Path == path);
+                IQueryable<FileManager> filemanager = db.FileManagers.Where(x => x.Path == path);
                 db.FileManagers.RemoveRange(filemanager);
                 db.SaveChanges();
             }
@@ -179,11 +179,11 @@ namespace ProcessManagement.Services
             if (fileDirectory.Exists)
             {
                 FileInfo[] files = fileDirectory.GetFiles();
-                foreach (var file in files)
+                foreach (FileInfo file in files)
                 {
                     file.Delete();
                 }
-                var filemanager = db.FileManagers.FirstOrDefault(x => x.Path == path);
+                FileManager filemanager = db.FileManagers.FirstOrDefault(x => x.Path == path);
                 if (filemanager != null)
                 {
                     db.FileManagers.Remove(filemanager);

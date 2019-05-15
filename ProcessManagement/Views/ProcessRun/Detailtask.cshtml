@@ -505,22 +505,17 @@
                         
                 }
             });
+            @if (Model.Status1.Name != "Open" && (idUser.ToString() != role.IdUser || isManager != true))
+            {
+               @:$(".dropify-clear").remove(); 
+            }
             $('#btn-opentask').on('click', function () {
-                   
+
                 var $this = $(this);
                 setConfirm(`Are you sure you want to open this task?`, `<textarea class="form-control" id="comment-action-content" placeholder="Your comment (optional)" rows="6"></textarea>`, function () {
                     toggleLoading($this);
                     var content = this.$content.find("#comment-action-content").val().trim();
-                    let data = {
-                            idtask: @Model.Id,
-                            comment: content
-                        };
-                    setTimeout(function () {
-                        submitopentask(data);
-                        toggleLoading($this);
-                    }, 1000);
-                });
-            });
+                    let data = if;
             $('#btn-finishtask').on('click', function () {
                 var $this = $(this);
                 let data = {

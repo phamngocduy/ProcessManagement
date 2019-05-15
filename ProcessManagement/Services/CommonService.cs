@@ -51,11 +51,11 @@ namespace ProcessManagement.Services
         public string getRandomString(int length)
         {
             const string TOKENALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            
-            var rnd = new RNGCryptoServiceProvider();
-            var tokenBytes = new byte[length];
+
+            RNGCryptoServiceProvider rnd = new RNGCryptoServiceProvider();
+            byte[] tokenBytes = new byte[length];
             rnd.GetBytes(tokenBytes);
-            var token = Enumerable
+            char[] token = Enumerable
                     .Range(0, length)
                     .Select(i => TOKENALPHABET[tokenBytes[i] % TOKENALPHABET.Length])
                     .ToArray();

@@ -99,13 +99,13 @@ namespace ProcessManagement.Controllers
             int groupid = (int)Session["groupid"];
             Group group = groupService.findGroup(groupid);
             if (group == null) return HttpNotFound();
-            var folderName = String.Format("~/App_Data/Files/Groups/{0}-{1}/Intros", group.Name, group.Id);
-            foreach (var file in files)
+            string folderName = String.Format("~/App_Data/Files/Groups/{0}-{1}/Intros", group.Name, group.Id);
+            foreach (HttpPostedFileBase file in files)
             {
                 if (file != null)
                 {
-                    var fileName = Path.GetFileName(file.FileName);
-                    var serverSavePath = Path.Combine(Server.MapPath(folderName),fileName);
+                    string fileName = Path.GetFileName(file.FileName);
+                    string serverSavePath = Path.Combine(Server.MapPath(folderName),fileName);
                     file.SaveAs(serverSavePath);
                 }
             }
@@ -122,7 +122,7 @@ namespace ProcessManagement.Controllers
             if (group == null) return HttpNotFound();
 
             dynamic expando = new ExpandoObject();
-            var groupStatisticModel = expando as IDictionary<string, object>;
+            IDictionary<string, object> groupStatisticModel = expando as IDictionary<string, object>;
             groupStatisticModel.Add("totalmember", participateService.countMemberInGroup(group.Id));
             groupStatisticModel.Add("totalprocess", processService.countProcessOfGroup(group.Id));
 
@@ -155,7 +155,7 @@ namespace ProcessManagement.Controllers
             Group group = groupService.findGroup(groupid);
             if (group == null) return HttpNotFound();
             //Tìm tất cả member thuộc group đó
-            var ListParticipant = participateService.findMembersInGroup(group.Id);
+            List<Participate> ListParticipant = participateService.findMembersInGroup(group.Id);
             ViewData["ListParticipant"] = ListParticipant;
             ViewData["Group"] = group;
             //Tìm tất cả member không thuộc group đó
@@ -211,7 +211,7 @@ namespace ProcessManagement.Controllers
         {
             int groupid = (int)Session["groupid"];
             Group group = groupService.findGroup(groupid);
-            var groupName = group.Name;
+            string groupName = group.Name;
             ////////////////////////////////////////////////////////////////////////////
             //TODO
             //hỏi thầy lúc xóa group có nên xóa process luôn hông 
@@ -230,7 +230,7 @@ namespace ProcessManagement.Controllers
         {
             Participate user = participateService.findMemberInGroup(participateid);
             if (user == null) return HttpNotFound();
-            var userName = user.AspNetUser.UserName;
+            string userName = user.AspNetUser.UserName;
             int groupId = (int)Session["groupid"];
             Group group = groupService.findGroup(groupId);
             ////////////////////////////////////////////////////////////////////////////
@@ -281,7 +281,7 @@ namespace ProcessManagement.Controllers
         [HttpPost]
         public ActionResult EditRoleMember(Participate model)
         {
-            var groupId = (int)Session["groupid"];
+            int groupId = (int)Session["groupid"];
             Group group = groupService.findGroup(groupId);
             Participate user = participateService.findMemberInGroup(model.Id);
             if (user == null) return HttpNotFound();
@@ -305,7 +305,7 @@ namespace ProcessManagement.Controllers
             string idUser = User.Identity.GetUserId();
             Participate user = participateService.findMemberInGroup(participateid);
             if (user == null) return HttpNotFound();
-            var groupName = user.Group.Name;
+            string groupName = user.Group.Name;
 
             //xóa thành viên trong group
             ////////////////////////////////////////////////////////////////////////////

@@ -46,7 +46,7 @@ namespace ProcessManagement.Services
 		/// <param name="model">Participate model</param>
 		public void editRoleUser(Participate model)
 		{
-			var user = findMemberInGroup(model.Id);
+            Participate user = findMemberInGroup(model.Id);
 			user.IsAdmin = model.IsAdmin;
 			user.IsManager = model.IsManager;
 			user.Updated_At = DateTime.Now;
@@ -101,7 +101,7 @@ namespace ProcessManagement.Services
         /// <returns>return danh sách member của group đó</returns>
 		public List<Participate> findMembersInGroup(int IdGroup, int quantity = -1)
 		{
-			var ListParticipant = db.Participates.Where(x => x.IdGroup == IdGroup);
+            IQueryable<Participate> ListParticipant = db.Participates.Where(x => x.IdGroup == IdGroup);
             if(quantity != -1)
             {
                 ListParticipant = ListParticipant.Take(quantity);
@@ -117,7 +117,7 @@ namespace ProcessManagement.Services
         public List<Participate> findMembersNotOwnerInGroup(int IdGroup, int quantity = -1)
         {
             Group group = db.Groups.Find(IdGroup);
-            var ListParticipant = db.Participates.Where(x => x.IdGroup == IdGroup && x.IdUser != group.IdOwner);
+            IQueryable<Participate> ListParticipant = db.Participates.Where(x => x.IdGroup == IdGroup && x.IdUser != group.IdOwner);
             if (quantity != -1)
             {
                 ListParticipant = ListParticipant.Take(quantity);
@@ -132,18 +132,18 @@ namespace ProcessManagement.Services
         public List<AspNetUser> findMembersNotInGroup(List<Participate> memberInGroup,string key = null)
 		{
             List<string> userInGroup = new List<string>();
-            foreach (var item in memberInGroup)
+            foreach (Participate item in memberInGroup)
             {
                 userInGroup.Add(item.IdUser);
             }
             //string temp = String.Join(", ", userInGroup); 
-            var memberNotInGroup = db.AspNetUsers.Where(x => !userInGroup.Contains(x.Id)).OrderByDescending(x => x.Id).ToList();
+            List<AspNetUser> memberNotInGroup = db.AspNetUsers.Where(x => !userInGroup.Contains(x.Id)).OrderByDescending(x => x.Id).ToList();
             return memberNotInGroup;
         }
         public List<AspNetUser> searchMembersNotInGroup(List<Participate> memberInGroup, string key = null,int quantity = 5)
         {
             List<string> userInGroup = new List<string>();
-            foreach (var item in memberInGroup)
+            foreach (Participate item in memberInGroup)
             {
                 userInGroup.Add(item.IdUser);
             }
@@ -168,7 +168,7 @@ namespace ProcessManagement.Services
         /// <returns>Return một object Participate của member thuộc group đó</returns>
         public Participate getRoleOfMember(string idUser, int idGroup)
 		{
-			var role = db.Participates.Where(x => x.IdUser == idUser && x.IdGroup == idGroup).FirstOrDefault();
+            Participate role = db.Participates.Where(x => x.IdUser == idUser && x.IdGroup == idGroup).FirstOrDefault();
 			return role;
 		}
 		/// <summary>
@@ -178,7 +178,7 @@ namespace ProcessManagement.Services
 		/// <param name="listUser">Danh sách email của member</param>
 		public void addMembers(Group group, List<string> listUser)
 		{
-			foreach (var user in listUser)
+			foreach (string user in listUser)
 			{
 				Participate role = new Participate();
 				role.IdUser = db.AspNetUsers.SingleOrDefault(x => x.Email == user).Id;

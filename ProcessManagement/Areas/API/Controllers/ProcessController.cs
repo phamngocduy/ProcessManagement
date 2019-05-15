@@ -35,7 +35,7 @@ namespace ProcessManagement.Areas.API.Controllers
         [GroupAuthorize(Role = new UserRole[] { UserRole.Manager })]
         public JsonResult editstep(int stepid, string des)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             Step step = db.Steps.Find(stepid);
@@ -52,7 +52,7 @@ namespace ProcessManagement.Areas.API.Controllers
         [GroupAuthorize(Role = new UserRole[] { UserRole.Manager })]
         public JsonResult addTask(int stepid, string name, int? idRole, string description, string inputConfig, string fileConfig, HttpPostedFileBase fileupload)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             //int idstep = (int)Session["idStep"];
@@ -70,7 +70,7 @@ namespace ProcessManagement.Areas.API.Controllers
             if (idRole != null)
             {
                 int idR = idRole.GetValueOrDefault();
-                var role = roleService.findRoleOfProcess(idR, step.Process.Id);
+                Role role = roleService.findRoleOfProcess(idR, step.Process.Id);
                 if (role == null)
                 {
                     //role not exist
@@ -83,7 +83,7 @@ namespace ProcessManagement.Areas.API.Controllers
 
             }
 
-            var task = taskService.addtask(step.Id, name, idRole, description, inputConfig, fileConfig);
+            TaskProcess task = taskService.addtask(step.Id, name, idRole, description, inputConfig, fileConfig);
             //create directory
             Group group = groupService.findGroup(step.Process.Group.Id);
             string directoryPath = String.Format("Upload/{0}/{1}/{2}/{3}", group.Id, step.Process.Id, step.Id, task.Id);
@@ -102,11 +102,11 @@ namespace ProcessManagement.Areas.API.Controllers
             ///////////////////////////
             /// chỉ được edit task thuộc process mà mình quản lý
             ///////////////////////////
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             int idTask = int.Parse(Session["idTask"].ToString());
-            var task = taskService.findTask(idTask);
+            TaskProcess task = taskService.findTask(idTask);
 
 
             if (task == null)
@@ -145,7 +145,7 @@ namespace ProcessManagement.Areas.API.Controllers
             if (idRole != null)
             {
                 int idR = idRole.GetValueOrDefault();
-                var role = roleService.findRoleOfProcess(idR, step.Process.Id);
+                Role role = roleService.findRoleOfProcess(idR, step.Process.Id);
                 if (role == null)
                 {
                     //role not exist
@@ -170,7 +170,7 @@ namespace ProcessManagement.Areas.API.Controllers
         [GroupAuthorize(Role = new UserRole[] { UserRole.Manager })]
         public JsonResult AddFormTask(string name, int? idRole, string description, string formBuilder, HttpPostedFileBase fileupload)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             int idstep = (int)Session["idStep"];
@@ -188,7 +188,7 @@ namespace ProcessManagement.Areas.API.Controllers
             if (idRole != null)
             {
                 int idR = idRole.GetValueOrDefault();
-                var role = roleService.findRoleOfProcess(idR, step.Process.Id);
+                Role role = roleService.findRoleOfProcess(idR, step.Process.Id);
                 if (role == null)
                 {
                     //role not exist
@@ -201,7 +201,7 @@ namespace ProcessManagement.Areas.API.Controllers
 
             }
 
-            var task = taskService.AddFormTask(step.Id, name, idRole, description, formBuilder);
+            TaskProcess task = taskService.AddFormTask(step.Id, name, idRole, description, formBuilder);
             //create directory
             Group group = groupService.findGroup(step.Process.Group.Id);
             string directoryPath = String.Format("Upload/{0}/{1}/{2}/{3}", group.Id, step.Process.Id, step.Id, task.Id);
@@ -220,11 +220,11 @@ namespace ProcessManagement.Areas.API.Controllers
             ///////////////////////////
             /// chỉ được edit task thuộc process mà mình quản lý
             ///////////////////////////
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             int idTask = int.Parse(Session["idTask"].ToString());
-            var task = taskService.findTask(idTask);
+            TaskProcess task = taskService.findTask(idTask);
 
 
             if (task == null)
@@ -260,7 +260,7 @@ namespace ProcessManagement.Areas.API.Controllers
             if (idRole != null)
             {
                 int idR = idRole.GetValueOrDefault();
-                var role = roleService.findRoleOfProcess(idR, step.Process.Id);
+                Role role = roleService.findRoleOfProcess(idR, step.Process.Id);
                 if (role == null)
                 {
                     //role not exist
@@ -292,7 +292,7 @@ namespace ProcessManagement.Areas.API.Controllers
         {
             List<Process> processes = processService.getProcess(groupid);
             List<object> jProcesses = new List<object>();
-            foreach (var process in processes.Where(x => x.IsRun == null || x.IsRun == false))
+            foreach (Process process in processes.Where(x => x.IsRun == null || x.IsRun == false))
             {
                 object jProcess = new
                 {
@@ -320,7 +320,7 @@ namespace ProcessManagement.Areas.API.Controllers
         [HttpPost]
         public JsonResult addProcessRun(int processid, string name,string des)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             Process process = processService.findProcess(processid);
@@ -330,7 +330,7 @@ namespace ProcessManagement.Areas.API.Controllers
             List<Role> rolerun = roleService.addRoleRun(role, processrun.Id);
             List<Step> liststep = stepService.findStepsOfProcess(processid);
             List<Step> liststeprun = stepService.addStepRun(liststep, processrun.Id);
-            foreach (var step in liststep)
+            foreach (Step step in liststep)
             {
                 List<TaskProcess> listtask = taskService.findTaskOfStep(step.Id);
                 taskService.addListTaskRun(listtask, rolerun, liststeprun);
@@ -343,7 +343,7 @@ namespace ProcessManagement.Areas.API.Controllers
         [HttpPost]
         public JsonResult assignRole(int processid, int roleid, string members)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             Role role = roleService.findRoleOfProcess(roleid, processid);
@@ -358,9 +358,9 @@ namespace ProcessManagement.Areas.API.Controllers
             List<string> assignList = members.Split(',').ToList();
             if (assignList.Any())
             {
-                foreach (var member in assignList)
+                foreach (string member in assignList)
                 {
-                    var isMemberInGroup = participateService.checkMemberInGroup(member, role.Process.Group.Id);
+                    bool isMemberInGroup = participateService.checkMemberInGroup(member, role.Process.Group.Id);
                     if (isMemberInGroup)
                     {
                         roleService.assignrolerun(roleid, member);
@@ -375,7 +375,7 @@ namespace ProcessManagement.Areas.API.Controllers
         [HttpPost]
         public JsonResult runprocess(int idprocess)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             Process findprocess = processService.findProcess(idprocess);
@@ -395,7 +395,7 @@ namespace ProcessManagement.Areas.API.Controllers
         public JsonResult addnextstepinrunprocess(int idStep, int idnextstep, int idstepdiamond)
         {
             string IdUser = User.Identity.GetUserId();
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             Step stepchoosenext = stepService.findStep(idnextstep);
@@ -443,7 +443,7 @@ namespace ProcessManagement.Areas.API.Controllers
         [HttpPost]
         public JsonResult submitdonetask(int idtask)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
 
@@ -459,7 +459,7 @@ namespace ProcessManagement.Areas.API.Controllers
         [HttpPost]
         public JsonResult DeleteProcess(int idprocess)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
 
@@ -476,13 +476,13 @@ namespace ProcessManagement.Areas.API.Controllers
         [HttpPost]
         public JsonResult deletenextsteprun(int idStep)
         {
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             StepRun runstep = stepService.findsteprun(idStep);
             List<StepRun> liststeprun = stepService.findStepsOfRunProcess(runstep.idProcess);
             StepRun stepback = new StepRun();
-            foreach (var item in liststeprun)
+            foreach (StepRun item in liststeprun)
             {
                 if (item.Id != runstep.Id)
                 {
@@ -510,7 +510,7 @@ namespace ProcessManagement.Areas.API.Controllers
         public JsonResult completestepinrunprocess(int idStep)
         {
             string IdUser = User.Identity.GetUserId();
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             StepRun runstep = stepService.findsteprun(idStep);
@@ -523,7 +523,7 @@ namespace ProcessManagement.Areas.API.Controllers
 
             List<Step> nextstep = new List<Step>();
             StepRun runnextstep = new StepRun();
-            foreach (var item in liststep)
+            foreach (Step item in liststep)
             {
                 if (runstep.NextStep1 == item.Key && item.StartStep == false)
                 {
@@ -537,7 +537,7 @@ namespace ProcessManagement.Areas.API.Controllers
                     runnextstep = stepService.completestepinrunprocess(processrun.Id, nextstep);
                 }
             }
-            foreach (var nexts in nextstep)
+            foreach (Step nexts in nextstep)
             {
                 List<TaskProcess> listtasknextstep = taskService.findTaskOfStep(nexts.Id);
             taskService.addlistruntask(listtasknextstep, runnextstep);
@@ -552,12 +552,12 @@ namespace ProcessManagement.Areas.API.Controllers
         public JsonResult createProcessCopy(int processid)
         {
             string IdUser = User.Identity.GetUserId();
-            var status = HttpStatusCode.OK;
+            HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
             try
             {
-                var process = processService.findProcess(processid);
+                Process process = processService.findProcess(processid);
                 if (process == null)
                 {
                     throw new ServerSideException("Process not found");
@@ -568,9 +568,9 @@ namespace ProcessManagement.Areas.API.Controllers
                 fileService.createDirectory(copyPath);
 
                 //role
-                var roles = roleService.findListRoleOfProcess(processid);
+                List<Role> roles = roleService.findListRoleOfProcess(processid);
                 List<object> copyRoles = new List<object>();
-                foreach (var role in roles)
+                foreach (Role role in roles)
                 {
                     object copyRole = new
                     {
@@ -580,14 +580,14 @@ namespace ProcessManagement.Areas.API.Controllers
                     copyRoles.Add(copyRole);
                 }
                 //step
-                var steps = stepService.findStepsOfProcess(processid);
+                List<Step> steps = stepService.findStepsOfProcess(processid);
                 List<object> copySteps = new List<object>();
-                foreach (var step in steps)
+                foreach (Step step in steps)
                 {
                     //task
-                    var tasks = taskService.findTaskOfStep(step.Id);
+                    List<TaskProcess> tasks = taskService.findTaskOfStep(step.Id);
                     List<object> copyTasks = new List<object>();
-                    foreach (var task in tasks)
+                    foreach (TaskProcess task in tasks)
                     {
                         object input, file, form;
                         if (task.ValueInputText != null)

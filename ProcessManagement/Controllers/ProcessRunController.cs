@@ -30,17 +30,17 @@ namespace ProcessManagement.Controllers
         public ActionResult AssignRole(int processid)
         {
             //TODO: chỉ được lấy process đang run thôi,process thường không dc assign role
-            var processRun = processService.findProcess(processid);
+            Process processRun = processService.findProcess(processid);
             if (processRun == null) return HttpNotFound();
 
-            var listRole = roleService.findListRoleOfProcess(processid);
-            var listUserInGroup = participateService.findMembersInGroup(processRun.IdGroup);
+            List<Role> listRole = roleService.findListRoleOfProcess(processid);
+            List<Participate> listUserInGroup = participateService.findMembersInGroup(processRun.IdGroup);
 
             List<object> jRoleList = new List<object>();
-            foreach (var role in listRole)
+            foreach (Role role in listRole)
             {
                 List<object> jMemberList = new List<object>();
-                foreach (var user in listUserInGroup)
+                foreach (Participate user in listUserInGroup)
                 {
                     object jMeber = new
                     {
@@ -71,15 +71,15 @@ namespace ProcessManagement.Controllers
         public ActionResult Detail(int processid)
         {
             string idUser = User.Identity.GetUserId();
-            var processrun = processService.findProcess(processid,true);
+            Process processrun = processService.findProcess(processid,true);
             if (processrun == null) return HttpNotFound();
 
-            var listrole = roleService.findListRoleOfProcess(processid);
-            var group = groupService.findGroup(processrun.IdGroup);
-            var listroleruns = roleService.findlistrolerun(listrole);
-            var listStep = stepService.findStepsOfProcess(processid);
-            var runprocess = processService.findRunProcessbyidprorun(processrun.Id);
-            var ktra = db.ProcessRuns.Where(x => x.IdProcess == processrun.Id).FirstOrDefault();
+            List<Role> listrole = roleService.findListRoleOfProcess(processid);
+            Group group = groupService.findGroup(processrun.IdGroup);
+            List<RoleRun> listroleruns = roleService.findlistrolerun(listrole);
+            List<Step> listStep = stepService.findStepsOfProcess(processid);
+            ProcessRun runprocess = processService.findRunProcessbyidprorun(processrun.Id);
+            ProcessRun ktra = db.ProcessRuns.Where(x => x.IdProcess == processrun.Id).FirstOrDefault();
             List<StepRun> liststepofrunprocess = new List<StepRun>();
             if (runprocess != null)
             {
@@ -188,13 +188,13 @@ namespace ProcessManagement.Controllers
             }
             //hàm xóa các phần tử giống nhau trong mảng
             //cho list 1
-            var gionglist1 = listnextstep1.Distinct();
+            IEnumerable<Step> gionglist1 = listnextstep1.Distinct();
             listnextstep1 = gionglist1.ToList();
             // cho list 2
-            var gionglist2 = listnextstep2.Distinct();
+            IEnumerable<Step> gionglist2 = listnextstep2.Distinct();
             listnextstep2 = gionglist2.ToList();
 
-            foreach (var item in listnextstep2)
+            foreach (Step item in listnextstep2)
             {
                 listnextstep1.Add(item);
             }
@@ -230,10 +230,10 @@ namespace ProcessManagement.Controllers
             {
                 return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "processrun", action = "Detailtaskform", taskid = idruntask });
             }
-            var listrolenotrun = roleService.findListRoleOfProcess(taskrun.StepRun.ProcessRun.IdProcess);
-            var listroleruns = roleService.findlistrolerun(listrolenotrun);
+            List<Role> listrolenotrun = roleService.findListRoleOfProcess(taskrun.StepRun.ProcessRun.IdProcess);
+            List<RoleRun> listroleruns = roleService.findlistrolerun(listrolenotrun);
             RoleRun role = new RoleRun();
-            foreach (var item in listroleruns)
+            foreach (RoleRun item in listroleruns)
             {
                 if (taskrun.IdRole != null)
                 {
@@ -244,10 +244,10 @@ namespace ProcessManagement.Controllers
                 }
             }
             //get taskrun file 
-            var groupId = taskrun.StepRun.ProcessRun.Process.IdGroup;
-            var processrunId = taskrun.StepRun.ProcessRun.Process.Id;
-            var stepId = taskrun.StepRun.CloneFrom;
-            var taskId = taskrun.CloneForm;
+            int groupId = taskrun.StepRun.ProcessRun.Process.IdGroup;
+            int processrunId = taskrun.StepRun.ProcessRun.Process.Id;
+            int? stepId = taskrun.StepRun.CloneFrom;
+            int? taskId = taskrun.CloneForm;
             string taskRunPath = string.Format("Upload/{0}/{1}/{2}/{3}", groupId, processrunId, stepId, taskId);
             List<FileManager> files = fileService.findFiles(groupId, taskRunPath);
             string userTaskRunPath = string.Format("Upload/{0}/run/{1}/{2}/{3}", groupId, taskrun.StepRun.idProcess, taskrun.IdStep, taskrun.Id);
@@ -275,10 +275,10 @@ namespace ProcessManagement.Controllers
             {
                 return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "processrun", action = "Detailtask", taskid = idruntask });
             }
-            var listrolenotrun = roleService.findListRoleOfProcess(taskrun.StepRun.ProcessRun.IdProcess);
-            var listroleruns = roleService.findlistrolerun(listrolenotrun);
+            List<Role> listrolenotrun = roleService.findListRoleOfProcess(taskrun.StepRun.ProcessRun.IdProcess);
+            List<RoleRun> listroleruns = roleService.findlistrolerun(listrolenotrun);
             RoleRun role = new RoleRun();
-            foreach (var item in listroleruns)
+            foreach (RoleRun item in listroleruns)
             {
                 if (taskrun.IdRole != null)
                 {
@@ -290,10 +290,10 @@ namespace ProcessManagement.Controllers
             }
 
             //get taskrun file 
-            var groupId = taskrun.StepRun.ProcessRun.Process.IdGroup;
-            var processrunId = taskrun.StepRun.ProcessRun.Process.Id;
-            var stepId = taskrun.StepRun.CloneFrom;
-            var taskId = taskrun.CloneForm;
+            int groupId = taskrun.StepRun.ProcessRun.Process.IdGroup;
+            int processrunId = taskrun.StepRun.ProcessRun.Process.Id;
+            int? stepId = taskrun.StepRun.CloneFrom;
+            int? taskId = taskrun.CloneForm;
             string processRunPath = string.Format("Upload/{0}/{1}/{2}/{3}", groupId, processrunId, stepId, taskId);
             List<FileManager> files = fileService.findFiles(groupId, processRunPath);
 

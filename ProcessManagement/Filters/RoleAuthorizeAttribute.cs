@@ -36,12 +36,12 @@ namespace ProcessManagement.Filters
             Group group;
             if (ownerSlug != null || groupSlug != null) group = groupService.findGroup(ownerSlug, groupSlug);
             else group = groupService.findGroup(groupid);
-            var user = db.Participates.Where(m => m.IdGroup == group.Id && m.IdUser == this.idUser).FirstOrDefault();
-            var isOwner = db.Groups.Where(m => m.Id == group.Id && m.IdOwner == this.idUser).Count() > 1 ? true : false;
+            Participate user = db.Participates.Where(m => m.IdGroup == group.Id && m.IdUser == this.idUser).FirstOrDefault();
+            bool isOwner = db.Groups.Where(m => m.Id == group.Id && m.IdOwner == this.idUser).Count() > 1 ? true : false;
             if (user.IsAdmin) this.userRoles[0] = "Admin";
             if (user.IsManager) this.userRoles[1] = "Manager";
             if (isOwner) this.userRoles[2] = "Owner";
-            var checkrole = this.userRoles.Intersect(this.allowedRoles).Any();
+            bool checkrole = this.userRoles.Intersect(this.allowedRoles).Any();
             if (!checkrole)
             {
                 filterContext.Result = new HttpStatusCodeResult(404);

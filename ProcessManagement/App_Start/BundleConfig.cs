@@ -12,7 +12,7 @@ namespace ProcessManagement
         // For more information on bundling, visit https://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            var cssBundle = new StyleBundle("~/Content/css")
+            Bundle cssBundle = new StyleBundle("~/Content/css")
                 .Include("~/Content/vendor/bootstrap/css/bootstrap.min.css")
                 .Include("~/Content/vendor/font-awesome-5/css/all.css")
                 .Include("~/Content/vendor/font-awesome/css/font-awesome.min.css")
@@ -23,7 +23,7 @@ namespace ProcessManagement
             cssBundle.Orderer = new PassthruBundleOrderer();
             bundles.Add(cssBundle);
 
-            var scriptBundle = new ScriptBundle("~/Content/js")
+            Bundle scriptBundle = new ScriptBundle("~/Content/js")
                 .Include("~/Content/build/bundles/libscripts.bundle.js")
                 .Include("~/Content/build/bundles/vendorscripts.bundle.js")
                 .Include("~/Content/vendor/toastr/toastr.js")

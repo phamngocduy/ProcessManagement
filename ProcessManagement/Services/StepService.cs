@@ -40,9 +40,9 @@ namespace ProcessManagement.Services
         /// <param name="process">Process Model</param>
         public void removeSteps(List<Process> processes)
         {
-            foreach (var process in processes)
+            foreach (Process process in processes)
             {
-                var steps = findStepsOfProcess(process.Id);
+                List<Step> steps = findStepsOfProcess(process.Id);
                 db.Steps.RemoveRange(steps);
             }
             db.SaveChanges();
@@ -82,7 +82,7 @@ namespace ProcessManagement.Services
 
             Process process = db.Processes.Find(liststep.First().Process.Id);
             Process processrun = db.Processes.Find(idprocessrun); 
-            foreach (var step in liststep)
+            foreach (Step step in liststep)
             {
                 Step stepRun = new Step();
                 stepRun.IdProcess = processrun.Id;
@@ -114,7 +114,7 @@ namespace ProcessManagement.Services
             Status status = db.Status.Where(y => y.Name == "Running").FirstOrDefault();
             ProcessRun idrun = db.ProcessRuns.Where(x => x.IdProcess == idprocess).FirstOrDefault();
             StepRun steprun = new StepRun();
-            foreach (var item in step.Where(x => x.StartStep == true))
+            foreach (Step item in step.Where(x => x.StartStep == true))
             {
                 steprun.idProcess = idrun.Id;
                 steprun.Name = item.Name;
@@ -169,7 +169,7 @@ namespace ProcessManagement.Services
         public void deletenextsteprun(StepRun runstep, StepRun stepback)
         {
             List<TaskProcessRun> taskrun = db.TaskProcessRuns.Where(x =>x.IdStep == runstep.Id).ToList();
-            foreach (var item in taskrun)
+            foreach (TaskProcessRun item in taskrun)
             {
                 List<Comment> comment = db.Comments.Where(x => x.IdDirection == item.Id).ToList();
                 db.Comments.RemoveRange(comment);
@@ -185,7 +185,7 @@ namespace ProcessManagement.Services
         {
             Status status = db.Status.Where(y => y.Name == "Running").FirstOrDefault();
             StepRun steprun = new StepRun();
-            foreach (var step in liststep)
+            foreach (Step step in liststep)
             {
                 steprun.idProcess = idrunprocess;
                 steprun.Name = step.Name;
