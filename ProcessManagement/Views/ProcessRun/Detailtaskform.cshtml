@@ -420,11 +420,11 @@
             if (taskform != null) {
                 $("#render-wrap").formRender({templates: optionRender, formData: taskform });
             }
-             @if (Model.Status1.Name != "Open" && (idUser.ToString() != role.IdUser || isManager != true))
+            @if (Model.Status1.Name != "Open" && (idUser.ToString() != role.IdUser || isManager != true))
             {
                @:$(".dropify-clear").remove();
                @:$(".dropify-download").css("right", "25px");
-             }
+            }
             //disable all field
             disabledAllField();
             var form = $(".form-validation").formValidation();
