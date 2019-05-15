@@ -370,9 +370,9 @@
                         attr.push("required");
                     }
                     attr.push(`maxsize= ${fieldData.maxfilesize}${fieldData.unit}`);
-                    var haveFile = Boolean(fieldData.userData) && Boolean(fieldData.path);
+                    var haveFile = Boolean(fieldData.filename) && Boolean(fieldData.path);
                     if (haveFile) {
-                        attr.push(`data-default-file=/${fieldData.path}/${fieldData.userData}`);
+                        attr.push(`data-default-file=/${fieldData.path}/${fieldData.filename}`);
                     }
                     return {
                         field: `<input type="file" id="${fieldData.name}" ${attr.join(" ")}>`,
@@ -400,18 +400,18 @@
                             dropify.on('dropify.afterClear', function (event, element) {
                                 var element = $(this);
                                 element.removeAttr("data-default-file");
-                                element.find(".dropify-download").remove();
+                                element.parents(".dropify-wrapper").find(".dropify-download").remove();
                                 form.validate(element);
                             });
                             inputfile.on('change', function () {
                                 var element = $(this);
                                 element.removeAttr("data-default-file");
-                                element.find(".dropify-download").remove();
+                                element.parents(".dropify-wrapper").find(".dropify-download").remove();
                                 form.validate(element);
                             });
                             if (haveFile) {
                                 var downloadAction = window.location.origin + "/file/download";
-                                $(`<a href="${downloadAction}/${fieldData.download}" class="dropify-download">Download</a>`).insertAfter($(`#${fieldData.name}`));
+                                $(`<a href="${downloadAction}/${fieldData.download}" class="dropify-download">Download</a>`).insertAfter(inputfile);
                             }
                         }
                     };
@@ -470,25 +470,27 @@
                 let info = [];
                 let data = new FormData();
                 formrender.forEach(function (input) {
-
+                    
                     if (input["type"] == "textarea" && input["subtype"] == "tinymce") {
                         let textarea = $(`#${input["name"]}`);
                         isFormHaveError = form.validate(textarea) ? true : isFormHaveError;
                     }
                     if (input["type"] == "uploadFile") {
+                        input["userData"] = "";
                         var fileElement = $(`#${input["name"]}`);
                         var fileData = fileElement[0].files[0];
+                        var emptyFile = fileElement[0].files.length == 0 ? true : false
                         if (!fileElement[0].hasAttribute("data-default-file")) {
-                            input["userData"] = fileElement[0].files.length == 0 ? "" : fileData.name;
+                            input["userData"] = emptyFile ? "" : fileData.name;
                         }
 
                         var file = {
                             id: input["name"],
-                            isEmpty: fileElement[0].files.length == 0 ? true : false, 
+                            isEmpty: emptyFile, 
                             isEdit: fileElement[0].hasAttribute("data-default-file") ? true : false,
                         };
                         info.push(file);
-                        data.append("files", fileData);
+                        data.append(`${ input["name"] }`, emptyFile ? null : fileData);
                     }
                 });
 
@@ -506,44 +508,7 @@
                             submitTaskForm($this,data);
                         }, 1000);
                     });
-                    //let data = new FormData();
-                    
                 }
-
-                @*let j = 0;
-                let tempArr = [];
-                let form = JSON.parse(taskform);
-                for (let i = 0; i < formrender.length; i++) {
-                    for (let k = 0; k < form.length; k++) {
-                        if (form[k]["name"] == formrender[i]["name"] && formrender[i]["required"] == true && (formrender[i]["userData"] == "" /*|| formrender[i]["userData"] == undefined*/)) {
-                            j++;
-                        }
-                        if (form[k]["name"] == formrender[i]["name"] && form[k]["required"] == formrender[i]["required"] && form[k]["userData"] == formrender[i]["userData"]) {
-                            tempArr.push(form[k]);
-                        }
-                        if (form[k]["name"] == formrender[i]["name"] && form[k]["required"] == formrender[i]["required"] && form[k]["userData"] != formrender[i]["userData"]) {
-                            tempArr.push(formrender[i]);
-                        }
-                    }
-                }
-
-                for (let i = 0; i < tempArr.length; i++) {
-                    tempArr[i]["disabled"] = "undefined";
-                }
-
-                if (j == 0) {
-                    let check = confirm("Done task?");
-                    if (check) {
-                        let data = {
-                            idtaskrun: @Model.Id,
-                            formrender: JSON.stringify(tempArr)
-                        };
-                        donetaskform(data);
-                    }
-                } else {
-                    alert('Some required not null!');
-                    return false;
-                }*@
             });
             $('#btn-finishtask').on('click', function () {
                 var $this = $(this);

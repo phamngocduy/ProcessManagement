@@ -106,7 +106,9 @@ namespace ProcessManagement.Areas.API.Controllers
                 string taskRunPath = string.Format("Upload/{0}/run/{1}/{2}/{3}", groupid, taskrun.StepRun.ProcessRun.Id, taskrun.StepRun.Id, taskrun.Id);
                 if (!isEdit)
                 {
-                    fileService.emptyDirectory(taskRunPath);
+                    fileService.removeDirectory(taskRunPath);
+                    fileService.createDirectory(taskRunPath);
+                    fileService.saveFile(groupid, fileupload, taskRunPath, Direction.TaskRun);
                 }
                 if (comment.Trim() != "")
                 {
@@ -121,8 +123,7 @@ namespace ProcessManagement.Areas.API.Controllers
                     db.Comments.Add(cm);
                     db.SaveChanges();
                 }
-                fileService.createDirectory(taskRunPath);
-                fileService.saveFile(groupid, fileupload, taskRunPath, Direction.TaskRun);
+               
             }
 
 
@@ -176,18 +177,32 @@ namespace ProcessManagement.Areas.API.Controllers
                     //Upload File
                     int groupid = taskrun.StepRun.ProcessRun.Process.IdGroup;
                     //parse string to jArray
-                    JArray jInfo = JArray.Parse(info);
+                    JArray jInfo = JArray.Parse(info);  
                     JArray jFormRender = JArray.Parse(formrender);
                     int position = 0;
                     foreach (var input in jFormRender)
                     {
                         if ((string)input["type"] == "uploadFile")
                         {
+                            var currentFileInfor = jInfo[position];
                             string taskFormRunPath = string.Format("Upload/{0}/run/{1}/{2}/{3}/{4}", groupid, taskrun.StepRun.ProcessRun.Id, taskrun.StepRun.Id, taskrun.Id, input["name"]);
-                            fileService.createDirectory(taskFormRunPath);
-                            var file = fileService.saveFile(groupid, files[position], taskFormRunPath, Direction.TaskFormRun);
-                            input["path"] = taskFormRunPath;
-                            input["download"] = file.Id;
+                            if ((bool)currentFileInfor["isEdit"] == false)
+                            {
+                                fileService.removeDirectory(taskFormRunPath);
+                                if ((bool)currentFileInfor["isEmpty"])
+                                {
+                                    input["path"] = "";
+                                    input["filename"] = "";
+                                    input["download"] = "";
+                                }
+                                else {
+                                    fileService.createDirectory(taskFormRunPath);
+                                    var file = fileService.saveFile(groupid, files[position], taskFormRunPath, Direction.TaskFormRun);
+                                    input["path"] = taskFormRunPath;
+                                    input["filename"] = files[position].FileName;
+                                    input["download"] = file.Id;
+                                }
+                            }
                             position++;
                         }
                     }
