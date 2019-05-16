@@ -429,49 +429,42 @@
             disabledAllField();
             var form = $(".form-validation").formValidation();
             $('#btn-savetask').on('click', function () {
+                var $this = $(this);
                 let formrender = $("#render-wrap").formRender("userData");
-                let j = 0;
-                let tempArr = [];
-                let form = JSON.parse(taskform);
-                for (let i = 0; i < formrender.length; i++) {
-                    for (let k = 0; k < form.length; k++) {
-                        if (form[k]["name"] == formrender[i]["name"] && formrender[i]["required"] == true && (formrender[i]["userData"] == "" /*|| formrender[i]["userData"] == undefined*/)) {
-                            j++;
+                let info = [];
+                let data = new FormData()
+                formrender.forEach(function (input) {
+                    if (input["type"] == "uploadFile") {
+                        input["userData"] = "";
+                        var fileElement = $(`#${input["name"]}`);
+                        var fileData = fileElement[0].files[0];
+                        var emptyFile = fileElement[0].files.length == 0 ? true : false
+                        if (!fileElement[0].hasAttribute("data-default-file")) {
+                            input["userData"] = emptyFile ? "" : fileData.name;
                         }
-                        if (form[k]["name"] == formrender[i]["name"] && form[k]["required"] == formrender[i]["required"] && form[k]["userData"] == formrender[i]["userData"]) {
-                            tempArr.push(form[k]);
-                        }
-                        if (form[k]["name"] == formrender[i]["name"] && form[k]["required"] == formrender[i]["required"] && form[k]["userData"] != formrender[i]["userData"]) {
-                            tempArr.push(formrender[i]);
-                        }
-                    }
-                }
 
-                for (let i = 0; i < formrender.length; i++) {
-                    if (formrender[i]["type"] == "textarea") {
-
-                    }
-                }
-
-                if (j == 0) {
-                    let check = confirm("Save task?");
-                    if (check) {
-                        let data = {
-                            idtaskrun: @Model.Id,
-                            formrender: JSON.stringify(tempArr)
+                        var file = {
+                            id: input["name"],
+                            isEmpty: emptyFile,
+                            isEdit: fileElement[0].hasAttribute("data-default-file") ? true : false,
                         };
-                        savetaskform(data);
+                        info.push(file);
+                        data.append(`${input["name"]}`, emptyFile ? null : fileData);
                     }
-                } else {
-                    alert('Some required not null!');
-                    return false;
-                }
+                });
+                //save
+                toggleLoading($this);
+                data.append("idtaskrun", @Model.Id);
+                data.append("formrender", JSON.stringify(formrender));
+                data.append("info", JSON.stringify(info));
+                setTimeout(function () {
+                    saveTaskForm($this, data);
+                }, 1000);
             });
             $('#btn-donetask').on('click', function () {
                 var $this = $(this);
                 let formrender = $("#render-wrap").formRender("userData");
                 let isFormHaveError = form.validates();
-                //let files = new FormData();
                 let info = [];
                 let data = new FormData();
                 formrender.forEach(function (input) {
@@ -566,24 +559,29 @@
             });
         });
 
-        function savetaskform(data) {
+        function saveTaskForm(element, data) {
                 $.ajax({
                     url: "@Url.Action("savetaskform", "processrun", new { area = "api"})",
                     type: "POST",
                     data: data,
+                    contentType: false,
+                    processData: false,
                     dataType: "json",
                     success: function (response) {
                         console.log(response);
                         if (response.status == 200) {
-                            //showToastr("error", "Error!!", "toast-bottom-left")
                             window.location.reload();
-                            console.error(response)
+
+                        } else {
+                             showToastr("error", "Error!!", "toast-bottom-left");
+                             console.error(response)
                         }
+                        toggleLoading(element);
                     }
                 });
         }
 
-        function submitTaskForm(element,data) {
+        function submitTaskForm(element, data) {
                 $.ajax({
                     url: "@Url.Action("donetaskform", "processrun", new { area = "api"})",
                     type: "POST",
@@ -594,7 +592,6 @@
                     success: function (response) {
                         console.log(response);
                         if (response.status == 200) {
-                            //showToastr("error", "Error!!", "toast-bottom-left")
                             window.location.reload();
                         } else {
                             showToastr("error", "Error!!", "toast-bottom-left");

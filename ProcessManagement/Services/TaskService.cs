@@ -239,7 +239,7 @@ namespace ProcessManagement.Services
             db.SaveChanges();
         }
         
-        public void submitvaluetask(string userid,string valuetext, string valuefile, int idtaskrun,bool isDone = false)
+        public void submitTask(string userid,string valuetext, string valuefile, int idtaskrun,bool isDone = false)
         {
             TaskProcessRun taskrun = findTaskRun(idtaskrun);
             JObject inputConfig = new JObject();
@@ -285,23 +285,17 @@ namespace ProcessManagement.Services
             db.SaveChanges();
         }
 
-        public void savevaluetaskform(int idtaskrun, string formrender)
+        public void submitTaskForm(string iduserby, int idtaskrun, string formrender, bool isDone = false)
         {
             TaskProcessRun taskform = findTaskRun(idtaskrun);
             taskform.ValueFormJson = formrender;
-            taskform.Updated_At = DateTime.Now;
-            db.SaveChanges();
-        }
-
-        public void donetaskform(int idtaskrun, string formrender, string iduserby)
-        {
-            Status status = db.Status.Where(y => y.Name == "Done").FirstOrDefault();
-            
-            TaskProcessRun taskform = findTaskRun(idtaskrun);
-            taskform.ValueFormJson = formrender;
-            taskform.Status = status.Id;
-            taskform.DoneBy = iduserby;
-            taskform.Done_At = DateTime.Now;
+            if (isDone)
+            {
+                Status status = db.Status.Where(y => y.Name == "Done").FirstOrDefault();
+                taskform.Status = status.Id;
+                taskform.DoneBy = iduserby;
+                taskform.Done_At = DateTime.Now;
+            }
             taskform.Updated_At = DateTime.Now;
             db.SaveChanges();
         }
