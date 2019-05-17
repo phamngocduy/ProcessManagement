@@ -418,15 +418,17 @@
                 }
             }
             if (taskform != null) {
-                $("#render-wrap").formRender({templates: optionRender, formData: taskform });
+                var render = $("#render-wrap").formRender({ templates: optionRender, formData: taskform });
             }
+            //disable all field
+            disabledAllField();
             @if (Model.Status1.Name != "Open" && (idUser.ToString() != role.IdUser || isManager != true))
             {
                @:$(".dropify-clear").remove();
                @:$(".dropify-download").css("right", "25px");
+               @:setTimeout(function () {
+               @:tinyMCE.activeEditor.setMode('readonly');}, 500);
             }
-            //disable all field
-            disabledAllField();
             var form = $(".form-validation").formValidation();
             $('#btn-savetask').on('click', function () {
                 var $this = $(this);
@@ -434,6 +436,14 @@
                 let info = [];
                 let data = new FormData()
                 formrender.forEach(function (input) {
+                    if (input["type"] == "textarea") {
+                        if (input["subtype"] == "tinymce") {
+                            input["userData"] = input["userData"].map(x => x.replace("\r\n", ""));
+                        } else {
+                            input["userData"] = input["userData"].map(x => x.replace("\r\n", "\\n"));
+
+                        }
+                    }
                     if (input["type"] == "uploadFile") {
                         input["userData"] = "";
                         var fileElement = $(`#${input["name"]}`);
@@ -469,9 +479,14 @@
                 let data = new FormData();
                 formrender.forEach(function (input) {
                     
-                    if (input["type"] == "textarea" && input["subtype"] == "tinymce") {
+                    if (input["type"] == "textarea") {
                         let textarea = $(`#${input["name"]}`);
-                        isFormHaveError = form.validate(textarea) ? true : isFormHaveError;
+                        if (input["subtype"] == "tinymce") {
+                            input["userData"] = input["userData"].map(x => x.replace("\r\n", ""));
+                            isFormHaveError = form.validate(textarea) ? true : isFormHaveError;
+                        } else {
+                            input["userData"] = input["userData"].map(x => x.replace("\r\n", "\\n"));
+                        }
                     }
                     if (input["type"] == "uploadFile") {
                         input["userData"] = "";
