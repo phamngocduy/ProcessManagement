@@ -205,7 +205,6 @@ namespace ProcessManagement.Areas.API.Controllers
 
                 message = "Save Task Sucessfully";
                 response = new { message = message, status = status };
-                SetFlash(FlashType.success, message);
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)

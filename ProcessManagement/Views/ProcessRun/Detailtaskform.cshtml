@@ -1,5 +1,6 @@
 ﻿@model ProcessManagement.Models.TaskProcessRun
-@using ProcessManagement.Models;
+@using System.Text.RegularExpressions;
+
 @{
     PMSEntities db = new PMSEntities();
     ViewBag.Title = "Detailtaskform";
@@ -352,7 +353,7 @@
     <script src="~/Content/vendor/dropify/js/dropify.min.js"></script>
     <script src="~/Content/vendor/FormBuilder/form-render.min.js"></script>
 
-    <script>
+    <script type="text/javascript" charset="utf-8">
 
         $(function () {
             //get comments
@@ -361,18 +362,8 @@
                 direction: "@Direction.TaskRun"
             };
             getComments(t);
-            @{ 
-                string a = Html.Raw(Json.Encode(Model.ValueFormJson)).ToString();
-                var temp = System.Text.RegularExpressions.Regex.Unescape(a); 
-
-            }
-            var taskform = '@temp'.replace(/&quot;/gi,"\"");
-            taskform = taskform.map(input => {
-                input["label"] = decodeURIComponent(escape(input["label"]));
-                input["userData"] = input["userData"].map(x => decodeURIComponent(escape(input["userData"])));
-            });
-            var taskform = taskform.replace(/&quot;/g, "\"").replace(/maxlength/gi,"maxtextlength");
-            //taskform = decodeURIComponent(escape(taskform));
+            var taskform = `@Html.Raw(Model.ValueFormJson.Replace("\r\n",""))`;
+            taskform = JSON.parse(taskform.replace(/maxlength/gi, "maxtextlength"));
             var optionRender = {
                 uploadFile: function (fieldData) {
                     var attr = [];
@@ -472,10 +463,6 @@
                         info.push(file);
                         data.append(`${input["name"]}`, emptyFile ? null : fileData);
                     }
-
-
-                    input["label"] = unescape(encodeURIComponent(input["label"]));
-                    input["userData"] = input["userData"].map(x => unescape(encodeURIComponent(x)));
                 });
 
                 //save
@@ -601,8 +588,7 @@
                     success: function (response) {
                         console.log(response);
                         if (response.status == 200) {
-                            window.location.reload();
-
+                            showToastr("success", response.message, "toast-bottom-left");
                         } else {
                              showToastr("error", "Error!!", "toast-bottom-left");
                              console.error(response)
