@@ -361,8 +361,18 @@
                 direction: "@Direction.TaskRun"
             };
             getComments(t);
-            var taskform = `@Model.ValueFormJson`.replace(/&quot;/g, "\"").replace(/&#244;/gi, "ô").replace(/&#224;/gi, "à");
-            taskform = taskform.replace(/maxlength/g,"maxtextlength");
+            @{ 
+                string a = Html.Raw(Json.Encode(Model.ValueFormJson)).ToString();
+                var temp = System.Text.RegularExpressions.Regex.Unescape(a); 
+
+            }
+            var taskform = '@temp'.replace(/&quot;/gi,"\"");
+            taskform = taskform.map(input => {
+                input["label"] = decodeURIComponent(escape(input["label"]));
+                input["userData"] = input["userData"].map(x => decodeURIComponent(escape(input["userData"])));
+            });
+            var taskform = taskform.replace(/&quot;/g, "\"").replace(/maxlength/gi,"maxtextlength");
+            //taskform = decodeURIComponent(escape(taskform));
             var optionRender = {
                 uploadFile: function (fieldData) {
                     var attr = [];
@@ -436,6 +446,7 @@
                 let info = [];
                 let data = new FormData()
                 formrender.forEach(function (input) {
+                    
                     if (input["type"] == "textarea") {
                         if (input["subtype"] == "tinymce") {
                             input["userData"] = input["userData"].map(x => x.replace("\r\n", ""));
@@ -461,7 +472,12 @@
                         info.push(file);
                         data.append(`${input["name"]}`, emptyFile ? null : fileData);
                     }
+
+
+                    input["label"] = unescape(encodeURIComponent(input["label"]));
+                    input["userData"] = input["userData"].map(x => unescape(encodeURIComponent(x)));
                 });
+
                 //save
                 toggleLoading($this);
                 data.append("idtaskrun", @Model.Id);
