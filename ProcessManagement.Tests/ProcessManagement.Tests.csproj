@@ -195,12 +195,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ProcessManagement\ProcessManagement.csproj">
-      <Project>{7B34AD09-49F1-4C86-9DF0-8E0DC56BC7E4}</Project>
-      <Name>ProcessManagement</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>

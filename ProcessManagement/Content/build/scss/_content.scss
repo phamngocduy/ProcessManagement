@@ -327,3 +327,14 @@
         }
     }
 }
+#process-import-container{
+    #process-import-preview{
+        width: 400px;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+    #process-import-remove{
+        display: none;
+        color:red;
+    }
+}

@@ -32,25 +32,25 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\</OutputPath>
     <DefineConstants>
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vs2320.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vs4BB1.tmp\Debug\</IntermediateOutputPath>
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\</OutputPath>
     <DefineConstants>
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vs2320.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vs4BB1.tmp\Release\</IntermediateOutputPath>
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -8524,6 +8524,7 @@
     <Content Include="Views\Shared\Common\_File.cshtml" />
     <Content Include="Views\ProcessRun\DetailTask.cshtml" />
     <Content Include="Views\ProcessRun\DetailTaskForm.cshtml" />
+    <Content Include="Views\Process\ImportExport.cshtml" />
     <Content Include="Views\Group\MyTask.cshtml" />
   </ItemGroup>
   <ItemGroup>

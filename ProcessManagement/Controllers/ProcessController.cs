@@ -789,6 +789,13 @@ namespace ProcessManagement.Controllers
             }
             return View(task);
         }
-        
+        public ActionResult ImportExport(int groupid)
+        {
+
+            Group gr = groupService.findGroup(groupid);
+            List<Process> pr = processService.findListProcess(groupid, isRun:false);
+            ViewData["processes"] = pr;
+            return View(gr);
+        }
     }
 }

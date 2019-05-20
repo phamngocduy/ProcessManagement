@@ -224,15 +224,15 @@ namespace ProcessManagement.Services
                         db.SaveChanges();
                     }
                 }
-            }
-            if (copySubDirs)
-            {
-                DirectoryInfo[] dirs = currentDirectory.GetDirectories();
-                foreach (DirectoryInfo subdir in dirs)
+                if (copySubDirs)
                 {
-                    string subPath = Path.Combine(path, subdir.Name);
-                    string subDestination = Path.Combine(destination, subdir.Name);
-                    copyDirectory(path:subPath, destination:subDestination, copyOnly,copySubDirs);
+                    DirectoryInfo[] dirs = currentDirectory.GetDirectories();
+                    foreach (DirectoryInfo subdir in dirs)
+                    {
+                        string subPath = Path.Combine(path, subdir.Name);
+                        string subDestination = Path.Combine(destination, subdir.Name);
+                        copyDirectory(path: subPath, destination: subDestination, copyOnly, copySubDirs);
+                    }
                 }
             }
         }

@@ -317,7 +317,7 @@
 
         function copyProcess(element,processid){
             $.ajax({
-                url: "@Url.Action("createprocesscopy", "process", new { area = "api"})",
+                url: "@Url.Action("Export", "process", new { area = "api"})",
                 type: "POST",
                 data: { processid: processid},
                 dataType: "json",

@@ -1,0 +1,127 @@
+﻿@model ProcessManagement.Models.Group
+@{
+    ViewBag.Title = "Import/Export Process";
+    var processlist = ViewData["processes"] as List<ProcessManagement.Models.Process>;
+}
+
+@section CustomCss{
+}
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+            <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Import / Export Process</h2>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-2.html"><i class="icon-home"></i></a></li>
+                <li class="breadcrumb-item">Group</li>
+                <li class="breadcrumb-item">Process</li>
+                <li class="breadcrumb-item active">Import / Export</li>
+            </ul>
+        </div>
+        <div class="col-lg-6 col-md-4 col-sm-12 text-right">
+            <div class="bh_chart hidden-xs">
+                <div class="float-left m-r-15">
+                    <small>Visitors</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-user"></i> 1,784</h6>
+                </div>
+                <span class="bh_visitors float-right">2,5,1,8,3,6,7,5</span>
+            </div>
+            <div class="bh_chart hidden-sm">
+                <div class="float-left m-r-15">
+                    <small>Visits</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-globe"></i> 325</h6>
+                </div>
+                <span class="bh_visits float-right">10,8,9,3,5,8,5</span>
+            </div>
+            <div class="bh_chart hidden-sm">
+                <div class="float-left m-r-15">
+                    <small>Chats</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-bubbles"></i> 13</h6>
+                </div>
+                <span class="bh_chats float-right">1,8,5,6,2,4,3,2</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="header">
+                <h5>Import Process</h5>
+            </div>
+            <div class="body" style="padding-top:0">
+                <div id="process-import-container">
+                    <input type="text" id="process-import-preview" class="form-control" readonly />
+                    <input type="file" accept=".pms" id="process-import" style="display:none" />
+                    <button class="btn btn-default waves-effect" id="btn-trigger" data-trigger="process-import">Browers</button>
+                </div>
+                <button class="btn btn-default waves-effect" id="btn-process-import" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Uploading...">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section CustomScripts{
+    <script>
+        $(function () {
+            $("#btn-trigger").on("click", function () {
+                var target = $(this)[0].dataset.trigger;
+                $(`#${target}`).trigger("click");
+            });
+            $("#process-import").on("change", function () {
+                var preview = $("#process-import-preview");
+                var $this = $(this);
+                var upload = $(this)[0].files[0];
+
+                preview.val(upload.name);
+                if ($("#process-import-remove").length == 0) {
+                    var remove = $(`<button class="btn btn-none waves-effect" id="process-import-remove"><i class="icon-trash"></i></button>`).insertBefore(preview);
+                    remove.show(400);
+                    remove.on("click", function () {
+                        preview.val("");
+                        $this.val("");
+                        $(this).hide(400, () => { $(this).remove(); })
+                    });
+                }
+            });
+            $("#btn-process-import").on("click", function () {
+                var upload = $("#process-import")[0].files[0];
+                var $this = $(this);
+                if (upload == undefined) {
+                    showToastr("error", "You can't upload empty file", "toast-bottom-left");
+                } else {
+                    var data = new FormData();
+                    data.append("groupid", @Model.Id);
+                    data.append("fileupload", upload);
+                    importProcess($this, data);
+                    
+                }
+            });
+
+        });
+        function importProcess(element, data) {
+            $.ajax({
+                url: "@Url.Action("import", "process", new { area = "api" })",
+                type: "POST",
+                data: data,
+                contentType: false,
+                processData: false,
+                dataType: "json",
+                beforeSend: function () {
+                    toggleLoading(element);
+                },
+                complete: function () {
+                    toggleLoading(element);
+                },
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                       
+                    } else {
+                        showToastr("error", response.message, "toast-bottom-left")
+                        console.error(response)
+                    }
+                }
+            });
+        }
+    </script>
+}
+

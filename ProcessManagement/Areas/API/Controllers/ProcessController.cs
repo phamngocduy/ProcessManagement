@@ -31,6 +31,7 @@ namespace ProcessManagement.Areas.API.Controllers
         ParticipateService participateService = new ParticipateService();
         FileService fileService = new FileService();
         ///=============================================================================================
+        
         [HttpPost]
         [GroupAuthorize(Role = new UserRole[] { UserRole.Manager })]
         public JsonResult editstep(int stepid, string des)
@@ -549,7 +550,7 @@ namespace ProcessManagement.Areas.API.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult createProcessCopy(int processid)
+        public JsonResult Export(int processid)
         {
             string IdUser = User.Identity.GetUserId();
             HttpStatusCode status = HttpStatusCode.OK;
@@ -658,9 +659,37 @@ namespace ProcessManagement.Areas.API.Controllers
 
 
                 //zip
-                string fileName = string.Format("{0}-download.zip", process.Name);
+                string fileName = string.Format("{0}-download.pms", process.Name);
                 FileManager f = fileService.zipFile(groupid: process.IdGroup, fileName: fileName, copyPath);
                 response = new { data = f.Id, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                status = HttpStatusCode.InternalServerError;
+                message = e.GetType().Name == "ServerSideException" ? e.Message : "Something not right";
+                response = new { message = message, detail = e.Message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public JsonResult Import(int groupid, HttpPostedFileBase fileupload)
+        {
+            HttpStatusCode status = HttpStatusCode.OK;
+            string message;
+            object response;
+            try
+            {
+                ZipFile zip = ZipFile.Read(fileupload.InputStream);
+                ZipEntry jsonFile = zip.Where(x => Path.GetFileName(x.FileName) == "data.json").FirstOrDefault();
+                jsonFile.Password = "clockworks-pms";
+                JObject data;
+                using (StreamReader sr = new StreamReader(jsonFile.OpenReader(), Encoding.UTF8))
+                {
+                    data = JsonConvert.DeserializeObject<JObject>(sr.ReadToEnd());
+                }
+
+                message = "Import Sucess";
+                response = new { message = message, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)

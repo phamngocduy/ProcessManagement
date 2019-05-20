@@ -501,6 +501,14 @@ input::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance:textfield; /* Firefox */
 }
+input, textarea, select{
+    &:disabled{
+        cursor: not-allowed;
+    }
+    &:read-only{
+        cursor: text;
+    }
+}
 .form-control:disabled, .form-control[readonly] {
     &[readonly]{
         background-color: #ffffff;

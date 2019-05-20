@@ -583,6 +583,11 @@
     </script>
     <script>
         $(function () {
+            $("#btn-trigger").on("click", function () {
+                var target = $(this)[0].dataset.trigger;
+                $(`#${target}`).trigger("click");
+            });
+            
             //fileupload
             @if (maxFileSizeRule != null)
             {

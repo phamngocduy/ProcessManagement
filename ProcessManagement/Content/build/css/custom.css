@@ -1338,6 +1338,13 @@ input[type=number] {
   /* Firefox */
 }
 
+input:disabled, textarea:disabled, select:disabled {
+  cursor: not-allowed;
+}
+input:read-only, textarea:read-only, select:read-only {
+  cursor: text;
+}
+
 .form-control:disabled[readonly], .form-control[readonly][readonly] {
   background-color: #ffffff;
   opacity: 1;
@@ -1752,6 +1759,16 @@ input[type=number] {
   text-align: justify;
 }
 
+#process-import-container #process-import-preview {
+  width: 400px;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+#process-import-container #process-import-remove {
+  display: none;
+  color: red;
+}
+
 /* end of content */
 /* footer */
 #footer {
@@ -1821,7 +1838,7 @@ input[type=number] {
 }
 .btn-none:hover, .btn-none:focus {
   color: #000;
-  background: rgba(158, 158, 158, 0.2);
+  background: none;
 }
 
 @keyframes ripple {
