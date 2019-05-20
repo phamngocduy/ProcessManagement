@@ -81,7 +81,15 @@ namespace ProcessManagement.Controllers
             SetFlash(FlashType.success, "Created Group Successfully");
             return RedirectToAction("index"); 
         }
-
+        //tạo 1 trang view mytask
+        [Authorize]
+        [GroupAuthorize]
+        public ActionResult MyTask(int groupid)
+        {
+            Group group = groupService.findGroup(groupid);
+            if (group == null) return HttpNotFound();
+            return View(group);
+        }
         [Authorize]
         [GroupAuthorize]
         public ActionResult FileManager(int groupid)

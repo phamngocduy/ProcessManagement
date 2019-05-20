@@ -130,5 +130,17 @@ namespace ProcessManagement.Services
             List<RoleRun> listrolerun = db.RoleRuns.Where(x => x.IdRole == idrole).ToList();
             return listrolerun;
         }
+
+        public List<RoleRun> findlistrolerunbyiduser(string idUser)
+        {
+            List<RoleRun> listrolerun = db.RoleRuns.Where(x => x.IdUser == idUser).ToList();
+            return listrolerun;
+        }
+
+        public Role findrolebyidrolerun(RoleRun rolerun)
+        {
+            Role role = db.Roles.Where(x => x.Id == rolerun.IdRole).FirstOrDefault();
+            return role;
+        }
     }
 }

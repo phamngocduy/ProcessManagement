@@ -18,8 +18,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <Use64BitIISExpress>
-    </Use64BitIISExpress>
+    <Use64BitIISExpress>true</Use64BitIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -39,7 +38,7 @@
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\PinkFox\AppData\Local\Temp\vs5E6A.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vs35BB.tmp\Debug\</IntermediateOutputPath>
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -51,7 +50,7 @@
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\PinkFox\AppData\Local\Temp\vs5E6A.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vs35BB.tmp\Release\</IntermediateOutputPath>
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -286,6 +285,7 @@
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Areas\API\Controllers\MyTaskController.cs" />
     <Compile Include="Controllers\ProcessController.cs" />
     <Compile Include="Controllers\ProcessRunController.cs" />
     <Compile Include="Extensions\IdentityExtensions.cs" />
@@ -445,6 +445,7 @@
     <Content Include="Content\build\fonts\weathericons-regular-webfontd41d.eot" />
     <Content Include="Areas\API\Views\web.config" />
     <Content Include="Areas\API\Views\ProcessRun\Comment.cshtml" />
+    <Content Include="Areas\API\Views\MyTask\ListTaskInProcess.cshtml" />
     <None Include="Content\build\scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Content\build\scripts\jquery-3.3.1.js" />
     <Content Include="Content\build\scripts\jquery-3.3.1.min.js" />
@@ -8523,6 +8524,7 @@
     <Content Include="Views\Shared\Common\_File.cshtml" />
     <Content Include="Views\ProcessRun\DetailTask.cshtml" />
     <Content Include="Views\ProcessRun\DetailTaskForm.cshtml" />
+    <Content Include="Views\Group\MyTask.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

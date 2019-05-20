@@ -1,0 +1,76 @@
+﻿
+@{
+    //var processrun = ViewData["ListProcessRun"];
+}
+@if (Model == null)
+{
+    <h2>You don't have any task</h2>
+}
+else
+{
+    foreach (var process in Model)
+    {
+        <div class="col-lg-4 col-md-12">
+            <div class="card planned_task">
+                <div class="header" style="padding-bottom: 0;">
+                    <a href="#"><h5>@process["name"]</h5></a>
+                    <h6>@process["status"]</h6>
+                </div>
+                <div class="body">
+                    <div class="dd" data-plugin="nestable">
+                        <ol class="dd-list">
+                            @foreach (var task in process["task"]["open"])
+                            {
+                                <a href="#">
+                                    <li class="dd-item" data-id="">
+                                        <div class="dd-handle" style="background: antiquewhite">
+                                            <h6>@task["name"]</h6>
+                                            <p>@task["description"]</p>
+                                            <ul class="list-unstyled team-info m-t-20">
+                                                <li><p>Role: @task["rolename"]</p></li>
+                                                <li style="float: right"><p>Status: @task["status"]</p></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </a>
+                            }
+                            @foreach (var task in process["task"]["done"])
+                            {
+                                <a href="#">
+                                    <li class="dd-item" data-id="">
+                                        <div class="dd-handle" style="background: aliceblue">
+                                            <h6>@task["name"]</h6>
+                                            <p>@task["description"]</p>
+                                            <ul class="list-unstyled team-info m-t-20">
+                                                <li><p>Role: @task["rolename"]</p></li>
+                                                <li style="float: right"><p>Status: @task["status"]</p></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </a>
+                            }
+                            @foreach (var task in process["task"]["finish"])
+                            {
+                                <a href="#">
+                                    <li class="dd-item" data-id="">
+                                        <div class="dd-handle" style="background: #f7f7f7">
+                                            <h6>@task["name"]</h6>
+                                            <p>@task["description"]</p>
+                                            <ul class="list-unstyled team-info m-t-20">
+                                                <li><p>Role: @task["rolename"]</p></li>
+                                                <li style="float: right"><p>Status: @task["status"]</p></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </a>
+                            }
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
+
