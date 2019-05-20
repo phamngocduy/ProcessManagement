@@ -355,8 +355,8 @@
         $(function () {
             $(".btn-switch-tab").on("click", function (e) {
                 var tab = $(this).attr("href");
-                $("#group-name").val("@Model.Name");
-                $("#group-description").val("@Model.Description");
+                $("#group-name").val("@Html.Raw(Model.Name)");
+                $("#group-description").val("@Html.Raw(Model.Description)");
                 $(".tab-pane").removeClass("active").removeClass("show");
                 $(tab).addClass("active").addClass("show");
                 e.preventDefault();

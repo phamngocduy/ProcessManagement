@@ -56,7 +56,7 @@ namespace ProcessManagement.Areas.API.Controllers
             }
             if (user.IsManager == true || haveRole)
             {
-                taskService.submitvaluetask(IdUser, valuetext, valuefile, idtaskrun);
+                taskService.submitTask(IdUser, valuetext, valuefile, idtaskrun);
                 int groupid = taskrun.StepRun.ProcessRun.Process.IdGroup;
                 string taskRunPath = string.Format("Upload/{0}/run/{1}/{2}/{3}", groupid, taskrun.StepRun.ProcessRun.Id, taskrun.StepRun.Id, taskrun.Id);
                 if (!isEdit)
@@ -101,7 +101,7 @@ namespace ProcessManagement.Areas.API.Controllers
             }
             if (user.IsManager == true || haveRole)
             {
-                taskService.submitvaluetask(IdUser, valuetext, valuefile, idtaskrun, true);
+                taskService.submitTask(IdUser, valuetext, valuefile, idtaskrun, true);
                 int groupid = taskrun.StepRun.ProcessRun.Process.IdGroup;
                 string taskRunPath = string.Format("Upload/{0}/run/{1}/{2}/{3}", groupid, taskrun.StepRun.ProcessRun.Id, taskrun.StepRun.Id, taskrun.Id);
                 if (!isEdit)
@@ -133,19 +133,87 @@ namespace ProcessManagement.Areas.API.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
-        public JsonResult savetaskform(int idtaskrun, string formrender)
+        [HttpPost, ValidateInput(false)]
+        public JsonResult savetaskform(int idtaskrun, string formrender, string comment, string info)
         {
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
+            try
+            {
+                string IdUser = User.Identity.GetUserId();
+                TaskProcessRun taskrun = taskService.findTaskRun(idtaskrun);
+                if (taskrun == null) throw new ServerSideException("TaskRun Not Found");
+                List<RoleRun> listrole = roleService.findlistrolerunbyidroleprocess(taskrun.IdRole);
+                Participate useringroup = participateService.findMemberInGroup(IdUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
+                if (useringroup == null) throw new ServerSideException("User not in group");
+                bool haveRole = false;
+                foreach (RoleRun role in listrole)
+                {
+                    if (IdUser == role.IdUser)
+                    {
+                        haveRole = true;
+                        break;
+                    }
+                }
+                if (useringroup.IsManager == true || haveRole)
+                {
+                    HttpFileCollectionBase files = Request.Files;
+                    //TODO: Chưa check form rule
+                    //Upload File
+                    int groupid = taskrun.StepRun.ProcessRun.Process.IdGroup;
+                    //parse string to jArray
+                    JArray jInfo = JArray.Parse(info);
+                    JArray jFormRender = JArray.Parse(formrender);
+                    int position = 0;
+                    int positionFile = 0;
+                    foreach (JToken input in jFormRender)
+                    {
+                        if ((string)input["type"] == "uploadFile")
+                        {
+                            JToken currentFileInfor = jInfo[position];
+                            string taskFormRunPath = string.Format("Upload/{0}/run/{1}/{2}/{3}/{4}", groupid, taskrun.StepRun.ProcessRun.Id, taskrun.StepRun.Id, taskrun.Id, input["name"]);
+                            if ((bool)currentFileInfor["isEdit"] == false)
+                            {
+                                fileService.removeDirectory(taskFormRunPath);
+                                if ((bool)currentFileInfor["isEmpty"])
+                                {
+                                    input["path"] = "";
+                                    input["filename"] = "";
+                                    input["download"] = "";
+                                }
+                                else
+                                {
+                                    HttpPostedFileBase file = files[positionFile];
+                                    fileService.createDirectory(taskFormRunPath);
+                                    FileManager f = fileService.saveFile(groupid, file, taskFormRunPath, Direction.TaskFormRun);
+                                    input["path"] = taskFormRunPath;
+                                    input["filename"] = file.FileName;
+                                    input["download"] = f.Id;
+                                    positionFile++;
+                                }
+                                position++;
+                            }
+                        }
+                    }
+                    string newFormString = jFormRender.ToString();
+                    taskService.submitTaskForm(IdUser, idtaskrun, newFormString);
+                }
+                else throw new ServerSideException("It is not your task");
 
-            taskService.savevaluetaskform(idtaskrun, formrender);
 
-            message = "Save Task";
-            response = new { message = message, status = status };
-            SetFlash(FlashType.success, "Save Task");
-            return Json(response, JsonRequestBehavior.AllowGet);
+
+                message = "Save Task Sucessfully";
+                response = new { message = message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                status = HttpStatusCode.InternalServerError;
+                message = e.GetType().Name == "ServerSideException" ? e.Message : "Something not right";
+                response = new { message = message, detail = e.Message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
         }
 
         [HttpPost, ValidateInput(false)]
@@ -211,7 +279,7 @@ namespace ProcessManagement.Areas.API.Controllers
                         }
                     }
                     string newFormString = jFormRender.ToString();
-                    taskService.donetaskform(idtaskrun, newFormString, IdUser);
+                    taskService.submitTaskForm(IdUser,idtaskrun, newFormString, true);
 
                     //comment
                     if (comment.Trim() != "")
@@ -232,9 +300,9 @@ namespace ProcessManagement.Areas.API.Controllers
                 
 
 
-                message = "Done Task";
+                message = "Done Task Successfully";
                 response = new { message = message, status = status };
-                SetFlash(FlashType.success, "Done Task");
+                SetFlash(FlashType.success, message);
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)

@@ -179,7 +179,16 @@
 
                     }
                 },
-                showActionButtons: false
+                showActionButtons: false,
+                i18n: {
+                    locale: 'vi-VN',
+                    override: {
+                        'vi-VN': {
+                            "number": "Trường văn bảng dạng số",
+                            "uploadFile": "Đăng tải tập tin"
+                        }
+                    }
+                }
             };
             var formB = $("#build-wrap").formBuilder(options);
             createSwitch();
