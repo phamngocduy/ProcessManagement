@@ -45,7 +45,7 @@
                 <li class="breadcrumb-item"><a href="" class="primary-theme">@Model.Name</a></li>
             </ul>
         </div>
-        <div class="col-lg-6 col-md-4 col-sm-12 text-right">
+        @*<div class="col-lg-6 col-md-4 col-sm-12 text-right">
             <div class="bh_chart hidden-xs">
                 <div class="float-left m-r-15">
                     <small>Visitors</small>
@@ -67,7 +67,7 @@
                 </div>
                 <span class="bh_chats float-right">1,8,5,6,2,4,3,2</span>
             </div>
-        </div>
+        </div>*@
     </div>
 </div>
 
@@ -87,12 +87,40 @@
                     </object>
                 </div>
                 <div class="content">
-                    <div class="text">Total Process</div>
-                    <h5 class="number">@statistic.totalprocess</h5>
+                    <div class="text">Process</div>
+                    <h5 class="number">
+                        @if (listprocess.Where(x => x.IsRun == null || x.IsRun == false).Count() != 0)
+                        {
+                            @listprocess.Where(x => x.IsRun == null || x.IsRun == false).Count()
+                        }
+                        else
+                        {
+                            <p>0</p>
+                        }
+                    </h5>
+                </div>
+                <hr />
+                <div class="icon">
+                    <object width="30" height="50" type="image/svg+xml" data="data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjQ4N3B0IiB2aWV3Qm94PSIwIC00IDQ4Ny4yMzQxMiA0ODciIHdpZHRoPSI0ODdwdCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJtMzkyLjA0Mjk2OSAzMDQuMTE3MTg4Yy00OC42MDE1NjMgMC04OCAzOS4zOTg0MzctODggODggMCA0OC42MDE1NjIgMzkuMzk4NDM3IDg4IDg4IDg4IDQ4LjYwMTU2MiAwIDg4LTM5LjM5ODQzOCA4OC04OC0uMDU4NTk0LTQ4LjU3ODEyNi0zOS40MjE4NzUtODcuOTQxNDA3LTg4LTg4em0wIDE2MGMtMzkuNzY1NjI1IDAtNzItMzIuMjM0Mzc2LTcyLTcyIDAtMzkuNzY1NjI2IDMyLjIzNDM3NS03MiA3Mi03MnM3MiAzMi4yMzQzNzQgNzIgNzJjLS4wNDI5NjkgMzkuNzQ2MDkzLTMyLjI1MzkwNyA3MS45NTcwMzEtNzIgNzJ6bTAgMCIvPjxwYXRoIGQ9Im0xNjguMDQyOTY5IDMwNC4xMTcxODhoLTcydi04NC42ODc1bDIzLjYwMTU2MiAyMy41OTc2NTZjMy4xMzY3MTkgMy4wMzUxNTYgOC4xMjg5MDcgMi45ODgyODEgMTEuMjE0ODQ0LS4wOTc2NTYgMy4wODU5MzctMy4wODIwMzIgMy4xMjg5MDYtOC4wNzQyMTkuMDk3NjU2LTExLjIxMDkzOGwtMzcuMjU3ODEyLTM3LjI1NzgxMmMtMy4xMjUtMy4xMjEwOTQtOC4xODc1LTMuMTIxMDk0LTExLjMxMjUgMGwtMzcuMjUzOTA3IDM3LjI1NzgxMmMtMy4wMzEyNSAzLjEzNjcxOS0yLjk4ODI4MSA4LjEyODkwNi4wOTc2NTcgMTEuMjEwOTM4IDMuMDg1OTM3IDMuMDg1OTM3IDguMDc0MjE5IDMuMTMyODEyIDExLjIxNDg0My4wOTc2NTZsMjMuNTk3NjU3LTIzLjU5NzY1NnY4NC42ODc1aC03MmMtNC40MTc5NjkgMC04LjAwMDAwMDIgMy41ODIwMzEtOC4wMDAwMDAyIDh2MTYwYzAgNC40MTc5NjggMy41ODIwMzEyIDggOC4wMDAwMDAyIDhoMTYwYzQuNDE3OTY5IDAgOC0zLjU4MjAzMiA4LTh2LTE2MGMwLTQuNDE3OTY5LTMuNTgyMDMxLTgtOC04em0tOCAxNjBoLTE0NHYtMTQ0aDE0NHptMCAwIi8+PHBhdGggZD0ibTI0MC40NDUzMTIgNDUuMjAzMTI1Yy0yLjAxMTcxOC0yLjA3ODEyNS00Ljk4NDM3NC0yLjkxMDE1Ni03Ljc4MTI1LTIuMTc5Njg3LTIuNzk2ODc0LjczMDQ2OC00Ljk4MDQ2OCAyLjkxNzk2OC01LjcxNDg0MyA1LjcxNDg0My0uNzMwNDY5IDIuNzk2ODc1LjEwMTU2MiA1Ljc2OTUzMSAyLjE4MzU5MyA3Ljc3NzM0NGwyMy41OTc2NTcgMjMuNjAxNTYzaC03Ny4wOTM3NWMtNC4yNzczNDQtNDYuODQ3NjU3LTQ0LjY0NDUzMS04Mi4wNTA3ODItOTEuNjQwNjI1LTc5LjkxMDE1N3MtODMuOTk2MDk0IDQwLjg2NzE4OC04My45OTYwOTQgODcuOTEwMTU3YzAgNDcuMDQyOTY4IDM3IDg1Ljc2OTUzMSA4My45OTYwOTQgODcuOTEwMTU2czg3LjM2MzI4MS0zMy4wNjI1IDkxLjY0MDYyNS03OS45MTAxNTZoNzcuMDkzNzVsLTIzLjU5NzY1NyAyMy42MDE1NjJjLTIuMDgyMDMxIDIuMDA3ODEyLTIuOTE0MDYyIDQuOTgwNDY5LTIuMTgzNTkzIDcuNzc3MzQ0LjczNDM3NSAyLjc5Njg3NSAyLjkxNzk2OSA0Ljk4MDQ2OCA1LjcxNDg0MyA1LjcxNDg0NCAyLjc5Njg3Ni43MzA0NjggNS43Njk1MzItLjEwMTU2MyA3Ljc4MTI1LTIuMTgzNTk0bDM3LjI1MzkwNy0zNy4yNTM5MDZjMy4xMjUtMy4xMjUgMy4xMjUtOC4xODc1IDAtMTEuMzEyNXptLTE1Mi40MDIzNDMgMTE0LjkxNDA2M2MtMzkuNzY1NjI1IDAtNzItMzIuMjM0Mzc2LTcyLTcyIDAtMzkuNzY1NjI2IDMyLjIzNDM3NS03MiA3Mi03MnM3MiAzMi4yMzQzNzQgNzIgNzJjLS4wNDI5NjkgMzkuNzQ2MDkzLTMyLjI1MzkwNyA3MS45NTcwMzEtNzIgNzJ6bTAgMCIvPjxwYXRoIGQ9Im00ODQuMzAwNzgxIDgxLjkyNTc4MS04Ny4yMDMxMjUtNzEuMTk5MjE5Yy0yLjk0NTMxMi0yLjQxMDE1Ni03LjE3OTY4Ny0yLjQxMDE1Ni0xMC4xMjUgMGwtODcuMTk5MjE4IDcxLjE5OTIxOWMtMS44NTkzNzYgMS41MTk1MzEtMi45Mzc1IDMuNzkyOTY5LTIuOTM3NSA2LjE5MTQwNyAwIDIuMzk4NDM3IDEuMDc4MTI0IDQuNjcxODc0IDIuOTM3NSA2LjE5MTQwNmw4NC4yNjk1MzEgNjguODAwNzgxdjk3LjY5NTMxM2wtMjMuNTk3NjU3LTIzLjYwMTU2M2MtMy4xNDA2MjQtMy4wMzEyNS04LjEyODkwNi0yLjk4ODI4MS0xMS4yMTQ4NDMuMDk3NjU2LTMuMDg1OTM4IDMuMDg1OTM4LTMuMTI4OTA3IDguMDc4MTI1LS4wOTc2NTcgMTEuMjE0ODQ0bDM3LjI1MzkwNyAzNy4yNTc4MTNjMy4xMjUgMy4xMjEwOTMgOC4xODc1IDMuMTIxMDkzIDExLjMxMjUgMGwzNy4yNTc4MTItMzcuMjU3ODEzYzMuMDMxMjUtMy4xMzY3MTkgMi45ODgyODEtOC4xMjg5MDYtLjA5NzY1Ni0xMS4yMTQ4NDQtMy4wODU5MzctMy4wODU5MzctOC4wNzgxMjUtMy4xMjg5MDYtMTEuMjE0ODQ0LS4wOTc2NTZsLTIzLjYwMTU2MiAyMy42MDE1NjN2LTk3LjY5NTMxM2w4NC4yNTc4MTItNjguODAwNzgxYzEuODU1NDY5LTEuNTE5NTMyIDIuOTMzNTk0LTMuNzkyOTY5IDIuOTMzNTk0LTYuMTkxNDA2IDAtMi4zOTg0MzgtMS4wNzgxMjUtNC42NzE4NzYtMi45MzM1OTQtNi4xOTE0MDd6bS05Mi4yNTc4MTIgNjcuMDU0Njg4LTc0LjU0Mjk2OS02MC44NjMyODEgNzQuNTQyOTY5LTYwLjg2MzI4MiA3NC41NDI5NjkgNjAuODYzMjgyem0wIDAiLz48L3N2Zz4=">
+                        fallback
+                    </object>
+                </div>
+                <div class="content">
+                    <div class="text">Process Run</div>
+                    <h5 class="number">
+                        @if (listprocess.Where(y => y.IsRun == true).Count() != 0)
+                        {
+                            @listprocess.Where(y => y.IsRun == true).Count()
+                        }
+                        else
+                        {
+                            <p>0</p>
+                        }
+                    </h5>
                 </div>
             </div>
         </div>
-        <div class="card top_counter">
+        @*<div class="card top_counter">
             <div class="body">
                 <div class="icon">
                     <object width="30" height="50" type="image/svg+xml" data="data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjQ4N3B0IiB2aWV3Qm94PSIwIC00IDQ4Ny4yMzQxMiA0ODciIHdpZHRoPSI0ODdwdCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJtMzkyLjA0Mjk2OSAzMDQuMTE3MTg4Yy00OC42MDE1NjMgMC04OCAzOS4zOTg0MzctODggODggMCA0OC42MDE1NjIgMzkuMzk4NDM3IDg4IDg4IDg4IDQ4LjYwMTU2MiAwIDg4LTM5LjM5ODQzOCA4OC04OC0uMDU4NTk0LTQ4LjU3ODEyNi0zOS40MjE4NzUtODcuOTQxNDA3LTg4LTg4em0wIDE2MGMtMzkuNzY1NjI1IDAtNzItMzIuMjM0Mzc2LTcyLTcyIDAtMzkuNzY1NjI2IDMyLjIzNDM3NS03MiA3Mi03MnM3MiAzMi4yMzQzNzQgNzIgNzJjLS4wNDI5NjkgMzkuNzQ2MDkzLTMyLjI1MzkwNyA3MS45NTcwMzEtNzIgNzJ6bTAgMCIvPjxwYXRoIGQ9Im0xNjguMDQyOTY5IDMwNC4xMTcxODhoLTcydi04NC42ODc1bDIzLjYwMTU2MiAyMy41OTc2NTZjMy4xMzY3MTkgMy4wMzUxNTYgOC4xMjg5MDcgMi45ODgyODEgMTEuMjE0ODQ0LS4wOTc2NTYgMy4wODU5MzctMy4wODIwMzIgMy4xMjg5MDYtOC4wNzQyMTkuMDk3NjU2LTExLjIxMDkzOGwtMzcuMjU3ODEyLTM3LjI1NzgxMmMtMy4xMjUtMy4xMjEwOTQtOC4xODc1LTMuMTIxMDk0LTExLjMxMjUgMGwtMzcuMjUzOTA3IDM3LjI1NzgxMmMtMy4wMzEyNSAzLjEzNjcxOS0yLjk4ODI4MSA4LjEyODkwNi4wOTc2NTcgMTEuMjEwOTM4IDMuMDg1OTM3IDMuMDg1OTM3IDguMDc0MjE5IDMuMTMyODEyIDExLjIxNDg0My4wOTc2NTZsMjMuNTk3NjU3LTIzLjU5NzY1NnY4NC42ODc1aC03MmMtNC40MTc5NjkgMC04LjAwMDAwMDIgMy41ODIwMzEtOC4wMDAwMDAyIDh2MTYwYzAgNC40MTc5NjggMy41ODIwMzEyIDggOC4wMDAwMDAyIDhoMTYwYzQuNDE3OTY5IDAgOC0zLjU4MjAzMiA4LTh2LTE2MGMwLTQuNDE3OTY5LTMuNTgyMDMxLTgtOC04em0tOCAxNjBoLTE0NHYtMTQ0aDE0NHptMCAwIi8+PHBhdGggZD0ibTI0MC40NDUzMTIgNDUuMjAzMTI1Yy0yLjAxMTcxOC0yLjA3ODEyNS00Ljk4NDM3NC0yLjkxMDE1Ni03Ljc4MTI1LTIuMTc5Njg3LTIuNzk2ODc0LjczMDQ2OC00Ljk4MDQ2OCAyLjkxNzk2OC01LjcxNDg0MyA1LjcxNDg0My0uNzMwNDY5IDIuNzk2ODc1LjEwMTU2MiA1Ljc2OTUzMSAyLjE4MzU5MyA3Ljc3NzM0NGwyMy41OTc2NTcgMjMuNjAxNTYzaC03Ny4wOTM3NWMtNC4yNzczNDQtNDYuODQ3NjU3LTQ0LjY0NDUzMS04Mi4wNTA3ODItOTEuNjQwNjI1LTc5LjkxMDE1N3MtODMuOTk2MDk0IDQwLjg2NzE4OC04My45OTYwOTQgODcuOTEwMTU3YzAgNDcuMDQyOTY4IDM3IDg1Ljc2OTUzMSA4My45OTYwOTQgODcuOTEwMTU2czg3LjM2MzI4MS0zMy4wNjI1IDkxLjY0MDYyNS03OS45MTAxNTZoNzcuMDkzNzVsLTIzLjU5NzY1NyAyMy42MDE1NjJjLTIuMDgyMDMxIDIuMDA3ODEyLTIuOTE0MDYyIDQuOTgwNDY5LTIuMTgzNTkzIDcuNzc3MzQ0LjczNDM3NSAyLjc5Njg3NSAyLjkxNzk2OSA0Ljk4MDQ2OCA1LjcxNDg0MyA1LjcxNDg0NCAyLjc5Njg3Ni43MzA0NjggNS43Njk1MzItLjEwMTU2MyA3Ljc4MTI1LTIuMTgzNTk0bDM3LjI1MzkwNy0zNy4yNTM5MDZjMy4xMjUtMy4xMjUgMy4xMjUtOC4xODc1IDAtMTEuMzEyNXptLTE1Mi40MDIzNDMgMTE0LjkxNDA2M2MtMzkuNzY1NjI1IDAtNzItMzIuMjM0Mzc2LTcyLTcyIDAtMzkuNzY1NjI2IDMyLjIzNDM3NS03MiA3Mi03MnM3MiAzMi4yMzQzNzQgNzIgNzJjLS4wNDI5NjkgMzkuNzQ2MDkzLTMyLjI1MzkwNyA3MS45NTcwMzEtNzIgNzJ6bTAgMCIvPjxwYXRoIGQ9Im00ODQuMzAwNzgxIDgxLjkyNTc4MS04Ny4yMDMxMjUtNzEuMTk5MjE5Yy0yLjk0NTMxMi0yLjQxMDE1Ni03LjE3OTY4Ny0yLjQxMDE1Ni0xMC4xMjUgMGwtODcuMTk5MjE4IDcxLjE5OTIxOWMtMS44NTkzNzYgMS41MTk1MzEtMi45Mzc1IDMuNzkyOTY5LTIuOTM3NSA2LjE5MTQwNyAwIDIuMzk4NDM3IDEuMDc4MTI0IDQuNjcxODc0IDIuOTM3NSA2LjE5MTQwNmw4NC4yNjk1MzEgNjguODAwNzgxdjk3LjY5NTMxM2wtMjMuNTk3NjU3LTIzLjYwMTU2M2MtMy4xNDA2MjQtMy4wMzEyNS04LjEyODkwNi0yLjk4ODI4MS0xMS4yMTQ4NDMuMDk3NjU2LTMuMDg1OTM4IDMuMDg1OTM4LTMuMTI4OTA3IDguMDc4MTI1LS4wOTc2NTcgMTEuMjE0ODQ0bDM3LjI1MzkwNyAzNy4yNTc4MTNjMy4xMjUgMy4xMjEwOTMgOC4xODc1IDMuMTIxMDkzIDExLjMxMjUgMGwzNy4yNTc4MTItMzcuMjU3ODEzYzMuMDMxMjUtMy4xMzY3MTkgMi45ODgyODEtOC4xMjg5MDYtLjA5NzY1Ni0xMS4yMTQ4NDQtMy4wODU5MzctMy4wODU5MzctOC4wNzgxMjUtMy4xMjg5MDYtMTEuMjE0ODQ0LS4wOTc2NTZsLTIzLjYwMTU2MiAyMy42MDE1NjN2LTk3LjY5NTMxM2w4NC4yNTc4MTItNjguODAwNzgxYzEuODU1NDY5LTEuNTE5NTMyIDIuOTMzNTk0LTMuNzkyOTY5IDIuOTMzNTk0LTYuMTkxNDA2IDAtMi4zOTg0MzgtMS4wNzgxMjUtNC42NzE4NzYtMi45MzM1OTQtNi4xOTE0MDd6bS05Mi4yNTc4MTIgNjcuMDU0Njg4LTc0LjU0Mjk2OS02MC44NjMyODEgNzQuNTQyOTY5LTYwLjg2MzI4MiA3NC41NDI5NjkgNjAuODYzMjgyem0wIDAiLz48L3N2Zz4=">
@@ -100,8 +128,17 @@
                     </object>
                 </div>
                 <div class="content">
-                    <div class="text">Active Process</div>
-                    <h5 class="number">$2.8M</h5>
+                    <div class="text">Process Run</div>
+                    <h5 class="number">
+                        @if (listprocess.Where(y => y.IsRun == true).Count() != 0)
+                        {
+		                     @listprocess.Where(y => y.IsRun == true).Count()
+                        }
+                        else
+                        {
+                            <p>0</p>
+                        }
+                    </h5>
                 </div>
                 <hr>
                 <div class="icon"><i class="fa fa-university"></i> </div>
@@ -110,9 +147,9 @@
                     <h5 class="number">$1,250</h5>
                 </div>
             </div>
-        </div>
+        </div>*@
     </div>
-    <div class="col-lg-3 col-md-6">
+        <div class="col-lg-3 col-md-6">
         <div class="card text-center" style="height:100%">
             <div class="body">
                 <h5>Income Analysis</h5>
