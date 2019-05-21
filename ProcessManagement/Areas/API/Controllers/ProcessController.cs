@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using System.IO;
 using Ionic.Zip;
 using System.Text;
+using System.Transactions;
 
 namespace ProcessManagement.Areas.API.Controllers
 {
@@ -576,7 +577,8 @@ namespace ProcessManagement.Areas.API.Controllers
                     object copyRole = new
                     {
                         roleid = role.Id,
-                        rolename = role.Name
+                        rolename = role.Name,
+                        description = role.Description
                     };
                     copyRoles.Add(copyRole);
                 }
@@ -659,7 +661,7 @@ namespace ProcessManagement.Areas.API.Controllers
 
 
                 //zip
-                string fileName = string.Format("{0}-download.pms", process.Name);
+                string fileName = string.Format("{0}-download.pms", process.Name.ToLower());
                 FileManager f = fileService.zipFile(groupid: process.IdGroup, fileName: fileName, copyPath);
                 response = new { data = f.Id, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);
@@ -674,6 +676,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
         public JsonResult Import(int groupid, HttpPostedFileBase fileupload)
         {
+            string IdUser = User.Identity.GetUserId();
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
@@ -687,7 +690,58 @@ namespace ProcessManagement.Areas.API.Controllers
                 {
                     data = JsonConvert.DeserializeObject<JObject>(sr.ReadToEnd());
                 }
+                //xử lý data
+                using (var scope = new TransactionScope())
+                {
+                    //process
+                    Process pr = new Process();
+                    pr.Name = (string)data["processname"];
+                    pr.Description = (string)data["description"];
+                    pr.IdOwner = IdUser;
+                    pr.IdGroup = groupid;
+                    pr.DataJson = (string)data["draw"];
+                    pr.Avatar = (string)data["avatar"];
+                    pr.IsRun = false;
+                    pr.Created_At = DateTime.Now;
+                    pr.Updated_At = DateTime.Now;
+                    db.Processes.Add(pr);
+                    //role
+                    JArray roles = (JArray)data["roles"];
+                    foreach (var role in roles)
+                    {
+                        Role rl = new Role();
+                        rl.IdProcess = pr.Id;
+                        rl.Name = (string)role["rolename"];
+                        rl.Description = (string)role["description"];
+                        rl.IsRun = false;
+                        rl.Create_At = DateTime.Now;
+                        rl.Update_At = DateTime.Now;
+                        db.Roles.Add(rl);
+                    }
+                    db.SaveChanges();
 
+                    JArray steps = (JArray)data["steps"];
+                    foreach (JToken step in steps)
+                    {
+                        Step st = new Step();
+                        st.IdProcess = pr.Id;
+                        st.Name = (string)step["stepname"];
+                        st.Description = (string)step["description"];
+                        st.StartStep = (bool)step["draw"]["isStartStep"];
+                        st.Key = (int)step["draw"]["key"];
+                        st.Figure = (string)step["draw"]["figure"];
+                        st.NextStep1 = (int)step["draw"]["nextstep1"];
+                        st.NextStep2 = (int)step["draw"]["nextstep2"];
+                        st.Color = commonService.getRandomColor();
+                        st.IsRun = false;
+                        st.Created_At = DateTime.Now;
+                        st.Updated_At = DateTime.Now;
+
+                        db.Steps.Add(st);
+                        //Task
+                        JArray tasks = (JArray)step["tasks"];
+                    }
+                }
                 message = "Import Sucess";
                 response = new { message = message, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);

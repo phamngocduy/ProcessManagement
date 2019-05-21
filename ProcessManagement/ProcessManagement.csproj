@@ -38,7 +38,7 @@
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vs4BB1.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vsBAC4.tmp\Debug\</IntermediateOutputPath>
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -50,7 +50,7 @@
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vs4BB1.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vsBAC4.tmp\Release\</IntermediateOutputPath>
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -93,6 +93,7 @@
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -8526,6 +8527,7 @@
     <Content Include="Views\ProcessRun\DetailTaskForm.cshtml" />
     <Content Include="Views\Process\ImportExport.cshtml" />
     <Content Include="Views\Group\MyTask.cshtml" />
+    <Content Include="Views\Shared\_NullLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -14,10 +14,13 @@
             }
             else
             {
-                JObject jDefault = JObject.Parse(avatardefault);
-                <div class="rounded-circle user-photo user-default" style="background-color:@jDefault["background"]">
-                    @jDefault["name"]
-                </div>
+                if (avatardefault != "")
+                {
+                    JObject jDefault = JObject.Parse(avatardefault);
+                    <div class="rounded-circle user-photo user-default" style="background-color:@jDefault["background"]">
+                        @jDefault["name"]
+                    </div>
+                }
             }
             <div class="dropdown">
                 <span>Welcome,</span>

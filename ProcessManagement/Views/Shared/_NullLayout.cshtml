@@ -7,6 +7,11 @@
     <meta name="description" content="Process Management System">
     <meta name="author" content="CAP2019, design by: Clockworks Team">
     <title>:: Lucid System :: @ViewBag.Title</title>
+    <style>
+        .page-loader-wrapper {
+            display: block;
+        }
+    </style>
     @Styles.Render("~/Content/css")
     @if (IsSectionDefined("CustomCss"))
     {
@@ -23,31 +28,53 @@
         <!-- end of header -->
         <!-- main content -->
         <div id="main-content">
-            @RenderBody()
+            <div class="container-fluid" id="content">
+                @RenderBody()
+            </div>
+            @Html.Partial("~/Views/Shared/Common/_Footer.cshtml")
+            <!-- end of body content -->
         </div>
-        <!-- end of body content -->
     </div>
     @Scripts.Render("~/Content/js")
-    @*<script type="text/javascript">
-            alertify.set('notifier', 'position', 'bottom-left');
-            @{
-                string text = (string)TempData["FlashMessage.Text"];
-                string type = (string)TempData["FlashMessage.Type"];
-                if (!string.IsNullOrWhiteSpace(text))
-                {
-                    if (type == "Success")
-                    {
 
-                        @:alertify.success("@text");
-
-                    }
-                    else if (type == "Fail")
-                    {
-                         @:alertify.error("@text");
-                    }
-                }
+    @{
+        string text = (string)TempData["FlashMessage.Text"];
+        if (!string.IsNullOrWhiteSpace(text))
+        {
+            FlashType type = (FlashType)TempData["FlashMessage.Type"];
+            FlashPosition position = (FlashPosition)TempData["FlashMessage.Position"];
+            string positionClass;
+            switch (position)
+            {
+                case FlashPosition.BottomRight:
+                    positionClass = "toast-bottom-right";
+                    break;
+                case FlashPosition.BottomLeft:
+                    positionClass = "toast-bottom-left";
+                    break;
+                case FlashPosition.TopLeft:
+                    positionClass = "toast-top-left";
+                    break;
+                case FlashPosition.TopRight:
+                    positionClass = "toast-top-right";
+                    break;
+                case FlashPosition.TopCenter:
+                    positionClass = "toast-top-center";
+                    break;
+                case FlashPosition.BottomCenter:
+                    positionClass = "toast-bottom-center";
+                    break;
+                default:
+                    positionClass = "toast-bottom-left";
+                    break;
             }
-        </script>*@
+            <script type="text/javascript">
+                $(function() {
+                    showToastr("@type", "@text", "@positionClass");
+                });
+            </script>
+        }
+    }
     @if (IsSectionDefined("CustomScripts"))
     {
         @RenderSection("CustomScripts", required: false)
