@@ -149,7 +149,7 @@
             </div>
         </div>*@
     </div>
-        <div class="col-lg-3 col-md-6">
+        @*<div class="col-lg-3 col-md-6">
         <div class="card text-center" style="height:100%">
             <div class="body">
                 <h5>Income Analysis</h5>
@@ -172,8 +172,8 @@
                 <span id="sparkline-compositeline">8,4,0,0,0,0,1,4,4,10,10,10,10,0,0,0,4,6,5,9,10</span>
             </div>
         </div>
-    </div>
-    <div class="col-lg-6 col-md-12">
+    </div>*@
+    <div class="col-lg-9 col-md-12">
         <div class="card clearfix" style="height:100%" id="group-infor-card">
             <div class="header"></div>
             <div class="body">
@@ -814,13 +814,22 @@
         $(function () {
             var idgroup = $('#btn-deletegroup').val();
             $('#btn-deletegroup').on('click', function () {
-                let check = confirm("Delete Group?");
-                if (check) {
-                    let data = {
-                        idgroup: idgroup
-                    }
-                    DeleteGroup(data);
-                }
+                var $this = $(this);
+                setConfirm(`Are you sure you want to delete this group?`, `<span>Please input group name</span> <input class="form-control" id="delete-action-content" placeholder="Your comment (optional)" rows="6">`, function () {
+                    
+                     var content = this.$content.find("#delete-action-content").val().trim();
+                     if (content === "@Model.Name") {
+                         let data = {
+                             idprocess: idprocess
+                         }
+                         setTimeout(function () {
+                             DeleteGroup(data);
+                         }, 1000);
+                     } else {
+                         alert("Please comment group name ?");
+                         return false;
+                     }
+                });
             })
         })
 

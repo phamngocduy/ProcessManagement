@@ -246,7 +246,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 processService.removeprocessrun(process.Id);
             }
             //todo find file in group and remove files
-
+            
             groupService.removeGroup(group);
 
             message = "Delete group Successfully";

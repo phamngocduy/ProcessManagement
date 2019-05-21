@@ -526,13 +526,22 @@
         $(function () {
             var idprocess = $('#btn-deleteprocess').val();
             $('#btn-deleteprocess').on('click', function () {
-                let check = confirm("Delete Process?");
-                if (check) {
-                    let data = {
-                        idprocess: idprocess
-                    }
-                    DeleteProcess(data);
-                }
+                var $this = $(this);
+                setConfirm(`Are you sure you want to delete this process?`, `<span>Please input process name</span> <input class="form-control" id="delete-action-content" placeholder="Your comment (optional)" rows="6">`, function () {
+                    
+                     var content = this.$content.find("#delete-action-content").val().trim();
+                     if (content === "@process.Name") {
+                         let data = {
+                             idprocess: idprocess
+                         }
+                         setTimeout(function () {
+                             DeleteProcess(data);
+                         }, 1000);
+                     } else {
+                         alert("Please comment process name ?");
+                         return false;
+                     }
+                });
             })
         })
 

@@ -79,7 +79,7 @@ namespace ProcessManagement.Areas.API.Controllers
                                 id = taskrun.Id,
                                 name = taskrun.Name,
                                 description = taskrun.Description,
-                                rolename = taskrun.Role.Name,
+                                rolename = taskrun.IdRole == null ? "Manager" : taskrun.Role.Name,
                                 status = taskrun.Status1.Name,
                                 valueform = taskrun.ValueFormJson
                             };
@@ -126,7 +126,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 }
 
                 object jprocessrun = new {
-                    id = processrun.Id,
+                    id = processrun.IdProcess,
                     name = processrun.Name,
                     status = processrun.Status1.Name,
                     task = new
