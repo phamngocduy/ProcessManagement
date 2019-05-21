@@ -79,11 +79,12 @@
                                 <ul>
                                     <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "newprocess", groupslug = groupSlug, groupid = groupId})">Define Process</a></li>
                                     <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "newprocessrun", groupslug = groupSlug, groupid = groupId})">Define Process Run</a></li>
+                                    <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "importexport", groupslug = groupSlug, groupid = groupId})">Import/Export Process</a></li>
                                     <li><a href="project-list.html">Process Management</a></li>
                                 </ul>
                             </li>
-                            <li><a href="#FileManager"><i class="icon-folder"></i> <span>File Manager</span></a></li>
                             <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new {  controller = "group", action = "mytask", groupslug = groupSlug, groupid = groupId})"><i class="icon-tag"></i><span>My Task</span></a></li>
+                            <li><a href="#FileManager"><i class="icon-folder"></i> <span>File Manager</span></a></li>
                         </ul>
                     </nav>
                 </div>
