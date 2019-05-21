@@ -576,9 +576,8 @@ namespace ProcessManagement.Areas.API.Controllers
                 {
                     object copyRole = new
                     {
-                        roleid = role.Id,
                         rolename = role.Name,
-                        description = role.Description
+                        description = role.Description ?? ""
                     };
                     copyRoles.Add(copyRole);
                 }
@@ -611,7 +610,7 @@ namespace ProcessManagement.Areas.API.Controllers
                             taskid = task.Id,
                             taskname = task.Name,
                             description = task.Description ?? "",
-                            role = task.IdRole,
+                            role = task.Role.Name,
                             position = task.Position,
                             config = new
                             {
@@ -682,24 +681,25 @@ namespace ProcessManagement.Areas.API.Controllers
             object response;
             try
             {
-                ZipFile zip = ZipFile.Read(fileupload.InputStream);
-                ZipEntry jsonFile = zip.Where(x => Path.GetFileName(x.FileName) == "data.json").FirstOrDefault();
-                jsonFile.Password = "clockworks-pms";
-                JObject data;
-                using (StreamReader sr = new StreamReader(jsonFile.OpenReader(), Encoding.UTF8))
-                {
-                    data = JsonConvert.DeserializeObject<JObject>(sr.ReadToEnd());
-                }
-                //xử lý data
                 using (var scope = new TransactionScope())
                 {
+                    ZipFile zip = ZipFile.Read(fileupload.InputStream);
+                    ZipEntry jsonFile = zip.Where(x => Path.GetFileName(x.FileName) == "data.json").FirstOrDefault();
+                    jsonFile.Password = "clockworks-pms";
+                    JObject data;
+                    using (StreamReader sr = new StreamReader(jsonFile.OpenReader(), Encoding.UTF8))
+                    {
+                        data = JsonConvert.DeserializeObject<JObject>(sr.ReadToEnd());
+                    }
+                    //xử lý data
+                
                     //process
                     Process pr = new Process();
                     pr.Name = (string)data["processname"];
                     pr.Description = (string)data["description"];
                     pr.IdOwner = IdUser;
                     pr.IdGroup = groupid;
-                    pr.DataJson = (string)data["draw"];
+                    pr.DataJson = data["draw"].ToString();
                     pr.Avatar = (string)data["avatar"];
                     pr.IsRun = false;
                     pr.Created_At = DateTime.Now;
@@ -707,23 +707,24 @@ namespace ProcessManagement.Areas.API.Controllers
                     db.Processes.Add(pr);
                     //role
                     JArray roles = (JArray)data["roles"];
+                    List<Role> roleList = new List<Role>();
                     foreach (var role in roles)
                     {
-                        Role rl = new Role();
+                        Role rl = new Role { Process = pr };
                         rl.IdProcess = pr.Id;
                         rl.Name = (string)role["rolename"];
                         rl.Description = (string)role["description"];
                         rl.IsRun = false;
                         rl.Create_At = DateTime.Now;
                         rl.Update_At = DateTime.Now;
-                        db.Roles.Add(rl);
+                        roleList.Add(rl);
                     }
+                    db.Roles.AddRange(roleList);
                     db.SaveChanges();
-
                     JArray steps = (JArray)data["steps"];
                     foreach (JToken step in steps)
                     {
-                        Step st = new Step();
+                        Step st = new Step { Process = pr };
                         st.IdProcess = pr.Id;
                         st.Name = (string)step["stepname"];
                         st.Description = (string)step["description"];
@@ -740,7 +741,32 @@ namespace ProcessManagement.Areas.API.Controllers
                         db.Steps.Add(st);
                         //Task
                         JArray tasks = (JArray)step["tasks"];
+                        foreach (JToken task in tasks)
+                        {
+                            int? rid;
+                            if ((string)task["role"] == "") {
+                                rid = null;
+                            } else {
+                                rid = roleList.First(x => x.Name == (string)task["role"]).Id;
+                            }
+                            TaskProcess tk = new TaskProcess { Step = st};
+                            tk.IdStep = st.Id;
+                            tk.IdRole = rid;
+                            tk.Name = (string)task["taskname"];
+                            tk.Description = (string)task["description"];
+                            tk.ValueInputFile = task["config"]["input"].ToString();
+                            tk.ValueInputFile = task["config"]["file"].ToString();
+                            tk.ValueFormJson = task["config"]["form"].ToString();
+                            tk.Color = commonService.getRandomColor();
+                            tk.Position = (int)task["position"];
+                            tk.IsRun = false;
+                            tk.Created_At = DateTime.Now;
+                            tk.Updated_At = DateTime.Now;
+                            db.TaskProcesses.Add(tk);
+                        }
                     }
+                    db.SaveChanges();
+                    scope.Complete();
                 }
                 message = "Import Sucess";
                 response = new { message = message, status = status };
