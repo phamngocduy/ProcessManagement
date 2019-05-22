@@ -327,9 +327,15 @@
                         showToastr("error", response.message, "toast-bottom-left");
                         console.error(response);
                     } else {
-                        toggleLoading(element);
-                        window.open(window.origin + "/file/download/" + response.data);
+                        var downloadAction = window.origin + "/file/download/" + response.data;
+                        window.open(downloadAction);
+                        $.alert({
+                            backgroundDismiss: 'buttonName',
+                            title:"Tip",
+                            content: `If file not download automatically. <a href="${downloadAction}">Click Here</a>.`
+                        });
                     }
+                    toggleLoading(element);
                 }
             })
         }

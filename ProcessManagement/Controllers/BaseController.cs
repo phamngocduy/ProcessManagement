@@ -40,7 +40,7 @@ namespace ProcessManagement.Controllers
         StepRun,
         TaskRun,
         TaskFormRun,
-        Zip
+        Export
     }
     public class BaseController : Controller
     {

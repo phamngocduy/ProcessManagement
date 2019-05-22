@@ -110,7 +110,15 @@ namespace ProcessManagement.Services
             db.SaveChanges();
 
         }
-       
+        public void removeFile(string path)
+        {
+            string AppPath = AppDomain.CurrentDomain.BaseDirectory;
+            string filePath = AppPath + path;
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
         public FileManager changeFileName(FileManager file,string filename)
         {
             string AppPath = AppDomain.CurrentDomain.BaseDirectory;
@@ -298,7 +306,7 @@ namespace ProcessManagement.Services
             file.Name = fileName;
             file.Type = ".zip";
             file.Path = path;
-            file.Direction = Direction.Zip.ToString();
+            file.Direction = Direction.Export.ToString();
             file.Create_At = DateTime.Now;
             file.Update_At = DateTime.Now;
             db.FileManagers.Add(file);

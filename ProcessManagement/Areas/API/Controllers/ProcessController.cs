@@ -586,23 +586,33 @@ namespace ProcessManagement.Areas.API.Controllers
                 List<object> copySteps = new List<object>();
                 foreach (Step step in steps)
                 {
+                    
                     //task
                     List<TaskProcess> tasks = taskService.findTaskOfStep(step.Id);
                     List<object> copyTasks = new List<object>();
                     foreach (TaskProcess task in tasks)
                     {
-                        object input, file, form;
-                        if (task.ValueInputText != null)
+                        //file
+                        string taskPath = string.Format("Upload/{0}/{1}/{2}/{3}", process.IdGroup,process.Id,step.Id,task.Id);
+                        List<FileManager> taskFiles = fileService.findFiles(process.IdGroup, taskPath);
+                        List<string> fileTaskName = taskFiles.Select(x => x.Name).ToList();
+
+                        object input = task.ValueInputText ?? "";
+                        object file = task.ValueInputFile?? "";
+                        object form = task.ValueFormJson ?? "";
+
+
+                        if (input.ToString() != "")
                         {
-                            input = JObject.Parse(task.ValueInputText);
-                            file = JObject.Parse(task.ValueInputFile);
-                            form = "";
+                            input = JObject.Parse(input.ToString());
                         }
-                        else
+                        if (file.ToString() != "")
                         {
-                            input = "";
-                            file = "";
-                            form =  JArray.Parse(task.ValueFormJson);
+                            file = JObject.Parse(file.ToString());
+                        }
+                        if (form.ToString() != "")
+                        {
+                            form = JArray.Parse(form.ToString());
                         }
 
                         object copyTask = new
@@ -610,17 +620,24 @@ namespace ProcessManagement.Areas.API.Controllers
                             taskid = task.Id,
                             taskname = task.Name,
                             description = task.Description ?? "",
-                            role = task.Role.Name,
+                            role = task.IdRole == null ? "" : task.Role.Name,
                             position = task.Position,
+                            files = fileTaskName,
                             config = new
                             {
                                 input = input,
                                 file = file,
-                                form = form
+                                form = form,
                             }
                         };
                         copyTasks.Add(copyTask);
                     }
+
+                    //file
+                    string stepPath = string.Format("Upload/{0}/{1}/{2}", process.IdGroup,process.Id,step.Id);
+                    List<FileManager> stepFiles = fileService.findFiles(process.IdGroup, stepPath);
+                    List<string> fileStepName = stepFiles.Select(x => x.Name).ToList();
+
                     //step
                     object copyStep = new
                     {
@@ -635,11 +652,16 @@ namespace ProcessManagement.Areas.API.Controllers
                             nextstep1 = step.NextStep1,
                             nextstep2 = step.NextStep2
                         },
+                        files = fileStepName,
                         tasks = copyTasks
                     };
                     copySteps.Add(copyStep);
                 }
 
+                //file
+                string processPath = string.Format("Upload/{0}/{1}", process.IdGroup, process.Id);
+                List<FileManager> processFiles = fileService.findFiles(process.IdGroup, processPath);
+                List<string> fileProcessName = processFiles.Select(x => x.Name).ToList();
                 //process 
                 object copyProcess = new
                 {
@@ -647,21 +669,28 @@ namespace ProcessManagement.Areas.API.Controllers
                     processname = process.Name,
                     description = process.Description ?? "",
                     draw = JObject.Parse(process.DataJson),
+                    files = fileProcessName,
                     avatar = process.Avatar,
                     steps = copySteps,
                     roles = copyRoles
                 };
+
                 //create jsonfile
                 fileService.createJsonFile(copyPath, copyProcess);
+
                 //copy dirs and sub-dirs
-                string processPath = string.Format("Upload/{0}/{1}", process.IdGroup, process.Id);
-                fileService.copyDirectory(processPath, Path.Combine(copyPath, string.Format("upload/upload/{0}", process.Id)), copyOnly: true, copySubDirs: true);
+                string uploadPath = Path.Combine(copyPath, string.Format("upload/upload/{0}", process.Id));
+                fileService.copyDirectory(processPath, uploadPath, copyOnly: true, copySubDirs: true);
                 string AppPath = AppDomain.CurrentDomain.BaseDirectory;
 
 
                 //zip
                 string fileName = string.Format("{0}-download.pms", process.Name.ToLower());
                 FileManager f = fileService.zipFile(groupid: process.IdGroup, fileName: fileName, copyPath);
+
+                fileService.removeDirectory(Path.Combine(copyPath, "upload"));
+                fileService.removeFile(Path.Combine(copyPath, "data.json"));
+
                 response = new { data = f.Id, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
@@ -684,7 +713,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 using (var scope = new TransactionScope())
                 {
                     ZipFile zip = ZipFile.Read(fileupload.InputStream);
-                    ZipEntry jsonFile = zip.Where(x => Path.GetFileName(x.FileName) == "data.json").FirstOrDefault();
+                    ZipEntry jsonFile = zip.FirstOrDefault(x => x.FileName == "data.json");
                     jsonFile.Password = "clockworks-pms";
                     JObject data;
                     using (StreamReader sr = new StreamReader(jsonFile.OpenReader(), Encoding.UTF8))
@@ -702,9 +731,19 @@ namespace ProcessManagement.Areas.API.Controllers
                     pr.DataJson = data["draw"].ToString();
                     pr.Avatar = (string)data["avatar"];
                     pr.IsRun = false;
-                    pr.Created_At = DateTime.Now;
+                    pr.Created_At = DateTime.Now;   
                     pr.Updated_At = DateTime.Now;
                     db.Processes.Add(pr);
+                    //process file
+                    JArray processFile = (JArray)data["files"];
+                    if (processFile.Any())
+                    {
+                        foreach (var file in processFile)
+                        {
+                            ZipArchiveEntry f = zip.FirstOrDefault(x => x.Name == Path.Combine("Upload", (string)data["processid"], file.ToString()));
+                            Stream input = f.InputStream;
+                        }
+                    }
                     //role
                     JArray roles = (JArray)data["roles"];
                     List<Role> roleList = new List<Role>();
@@ -721,6 +760,7 @@ namespace ProcessManagement.Areas.API.Controllers
                     }
                     db.Roles.AddRange(roleList);
                     db.SaveChanges();
+
                     JArray steps = (JArray)data["steps"];
                     foreach (JToken step in steps)
                     {
@@ -749,7 +789,7 @@ namespace ProcessManagement.Areas.API.Controllers
                             } else {
                                 rid = roleList.First(x => x.Name == (string)task["role"]).Id;
                             }
-                            TaskProcess tk = new TaskProcess { Step = st};
+                            TaskProcess tk = new TaskProcess { Step = st };
                             tk.IdStep = st.Id;
                             tk.IdRole = rid;
                             tk.Name = (string)task["taskname"];
@@ -766,6 +806,9 @@ namespace ProcessManagement.Areas.API.Controllers
                         }
                     }
                     db.SaveChanges();
+                    //file
+                    //process
+
                     scope.Complete();
                 }
                 message = "Import Sucess";

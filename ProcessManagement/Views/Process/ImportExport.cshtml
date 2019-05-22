@@ -52,7 +52,7 @@
                 <div id="process-import-container">
                     <input type="text" id="process-import-preview" class="form-control" readonly />
                     <input type="file" accept=".pms" id="process-import" style="display:none" />
-                    <button class="btn btn-default waves-effect" id="btn-trigger" data-trigger="process-import">Browers</button>
+                    <button class="btn btn-success waves-effect" id="btn-trigger" data-trigger="process-import">Browers</button>
                 </div>
                 <button class="btn btn-default waves-effect" id="btn-process-import" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Uploading...">Upload</button>
             </div>
@@ -74,11 +74,11 @@
                 preview.val(upload.name);
                 if ($("#process-import-remove").length == 0) {
                     var remove = $(`<button class="btn btn-none waves-effect" id="process-import-remove"><i class="icon-trash"></i></button>`).insertBefore(preview);
-                    remove.show(400);
+                    remove.show(500);
                     remove.on("click", function () {
                         preview.val("");
                         $this.val("");
-                        $(this).hide(400, () => { $(this).remove(); })
+                        $(this).hide(500, () => { $(this).remove(); })
                     });
                 }
             });
