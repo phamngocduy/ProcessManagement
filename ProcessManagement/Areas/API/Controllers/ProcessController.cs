@@ -679,16 +679,14 @@ namespace ProcessManagement.Areas.API.Controllers
                 fileService.createJsonFile(copyPath, copyProcess);
 
                 //copy dirs and sub-dirs
-                string uploadPath = Path.Combine(copyPath, string.Format("upload/upload/{0}", process.Id));
+                string uploadPath = Path.Combine(copyPath, string.Format("upload/Upload/{0}", process.Id));
                 fileService.copyDirectory(processPath, uploadPath, copyOnly: true, copySubDirs: true);
-                string AppPath = AppDomain.CurrentDomain.BaseDirectory;
-
 
                 //zip
                 string fileName = string.Format("{0}-download.pms", process.Name.ToLower());
                 FileManager f = fileService.zipFile(groupid: process.IdGroup, fileName: fileName, copyPath);
 
-                fileService.removeDirectory(Path.Combine(copyPath, "upload"));
+                fileService.removeDirectory(Path.Combine(copyPath, "Upload"));
                 fileService.removeFile(Path.Combine(copyPath, "data.json"));
 
                 response = new { data = f.Id, status = status };
@@ -705,6 +703,7 @@ namespace ProcessManagement.Areas.API.Controllers
         public JsonResult Import(int groupid, HttpPostedFileBase fileupload)
         {
             string IdUser = User.Identity.GetUserId();
+            string AppPath = AppDomain.CurrentDomain.BaseDirectory;
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
@@ -714,9 +713,10 @@ namespace ProcessManagement.Areas.API.Controllers
                 {
                     ZipFile zip = ZipFile.Read(fileupload.InputStream);
                     ZipEntry jsonFile = zip.FirstOrDefault(x => x.FileName == "data.json");
-                    jsonFile.Password = "clockworks-pms";
+                    //jsonFile.Password = "clockworks-pms";
+                    var passsword = "clockworks-pms";
                     JObject data;
-                    using (StreamReader sr = new StreamReader(jsonFile.OpenReader(), Encoding.UTF8))
+                    using (StreamReader sr = new StreamReader(jsonFile.OpenReader(passsword), Encoding.UTF8))
                     {
                         data = JsonConvert.DeserializeObject<JObject>(sr.ReadToEnd());
                     }
@@ -734,14 +734,43 @@ namespace ProcessManagement.Areas.API.Controllers
                     pr.Created_At = DateTime.Now;   
                     pr.Updated_At = DateTime.Now;
                     db.Processes.Add(pr);
-                    //process file
+                    db.SaveChanges();
+
+                    //file process
                     JArray processFile = (JArray)data["files"];
                     if (processFile.Any())
                     {
-                        foreach (var file in processFile)
+                        foreach (JToken file in processFile)
                         {
-                            ZipArchiveEntry f = zip.FirstOrDefault(x => x.Name == Path.Combine("Upload", (string)data["processid"], file.ToString()));
-                            Stream input = f.InputStream;
+                            ZipEntry f = zip.FirstOrDefault(x => x.FileName == string.Format("Upload/{0}/{1}", (string)data["processid"], file.ToString()));
+                            if (f != null)
+                            {
+                                Stream st = f.OpenReader();
+                                ZipInputStream zp = new ZipInputStream(st);
+                                string processPath = string.Format("Upload/{0}/{1}", groupid.ToString(), pr.Id.ToString());
+                                fileService.createDirectory(processPath);
+                                //System.IO.File.SetAttributes(Path.Combine(AppPath, processPath), FileAttributes.Temporary);
+                                using (FileStream fileStream = System.IO.File.Create(string.Format("{0}/{1}/{2}", AppPath, processPath, file.ToString())))
+                                {
+                                    string fileId;
+                                    do
+                                    {
+                                        fileId = commonService.getRandomString(50);
+                                    } while (fileService.findFile(fileId) != null);
+                                    FileManager fm = new FileManager();
+                                    fm.Id = fileId;
+                                    fm.IdGroup = groupid;
+                                    fm.Name = Path.GetFileName(fileStream.Name);
+                                    fm.Type = Path.GetExtension(fileStream.Name);
+                                    fm.Path = processPath;
+                                    fm.Direction = Direction.Process.ToString();
+                                    fm.Create_At = DateTime.Now;
+                                    fm.Update_At = DateTime.Now;
+                                    db.FileManagers.Add(fm);
+                                    //zp.Seek(0, SeekOrigin.Begin);
+                                    zp.CopyTo(fileStream);
+                                }
+                            }
                         }
                     }
                     //role
@@ -777,8 +806,48 @@ namespace ProcessManagement.Areas.API.Controllers
                         st.IsRun = false;
                         st.Created_At = DateTime.Now;
                         st.Updated_At = DateTime.Now;
-
                         db.Steps.Add(st);
+                        db.SaveChanges();
+                        
+                        //File Step
+                        JArray stepFile = (JArray)step["files"];
+                        if (stepFile.Any())
+                        {
+                            foreach (JToken file in stepFile)
+                            {
+                                ZipEntry f = zip.FirstOrDefault(x => x.FileName == string.Format("Upload/{0}/{1}/{2}", (string)data["processid"], (string)step["stepid"], file.ToString()));
+                                if (f != null)
+                                {
+                                    Stream stm = f.OpenReader();
+                                    ZipInputStream zp = new ZipInputStream(stm);
+                                    string stepPath = string.Format("Upload/{0}/{1}/{2}", groupid.ToString(), pr.Id.ToString(), st.Id.ToString());
+                                    fileService.createDirectory(stepPath);
+                                    //System.IO.File.SetAttributes(Path.Combine(AppPath, processPath), FileAttributes.Temporary);
+                                    using (FileStream fileStream = System.IO.File.Create(string.Format("{0}/{1}/{2}", AppPath, stepPath, file.ToString())))
+                                    {
+                                        string fileId;
+                                        do
+                                        {
+                                            fileId = commonService.getRandomString(50);
+                                        } while (fileService.findFile(fileId) != null);
+                                        FileManager fm = new FileManager();
+                                        fm.Id = fileId;
+                                        fm.IdGroup = groupid;
+                                        fm.Name = Path.GetFileName(fileStream.Name);
+                                        fm.Type = Path.GetExtension(fileStream.Name);
+                                        fm.Path = stepPath;
+                                        fm.Direction = Direction.Step.ToString();
+                                        fm.Create_At = DateTime.Now;
+                                        fm.Update_At = DateTime.Now;
+                                        db.FileManagers.Add(fm);
+
+                                        //zp.Seek(0, SeekOrigin.Begin);
+                                        zp.CopyTo(fileStream);
+                                    }
+                                }
+                            }
+                        }
+
                         //Task
                         JArray tasks = (JArray)step["tasks"];
                         foreach (JToken task in tasks)
@@ -803,12 +872,51 @@ namespace ProcessManagement.Areas.API.Controllers
                             tk.Created_At = DateTime.Now;
                             tk.Updated_At = DateTime.Now;
                             db.TaskProcesses.Add(tk);
-                        }
-                    }
-                    db.SaveChanges();
-                    //file
-                    //process
+                            db.SaveChanges();
+                            //file task
+                            //File Step
+                            JArray taskFile = (JArray)task["files"];
+                            if (taskFile.Any())
+                            {
+                                foreach (JToken file in taskFile)
+                                {
+                                    ZipEntry f = zip.FirstOrDefault(x => x.FileName == string.Format("Upload/{0}/{1}/{2}/{3}", (string)data["processid"], (string)step["stepid"], (string)step["taskid"], file.ToString()));
+                                    if (f != null)
+                                    {
+                                        Stream stm = f.OpenReader();
+                                        ZipInputStream zp = new ZipInputStream(stm);
+                                        string taskPath = string.Format("Upload/{0}/{1}/{2}/{3}", groupid.ToString(), pr.Id.ToString(), st.Id.ToString(), tk.Id.ToString());
+                                        fileService.createDirectory(taskPath);
+                                        //System.IO.File.SetAttributes(Path.Combine(AppPath, processPath), FileAttributes.Temporary);
+                                        using (FileStream fileStream = System.IO.File.Create(string.Format("{0}/{1}/{2}", AppPath, taskPath, file.ToString())))
+                                        {
+                                            string fileId;
+                                            do
+                                            {
+                                                fileId = commonService.getRandomString(50);
+                                            } while (fileService.findFile(fileId) != null);
+                                            FileManager fm = new FileManager();
+                                            fm.Id = fileId;
+                                            fm.IdGroup = groupid;
+                                            fm.Name = Path.GetFileName(fileStream.Name);
+                                            fm.Type = Path.GetExtension(fileStream.Name);
+                                            fm.Path = taskPath;
+                                            fm.Direction = Direction.Task.ToString();
+                                            fm.Create_At = DateTime.Now;
+                                            fm.Update_At = DateTime.Now;
+                                            db.FileManagers.Add(fm);
 
+                                            //zp.Seek(0, SeekOrigin.Begin);
+                                            zp.CopyTo(fileStream);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        db.SaveChanges();
+                    }
+
+                    //process
                     scope.Complete();
                 }
                 message = "Import Sucess";

@@ -293,7 +293,7 @@ namespace ProcessManagement.Services
                 zip.AlternateEncoding = Encoding.UTF8;
                 zip.AlternateEncodingUsage = ZipOption.Always;
                 zip.Comment = "This zip was created for copy process,do not change any file\r\nFile này tạo ra dùng để sao chép quy trình, đừng chỉnh sửa gì\r\nDevTeam: ClockWorks";
-                zip.AddDirectory(Path.Combine(AppPath, path, "upload"));
+                zip.AddDirectory(Path.Combine(AppPath, path, "Upload"));
                 zip.Password = "clockworks-pms";
                 zip.AddFile(Path.Combine(AppPath, path, "data.json"), "");
                 zip.Save(filePath);
@@ -304,7 +304,7 @@ namespace ProcessManagement.Services
             file.Id = commonService.getRandomString(50);
             file.IdGroup = groupid;
             file.Name = fileName;
-            file.Type = ".zip";
+            file.Type = ".pms";
             file.Path = path;
             file.Direction = Direction.Export.ToString();
             file.Create_At = DateTime.Now;

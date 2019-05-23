@@ -70,7 +70,7 @@
 
                         <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "EditProcess", processid = process.Id })" class="btn btn-xs btn-primary-theme waves-effect">Edit Process</a>
                         <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "Setting", processid = process.Id })" class="btn btn-xs btn-default waves-effect"><i class="icon-settings"></i></a>
-                        <button class="btn btn-default" id="btn-process-copy" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Copping...">Copy</button>
+                        <button class="btn btn-default waves-effect" id="btn-process-copy" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Copping...">Copy</button>
                         <button id="btn-deleteprocess" title="Delete" value="@process.Id" class="btn btn-sm btn-outline-danger js-sweetalert" data-loading-text="<i class='icon-trash'></i>"><i class="icon-trash"></i></button>
 
                     </div>
