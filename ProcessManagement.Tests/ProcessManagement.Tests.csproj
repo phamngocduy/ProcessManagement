@@ -208,6 +208,12 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ProcessManagement\ProcessManagement.csproj">
+      <Project>{7b34ad09-49f1-4c86-9df0-8e0dc56bc7e4}</Project>
+      <Name>ProcessManagement</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

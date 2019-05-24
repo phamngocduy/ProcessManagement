@@ -863,7 +863,7 @@ namespace ProcessManagement.Areas.API.Controllers
                             tk.IdRole = rid;
                             tk.Name = (string)task["taskname"];
                             tk.Description = (string)task["description"];
-                            tk.ValueInputFile = task["config"]["input"].ToString();
+                            tk.ValueInputText = task["config"]["input"].ToString();
                             tk.ValueInputFile = task["config"]["file"].ToString();
                             tk.ValueFormJson = task["config"]["form"].ToString();
                             tk.Color = commonService.getRandomColor();
