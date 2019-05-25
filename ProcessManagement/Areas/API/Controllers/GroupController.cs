@@ -160,6 +160,7 @@ namespace ProcessManagement.Areas.API.Controllers
                 {
                     id = user.Id,
                     name = user.AspNetUser.UserName,
+                    iduser = user.IdUser,
                     avatar = new
                     {
                         avatar = user.AspNetUser.Avatar,
@@ -252,6 +253,42 @@ namespace ProcessManagement.Areas.API.Controllers
             message = "Delete group Successfully";
             response = new { message = message, status = status };
             SetFlash(FlashType.success, "Removed " + group.Name + " Successfully");
+
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteUser(int iduser)
+        {
+            HttpStatusCode status = HttpStatusCode.OK;
+            string message;
+            object response;
+
+            Participate user = participateService.findMemberInGroup(iduser);
+            participateService.removeUserInGroup(user);
+
+            message = "Delete user Successfully";
+            response = new { message = message, status = status };
+
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult LeaveGroup(int iduser)
+        {
+            HttpStatusCode status = HttpStatusCode.OK;
+            string message;
+            object response;
+
+            Participate user = participateService.findMemberInGroup(iduser);
+            string IdUser = User.Identity.GetUserId();
+            if (IdUser == user.IdUser)
+            {
+                participateService.removeUserInGroup(user);
+            }
+
+            message = "Leave group successfully";
+            response = new { message = message, status = status };
 
             return Json(response, JsonRequestBehavior.AllowGet);
         }

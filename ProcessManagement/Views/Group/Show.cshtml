@@ -3,6 +3,7 @@
     ViewBag.Title = Model.Name;
     Session["groupid"] = Model.Id;
     var group = Model;
+    var IdUser = ViewData["IdUser"] as string;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var listprocess = ViewData["ListProcess"] as List<ProcessManagement.Models.Process>;
     //var listuser = ViewData["ListParticipant"] as List<ProcessManagement.Models.Participate>;
@@ -46,28 +47,28 @@
             </ul>
         </div>
         @*<div class="col-lg-6 col-md-4 col-sm-12 text-right">
-            <div class="bh_chart hidden-xs">
-                <div class="float-left m-r-15">
-                    <small>Visitors</small>
-                    <h6 class="mb-0 mt-1"><i class="icon-user"></i> 1,784</h6>
+                <div class="bh_chart hidden-xs">
+                    <div class="float-left m-r-15">
+                        <small>Visitors</small>
+                        <h6 class="mb-0 mt-1"><i class="icon-user"></i> 1,784</h6>
+                    </div>
+                    <span class="bh_visitors float-right">2,5,1,8,3,6,7,5</span>
                 </div>
-                <span class="bh_visitors float-right">2,5,1,8,3,6,7,5</span>
-            </div>
-            <div class="bh_chart hidden-sm">
-                <div class="float-left m-r-15">
-                    <small>Visits</small>
-                    <h6 class="mb-0 mt-1"><i class="icon-globe"></i> 325</h6>
+                <div class="bh_chart hidden-sm">
+                    <div class="float-left m-r-15">
+                        <small>Visits</small>
+                        <h6 class="mb-0 mt-1"><i class="icon-globe"></i> 325</h6>
+                    </div>
+                    <span class="bh_visits float-right">10,8,9,3,5,8,5</span>
                 </div>
-                <span class="bh_visits float-right">10,8,9,3,5,8,5</span>
-            </div>
-            <div class="bh_chart hidden-sm">
-                <div class="float-left m-r-15">
-                    <small>Chats</small>
-                    <h6 class="mb-0 mt-1"><i class="icon-bubbles"></i> 13</h6>
+                <div class="bh_chart hidden-sm">
+                    <div class="float-left m-r-15">
+                        <small>Chats</small>
+                        <h6 class="mb-0 mt-1"><i class="icon-bubbles"></i> 13</h6>
+                    </div>
+                    <span class="bh_chats float-right">1,8,5,6,2,4,3,2</span>
                 </div>
-                <span class="bh_chats float-right">1,8,5,6,2,4,3,2</span>
-            </div>
-        </div>*@
+            </div>*@
     </div>
 </div>
 
@@ -121,58 +122,58 @@
             </div>
         </div>
         @*<div class="card top_counter">
-            <div class="body">
-                <div class="icon">
-                    <object width="30" height="50" type="image/svg+xml" data="data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjQ4N3B0IiB2aWV3Qm94PSIwIC00IDQ4Ny4yMzQxMiA0ODciIHdpZHRoPSI0ODdwdCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJtMzkyLjA0Mjk2OSAzMDQuMTE3MTg4Yy00OC42MDE1NjMgMC04OCAzOS4zOTg0MzctODggODggMCA0OC42MDE1NjIgMzkuMzk4NDM3IDg4IDg4IDg4IDQ4LjYwMTU2MiAwIDg4LTM5LjM5ODQzOCA4OC04OC0uMDU4NTk0LTQ4LjU3ODEyNi0zOS40MjE4NzUtODcuOTQxNDA3LTg4LTg4em0wIDE2MGMtMzkuNzY1NjI1IDAtNzItMzIuMjM0Mzc2LTcyLTcyIDAtMzkuNzY1NjI2IDMyLjIzNDM3NS03MiA3Mi03MnM3MiAzMi4yMzQzNzQgNzIgNzJjLS4wNDI5NjkgMzkuNzQ2MDkzLTMyLjI1MzkwNyA3MS45NTcwMzEtNzIgNzJ6bTAgMCIvPjxwYXRoIGQ9Im0xNjguMDQyOTY5IDMwNC4xMTcxODhoLTcydi04NC42ODc1bDIzLjYwMTU2MiAyMy41OTc2NTZjMy4xMzY3MTkgMy4wMzUxNTYgOC4xMjg5MDcgMi45ODgyODEgMTEuMjE0ODQ0LS4wOTc2NTYgMy4wODU5MzctMy4wODIwMzIgMy4xMjg5MDYtOC4wNzQyMTkuMDk3NjU2LTExLjIxMDkzOGwtMzcuMjU3ODEyLTM3LjI1NzgxMmMtMy4xMjUtMy4xMjEwOTQtOC4xODc1LTMuMTIxMDk0LTExLjMxMjUgMGwtMzcuMjUzOTA3IDM3LjI1NzgxMmMtMy4wMzEyNSAzLjEzNjcxOS0yLjk4ODI4MSA4LjEyODkwNi4wOTc2NTcgMTEuMjEwOTM4IDMuMDg1OTM3IDMuMDg1OTM3IDguMDc0MjE5IDMuMTMyODEyIDExLjIxNDg0My4wOTc2NTZsMjMuNTk3NjU3LTIzLjU5NzY1NnY4NC42ODc1aC03MmMtNC40MTc5NjkgMC04LjAwMDAwMDIgMy41ODIwMzEtOC4wMDAwMDAyIDh2MTYwYzAgNC40MTc5NjggMy41ODIwMzEyIDggOC4wMDAwMDAyIDhoMTYwYzQuNDE3OTY5IDAgOC0zLjU4MjAzMiA4LTh2LTE2MGMwLTQuNDE3OTY5LTMuNTgyMDMxLTgtOC04em0tOCAxNjBoLTE0NHYtMTQ0aDE0NHptMCAwIi8+PHBhdGggZD0ibTI0MC40NDUzMTIgNDUuMjAzMTI1Yy0yLjAxMTcxOC0yLjA3ODEyNS00Ljk4NDM3NC0yLjkxMDE1Ni03Ljc4MTI1LTIuMTc5Njg3LTIuNzk2ODc0LjczMDQ2OC00Ljk4MDQ2OCAyLjkxNzk2OC01LjcxNDg0MyA1LjcxNDg0My0uNzMwNDY5IDIuNzk2ODc1LjEwMTU2MiA1Ljc2OTUzMSAyLjE4MzU5MyA3Ljc3NzM0NGwyMy41OTc2NTcgMjMuNjAxNTYzaC03Ny4wOTM3NWMtNC4yNzczNDQtNDYuODQ3NjU3LTQ0LjY0NDUzMS04Mi4wNTA3ODItOTEuNjQwNjI1LTc5LjkxMDE1N3MtODMuOTk2MDk0IDQwLjg2NzE4OC04My45OTYwOTQgODcuOTEwMTU3YzAgNDcuMDQyOTY4IDM3IDg1Ljc2OTUzMSA4My45OTYwOTQgODcuOTEwMTU2czg3LjM2MzI4MS0zMy4wNjI1IDkxLjY0MDYyNS03OS45MTAxNTZoNzcuMDkzNzVsLTIzLjU5NzY1NyAyMy42MDE1NjJjLTIuMDgyMDMxIDIuMDA3ODEyLTIuOTE0MDYyIDQuOTgwNDY5LTIuMTgzNTkzIDcuNzc3MzQ0LjczNDM3NSAyLjc5Njg3NSAyLjkxNzk2OSA0Ljk4MDQ2OCA1LjcxNDg0MyA1LjcxNDg0NCAyLjc5Njg3Ni43MzA0NjggNS43Njk1MzItLjEwMTU2MyA3Ljc4MTI1LTIuMTgzNTk0bDM3LjI1MzkwNy0zNy4yNTM5MDZjMy4xMjUtMy4xMjUgMy4xMjUtOC4xODc1IDAtMTEuMzEyNXptLTE1Mi40MDIzNDMgMTE0LjkxNDA2M2MtMzkuNzY1NjI1IDAtNzItMzIuMjM0Mzc2LTcyLTcyIDAtMzkuNzY1NjI2IDMyLjIzNDM3NS03MiA3Mi03MnM3MiAzMi4yMzQzNzQgNzIgNzJjLS4wNDI5NjkgMzkuNzQ2MDkzLTMyLjI1MzkwNyA3MS45NTcwMzEtNzIgNzJ6bTAgMCIvPjxwYXRoIGQ9Im00ODQuMzAwNzgxIDgxLjkyNTc4MS04Ny4yMDMxMjUtNzEuMTk5MjE5Yy0yLjk0NTMxMi0yLjQxMDE1Ni03LjE3OTY4Ny0yLjQxMDE1Ni0xMC4xMjUgMGwtODcuMTk5MjE4IDcxLjE5OTIxOWMtMS44NTkzNzYgMS41MTk1MzEtMi45Mzc1IDMuNzkyOTY5LTIuOTM3NSA2LjE5MTQwNyAwIDIuMzk4NDM3IDEuMDc4MTI0IDQuNjcxODc0IDIuOTM3NSA2LjE5MTQwNmw4NC4yNjk1MzEgNjguODAwNzgxdjk3LjY5NTMxM2wtMjMuNTk3NjU3LTIzLjYwMTU2M2MtMy4xNDA2MjQtMy4wMzEyNS04LjEyODkwNi0yLjk4ODI4MS0xMS4yMTQ4NDMuMDk3NjU2LTMuMDg1OTM4IDMuMDg1OTM4LTMuMTI4OTA3IDguMDc4MTI1LS4wOTc2NTcgMTEuMjE0ODQ0bDM3LjI1MzkwNyAzNy4yNTc4MTNjMy4xMjUgMy4xMjEwOTMgOC4xODc1IDMuMTIxMDkzIDExLjMxMjUgMGwzNy4yNTc4MTItMzcuMjU3ODEzYzMuMDMxMjUtMy4xMzY3MTkgMi45ODgyODEtOC4xMjg5MDYtLjA5NzY1Ni0xMS4yMTQ4NDQtMy4wODU5MzctMy4wODU5MzctOC4wNzgxMjUtMy4xMjg5MDYtMTEuMjE0ODQ0LS4wOTc2NTZsLTIzLjYwMTU2MiAyMy42MDE1NjN2LTk3LjY5NTMxM2w4NC4yNTc4MTItNjguODAwNzgxYzEuODU1NDY5LTEuNTE5NTMyIDIuOTMzNTk0LTMuNzkyOTY5IDIuOTMzNTk0LTYuMTkxNDA2IDAtMi4zOTg0MzgtMS4wNzgxMjUtNC42NzE4NzYtMi45MzM1OTQtNi4xOTE0MDd6bS05Mi4yNTc4MTIgNjcuMDU0Njg4LTc0LjU0Mjk2OS02MC44NjMyODEgNzQuNTQyOTY5LTYwLjg2MzI4MiA3NC41NDI5NjkgNjAuODYzMjgyem0wIDAiLz48L3N2Zz4=">
-                        fallback
-                    </object>
+                <div class="body">
+                    <div class="icon">
+                        <object width="30" height="50" type="image/svg+xml" data="data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjQ4N3B0IiB2aWV3Qm94PSIwIC00IDQ4Ny4yMzQxMiA0ODciIHdpZHRoPSI0ODdwdCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJtMzkyLjA0Mjk2OSAzMDQuMTE3MTg4Yy00OC42MDE1NjMgMC04OCAzOS4zOTg0MzctODggODggMCA0OC42MDE1NjIgMzkuMzk4NDM3IDg4IDg4IDg4IDQ4LjYwMTU2MiAwIDg4LTM5LjM5ODQzOCA4OC04OC0uMDU4NTk0LTQ4LjU3ODEyNi0zOS40MjE4NzUtODcuOTQxNDA3LTg4LTg4em0wIDE2MGMtMzkuNzY1NjI1IDAtNzItMzIuMjM0Mzc2LTcyLTcyIDAtMzkuNzY1NjI2IDMyLjIzNDM3NS03MiA3Mi03MnM3MiAzMi4yMzQzNzQgNzIgNzJjLS4wNDI5NjkgMzkuNzQ2MDkzLTMyLjI1MzkwNyA3MS45NTcwMzEtNzIgNzJ6bTAgMCIvPjxwYXRoIGQ9Im0xNjguMDQyOTY5IDMwNC4xMTcxODhoLTcydi04NC42ODc1bDIzLjYwMTU2MiAyMy41OTc2NTZjMy4xMzY3MTkgMy4wMzUxNTYgOC4xMjg5MDcgMi45ODgyODEgMTEuMjE0ODQ0LS4wOTc2NTYgMy4wODU5MzctMy4wODIwMzIgMy4xMjg5MDYtOC4wNzQyMTkuMDk3NjU2LTExLjIxMDkzOGwtMzcuMjU3ODEyLTM3LjI1NzgxMmMtMy4xMjUtMy4xMjEwOTQtOC4xODc1LTMuMTIxMDk0LTExLjMxMjUgMGwtMzcuMjUzOTA3IDM3LjI1NzgxMmMtMy4wMzEyNSAzLjEzNjcxOS0yLjk4ODI4MSA4LjEyODkwNi4wOTc2NTcgMTEuMjEwOTM4IDMuMDg1OTM3IDMuMDg1OTM3IDguMDc0MjE5IDMuMTMyODEyIDExLjIxNDg0My4wOTc2NTZsMjMuNTk3NjU3LTIzLjU5NzY1NnY4NC42ODc1aC03MmMtNC40MTc5NjkgMC04LjAwMDAwMDIgMy41ODIwMzEtOC4wMDAwMDAyIDh2MTYwYzAgNC40MTc5NjggMy41ODIwMzEyIDggOC4wMDAwMDAyIDhoMTYwYzQuNDE3OTY5IDAgOC0zLjU4MjAzMiA4LTh2LTE2MGMwLTQuNDE3OTY5LTMuNTgyMDMxLTgtOC04em0tOCAxNjBoLTE0NHYtMTQ0aDE0NHptMCAwIi8+PHBhdGggZD0ibTI0MC40NDUzMTIgNDUuMjAzMTI1Yy0yLjAxMTcxOC0yLjA3ODEyNS00Ljk4NDM3NC0yLjkxMDE1Ni03Ljc4MTI1LTIuMTc5Njg3LTIuNzk2ODc0LjczMDQ2OC00Ljk4MDQ2OCAyLjkxNzk2OC01LjcxNDg0MyA1LjcxNDg0My0uNzMwNDY5IDIuNzk2ODc1LjEwMTU2MiA1Ljc2OTUzMSAyLjE4MzU5MyA3Ljc3NzM0NGwyMy41OTc2NTcgMjMuNjAxNTYzaC03Ny4wOTM3NWMtNC4yNzczNDQtNDYuODQ3NjU3LTQ0LjY0NDUzMS04Mi4wNTA3ODItOTEuNjQwNjI1LTc5LjkxMDE1N3MtODMuOTk2MDk0IDQwLjg2NzE4OC04My45OTYwOTQgODcuOTEwMTU3YzAgNDcuMDQyOTY4IDM3IDg1Ljc2OTUzMSA4My45OTYwOTQgODcuOTEwMTU2czg3LjM2MzI4MS0zMy4wNjI1IDkxLjY0MDYyNS03OS45MTAxNTZoNzcuMDkzNzVsLTIzLjU5NzY1NyAyMy42MDE1NjJjLTIuMDgyMDMxIDIuMDA3ODEyLTIuOTE0MDYyIDQuOTgwNDY5LTIuMTgzNTkzIDcuNzc3MzQ0LjczNDM3NSAyLjc5Njg3NSAyLjkxNzk2OSA0Ljk4MDQ2OCA1LjcxNDg0MyA1LjcxNDg0NCAyLjc5Njg3Ni43MzA0NjggNS43Njk1MzItLjEwMTU2MyA3Ljc4MTI1LTIuMTgzNTk0bDM3LjI1MzkwNy0zNy4yNTM5MDZjMy4xMjUtMy4xMjUgMy4xMjUtOC4xODc1IDAtMTEuMzEyNXptLTE1Mi40MDIzNDMgMTE0LjkxNDA2M2MtMzkuNzY1NjI1IDAtNzItMzIuMjM0Mzc2LTcyLTcyIDAtMzkuNzY1NjI2IDMyLjIzNDM3NS03MiA3Mi03MnM3MiAzMi4yMzQzNzQgNzIgNzJjLS4wNDI5NjkgMzkuNzQ2MDkzLTMyLjI1MzkwNyA3MS45NTcwMzEtNzIgNzJ6bTAgMCIvPjxwYXRoIGQ9Im00ODQuMzAwNzgxIDgxLjkyNTc4MS04Ny4yMDMxMjUtNzEuMTk5MjE5Yy0yLjk0NTMxMi0yLjQxMDE1Ni03LjE3OTY4Ny0yLjQxMDE1Ni0xMC4xMjUgMGwtODcuMTk5MjE4IDcxLjE5OTIxOWMtMS44NTkzNzYgMS41MTk1MzEtMi45Mzc1IDMuNzkyOTY5LTIuOTM3NSA2LjE5MTQwNyAwIDIuMzk4NDM3IDEuMDc4MTI0IDQuNjcxODc0IDIuOTM3NSA2LjE5MTQwNmw4NC4yNjk1MzEgNjguODAwNzgxdjk3LjY5NTMxM2wtMjMuNTk3NjU3LTIzLjYwMTU2M2MtMy4xNDA2MjQtMy4wMzEyNS04LjEyODkwNi0yLjk4ODI4MS0xMS4yMTQ4NDMuMDk3NjU2LTMuMDg1OTM4IDMuMDg1OTM4LTMuMTI4OTA3IDguMDc4MTI1LS4wOTc2NTcgMTEuMjE0ODQ0bDM3LjI1MzkwNyAzNy4yNTc4MTNjMy4xMjUgMy4xMjEwOTMgOC4xODc1IDMuMTIxMDkzIDExLjMxMjUgMGwzNy4yNTc4MTItMzcuMjU3ODEzYzMuMDMxMjUtMy4xMzY3MTkgMi45ODgyODEtOC4xMjg5MDYtLjA5NzY1Ni0xMS4yMTQ4NDQtMy4wODU5MzctMy4wODU5MzctOC4wNzgxMjUtMy4xMjg5MDYtMTEuMjE0ODQ0LS4wOTc2NTZsLTIzLjYwMTU2MiAyMy42MDE1NjN2LTk3LjY5NTMxM2w4NC4yNTc4MTItNjguODAwNzgxYzEuODU1NDY5LTEuNTE5NTMyIDIuOTMzNTk0LTMuNzkyOTY5IDIuOTMzNTk0LTYuMTkxNDA2IDAtMi4zOTg0MzgtMS4wNzgxMjUtNC42NzE4NzYtMi45MzM1OTQtNi4xOTE0MDd6bS05Mi4yNTc4MTIgNjcuMDU0Njg4LTc0LjU0Mjk2OS02MC44NjMyODEgNzQuNTQyOTY5LTYwLjg2MzI4MiA3NC41NDI5NjkgNjAuODYzMjgyem0wIDAiLz48L3N2Zz4=">
+                            fallback
+                        </object>
+                    </div>
+                    <div class="content">
+                        <div class="text">Process Run</div>
+                        <h5 class="number">
+                            @if (listprocess.Where(y => y.IsRun == true).Count() != 0)
+                            {
+                                 @listprocess.Where(y => y.IsRun == true).Count()
+                            }
+                            else
+                            {
+                                <p>0</p>
+                            }
+                        </h5>
+                    </div>
+                    <hr>
+                    <div class="icon"><i class="fa fa-university"></i> </div>
+                    <div class="content">
+                        <div class="text">Avg. Salary</div>
+                        <h5 class="number">$1,250</h5>
+                    </div>
                 </div>
-                <div class="content">
-                    <div class="text">Process Run</div>
-                    <h5 class="number">
-                        @if (listprocess.Where(y => y.IsRun == true).Count() != 0)
-                        {
-		                     @listprocess.Where(y => y.IsRun == true).Count()
-                        }
-                        else
-                        {
-                            <p>0</p>
-                        }
-                    </h5>
-                </div>
-                <hr>
-                <div class="icon"><i class="fa fa-university"></i> </div>
-                <div class="content">
-                    <div class="text">Avg. Salary</div>
-                    <h5 class="number">$1,250</h5>
+            </div>*@
+    </div>
+    @*<div class="col-lg-3 col-md-6">
+            <div class="card text-center" style="height:100%">
+                <div class="body">
+                    <h5>Income Analysis</h5>
+                    <span>8% High then last month</span>
+                    <div class="sparkline-pie m-t-20">6,4,8</div>
+                    <div class="stats-report m-b-30">
+                        <div class="stat-item">
+                            <h5>Design</h5>
+                            <b class="col-black">84.60%</b>
+                        </div>
+                        <div class="stat-item">
+                            <h5>Dev</h5>
+                            <b class="col-black">15.40%</b>
+                        </div>
+                        <div class="stat-item">
+                            <h5>SEO</h5>
+                            <b class="col-black">5.10%</b>
+                        </div>
+                    </div>
+                    <span id="sparkline-compositeline">8,4,0,0,0,0,1,4,4,10,10,10,10,0,0,0,4,6,5,9,10</span>
                 </div>
             </div>
         </div>*@
-    </div>
-        @*<div class="col-lg-3 col-md-6">
-        <div class="card text-center" style="height:100%">
-            <div class="body">
-                <h5>Income Analysis</h5>
-                <span>8% High then last month</span>
-                <div class="sparkline-pie m-t-20">6,4,8</div>
-                <div class="stats-report m-b-30">
-                    <div class="stat-item">
-                        <h5>Design</h5>
-                        <b class="col-black">84.60%</b>
-                    </div>
-                    <div class="stat-item">
-                        <h5>Dev</h5>
-                        <b class="col-black">15.40%</b>
-                    </div>
-                    <div class="stat-item">
-                        <h5>SEO</h5>
-                        <b class="col-black">5.10%</b>
-                    </div>
-                </div>
-                <span id="sparkline-compositeline">8,4,0,0,0,0,1,4,4,10,10,10,10,0,0,0,4,6,5,9,10</span>
-            </div>
-        </div>
-    </div>*@
     <div class="col-lg-9 col-md-12">
         <div class="card clearfix" style="height:100%" id="group-infor-card">
             <div class="header"></div>
@@ -186,27 +187,27 @@
                         <p>@Model.Description</p>
                         @Html.Partial("~/Views/Shared/Common/_File.cshtml", new ViewDataDictionary { { "filess", files }, { "UserRoles", userRole } })
                         @*<div id="uploadfile">
-            <input type="file" id="FileUpload" name="FileUpload" style="display:none" />
-            <button class="btn btn-default waves-effect" id="btn-file"><i class="icon-cloud-upload"></i> Upload</button>
-        </div>
-        <div class="table-responsive m-t-15" style="overflow-x:unset" id="file-list">
-            <table class="table table-hover">
-                <tbody>
-                    @foreach (var file in files)
-                    {
-                        <tr>
-                            <td>@file.Name</td>
-                            <td style="text-align:center">
-                                <a href="@Url.Action("download", "file", new { file = file.Id })" class="btn btn-primary-theme waves-effect" data-toggle="tooltip" data-placement="top" title="Download">
-                                    <i class="icon-cloud-download"></i>
-                                </a>
-                                <button class="btn btn-danger waves-effect btn-file-remove" data-src="@file.Id" data-toggle="tooltip" data-placement="top" title="Remove"><i class="icon-trash"></i></button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>*@
+                                <input type="file" id="FileUpload" name="FileUpload" style="display:none" />
+                                <button class="btn btn-default waves-effect" id="btn-file"><i class="icon-cloud-upload"></i> Upload</button>
+                            </div>
+                            <div class="table-responsive m-t-15" style="overflow-x:unset" id="file-list">
+                                <table class="table table-hover">
+                                    <tbody>
+                                        @foreach (var file in files)
+                                        {
+                                            <tr>
+                                                <td>@file.Name</td>
+                                                <td style="text-align:center">
+                                                    <a href="@Url.Action("download", "file", new { file = file.Id })" class="btn btn-primary-theme waves-effect" data-toggle="tooltip" data-placement="top" title="Download">
+                                                        <i class="icon-cloud-download"></i>
+                                                    </a>
+                                                    <button class="btn btn-danger waves-effect btn-file-remove" data-src="@file.Id" data-toggle="tooltip" data-placement="top" title="Remove"><i class="icon-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>*@
 
                     </div>
                     <div class="tab-pane animated fadeIn" id="setting-tab">
@@ -423,6 +424,7 @@
                         for (var i = 0; i < json.length; i++) {
                             var name = json[i].name;
                             var avatar;
+                            
                             var jAvatar = json[i].avatar;
                             if (jAvatar.avatar == null) {
                                 avatar = `<img src="~/Content/images/xs/avatar1.jpg" class="rounded-circle width35" alt="">`;
@@ -433,23 +435,27 @@
                             var member = `${avatar}${name}`;
                             var isAdmin = json[i].isAdmin ? "selected" : "";
                             var isManager = json[i].isManager ? "selected" : "";
+                            
                             if (json[i].isOwner) {
                                 var role = `<select multiple="multiple" class="role multiselect" id="role-${i + 1}" data-id="${json[i].id}" disabled>
                                                 <option value="o" selected>Owner</option>
                                             </select>`;
+                                var action = ``;
                             } else {
                                 var role = `<select multiple="multiple" class="role multiselect" id="role-${i + 1}" data-id="${json[i].id}">
                                                 <option value="a" ${isAdmin}>Admin</option>
                                                 <option value="m" ${isManager}>Manager</option>
-                                            </select>`;
-
+                                            </select>`; 
+                                var action = `<button class="btn btn-danger btn-deleteuser" value="${json[i].id}" >Delete</button>
+                                            <button class="btn btn-danger btn-leavegroup" value="${json[i].id}" >Leave</button>`
+                               
                             }
-
+                           
                             return_data.push({
                                 "member": member,
                                 "sort": name,
                                 "role": role,
-                                "action":`<button class="btn btn-danger">Delete</button>`
+                                "action": action
                             })
                         }
                         return return_data;
@@ -520,6 +526,28 @@
                     });
                     $(".page-item:not(.previous):not(.next) a").addClass("waves-effect");
                     $(".multiselect").addClass("waves-effect").css("box-shadow", "none");
+                    $('.btn-deleteuser').on("click", function () {
+                        var iduser = $(this).val();
+                        setConfirm(null, `Are you sure you want to delete this user?`, function () {
+                            let data = {
+                                iduser: iduser
+                            }
+                            setTimeout(function () {
+                                DeleteUser(data);
+                            }, 1000);
+                        });
+                    })
+                    $('.btn-leavegroup').on("click", function () {
+                        var iduser = $(this).val();
+                        setConfirm(null, `Are you sure you want to leave this group?`, function () {
+                            let data = {
+                                iduser: iduser
+                            }
+                            setTimeout(function () {
+                                LeaveGroup(data);
+                            }, 1000);
+                        });
+                    })
                 }
             });
             $("#btn-add-member").on("click", function () {
@@ -624,7 +652,7 @@
                 var target = $(this)[0].dataset.trigger;
                 $(`#${target}`).trigger("click");
             });
-            
+
             //fileupload
             @if (maxFileSizeRule != null)
             {
@@ -687,7 +715,7 @@
                                     setConfirm(null, `Are you sure you want to change from <b>${fileName}</b> to <b>${newFileName}</b>?`, function () {
                                         changeFileName(id, newFileName);
                                     });
-                                    
+
                                 }
                                 return false;
                             }
@@ -784,7 +812,7 @@
                             </button>
                         </td>
                     </tr>`
-            
+
         }
         function changeFileName(id,filename) {
             var data = {
@@ -816,7 +844,7 @@
             $('#btn-deletegroup').on('click', function () {
                 var $this = $(this);
                 setConfirm(`Are you sure you want to delete this group?`, `<span>Please input group name</span> <input class="form-control" id="delete-action-content" placeholder="Your comment (optional)" rows="6">`, function () {
-                    
+
                      var content = this.$content.find("#delete-action-content").val().trim();
                      if (content === "@Model.Name") {
                          let data = {
@@ -849,6 +877,47 @@
                 }
             });
         }
+
+        function DeleteUser(data) {
+            $.ajax({
+                url: "@Url.Action("DeleteUser", "group",new { area = "api"})",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        //h làm s cho nó không cần load lại m
+                        //cái table này lấy data = ajax,nên chỉ cần gọi lại nó thôi
+                        //window.reload();
+                        showToastr("success", response.message, "toast-bottom-left");
+                        $("#table-member").DataTable().ajax.reload();
+                    } else {
+                        showToastr("error", response.message, "toast-bottom-left");
+                        console.error(response)
+                    }
+                }
+            });
+        }
+
+        function LeaveGroup(data) {
+            $.ajax({
+                url: "@Url.Action("LeaveGroup", "group",new { area = "api"})",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        location.href = '@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "index"})';
+                    } else {
+                        showToastr("error", response.message, "toast-bottom-left");
+                        console.error(response)
+                    }
+                }
+            });
+        }
+
 
     </script>
 }

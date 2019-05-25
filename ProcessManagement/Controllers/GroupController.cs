@@ -261,6 +261,7 @@ namespace ProcessManagement.Controllers
             //lấy role của user hiện tại
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             ViewData["Files"] = files;
+            ViewData["IdUser"] = idUser;
             //get maximum file config
             ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
             return View(group);
