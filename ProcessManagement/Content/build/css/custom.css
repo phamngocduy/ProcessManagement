@@ -1393,6 +1393,10 @@ input:read-only, textarea:read-only, select:read-only {
   opacity: 0;
 }
 
+.text-strong {
+  font-weight: bold;
+}
+
 .modal .vertical-alignment-helper {
   display: table;
   height: 100%;

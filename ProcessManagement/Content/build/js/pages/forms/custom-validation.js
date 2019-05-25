@@ -39,8 +39,14 @@
 
                 var texts = $(formContainer).find(`input[type=text]`),
                     files = $(formContainer).find(`input[type=file]`),
+                    radios = $(formContainer).find(`input[type=radio]`),
+                    checkboxs = $(formContainer).find(`input[type=checkbox]`),
+                    numbers = $(formContainer).find(`input[type=number]`),
+                    dates = $(formContainer).find(`input[type=date]`),
+                    selects = $(formContainer).find(`select`),
                     textarea = $(formContainer).find(`textarea`);
-                var input = [...texts, ...files, ...textarea];
+
+                var input = [...texts, ...files, ...radios, ...checkboxs, ...numbers, ...dates, ...selects, ...textarea];
                 var formHasError = false;
                 for (var i = 0; i < input.length; i++) {
                     var element = $(input[i]);
