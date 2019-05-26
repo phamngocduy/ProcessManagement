@@ -76,7 +76,7 @@
                         <button class="btn btn-primary-theme btn-sm" id="btn-runprocess">Run Process</button>
                     }
                     <a class="btn btn-default btn-sm waves-effect" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "assignrole", processid = processrun.Id })">Assign Roles</a>
-                    <button id="btn-deleteprocess" title="Delete" value="@processrun.Id" class="btn btn-sm btn-outline-danger js-sweetalert" data-loading-text="<i class='icon-trash'></i>"><i class="icon-trash"></i></button>
+                    <button id="#btn-process-delete" data-id="@processrun.Id" data-name="@processrun.Name" class="btn btn-sm btn-danger waves-effect"><i class="icon-trash"></i></button>
 
                 </div>
                 }
@@ -656,32 +656,46 @@
         }
 
         $(function () {
-            var idprocess = $('#btn-deleteprocess').val();
-            $('#btn-deleteprocess').on('click', function () {
+            $('#btn-process-delete').on('click', function () {
                 var $this = $(this);
-                setConfirm(`Are you sure you want to delete this process?`, `<span>Please input process name</span> <input class="form-control" id="delete-action-content" placeholder="Your comment (optional)" rows="6">`, function () {
-                    
-                     var content = this.$content.find("#delete-action-content").val().trim();
-                     if (content === "@processrun.Name") {
-                         let data = {
-                             idprocess: idprocess
-                         }
-                         setTimeout(function () {
-                             DeleteProcessRun(data);
-                         }, 1000);
-                     } else {
-                         alert("Please comment process name ?");
-                         return false;
-                     }
+                var processId = $this[0].dataset.id,
+                    processName = $this[0].dataset.name;
+                var content = `<div id="process-delete-confirm">
+                                    <div class="text-danger">You are going to remove <span class="text-strong">${processName}</span>. Removed this process CANNOT be restored! Are you ABSOLUTELY sure?</div>
+                                    <div>Please type <span class="text-danger background-danger">${ processName}</span> to proceed or close this modal to cancel.</div>
+                                    <div class="process-confirm form-group">
+                                        <input type="text" class="form-control">
+                                    </div>
+                               </div>`;
+
+                setConfirm(`Confirmation required`, content, function () {
+                    var container = this.$content.find(".process-confirm");
+                    var confirm = this.$content.find(".process-confirm > input").val().trim();
+                    if (confirm == "") {
+                        container.addClass("error");
+                        container.append(`<span class="error-message">This field is required.</span>`);
+                        return false;
+                    } else {
+                        container.removeClass("error");
+                        $(".error-message").remove();
+                        if (confirm === processName) {
+                            DeleteProcessRun(processId);
+                        } else {
+                            container.addClass("error");
+                            container.append(`<span class="error-message">Process name not match.</span>`);
+                            return false;
+
+                        }
+                    };
                 });
-            })
+            });
         })
 
         function DeleteProcessRun(data) {
             $.ajax({
                 url: "@Url.Action("DeleteProcessRun", "processrun",new { area = "api"})",
                 type: "POST",
-                data: data,
+                data: { processid: data },
                 dataType: "json",
                 success: function (response) {
                     console.log(response);

@@ -533,45 +533,49 @@
                 var $this = $(this);
                 var processId = $this[0].dataset.id,
                     processName = $this[0].dataset.name;
-                var content = `<div class="text-danger">You are going to remove <span class="text-strong">${processName}</span>. Removed this process CANNOT be restored! Are you ABSOLUTELY sure?</div>
-                               <div>Please type <span class="text-danger background-danger">${ processName }</span> to proceed or close this modal to cancel.</div>
-                               <div class="process-confirm">
-                                    <input type="text">
-                               </div>
-                              `
+                var content = `<div id="process-delete-confirm">
+                                    <div class="text-danger">You are going to remove <span class="text-strong">${processName}</span>. Removed this process CANNOT be restored! Are you ABSOLUTELY sure?</div>
+                                    <div>Please type <span class="text-danger background-danger">${ processName}</span> to proceed or close this modal to cancel.</div>
+                                    <div class="process-confirm form-group">
+                                        <input type="text" class="form-control">
+                                    </div>
+                               </div>`;
                 
                 setConfirm(`Confirmation required`, content, function () {
-                    var container = this.$content.find("#process-confirm");
-                    var confirm = this.$content.find("#process-confirm > input").val().trim();
+                    var container = this.$content.find(".process-confirm");
+                    var confirm = this.$content.find(".process-confirm > input").val().trim();
                     if (confirm == "") {
                         container.addClass("error");
-                        container.append(`<span class="error-message">This field is required</span>`);
+                        container.append(`<span class="error-message">This field is required.</span>`);
+                        return false;
                     } else {
                         container.removeClass("error");
                         $(".error-message").remove();
-                        if (content === processName) {
+                        if (confirm === processName) {
                             DeleteProcess(processId);
                         } else {
                             container.addClass("error");
-                            container.append(`<span class="error-message">This field is required</span>`);
+                            container.append(`<span class="error-message">Process name not match.</span>`);
+                            return false;
+
                         }
                     }
-                    
                 });
             })
         })
 
         function DeleteProcess(data) {
             $.ajax({
-                url: "@Url.Action("DeleteProcess", "process",new { area = "api"})",
+                url: "@Url.Action("deleteprocess", "process",new { area = "api"})",
                 type: "POST",
-                data: data,
+                data: { processid : data },
                 dataType: "json",
                 success: function (response) {
                     console.log(response);
                     if (response.status == 200) {
                         location.href = '@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "show", groupid = process.IdGroup })';
                     } else {
+                        showToastr("error", response.message, "toast-bottom-left");
                         console.error(response)
                     }
                 }

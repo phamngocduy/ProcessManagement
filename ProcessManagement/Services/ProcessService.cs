@@ -32,12 +32,12 @@ namespace ProcessManagement.Services
             Process process = db.Processes.FirstOrDefault(x =>x.Id == idProcess && x.IsRun == isRun);
             return process;
         }
-        public ProcessRun findRunProcess(int idProcess)
+        public ProcessRun findProcessRun(int idProcess)
         {
             ProcessRun process = db.ProcessRuns.Find(idProcess);
             return process;
         }
-        public ProcessRun findRunProcessbyidprorun(int idProcess)
+        public ProcessRun findProcessRunByProcessId(int idProcess)
         {
             ProcessRun process = db.ProcessRuns.Where(x => x.IdProcess == idProcess).FirstOrDefault();
             return process;
@@ -94,11 +94,15 @@ namespace ProcessManagement.Services
 		}
         public void removeProcess(Process process)
         {
+            string processPath = string.Format("Upload/{0}/{1}", process.IdGroup, process.Id);
+            fileService.removeDirectory(processPath);
             db.Processes.Remove(process);
             db.SaveChanges();
         }
         public void removeProcessRun(ProcessRun processrun)
         {
+            string processRunPath = string.Format("Upload/{0}/run/{1}", processrun.Process.IdGroup, processrun.Id);
+            fileService.removeDirectory(processRunPath);
             db.ProcessRuns.Remove(processrun);
             db.SaveChanges();
         }
@@ -182,56 +186,50 @@ namespace ProcessManagement.Services
             db.SaveChanges();
         }
 
-        public void removeprocess(int idprocess)
+        public void removeProcess(int idprocess)
         {
             Process process = findProcess(idprocess);
-            List<Role> listrole = roleService.findListRoleOfProcess(idprocess);
-            List<Step> liststep = stepService.findStepsOfProcess(idprocess);
-            foreach (Step step in liststep)
+            if (process != null)
             {
-                List<TaskProcess> listtask = taskService.findTaskOfStep(step.Id);
-                if (listtask.Count != 0)
+                List<Role> roles = roleService.findListRoleOfProcess(idprocess);
+                List<Step> steps = stepService.findStepsOfProcess(idprocess);
+                foreach (Step step in steps)
                 {
-                    taskService.deletelisttask(listtask);
+                    List<TaskProcess> tasks = taskService.findTaskOfStep(step.Id);
+                    if (tasks.Any())
+                    {
+                        taskService.removeTasks(tasks);
+                        
+                    } 
                 }
+                if (steps.Any()) stepService.removeSteps(steps);
+                if (roles.Any()) roleService.removeRoles(roles);
+
+                
+                removeProcess(process);
             }
-            if (liststep.Count != 0)
-            {
-                stepService.removelistStep(liststep);
-            }
-            if (listrole.Count != 0)
-            {
-                roleService.removelistRole(listrole);
-            }
-            removeProcess(process);
         }
         public void removeprocessrun(int idprocess)
         {
-            ProcessRun processrun = findRunProcessbyidprorun(idprocess);
-            List<Role> listrole = roleService.findListRoleOfProcess(idprocess);
-            List<RoleRun> listrolerun = roleService.findlistrolerun(listrole);
+            ProcessRun processrun = findProcessRun(idprocess);
             if (processrun != null)
             {
+                Process process = findProcess(processrun.Id);
+                List<Role> listrole = roleService.findListRoleOfProcess(idprocess);
+                List<RoleRun> listrolerun = roleService.findlistrolerun(listrole);
                 List<StepRun> liststeprun = stepService.findStepsOfRunProcess(processrun.Id);
                 foreach (StepRun steprun in liststeprun)
                 {
                     List<TaskProcessRun> listtaskrun = taskService.findruntaskofstep(steprun.Id);
-                    if (listtaskrun.Count != 0)
-                    {
-                        taskService.deletelisttaskrun(listtaskrun);
-                    }
+                    if (listtaskrun.Any()) taskService.deletelisttaskrun(listtaskrun);
+
                 }
-                if (liststeprun.Count != 0)
-                {
-                    stepService.removelistStepRun(liststeprun);
-                }
-                if (listrolerun.Count != 0)
-                {
-                    roleService.removelistRoleRun(listrolerun);
-                }
+                if (liststeprun.Any()) stepService.removelistStepRun(liststeprun);
+                if (listrolerun.Any()) roleService.removelistRoleRun(listrolerun);
                 removeProcessRun(processrun);
-            }
-            removeprocess(idprocess);
+
+                removeProcess(process);
+            }  
         }
     }
 }

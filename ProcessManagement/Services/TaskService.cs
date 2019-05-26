@@ -90,9 +90,15 @@ namespace ProcessManagement.Services
             db.TaskProcesses.Remove(task);
             db.SaveChanges();
         }
-        public void deletelisttask(List<TaskProcess> listtask)
+        public void removeTasks(List<TaskProcess> tasks)
         {
-            db.TaskProcesses.RemoveRange(listtask);
+            //foreach (var task in tasks)
+            //{
+            //    string taskPath = string.Format("Upload/{0}/{1}/{2}/{3}", task.Step.Process.IdGroup, task.Step.Process.Id, task.Step.Id, task.Id);
+            //    fileService.removeDirectory(taskPath);
+            //    db.TaskProcesses.Remove(task);
+            //}
+            db.TaskProcesses.RemoveRange(tasks);
             db.SaveChanges();
         }
         public void deletelisttaskrun(List<TaskProcessRun> listtaskrun)

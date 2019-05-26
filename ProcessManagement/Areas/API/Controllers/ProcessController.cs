@@ -35,7 +35,7 @@ namespace ProcessManagement.Areas.API.Controllers
         
         [HttpPost]
         [GroupAuthorize(Role = new UserRole[] { UserRole.Manager })]
-        public JsonResult editstep(int stepid, string des)
+        public JsonResult Editstep(int stepid, string des)
         {
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
@@ -52,7 +52,7 @@ namespace ProcessManagement.Areas.API.Controllers
 
         [HttpPost]
         [GroupAuthorize(Role = new UserRole[] { UserRole.Manager })]
-        public JsonResult addTask(int stepid, string name, int? idRole, string description, string inputConfig, string fileConfig, HttpPostedFileBase fileupload)
+        public JsonResult AddTask(int stepid, string name, int? idRole, string description, string inputConfig, string fileConfig, HttpPostedFileBase fileupload)
         {
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
@@ -99,7 +99,7 @@ namespace ProcessManagement.Areas.API.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult editTask(string name, int? idRole, string description, string inputConfig, string fileConfig)
+        public JsonResult EditTask(string name, int? idRole, string description, string inputConfig, string fileConfig)
         {
             ///////////////////////////
             /// chỉ được edit task thuộc process mà mình quản lý
@@ -217,7 +217,7 @@ namespace ProcessManagement.Areas.API.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult editFormTask(string name, int? idRole, string description, string formBuilder)
+        public JsonResult EditFormTask(string name, int? idRole, string description, string formBuilder)
         {
             ///////////////////////////
             /// chỉ được edit task thuộc process mà mình quản lý
@@ -284,13 +284,13 @@ namespace ProcessManagement.Areas.API.Controllers
 
         }
         [HttpPost]
-        public JsonResult changeTaskPosition(string position)
+        public JsonResult ChangeTaskPosition(string position)
         {
             taskService.changePosition(position);
             var response = new { message = "Change position sucess", status = HttpStatusCode.OK };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult getProcessList(int groupid)
+        public JsonResult GetProcessList(int groupid)
         {
             List<Process> processes = processService.getProcess(groupid);
             List<object> jProcesses = new List<object>();
@@ -320,7 +320,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult addProcessRun(int processid, string name,string des)
+        public JsonResult AddProcessRun(int processid, string name,string des)
         {
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
@@ -343,7 +343,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult assignRole(int processid, int roleid, string members)
+        public JsonResult AssignRole(int processid, int roleid, string members)
         {
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
@@ -375,7 +375,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult runprocess(int idprocess)
+        public JsonResult RunProcess(int idprocess)
         {
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
@@ -394,7 +394,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult addnextstepinrunprocess(int idStep, int idnextstep, int idstepdiamond)
+        public JsonResult AddNextStepInRunProcess(int idStep, int idnextstep, int idstepdiamond)
         {
             string IdUser = User.Identity.GetUserId();
             HttpStatusCode status = HttpStatusCode.OK;
@@ -404,7 +404,7 @@ namespace ProcessManagement.Areas.API.Controllers
             Step idstepdk = stepService.findStep(idstepdiamond);
             StepRun runstep = stepService.findsteprun(idStep);
             stepService.changestatustep(runstep.Id, IdUser);
-            ProcessRun processrun = processService.findRunProcess(runstep.idProcess);
+            ProcessRun processrun = processService.findProcessRun(runstep.idProcess);
             if (idstepdk != null)
             {
                 stepService.addrunnextstep(processrun.Id, idstepdk);
@@ -443,7 +443,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult submitdonetask(int idtask)
+        public JsonResult SubmitDoneTask(int idtask)
         {
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
@@ -459,24 +459,31 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult DeleteProcess(int idprocess)
+        public JsonResult DeleteProcess(int processid)
         {
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
+            try
+            {
+                processService.removeProcess(processid);
+                message = "Delete process Successfully";
+                response = new { message = message, status = status };
+                SetFlash(FlashType.success, "Removed Process Successfully");
+                return Json(response, JsonRequestBehavior.AllowGet);
 
-            Process process = processService.findProcess(idprocess);
-            processService.removeprocess(process.Id);
-
-            message = "Delete process Successfully";
-            response = new { message = message, status = status };
-            SetFlash(FlashType.success, "Removed " + process.Name + " Successfully");
-
-            return Json(response, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                status = HttpStatusCode.InternalServerError;
+                message = e.GetType().Name == "ServerSideException" ? e.Message : "Something not right";
+                response = new { message = message, detail = e.Message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
         }
 
         [HttpPost]
-        public JsonResult deletenextsteprun(int idStep)
+        public JsonResult DeleteNextStepRun(int idStep)
         {
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
@@ -509,7 +516,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult completestepinrunprocess(int idStep)
+        public JsonResult CompleteStepInRunProcess(int idStep)
         {
             string IdUser = User.Identity.GetUserId();
             HttpStatusCode status = HttpStatusCode.OK;
@@ -517,7 +524,7 @@ namespace ProcessManagement.Areas.API.Controllers
             object response;
             StepRun runstep = stepService.findsteprun(idStep);
             stepService.changestatustep(runstep.Id, IdUser);
-            ProcessRun processrun = processService.findRunProcess(runstep.idProcess);
+            ProcessRun processrun = processService.findProcessRun(runstep.idProcess);
             List<Step> liststep = stepService.findStepsOfProcess(processrun.IdProcess);
 
             List<TaskProcessRun> listruntask = taskService.findruntaskofstep(idStep);

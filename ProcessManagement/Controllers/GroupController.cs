@@ -110,7 +110,7 @@ namespace ProcessManagement.Controllers
             List<object> jListProcessRun = new List<object>();
             foreach (var process in listprocess)
             {
-                ProcessRun processrun = processService.findRunProcessbyidprorun(process.Id);
+                ProcessRun processrun = processService.findProcessRunByProcessId(process.Id);
                 if (processrun != null)
                 {
                     listprocessrun.Add(processrun);

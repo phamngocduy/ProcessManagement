@@ -78,7 +78,7 @@ namespace ProcessManagement.Controllers
             Group group = groupService.findGroup(processrun.IdGroup);
             List<RoleRun> listroleruns = roleService.findlistrolerun(listrole);
             List<Step> listStep = stepService.findStepsOfProcess(processid);
-            ProcessRun runprocess = processService.findRunProcessbyidprorun(processrun.Id);
+            ProcessRun runprocess = processService.findProcessRunByProcessId(processrun.Id);
             ProcessRun ktra = db.ProcessRuns.Where(x => x.IdProcess == processrun.Id).FirstOrDefault();
             List<StepRun> liststepofrunprocess = new List<StepRun>();
             if (runprocess != null)

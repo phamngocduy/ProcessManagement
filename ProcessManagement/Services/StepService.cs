@@ -62,9 +62,15 @@ namespace ProcessManagement.Services
             db.Steps.Remove(step);
             db.SaveChanges();
         }
-        public void removelistStep(List<Step> liststep)
+        public void removeSteps(List<Step> steps)
         {
-            db.Steps.RemoveRange(liststep);
+            ////foreach (Step step in steps)
+            ////{
+            ////    string stepPath = string.Format("Upload/{0}/{1}/{2}", step.Process.IdGroup, step.Process.Id, step.Id);
+            ////    fileService.removeDirectory(stepPath);
+            ////    db.Steps.Remove(step);
+            ////}
+            db.Steps.RemoveRange(steps);
             db.SaveChanges();
         }
         public void removeStepRun(StepRun step)

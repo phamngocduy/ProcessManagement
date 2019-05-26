@@ -574,7 +574,15 @@ input, textarea, select{
     }
 }
 .text-strong{
-    font-weight: bold;
+    font-weight: 600;
+}
+.text-danger {
+    color: #ff0101 !important;
+}
+.background-danger {
+    background-color: #fbe5e1;
+    border-radius: 4px;
+    padding: 3px 5px;
 }
 //modal
 .modal{

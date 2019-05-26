@@ -104,7 +104,7 @@ namespace ProcessManagement.Services
             db.Roles.Remove(role);
             db.SaveChanges();
         }
-        public void removelistRole(List<Role> listrole)
+        public void removeRoles(List<Role> listrole)
         {
             db.Roles.RemoveRange(listrole);
             db.SaveChanges();

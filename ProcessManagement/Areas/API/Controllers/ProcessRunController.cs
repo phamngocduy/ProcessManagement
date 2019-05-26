@@ -27,7 +27,7 @@ namespace ProcessManagement.Areas.API.Controllers
         ///=============================================================================================
 
         [HttpPost]
-        public JsonResult savetaskrun(int idtaskrun, string valuetext, string valuefile, HttpPostedFileBase fileupload, bool isEdit)
+        public JsonResult SaveTaskRun(int idtaskrun, string valuetext, string valuefile, HttpPostedFileBase fileupload, bool isEdit)
         {
             //TODO: Chưa phân quyền
             string IdUser = User.Identity.GetUserId();
@@ -73,7 +73,7 @@ namespace ProcessManagement.Areas.API.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult donetaskrun(int idtaskrun, string valuetext, string valuefile, HttpPostedFileBase fileupload, string comment, bool isEdit)
+        public JsonResult DoneTaskRun(int idtaskrun, string valuetext, string valuefile, HttpPostedFileBase fileupload, string comment, bool isEdit)
         {
             string IdUser = User.Identity.GetUserId();
             HttpStatusCode status = HttpStatusCode.OK;
@@ -134,7 +134,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost, ValidateInput(false)]
-        public JsonResult savetaskform(int idtaskrun, string formrender, string comment, string info)
+        public JsonResult SaveTaskForm(int idtaskrun, string formrender, string comment, string info)
         {
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
@@ -217,7 +217,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost, ValidateInput(false)]
-        public JsonResult donetaskform(int idtaskrun, string formrender, string comment, string info)
+        public JsonResult DoneTaskForm(int idtaskrun, string formrender, string comment, string info)
         {
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
@@ -315,7 +315,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult submitfinishtask(int idtask, string comment)
+        public JsonResult SubmitFinishTask(int idtask, string comment)
         {
             string IdUser = User.Identity.GetUserId();
             HttpStatusCode status = HttpStatusCode.OK;
@@ -344,7 +344,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult submitopentask(int idtask,string comment)
+        public JsonResult SubmitOpenTask(int idtask,string comment)
         {
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
@@ -372,7 +372,7 @@ namespace ProcessManagement.Areas.API.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult addComment(int id, Direction direction, string content)
+        public JsonResult AddComment(int id, Direction direction, string content)
         {
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
@@ -395,7 +395,7 @@ namespace ProcessManagement.Areas.API.Controllers
 
         }
         [HttpGet]
-        public PartialViewResult getComments(int id, string direction)
+        public PartialViewResult GetComments(int id, string direction)
         {
             List<Comment> comments = db.Comments.Where(x => x.IdDirection == id && x.Direction == direction.Trim()).OrderByDescending(x => x.Create_At).ToList();
             ViewData["comments"] = comments;
@@ -403,20 +403,26 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult DeleteProcessRun(int idprocess)
+        public JsonResult DeleteProcessRun(int processid)
         {
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
-            //find process
-            ProcessRun processrun = processService.findRunProcessbyidprorun(idprocess);
-            processService.removeprocessrun(idprocess);
-
-            message = "Delete process Successfully";
-            response = new { message = message, status = status };
-            SetFlash(FlashType.success, "Removed " + processrun.Name + " Successfully");
-
-            return Json(response, JsonRequestBehavior.AllowGet);
+            try
+            {
+                processService.removeprocessrun(processid);
+                message = "Remove ProcessRun Successfully";
+                response = new { message = message, status = status };
+                SetFlash(FlashType.success, message);
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                status = HttpStatusCode.InternalServerError;
+                message = e.GetType().Name == "ServerSideException" ? e.Message : "Something not right";
+                response = new { message = message, detail = e.Message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }
