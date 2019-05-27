@@ -459,6 +459,7 @@
     <Content Include="Content\build\scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Content\build\scripts\modernizr-2.8.3.js" />
     <None Include="Content\build\scss\_header.scss" />
+    <None Include="Content\build\scss\_breadcrumb.scss" />
     <Content Include="Content\images\auth_bg.jpg" />
     <Content Include="Content\images\avatar.png" />
     <Content Include="Content\images\back_disabled.png" />
