@@ -73,7 +73,8 @@ namespace ProcessManagement.Controllers
         public ActionResult NewProcessRun(int groupid)
         {
             Group group = groupService.findGroup(groupid);
-            return View(group);
+            ViewData["group"] = group;
+            return View();
         }
         [Authorize]
         [GroupAuthorize]
@@ -795,6 +796,7 @@ namespace ProcessManagement.Controllers
             Group gr = groupService.findGroup(groupid);
             List<Process> pr = processService.findListProcess(groupid, isRun:false);
             ViewData["processes"] = pr;
+            ViewData["group"] = gr;
             return View(gr);
         }
     }

@@ -608,10 +608,18 @@ input, textarea, select{
         }
     }
 }
-
-@include respond-to-screen-size(992px,-1){
-    .modal{
-        .modal-extra-lg{
+.btn-toggle-fullwidth {
+    display: block;
+    float: left;
+    margin-top: -2px;
+}
+.block-header {
+    margin-bottom: 10px;
+    margin-top: 25px;
+}
+@include respond-to-screen-size(992px,-1) {
+    .modal {
+        .modal-extra-lg {
             max-width: 800px;
         }
     }
