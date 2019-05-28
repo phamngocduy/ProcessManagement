@@ -1,6 +1,9 @@
 define(function () {
   // German
   return {
+    errorLoading: function () {
+      return 'Die Ergebnisse konnten nicht geladen werden.';
+    },
     inputTooLong: function (args) {
       var overChars = args.input.length - args.maximum;
 
@@ -32,6 +35,9 @@ define(function () {
     },
     searching: function () {
       return 'Suche…';
+    },
+    removeAllItems: function () {
+      return 'Entferne alle Gegenstände';
     }
   };
 });

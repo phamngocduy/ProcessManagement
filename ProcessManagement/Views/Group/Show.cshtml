@@ -14,9 +14,7 @@
     var maxFileSizeRule = ViewData["FileMaxSize"] as ProcessManagement.Models.ConfigRule;
 }
 @section CustomCss{
-    <link rel="stylesheet" href="~/Content/vendor/chartist/css/chartist.min.css">
-    <link rel="stylesheet" href="~/Content/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.css">
-    <link rel="stylesheet" href="~/Content/vendor/select2/select2.css" />
+    <link rel="stylesheet" href="~/Content/vendor/select2/dist/css/select2.min.css" />
     <link rel="stylesheet" href="~/Content/vendor/bootstrap-multiselect/bootstrap-multiselect.css">
     <style>
         .dropdown-menu a {
@@ -354,7 +352,7 @@
                 @if (userRole.IsAdmin || userRole.IsOwner)
                 {
                     <div id="add-member-search">
-                        <input type="hidden" style="width:calc(100% - 118px); border: 1px solid #ced4da; padding:5px 10px;" />
+                        <select  style="width:calc(100% - 118px) !important; border: 1px solid #ced4da; padding:5px 10px;"></select>
                         <button class="btn btn-primary-theme waves-effect" id="btn-add-member" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing" @isOwnerOrAdmin>Add member</button>
                     </div>
                 }
@@ -381,11 +379,8 @@
     </div>
 </div>
 @section CustomScripts{
-    <script src="~/Content/build/bundles/chartist.bundle.js"></script>
-    <script src="~/Content/build/bundles/knob.bundle.js"></script>
-    <script src="~/Content/vendor/select2/select2.min.js"></script>
+    <script src="~/Content/vendor/select2/dist/js/select2.min.js"></script>
     <script src="~/Content/vendor/bootstrap-multiselect/bootstrap-multiselect.js"></script>
-    <script src="~/Content/build/js/index.js"></script>
     <script>
         $(function () {
             $(".btn-switch-tab").on("click", function (e) {
@@ -550,7 +545,7 @@
             $("#btn-add-member").on("click", function () {
                 var $this = $(this);
                 toggleLoading($this);
-                var newMember = $("#add-member-search input").select2("data");
+                var newMember = $("#add-member-search select").select2("data");
                 if (newMember == null) {
                     showToastr("error", "Please input name to invite user", "toast-bottom-left");
                     toggleLoading($this);
@@ -559,28 +554,41 @@
                 }
             });
 
-            $("#add-member-search input").select2({
+            $("#add-member-search select").select2({
                 placeholder: "Search username, nickname, email...",
+                allowClear: true,
                 ajax: {
+                    delay: 500,
                     url: "@Url.Action("getusernotingroup", "group", new { area ="api"})",
-
                     dataType: 'json',
                     data: function (params) {
                         var query = {
-                            key: params,
+                            key: params.term,
                             idGroup: @Model.Id
                         }
                         return query;
                     },
                     processResults: function (data) {
-                        // Tranforms the top-level key of the response object from 'items' to 'results'
                         return {
                             results: data.results
                         };
-                    }
-                }
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) { return markup; },
+                templateResult: displayItem,
+                templateSelection: displayItemSelection,
             });
         });
+        function displayItemSelection(item) {
+            return item.text;
+        } 
+        function displayItem(item) {
+            if (item.loading) return item.text;
+
+            var avatardefault = JSON.parse(item.avatardefault);
+            return `<div class="width35 rounded owner-default" style="background-color:${avatardefault.background};margin-right:10px">${avatardefault.name}</div>${item.text}`;
+        }
         function editGroup(newGroup) {
             $.ajax({
                 url: "@Url.Action("editgroup", "group", new { area ="api"})",

@@ -21,11 +21,7 @@ namespace ProcessManagement.Areas.API.Controllers
         GroupService groupService = new GroupService();
         ParticipateService participateService = new ParticipateService();
         UserService userService = new UserService();
-        FileService fileService = new FileService();
-        TaskService taskService = new TaskService();
         ProcessService processService = new ProcessService();
-        StepService stepService = new StepService();
-        RoleService roleService = new RoleService();
         ///=============================================================================================
 
         [GroupAuthorize]
@@ -140,7 +136,9 @@ namespace ProcessManagement.Areas.API.Controllers
                     object tempData = new
                     {
                         id = member.Id,
-                        text = member.NickName
+                        text = member.UserName,
+                        avatar = member.Avatar,
+                        avatardefault = member.AvatarDefault
                     };
                     jMember.Add(tempData);
                 }
