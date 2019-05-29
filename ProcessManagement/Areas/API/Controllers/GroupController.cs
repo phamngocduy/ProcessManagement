@@ -124,10 +124,14 @@ namespace ProcessManagement.Areas.API.Controllers
             var response = new { data = groupList, status = HttpStatusCode.OK };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult getUserNotInGroup(string key, int idGroup)
+        public JsonResult getUserNotInGroup(string key, int groupid)
         {
             List<object> jMember = new List<object>();
-            List<Participate> ListParticipant = participateService.findMembersInGroup(idGroup);
+            if (!string.IsNullOrEmpty(key))
+            {
+                key = key.ToLower().Trim();
+            }
+            List<Participate> ListParticipant = participateService.findMembersInGroup(groupid);
             List<AspNetUser> memberNotInGroup = participateService.searchMembersNotInGroup(ListParticipant, key, 5);
             if (memberNotInGroup.Any())
             {
@@ -137,6 +141,7 @@ namespace ProcessManagement.Areas.API.Controllers
                     {
                         id = member.Id,
                         text = member.UserName,
+                        email = member.Email,
                         avatar = member.Avatar,
                         avatardefault = member.AvatarDefault
                     };

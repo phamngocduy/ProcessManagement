@@ -352,7 +352,9 @@
                 @if (userRole.IsAdmin || userRole.IsOwner)
                 {
                     <div id="add-member-search">
-                        <select  style="width:calc(100% - 118px) !important; border: 1px solid #ced4da; padding:5px 10px;"></select>
+                        <select>
+                            <option></option>
+                        </select>
                         <button class="btn btn-primary-theme waves-effect" id="btn-add-member" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing" @isOwnerOrAdmin>Add member</button>
                     </div>
                 }
@@ -545,8 +547,9 @@
             $("#btn-add-member").on("click", function () {
                 var $this = $(this);
                 toggleLoading($this);
-                var newMember = $("#add-member-search select").select2("data");
-                if (newMember == null) {
+                var newMember = $("#add-member-search select").select2("data")[0].id;
+               
+                if ( newMember == null) {
                     showToastr("error", "Please input name to invite user", "toast-bottom-left");
                     toggleLoading($this);
                 } else {
@@ -564,7 +567,7 @@
                     data: function (params) {
                         var query = {
                             key: params.term,
-                            idGroup: @Model.Id
+                            groupid: @Model.Id
                         }
                         return query;
                     },
@@ -587,7 +590,7 @@
             if (item.loading) return item.text;
 
             var avatardefault = JSON.parse(item.avatardefault);
-            return `<div class="width35 rounded owner-default" style="background-color:${avatardefault.background};margin-right:10px">${avatardefault.name}</div>${item.text}`;
+            return `<div class="width35 rounded owner-default" style="background-color:${avatardefault.background};margin-right:10px">${avatardefault.name}</div>${item.text}<span class="select2-member-email">< ${item.email} ></span>`;
         }
         function editGroup(newGroup) {
             $.ajax({
@@ -612,7 +615,7 @@
             $.ajax({
                 url: "@Url.Action("addmember", "group", new { area ="api"})",
                 type: "POST",
-                data: newMember,
+                data: { id : newMember },
                 dataType: "json",
                 success: function (response) {
                     //thanh cong thi no tra du lieu ve
@@ -621,7 +624,7 @@
                         showToastr("success", response.message, "toast-bottom-left");
                         var addButton = $("#btn-add-member");
                         toggleLoading(addButton);
-                        $(".select2-chosen").empty();
+                        $("#add-member-search select").empty();
                         $("#table-member").DataTable().ajax.reload();
                     } else {
                         showToastr("error", response.message, "toast-bottom-left")

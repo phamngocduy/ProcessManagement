@@ -292,7 +292,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
         public JsonResult GetProcessList(int groupid)
         {
-            List<Process> processes = processService.getProcess(groupid);
+            List<Process> processes = processService.getProcesses(groupid);
             List<object> jProcesses = new List<object>();
             foreach (Process process in processes.Where(x => x.IsRun == null || x.IsRun == false))
             {
@@ -316,6 +316,24 @@ namespace ProcessManagement.Areas.API.Controllers
             }
             
             var response = new { data = jProcesses, status = HttpStatusCode.OK };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ShowProcessList(string key, int groupid)
+        {
+            List<Process> processes = processService.searchProcesses(groupid, key, 5);
+            List<object> jProcesses = new List<object>();
+            foreach (Process process in processes.Where(x => x.IsRun == null || x.IsRun == false))
+            {
+                object jProcess = new
+                {
+                    id = process.Id,
+                    text = process.Name,
+                    avatar = process.Avatar,
+                };
+                jProcesses.Add(jProcess);
+            }
+
+            var response = new { results = jProcesses, status = HttpStatusCode.OK };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
