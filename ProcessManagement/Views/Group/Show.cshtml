@@ -638,11 +638,6 @@
     </script>
     <script>
         $(function () {
-            $("#btn-trigger").on("click", function () {
-                var target = $(this)[0].dataset.trigger;
-                $(`#${target}`).trigger("click");
-            });
-
             //fileupload
             @if (maxFileSizeRule != null)
             {
@@ -869,7 +864,7 @@
             $.ajax({
                 url: "@Url.Action("DeleteGroup", "group",new { area = "api"})",
                 type: "POST",
-                data: {groupid = data},
+                data: {groupid : data},
                 dataType: "json",
                 success: function (response) {
                     console.log(response);
