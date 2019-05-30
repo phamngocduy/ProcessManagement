@@ -10,7 +10,11 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="NickName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Avatar" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="AvatarDefault" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
           <Property Name="PasswordHash" Type="nvarchar(max)" />
           <Property Name="SecurityStamp" Type="nvarchar(max)" />
@@ -20,10 +24,6 @@
           <Property Name="LockoutEndDateUtc" Type="datetime" />
           <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
           <Property Name="AccessFailedCount" Type="int" Nullable="false" />
-          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
-          <Property Name="NickName" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="AvatarDefault" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="Avatar" Type="nvarchar" MaxLength="255" Nullable="false" />
         </EntityType>
         <EntityType Name="Comment">
           <Key>
@@ -36,7 +36,7 @@
           <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Create_At" Type="datetime" Nullable="false" />
           <Property Name="Update_At" Type="datetime" Nullable="false" />
-          <Property Name="isAction" Type="bit" />
+          <Property Name="isAction" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="ConfigRule">
           <Key>
@@ -99,9 +99,9 @@
           <Property Name="IdOwner" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Description" Type="nvarchar(max)" />
-          <Property Name="DataJson" Type="nvarchar(max)" />
-          <Property Name="Avatar" Type="nvarchar(max)" />
-          <Property Name="IsRun" Type="bit" />
+          <Property Name="DataJson" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Avatar" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsRun" Type="bit" Nullable="false" />
           <Property Name="Created_At" Type="datetime" Nullable="false" />
           <Property Name="Updated_At" Type="datetime" Nullable="false" />
         </EntityType>
@@ -125,8 +125,8 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IdProcess" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="Description" Type="varchar" MaxLength="255" />
-          <Property Name="Color" Type="varchar" MaxLength="255" />
+          <Property Name="Description" Type="nvarchar" MaxLength="255" />
+          <Property Name="Color" Type="nvarchar" MaxLength="255" />
           <Property Name="IsRun" Type="bit" />
           <Property Name="Create_At" Type="datetime" />
           <Property Name="Update_At" Type="datetime" />
@@ -732,7 +732,11 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="NickName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Avatar" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="AvatarDefault" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
           <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -742,10 +746,6 @@
           <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
           <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
           <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
-          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="NickName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="AvatarDefault" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Avatar" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="RoleRuns" Relationship="PMSModel.FK_AssignRole_AspNetUsers" FromRole="AspNetUser" ToRole="RoleRun" />
           <NavigationProperty Name="Comments" Relationship="PMSModel.FK_Comment_AspNetUsers" FromRole="AspNetUser" ToRole="Comment" />
           <NavigationProperty Name="Groups" Relationship="PMSModel.FK_Group_AspNetUsers" FromRole="AspNetUser" ToRole="Group" />
@@ -766,7 +766,7 @@
           <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Create_At" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Update_At" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="isAction" Type="Boolean" />
+          <Property Name="isAction" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="AspNetUser" Relationship="PMSModel.FK_Comment_AspNetUsers" FromRole="Comment" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="ConfigRule">
@@ -837,9 +837,9 @@
           <Property Name="IdOwner" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="DataJson" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Avatar" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IsRun" Type="Boolean" />
+          <Property Name="DataJson" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Avatar" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsRun" Type="Boolean" Nullable="false" />
           <Property Name="Created_At" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Updated_At" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="AspNetUser" Relationship="PMSModel.FK_Process_AspNetUsers" FromRole="Process" ToRole="AspNetUser" />
@@ -871,8 +871,8 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IdProcess" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Color" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Color" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="IsRun" Type="Boolean" />
           <Property Name="Create_At" Type="DateTime" Precision="3" />
           <Property Name="Update_At" Type="DateTime" Precision="3" />
@@ -1282,10 +1282,6 @@
           <EntitySetMapping Name="AspNetUsers">
             <EntityTypeMapping TypeName="PMSModel.AspNetUser">
               <MappingFragment StoreEntitySet="AspNetUsers">
-                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
-                <ScalarProperty Name="AvatarDefault" ColumnName="AvatarDefault" />
-                <ScalarProperty Name="NickName" ColumnName="NickName" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
                 <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
                 <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
@@ -1295,7 +1291,11 @@
                 <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
                 <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
                 <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="AvatarDefault" ColumnName="AvatarDefault" />
+                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="NickName" ColumnName="NickName" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

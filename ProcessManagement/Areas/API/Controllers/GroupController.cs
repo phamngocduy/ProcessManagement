@@ -242,22 +242,28 @@ namespace ProcessManagement.Areas.API.Controllers
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
-
-            Group group = groupService.findGroup(idgroup);
-            List<Process> listprocess = processService.findListProcess(idgroup);
-            foreach (Process process in listprocess)
+            try
             {
-                processService.removeprocessrun(process.Id);
+
+                Group group = groupService.findGroup(idgroup);
+                
+                groupService.removeGroup(group);
+
+                message = "Delete group Successfully";
+                response = new { message = message, status = status };
+                SetFlash(FlashType.success, "Removed " + group.Name + " Successfully");
+
+                return Json(response, JsonRequestBehavior.AllowGet);
+
             }
-            //todo find file in group and remove files
-            
-            groupService.removeGroup(group);
+            catch (Exception e)
+            {
 
-            message = "Delete group Successfully";
-            response = new { message = message, status = status };
-            SetFlash(FlashType.success, "Removed " + group.Name + " Successfully");
-
-            return Json(response, JsonRequestBehavior.AllowGet);
+                status = HttpStatusCode.InternalServerError;
+                message = e.GetType().Name == "ServerSideException" ? e.Message : "Something not right";
+                response = new { message = message, detail = e.Message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
         }
 
         [HttpPost]

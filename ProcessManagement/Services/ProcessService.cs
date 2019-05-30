@@ -92,20 +92,6 @@ namespace ProcessManagement.Services
 			db.Processes.RemoveRange(processes);
 			db.SaveChanges();
 		}
-        public void removeProcess(Process process)
-        {
-            string processPath = string.Format("Upload/{0}/{1}", process.IdGroup, process.Id);
-            fileService.removeDirectory(processPath);
-            db.Processes.Remove(process);
-            db.SaveChanges();
-        }
-        public void removeProcessRun(ProcessRun processrun)
-        {
-            string processRunPath = string.Format("Upload/{0}/run/{1}", processrun.Process.IdGroup, processrun.Id);
-            fileService.removeDirectory(processRunPath);
-            db.ProcessRuns.Remove(processrun);
-            db.SaveChanges();
-        }
         public void insertDataJson(Process ps, string data, string imageprocess)
 		{
 			ps.DataJson = data;
@@ -219,6 +205,14 @@ namespace ProcessManagement.Services
                 removeProcess(process);
             }
         }
+        public void removeProcess(Process process)
+        {
+            string processPath = string.Format("Upload/{0}/{1}", process.IdGroup, process.Id);
+            fileService.removeDirectory(processPath);
+            db.Processes.Remove(process);
+            db.SaveChanges();
+        }
+        
         public void removeprocessrun(int idprocess)
         {
             ProcessRun processrun = findProcessRun(idprocess);
@@ -240,6 +234,13 @@ namespace ProcessManagement.Services
 
                 removeProcess(process);
             }  
+        }
+        public void removeProcessRun(ProcessRun processrun)
+        {
+            string processRunPath = string.Format("Upload/{0}/run/{1}", processrun.Process.IdGroup, processrun.Id);
+            fileService.removeDirectory(processRunPath);
+            db.ProcessRuns.Remove(processrun);
+            db.SaveChanges();
         }
     }
 }

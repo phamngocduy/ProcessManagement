@@ -12,6 +12,7 @@ namespace ProcessManagement.Services
         ParticipateService participateService = new ParticipateService();
         ProcessService processService = new ProcessService();
         CommonService commonService = new CommonService();
+        FileService fileService = new FileService();
         ///=============================================================================================
 
         
@@ -96,6 +97,23 @@ namespace ProcessManagement.Services
         public void removeGroup(Group group)
         {
             List<Participate> listUser = participateService.findMembersInGroup(group.Id);
+            //remove process
+            List<Process> processes = processService.findListProcess(group.Id);
+            foreach (Process pr in processes)
+            {
+                if (pr.IsRun)
+                {
+                    ProcessRun prRun = processService.findProcessRun(pr.Id);
+                    processService.removeprocessrun(prRun.Id);
+                }
+                else
+                {
+                    processService.removeProcess(pr.Id);
+                }
+            }
+            //todo find file in group and remove files
+            string groupPath = string.Format("Upload/{0}", group.Id);
+            fileService.removeDirectory(groupPath);
             //remove user in group
             participateService.removeUsersInGroup(listUser);
             //remove tất cả các process của group

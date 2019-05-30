@@ -29,7 +29,7 @@ namespace ProcessManagement.Models
         public string Description { get; set; }
         public string DataJson { get; set; }
         public string Avatar { get; set; }
-        public Nullable<bool> IsRun { get; set; }
+        public bool IsRun { get; set; }
         public System.DateTime Created_At { get; set; }
         public System.DateTime Updated_At { get; set; }
     
