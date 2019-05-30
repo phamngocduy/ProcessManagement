@@ -1784,14 +1784,64 @@ input:read-only, textarea:read-only, select:read-only {
   text-align: justify;
 }
 
-#process-import-container #process-import-preview {
-  width: 400px;
+.select2-container .select2-selection--single {
+  height: 32px;
+}
+.select2-container .select2-selection--single .select2-selection__rendered {
+  line-height: 30px;
+}
+.select2-container .select2-selection--single .select2-selection__arrow {
+  height: 30px;
+}
+
+#process-import-container {
+  margin-bottom: 10px;
+}
+#process-import-container.has-file #process-import-preview {
   display: inline-block;
-  margin-bottom: 20px;
+  width: calc(100% - 134px) !important;
+}
+#process-import-container #process-import-preview {
+  display: inline-block;
+  width: calc(100% - 91px) !important;
 }
 #process-import-container #process-import-remove {
   display: none;
   color: red;
+}
+
+#process-export-container {
+  margin-bottom: 10px;
+}
+#process-export-container select {
+  width: calc(100% - 91px) !important;
+  display: inline-block;
+  border: 1px solid #ced4da;
+  padding: 5px 10px;
+}
+#process-export-container .select2-container {
+  width: calc(100% - 91px) !important;
+}
+
+#add-member-search select {
+  width: calc(100% - 117px) !important;
+  display: inline-block;
+  border: 1px solid #ced4da;
+  padding: 5px 10px;
+}
+
+.select2-results .select2-results__options .process-avatar {
+  -o-object-fit: contain;
+  object-fit: contain;
+  width: 64px;
+  height: 64px;
+}
+
+.select2-member-email {
+  font-weight: 300;
+  font-size: 14px;
+  color: #040404;
+  margin-left: 10px;
 }
 
 /* end of content */

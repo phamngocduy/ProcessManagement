@@ -242,11 +242,7 @@ namespace ProcessManagement.Controllers
             string idUser = User.Identity.GetUserId();
             if (group == null) return HttpNotFound();
 
-            dynamic expando = new ExpandoObject();
-            IDictionary<string, object> groupStatisticModel = expando as IDictionary<string, object>;
-            groupStatisticModel.Add("totalmember", participateService.countMemberInGroup(group.Id));
-            groupStatisticModel.Add("totalprocess", processService.countProcessOfGroup(group.Id));
-
+            
             //tìm file group
             string groupPath = string.Format("Upload/{0}",group.Id);
             List<FileManager> files = fileService.findFiles(group.Id,groupPath);
@@ -255,15 +251,24 @@ namespace ProcessManagement.Controllers
             //var ListParticipant = participateService.findMembersInGroup(group.Id);
             //ViewData["ListParticipant"] = ListParticipant;
             //Tìm tất cả các process thuộc group đó
-            ViewData["ListProcess"] = processService.findListProcess(group.Id);
-            //thống kê
-            ViewData["Statistic"] = groupStatisticModel;
+            List<Process> processes = processService.findListProcess(group.Id);
+            ViewData["ListProcess"] = processes;
             //lấy role của user hiện tại
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
             ViewData["Files"] = files;
             ViewData["IdUser"] = idUser;
             //get maximum file config
             ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
+
+            //thống kê
+            dynamic expando = new ExpandoObject();
+            IDictionary<string, object> groupStatisticModel = expando as IDictionary<string, object>;
+            groupStatisticModel.Add("totalmember", participateService.countMemberInGroup(group.Id));
+            groupStatisticModel.Add("totalprocess", processes.Where(x => x.IsRun == null || x.IsRun == false).Count());
+            groupStatisticModel.Add("totalprocessrun", processes.Where(x => x.IsRun == true).Count());
+            ViewData["Statistic"] = groupStatisticModel;
+
+
             return View(group);
         }
 

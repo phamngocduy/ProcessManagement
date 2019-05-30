@@ -292,7 +292,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
         public JsonResult GetProcessList(int groupid)
         {
-            List<Process> processes = processService.getProcess(groupid);
+            List<Process> processes = processService.getProcesses(groupid);
             List<object> jProcesses = new List<object>();
             foreach (Process process in processes.Where(x => x.IsRun == null || x.IsRun == false))
             {
@@ -316,6 +316,28 @@ namespace ProcessManagement.Areas.API.Controllers
             }
             
             var response = new { data = jProcesses, status = HttpStatusCode.OK };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ShowProcessList(string key, int groupid)
+        {
+            if (!string.IsNullOrEmpty(key))
+            {
+                key = key.ToLower().Trim();
+            }
+            List<Process> processes = processService.searchProcesses(groupid, key, 5);
+            List<object> jProcesses = new List<object>();
+            foreach (Process process in processes.Where(x => x.IsRun == null || x.IsRun == false))
+            {
+                object jProcess = new
+                {
+                    id = process.Id,
+                    text = process.Name,
+                    avatar = process.Avatar,
+                };
+                jProcesses.Add(jProcess);
+            }
+
+            var response = new { results = jProcesses, status = HttpStatusCode.OK };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
@@ -720,6 +742,10 @@ namespace ProcessManagement.Areas.API.Controllers
                 {
                     ZipFile zip = ZipFile.Read(fileupload.InputStream);
                     ZipEntry jsonFile = zip.FirstOrDefault(x => x.FileName == "data.json");
+                    if (jsonFile == null)
+                    {
+                        throw new ServerSideException("File is damaged, please try other file");
+                    }
                     //jsonFile.Password = "clockworks-pms";
                     var passsword = "clockworks-pms";
                     JObject data;
@@ -865,14 +891,20 @@ namespace ProcessManagement.Areas.API.Controllers
                             } else {
                                 rid = roleList.First(x => x.Name == (string)task["role"]).Id;
                             }
+                            string jText = task["config"]["input"].ToString();
+                            string jFile = task["config"]["file"].ToString();
+                            string jForm = task["config"]["form"].ToString();
                             TaskProcess tk = new TaskProcess { Step = st };
                             tk.IdStep = st.Id;
                             tk.IdRole = rid;
                             tk.Name = (string)task["taskname"];
                             tk.Description = (string)task["description"];
-                            tk.ValueInputText = task["config"]["input"].ToString();
-                            tk.ValueInputFile = task["config"]["file"].ToString();
-                            tk.ValueFormJson = task["config"]["form"].ToString();
+                            if (jText != "")
+                                tk.ValueInputText = jText;
+                            if(jFile != "")
+                                tk.ValueInputFile = jFile;
+                            if (jForm != "")
+                                tk.ValueFormJson = jForm;
                             tk.Color = commonService.getRandomColor();
                             tk.Position = (int)task["position"];
                             tk.IsRun = false;

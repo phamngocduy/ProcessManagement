@@ -21,11 +21,7 @@ namespace ProcessManagement.Areas.API.Controllers
         GroupService groupService = new GroupService();
         ParticipateService participateService = new ParticipateService();
         UserService userService = new UserService();
-        FileService fileService = new FileService();
-        TaskService taskService = new TaskService();
         ProcessService processService = new ProcessService();
-        StepService stepService = new StepService();
-        RoleService roleService = new RoleService();
         ///=============================================================================================
 
         [GroupAuthorize]
@@ -128,10 +124,14 @@ namespace ProcessManagement.Areas.API.Controllers
             var response = new { data = groupList, status = HttpStatusCode.OK };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult getUserNotInGroup(string key, int idGroup)
+        public JsonResult getUserNotInGroup(string key, int groupid)
         {
             List<object> jMember = new List<object>();
-            List<Participate> ListParticipant = participateService.findMembersInGroup(idGroup);
+            if (!string.IsNullOrEmpty(key))
+            {
+                key = key.ToLower().Trim();
+            }
+            List<Participate> ListParticipant = participateService.findMembersInGroup(groupid);
             List<AspNetUser> memberNotInGroup = participateService.searchMembersNotInGroup(ListParticipant, key, 5);
             if (memberNotInGroup.Any())
             {
@@ -140,7 +140,10 @@ namespace ProcessManagement.Areas.API.Controllers
                     object tempData = new
                     {
                         id = member.Id,
-                        text = member.NickName
+                        text = member.UserName,
+                        email = member.Email,
+                        avatar = member.Avatar,
+                        avatardefault = member.AvatarDefault
                     };
                     jMember.Add(tempData);
                 }
@@ -239,22 +242,28 @@ namespace ProcessManagement.Areas.API.Controllers
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
-
-            Group group = groupService.findGroup(idgroup);
-            List<Process> listprocess = processService.findListProcess(idgroup);
-            foreach (Process process in listprocess)
+            try
             {
-                processService.removeprocessrun(process.Id);
+
+                Group group = groupService.findGroup(idgroup);
+                
+                groupService.removeGroup(group);
+
+                message = "Delete group Successfully";
+                response = new { message = message, status = status };
+                SetFlash(FlashType.success, "Removed " + group.Name + " Successfully");
+
+                return Json(response, JsonRequestBehavior.AllowGet);
+
             }
-            //todo find file in group and remove files
-            
-            groupService.removeGroup(group);
+            catch (Exception e)
+            {
 
-            message = "Delete group Successfully";
-            response = new { message = message, status = status };
-            SetFlash(FlashType.success, "Removed " + group.Name + " Successfully");
-
-            return Json(response, JsonRequestBehavior.AllowGet);
+                status = HttpStatusCode.InternalServerError;
+                message = e.GetType().Name == "ServerSideException" ? e.Message : "Something not right";
+                response = new { message = message, detail = e.Message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
         }
 
         [HttpPost]

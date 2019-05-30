@@ -92,20 +92,6 @@ namespace ProcessManagement.Services
 			db.Processes.RemoveRange(processes);
 			db.SaveChanges();
 		}
-        public void removeProcess(Process process)
-        {
-            string processPath = string.Format("Upload/{0}/{1}", process.IdGroup, process.Id);
-            fileService.removeDirectory(processPath);
-            db.Processes.Remove(process);
-            db.SaveChanges();
-        }
-        public void removeProcessRun(ProcessRun processrun)
-        {
-            string processRunPath = string.Format("Upload/{0}/run/{1}", processrun.Process.IdGroup, processrun.Id);
-            fileService.removeDirectory(processRunPath);
-            db.ProcessRuns.Remove(processrun);
-            db.SaveChanges();
-        }
         public void insertDataJson(Process ps, string data, string imageprocess)
 		{
 			ps.DataJson = data;
@@ -130,16 +116,26 @@ namespace ProcessManagement.Services
             int count = db.Processes.Where(m => m.IdGroup == idGroup).Count();
             return count;
         }
-        public List<Process> getProcess(int idGroup)
+        public List<Process> getProcesses(int idGroup)
         {
             List<Process> processes = db.Processes.Where(x => x.IdGroup == idGroup).OrderByDescending(x => x.Updated_At).ToList();
             return processes;
         }
-		/// <summary>
-		/// Edit thông tin một process
-		/// </summary>
-		/// <param name="model">Process Model</param>
-		public void EditProcess(int processId, Process model)
+        public List<Process> searchProcesses(int idGroup, string key = null, int quantity = 5 )
+        {
+            List<Process> processes;
+            
+            if (key == null)
+                processes = db.Processes.Where(x => x.IdGroup == idGroup).OrderByDescending(x => x.Updated_At).Take(quantity).ToList();
+            else    
+                processes = db.Processes.Where(x => x.IdGroup == idGroup && x.Name.ToLower().Contains(key)).OrderByDescending(x => x.Updated_At).Take(quantity).ToList();
+            return processes;
+        }
+        /// <summary>
+        /// Edit thông tin một process
+        /// </summary>
+        /// <param name="model">Process Model</param>
+        public void EditProcess(int processId, Process model)
 		{
 			Process ps = findProcess(processId);
 			ps.Name = model.Name;
@@ -209,6 +205,14 @@ namespace ProcessManagement.Services
                 removeProcess(process);
             }
         }
+        public void removeProcess(Process process)
+        {
+            string processPath = string.Format("Upload/{0}/{1}", process.IdGroup, process.Id);
+            fileService.removeDirectory(processPath);
+            db.Processes.Remove(process);
+            db.SaveChanges();
+        }
+        
         public void removeprocessrun(int idprocess)
         {
             ProcessRun processrun = findProcessRun(idprocess);
@@ -230,6 +234,13 @@ namespace ProcessManagement.Services
 
                 removeProcess(process);
             }  
+        }
+        public void removeProcessRun(ProcessRun processrun)
+        {
+            string processRunPath = string.Format("Upload/{0}/run/{1}", processrun.Process.IdGroup, processrun.Id);
+            fileService.removeDirectory(processRunPath);
+            db.ProcessRuns.Remove(processrun);
+            db.SaveChanges();
         }
     }
 }

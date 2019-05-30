@@ -14,9 +14,7 @@
     var maxFileSizeRule = ViewData["FileMaxSize"] as ProcessManagement.Models.ConfigRule;
 }
 @section CustomCss{
-    <link rel="stylesheet" href="~/Content/vendor/chartist/css/chartist.min.css">
-    <link rel="stylesheet" href="~/Content/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.css">
-    <link rel="stylesheet" href="~/Content/vendor/select2/select2.css" />
+    <link rel="stylesheet" href="~/Content/vendor/select2/dist/css/select2.min.css" />
     <link rel="stylesheet" href="~/Content/vendor/bootstrap-multiselect/bootstrap-multiselect.css">
     <style>
         .dropdown-menu a {
@@ -86,16 +84,7 @@
                 </div>
                 <div class="content">
                     <div class="text">Process</div>
-                    <h5 class="number">
-                        @if (listprocess.Where(x => x.IsRun == null || x.IsRun == false).Count() != 0)
-                        {
-                            @listprocess.Where(x => x.IsRun == null || x.IsRun == false).Count()
-                        }
-                        else
-                        {
-                            <p>0</p>
-                        }
-                    </h5>
+                    <h5 class="number">@statistic.totalprocess</h5>
                 </div>
                 <hr />
                 <div class="icon">
@@ -105,16 +94,7 @@
                 </div>
                 <div class="content">
                     <div class="text">Process Run</div>
-                    <h5 class="number">
-                        @if (listprocess.Where(y => y.IsRun == true).Count() != 0)
-                        {
-                            @listprocess.Where(y => y.IsRun == true).Count()
-                        }
-                        else
-                        {
-                            <p>0</p>
-                        }
-                    </h5>
+                    <h5 class="number">@statistic.totalprocessrun</h5>
                 </div>
             </div>
         </div>
@@ -178,7 +158,7 @@
                 <div class="tab-content">
                     <!-- TODO: Không biết để nút remove với nút tranfer owner ở đâu -->
                     <div class="tab-pane animated fadeIn show active clearfix" id="overview-tab">
-                        <button id="btn-deletegroup" title="Delete" style="float:right; margin-left: 5px" value="@Model.Id" class="btn btn-sm btn-outline-danger js-sweetalert" data-loading-text="<i class='icon-trash'></i>"><i class="icon-trash"> Delete Group</i></button>
+                        <button id="btn-group-delete" style="float:right; margin-left: 5px" data-id="@Model.Id" data-name="@Model.Name" class="btn btn-sm btn-danger waves-effect"><i class="icon-trash"> Delete Group</i></button>
                         <a class="btn-circle btn-primary-theme btn-switch-tab" style="float:right" href="#setting-tab"><i class="icon-settings"></i> Settings</a>
                         <h5>@Model.Name</h5>
                         <p>@Model.Description</p>
@@ -354,7 +334,9 @@
                 @if (userRole.IsAdmin || userRole.IsOwner)
                 {
                     <div id="add-member-search">
-                        <input type="hidden" style="width:calc(100% - 118px); border: 1px solid #ced4da; padding:5px 10px;" />
+                        <select>
+                            <option></option>
+                        </select>
                         <button class="btn btn-primary-theme waves-effect" id="btn-add-member" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing" @isOwnerOrAdmin>Add member</button>
                     </div>
                 }
@@ -381,11 +363,8 @@
     </div>
 </div>
 @section CustomScripts{
-    <script src="~/Content/build/bundles/chartist.bundle.js"></script>
-    <script src="~/Content/build/bundles/knob.bundle.js"></script>
-    <script src="~/Content/vendor/select2/select2.min.js"></script>
+    <script src="~/Content/vendor/select2/dist/js/select2.min.js"></script>
     <script src="~/Content/vendor/bootstrap-multiselect/bootstrap-multiselect.js"></script>
-    <script src="~/Content/build/js/index.js"></script>
     <script>
         $(function () {
             $(".btn-switch-tab").on("click", function (e) {
@@ -550,8 +529,9 @@
             $("#btn-add-member").on("click", function () {
                 var $this = $(this);
                 toggleLoading($this);
-                var newMember = $("#add-member-search input").select2("data");
-                if (newMember == null) {
+                var newMember = $("#add-member-search select").select2("data")[0].id;
+               
+                if ( newMember == "") {
                     showToastr("error", "Please input name to invite user", "toast-bottom-left");
                     toggleLoading($this);
                 } else {
@@ -559,28 +539,41 @@
                 }
             });
 
-            $("#add-member-search input").select2({
+            $("#add-member-search select").select2({
                 placeholder: "Search username, nickname, email...",
+                allowClear: true,
                 ajax: {
+                    delay: 500,
                     url: "@Url.Action("getusernotingroup", "group", new { area ="api"})",
-
                     dataType: 'json',
                     data: function (params) {
                         var query = {
-                            key: params,
-                            idGroup: @Model.Id
+                            key: params.term,
+                            groupid: @Model.Id
                         }
                         return query;
                     },
                     processResults: function (data) {
-                        // Tranforms the top-level key of the response object from 'items' to 'results'
                         return {
                             results: data.results
                         };
-                    }
-                }
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) { return markup; },
+                templateResult: displayItem,
+                templateSelection: displayItemSelection,
             });
         });
+        function displayItemSelection(item) {
+            return item.text;
+        } 
+        function displayItem(item) {
+            if (item.loading) return item.text;
+
+            var avatardefault = JSON.parse(item.avatardefault);
+            return `<div class="width35 rounded owner-default" style="background-color:${avatardefault.background};margin-right:10px">${avatardefault.name}</div>${item.text}<span class="select2-member-email">< ${item.email} ></span>`;
+        }
         function editGroup(newGroup) {
             $.ajax({
                 url: "@Url.Action("editgroup", "group", new { area ="api"})",
@@ -604,7 +597,7 @@
             $.ajax({
                 url: "@Url.Action("addmember", "group", new { area ="api"})",
                 type: "POST",
-                data: newMember,
+                data: { id : newMember },
                 dataType: "json",
                 success: function (response) {
                     //thanh cong thi no tra du lieu ve
@@ -613,7 +606,7 @@
                         showToastr("success", response.message, "toast-bottom-left");
                         var addButton = $("#btn-add-member");
                         toggleLoading(addButton);
-                        $(".select2-chosen").empty();
+                        $("#add-member-search select").empty();
                         $("#table-member").DataTable().ajax.reload();
                     } else {
                         showToastr("error", response.message, "toast-bottom-left")
@@ -645,11 +638,6 @@
     </script>
     <script>
         $(function () {
-            $("#btn-trigger").on("click", function () {
-                var target = $(this)[0].dataset.trigger;
-                $(`#${target}`).trigger("click");
-            });
-
             //fileupload
             @if (maxFileSizeRule != null)
             {
@@ -837,32 +825,46 @@
         }
 
         $(function () {
-            var idgroup = $('#btn-deletegroup').val();
-            $('#btn-deletegroup').on('click', function () {
+            $('#btn-group-delete').on('click', function () {
                 var $this = $(this);
-                setConfirm(`Are you sure you want to delete this group?`, `<span>Please input group name</span> <input class="form-control" id="delete-action-content" placeholder="Your comment (optional)" rows="6">`, function () {
+                var groupId = $this[0].dataset.id,
+                    groupName = $this[0].dataset.name;
+                var content = `<div id="group-delete-confirm">
+                                    <div class="text-danger">You are going to remove <span class="text-strong">${groupName}</span>. Removed this group CANNOT be restored! Are you ABSOLUTELY sure?</div>
+                                    <div>Please type <span class="text-danger background-danger">${ groupName}</span> to proceed or close this modal to cancel.</div>
+                                    <div class="process-confirm form-group">
+                                        <input type="text" class="form-control">
+                                    </div>
+                               </div>`;
 
-                     var content = this.$content.find("#delete-action-content").val().trim();
-                     if (content === "@Model.Name") {
-                         let data = {
-                             idprocess: idprocess
-                         }
-                         setTimeout(function () {
-                             DeleteGroup(data);
-                         }, 1000);
-                     } else {
-                         alert("Please comment group name ?");
-                         return false;
-                     }
+                setConfirm(`Confirmation required`, content, function () {
+                    var container = this.$content.find(".group-confirm");
+                    var confirm = this.$content.find(".group-confirm > input").val().trim();
+                    if (confirm == "") {
+                        container.addClass("error");
+                        container.append(`<span class="error-message">This field is required.</span>`);
+                        return false;
+                    } else {
+                        container.removeClass("error");
+                        $(".error-message").remove();
+                        if (confirm === processName) {
+                            DeleteGroup(groupId);
+                        } else {
+                            container.addClass("error");
+                            container.append(`<span class="error-message">Group name not match.</span>`);
+                            return false;
+
+                        }
+                    }
                 });
-            })
+            });
         })
 
         function DeleteGroup(data) {
             $.ajax({
                 url: "@Url.Action("DeleteGroup", "group",new { area = "api"})",
                 type: "POST",
-                data: data,
+                data: {groupid : data},
                 dataType: "json",
                 success: function (response) {
                     console.log(response);

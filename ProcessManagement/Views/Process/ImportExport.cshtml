@@ -6,6 +6,7 @@
 }
 
 @section CustomCss{
+    <link rel="stylesheet" href="~/Content/vendor/select2/dist/css/select2.min.css" />
 }
 <div class="block-header">
     <div class="row">
@@ -28,17 +29,47 @@
                 <h5>Import Process</h5>
             </div>
             <div class="body" style="padding-top:0">
-                <div id="process-import-container">
-                    <input type="text" id="process-import-preview" class="form-control" readonly />
-                    <input type="file" accept=".pms" id="process-import" style="display:none" />
-                    <button class="btn btn-success waves-effect" id="btn-trigger" data-trigger="process-import">Browers</button>
+                <div class="row">
+                    <div id="process-import-container" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <input type="text" id="process-import-preview" class="form-control" readonly />
+                        <input type="file" accept=".pms" id="process-import" style="display:none" />
+                        <button class="btn btn-none waves-effect" id="btn-trigger" data-trigger="process-import"><i class="icon-magnifier"></i></button>
+                    </div>
                 </div>
-                <button class="btn btn-default waves-effect" id="btn-process-import" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Uploading...">Upload</button>
+                <button class="btn btn-primary-theme waves-effect" id="btn-process-import" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Uploading...">Upload</button>
+                <ul style="padding:20px;font-size:16px">
+                    <li>Export process you want to copy first</li>
+                    <li>Import file with .pms extension only</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="header">
+                <h5>Export Process</h5>
+            </div>
+            <div class="body" style="padding-top:0">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" id="process-export-container">
+                        <select>
+                            <option></option>
+                        </select>
+                        
+                    </div>
+                </div>
+                <button class="btn btn-primary-theme waves-effect" id="btn-process-export" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Export">Export</button>
+
+                <ul style="padding:20px;font-size:16px">
+                    <li>Input name process you want to export</li>
+                    <li>After downloaded file, please dont change anything, import it in import section</li>
+                </ul>
             </div>
         </div>
     </div>
 </div>
 @section CustomScripts{
+    <script src="~/Content/vendor/select2/dist/js/select2.min.js"></script>
     <script>
         $(function () {
             $("#btn-trigger").on("click", function () {
@@ -47,6 +78,7 @@
             });
             $("#process-import").on("change", function () {
                 var preview = $("#process-import-preview");
+                $("#process-import-container").addClass("has-file");
                 var $this = $(this);
                 var upload = $(this)[0].files[0];
 
@@ -57,6 +89,8 @@
                     remove.on("click", function () {
                         preview.val("");
                         $this.val("");
+                        $("#process-import-container").removeClass("has-file");
+
                         $(this).hide(500, () => { $(this).remove(); })
                     });
                 }
@@ -67,15 +101,80 @@
                 if (upload == undefined) {
                     showToastr("error", "You can't upload empty file", "toast-bottom-left");
                 } else {
-                    var data = new FormData();
-                    data.append("groupid", @Model.Id);
-                    data.append("fileupload", upload);
-                    importProcess($this, data);
-                    
+                    var fileExtension = upload.name.replace(/^.*\./, '');
+                    fileExtension = fileExtension.toLowerCase().trim();
+                    if (fileExtension != "pms") {
+                        showToastr("error", "Please import file with .pms extention", "toast-bottom-left");
+                    } else {
+                        var data = new FormData();
+                        data.append("groupid", @Model.Id);
+                        data.append("fileupload", upload);
+                        importProcess($this, data);
+                    }
+
+                }
+            });
+            $("#process-export-container select").select2({
+                placeholder: "Search process by name ...",
+                allowClear: true,
+                ajax: {
+                    delay: 500,
+                    url: "@Url.Action("showprocesslist", "process", new { area ="api"})",
+                    dataType: 'json',
+                    data: function (params) {
+                        var query = {
+                            key: params.term,
+                            groupid: @Model.Id
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.results
+                        };
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) { return markup; },
+                templateResult: displayItem,
+                templateSelection: displayItemSelection,
+            });
+            $("#process-export-container select").on('select2:select', function (e) {
+                var btnDetail = $("#btn-process-detail");
+                if (btnDetail.length == 0) {
+                    $("#process-export-container").append(`<button class="btn btn-warning waves-effect" id="btn-process-detail"><i class="icon-info"></i> Detail</button>`);
+                    $("#btn-process-detail").on("click", function () {
+                        var strWindownFeatures = `toolbars=no,scrollbars=yes,status=no,resizable=no,location=no,width=${$(window).width()},height=${$(window).height()}`;
+                        var url = `http://localhost:8080/en/my-group-6128/process/showstep?processid=4382`;
+                        WindowObject = window.open(url, "ProcessName::Detail", strWindownFeatures);
+                        WindowObject.document.close();
+                        WindowObject.focus();
+                    });
+                }
+            });
+            $("#process-export-container select").on('select2:unselect', function (e) {
+                $("#btn-process-detail").remove();
+            });
+            $("#btn-process-export").on("click", function () {
+                var $this = $(this);
+                var processid = $("#process-export-container select").select2("data")[0].id;
+               
+                if ( processid == "") {
+                    showToastr("error", "Please input process name to export process", "toast-bottom-left");
+                } else {
+                    toggleLoading($this);
+                    exportProcess($this, processid);
                 }
             });
 
         });
+        function displayItemSelection(item) {
+            return item.text;
+        } 
+        function displayItem(item) {
+            if (item.loading) return item.text;
+            return `<img class="mr-3 process-avatar img-responsive" src="${item.avatar}" alt="${item.text}" /> ${item.text}`;
+        }
         function importProcess(element, data) {
             $.ajax({
                 url: "@Url.Action("import", "process", new { area = "api" })",
@@ -93,13 +192,37 @@
                 success: function (response) {
                     console.log(response);
                     if (response.status == 200) {
-                       
+
                     } else {
                         showToastr("error", response.message, "toast-bottom-left")
                         console.error(response)
                     }
                 }
             });
+        }
+        function exportProcess(element,processid){
+            $.ajax({
+                url: "@Url.Action("Export", "process", new { area = "api"})",
+                type: "POST",
+                data: { processid: processid},
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status != 200) {
+                        showToastr("error", response.message, "toast-bottom-left");
+                        console.error(response);
+                    } else {
+                        var downloadAction = window.origin + "/file/download/" + response.data;
+                        window.open(downloadAction);
+                        $.alert({
+                            backgroundDismiss: 'buttonName',
+                            title:"Tip",
+                            content: `If file not download automatically. <a href="${downloadAction}">Click Here</a>.`
+                        });
+                    }
+                    toggleLoading(element);
+                }
+            })
         }
     </script>
 }

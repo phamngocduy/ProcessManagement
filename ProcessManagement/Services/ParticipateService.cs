@@ -150,7 +150,7 @@ namespace ProcessManagement.Services
             //string temp = String.Join(", ", userInGroup); 
             List<AspNetUser> memberNotInGroup;
             if (key != null)
-                memberNotInGroup = db.AspNetUsers.Where(x => !userInGroup.Contains(x.Id) && x.NickName.Contains(key)).OrderByDescending(x => x.Id).Take(quantity).ToList();
+                memberNotInGroup = db.AspNetUsers.Where(x => !userInGroup.Contains(x.Id) && x.NickName.ToLower().Contains(key)).OrderByDescending(x => x.Id).Take(quantity).ToList();
             else
                 memberNotInGroup = db.AspNetUsers.Where(x => !userInGroup.Contains(x.Id)).OrderByDescending(x => x.Id).Take(quantity).ToList();
             return memberNotInGroup;

@@ -14,7 +14,7 @@
 
 @section CustomCss{
     <link rel="stylesheet" href="~/Content/vendor/dropify/css/dropify.min.css">
-    <link rel="stylesheet" href="~/Content/vendor/select2/select2.css" />
+    <link rel="stylesheet" href="~/Content/vendor/select2/dist/css/select2.min.css" />
     <link rel="stylesheet" href="~/Content/vendor/switchery/dist/switchery.min.css" />
 }
 <div class="block-header">
@@ -97,7 +97,7 @@
 </div>
 @section CustomScripts{
     <script src="~/Content/vendor/dropify/js/dropify.min.js"></script>
-    <script src="~/Content/vendor/select2/select2.min.js"></script>
+    <script src="~/Content/vendor/select2/dist/js/select2.min.js"></script>
     <script src="~/Content/vendor/switchery/dist/switchery.min.js"></script>
     <script src="~/Content/vendor/jquery-ui-custom/jquery-ui.min.js"></script>
     <script src="~/Content/vendor/FormBuilder/form-builder.min.js"></script>
@@ -116,10 +116,10 @@
                     if (fieldData.required) {
                         attr.push("required");
                     }
-                    attr.push(`maxsize= ${fieldData.maxfilesize}${fieldData.unit}`);  
+                    attr.push(`maxsize= ${fieldData.maxfilesize}${fieldData.unit}`);
                     if (fieldData.value == "undefined" || fieldData.val == "") {
                         attr.push(`data-default-file=${fieldData.value}`);
-                    } 
+                    }
                     return {
                         field: `<input type="file" id="${fieldData.name}" ${attr.join(" ")}>`,
                         onRender: function () {
