@@ -1810,6 +1810,9 @@ input:read-only, textarea:read-only, select:read-only {
   color: red;
 }
 
+#process-export-container {
+  margin-bottom: 10px;
+}
 #process-export-container select {
   width: calc(100% - 91px) !important;
   display: inline-block;

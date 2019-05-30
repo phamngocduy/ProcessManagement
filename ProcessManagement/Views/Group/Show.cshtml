@@ -549,7 +549,7 @@
                 toggleLoading($this);
                 var newMember = $("#add-member-search select").select2("data")[0].id;
                
-                if ( newMember == null) {
+                if ( newMember == "") {
                     showToastr("error", "Please input name to invite user", "toast-bottom-left");
                     toggleLoading($this);
                 } else {

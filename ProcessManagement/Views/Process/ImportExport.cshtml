@@ -55,9 +55,11 @@
                         <select>
                             <option></option>
                         </select>
-                        <button class="btn btn-primary-theme waves-effect" id="btn-process-export" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Export">Export</button>
+                        
                     </div>
                 </div>
+                <button class="btn btn-primary-theme waves-effect" id="btn-process-export" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Export">Export</button>
+
                 <ul style="padding:20px;font-size:16px">
                     <li>Input name process you want to export</li>
                     <li>After downloaded file, please dont change anything, import it in import section</li>
@@ -131,11 +133,27 @@
                 templateResult: displayItem,
                 templateSelection: displayItemSelection,
             });
+            $("#process-export-container select").on('select2:select', function (e) {
+                var btnDetail = $("#btn-process-detail");
+                if (btnDetail.length == 0) {
+                    $("#process-export-container").append(`<button class="btn btn-warning waves-effect" id="btn-process-detail"><i class="icon-info"></i> Detail</button>`);
+                    $("#btn-process-detail").on("click", function () {
+                        var strWindownFeatures = `toolbars=no,scrollbars=yes,status=no,resizable=no,location=no,width=${$(window).width()},height=${$(window).height()}`;
+                        var url = `http://localhost:8080/en/my-group-6128/process/showstep?processid=4382`;
+                        WindowObject = window.open(url, "ProcessName::Detail", strWindownFeatures);
+                        WindowObject.document.close();
+                        WindowObject.focus();
+                    });
+                }
+            });
+            $("#process-export-container select").on('select2:unselect', function (e) {
+                $("#btn-process-detail").remove();
+            });
             $("#btn-process-export").on("click", function () {
                 var $this = $(this);
                 var processid = $("#process-export-container select").select2("data")[0].id;
                
-                if ( processid == null) {
+                if ( processid == "") {
                     showToastr("error", "Please input process name to export process", "toast-bottom-left");
                 } else {
                     toggleLoading($this);
