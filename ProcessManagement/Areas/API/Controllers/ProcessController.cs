@@ -320,6 +320,10 @@ namespace ProcessManagement.Areas.API.Controllers
         }
         public JsonResult ShowProcessList(string key, int groupid)
         {
+            if (!string.IsNullOrEmpty(key))
+            {
+                key = key.ToLower().Trim();
+            }
             List<Process> processes = processService.searchProcesses(groupid, key, 5);
             List<object> jProcesses = new List<object>();
             foreach (Process process in processes.Where(x => x.IsRun == null || x.IsRun == false))
