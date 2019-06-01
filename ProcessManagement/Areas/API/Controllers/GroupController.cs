@@ -237,7 +237,7 @@ namespace ProcessManagement.Areas.API.Controllers
         }
 
         [HttpPost]
-        public JsonResult DeleteGroup(int idgroup)
+        public JsonResult DeleteGroup(int groupid)
         {
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
@@ -245,7 +245,7 @@ namespace ProcessManagement.Areas.API.Controllers
             try
             {
 
-                Group group = groupService.findGroup(idgroup);
+                Group group = groupService.findGroup(groupid);
                 
                 groupService.removeGroup(group);
 

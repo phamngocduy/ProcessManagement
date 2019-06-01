@@ -832,7 +832,7 @@
                 var content = `<div id="group-delete-confirm">
                                     <div class="text-danger">You are going to remove <span class="text-strong">${groupName}</span>. Removed this group CANNOT be restored! Are you ABSOLUTELY sure?</div>
                                     <div>Please type <span class="text-danger background-danger">${ groupName}</span> to proceed or close this modal to cancel.</div>
-                                    <div class="process-confirm form-group">
+                                    <div class="group-confirm form-group">
                                         <input type="text" class="form-control">
                                     </div>
                                </div>`;
@@ -847,7 +847,7 @@
                     } else {
                         container.removeClass("error");
                         $(".error-message").remove();
-                        if (confirm === processName) {
+                        if (confirm === groupName) {
                             DeleteGroup(groupId);
                         } else {
                             container.addClass("error");
