@@ -869,7 +869,7 @@
                 success: function (response) {
                     console.log(response);
                     if (response.status == 200) {
-                        location.href = '@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "index"})';
+                        location.href = window.location.origin;
                     } else {
                         console.error(response)
                     }

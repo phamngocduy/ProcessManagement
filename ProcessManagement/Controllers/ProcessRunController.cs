@@ -245,14 +245,15 @@ namespace ProcessManagement.Controllers
             }
             //get taskrun file 
             int groupId = taskrun.StepRun.ProcessRun.Process.IdGroup;
-            int processrunId = taskrun.StepRun.ProcessRun.Process.Id;
+            int processRunId = taskrun.StepRun.ProcessRun.Process.Id;
             int? stepId = taskrun.StepRun.CloneFrom;
             int? taskId = taskrun.CloneForm;
-            string taskRunPath = string.Format("Upload/{0}/{1}/{2}/{3}", groupId, processrunId, stepId, taskId);
+            string taskRunPath = string.Format("Upload/{0}/{1}/{2}/{3}", groupId, processRunId, stepId, taskId);
             List<FileManager> files = fileService.findFiles(groupId, taskRunPath);
             string userTaskRunPath = string.Format("Upload/{0}/run/{1}/{2}/{3}", groupId, taskrun.StepRun.idProcess, taskrun.IdStep, taskrun.Id);
             FileManager userFile = fileService.findFile(groupId, userTaskRunPath);
 
+            ViewData["Process"] = processService.findProcess(processRunId, true);
             ViewData["Rolerun"] = role;
             ViewData["UserId"] = idUser;
             ViewData["ValueInput"] = JObject.Parse(taskrun.ValueInputText);
@@ -291,12 +292,13 @@ namespace ProcessManagement.Controllers
 
             //get taskrun file 
             int groupId = taskrun.StepRun.ProcessRun.Process.IdGroup;
-            int processrunId = taskrun.StepRun.ProcessRun.Process.Id;
+            int processRunId = taskrun.StepRun.ProcessRun.Process.Id;
             int? stepId = taskrun.StepRun.CloneFrom;
             int? taskId = taskrun.CloneForm;
-            string processRunPath = string.Format("Upload/{0}/{1}/{2}/{3}", groupId, processrunId, stepId, taskId);
+            string processRunPath = string.Format("Upload/{0}/{1}/{2}/{3}", groupId, processRunId, stepId, taskId);
             List<FileManager> files = fileService.findFiles(groupId, processRunPath);
 
+            ViewData["Process"] = processService.findProcess(processRunId, true);
             ViewData["Rolerun"] = role;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, taskrun.StepRun.ProcessRun.Process.IdGroup);
             ViewData["UserId"] = idUser;

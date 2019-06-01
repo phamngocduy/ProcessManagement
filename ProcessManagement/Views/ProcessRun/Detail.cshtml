@@ -19,17 +19,14 @@
 }
 <div class="block-header">
     <div class="row">
-        <div class="col-lg-6 col-md-8 col-sm-12">
-            <h2>
-                <a href="javascript:void(0);" class="btn btn-xs btn-link primary-theme btn-toggle-fullwidth">
-                    <i class="fa fa-arrow-left"></i>
-                </a> Process Run Name
-            </h2>
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <a href="javascript:void(0);" class="btn btn-xs btn-link primary-theme btn-toggle-fullwidth primary-theme">
+                <i class="fa fa-arrow-left"></i>
+            </a>
             <ul class="breadcrumb">
-                <li class="breadcrumb-item"><a href="~/Home/Index" class="primary-theme"><i class="icon-home"></i></a></li>
-                <li class="breadcrumb-item"><a href="/" class="primary-theme">Groups</a></li>
-                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = processrun.IdGroup })" class="primary-theme">@processrun.Group.Name</a></li>
-                <li class="breadcrumb-item"><a href="#" class="primary-theme">Detail @processrun.Name</a></li>
+                <li><a href="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "group", action = "index"})"><i class="icon-home"></i></a></li>
+                <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "show", groupid = processrun.Group.Id })">Group: @processrun.Group.Name</a></li>
+                <li><a href="javascript:void(0);">Process: @processrun.Name</a></li>
             </ul>
         </div>
         @*<div class="col-lg-6 col-md-4 col-sm-12 text-right">
@@ -76,7 +73,7 @@
                         <button class="btn btn-primary-theme btn-sm" id="btn-runprocess">Run Process</button>
                     }
                     <a class="btn btn-default btn-sm waves-effect" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "assignrole", processid = processrun.Id })">Assign Roles</a>
-                    <button id="#btn-process-delete" data-id="@processrun.Id" data-name="@processrun.Name" class="btn btn-sm btn-danger waves-effect"><i class="icon-trash"></i></button>
+                    <button id="btn-processrun-delete" data-id="@processrun.Id" data-name="@processrun.Name" class="btn btn-sm btn-danger waves-effect"><i class="icon-trash"></i></button>
 
                 </div>
                 }
@@ -656,7 +653,7 @@
         }
 
         $(function () {
-            $('#btn-process-delete').on('click', function () {
+            $('#btn-processrun-delete').on('click', function () {
                 var $this = $(this);
                 var processId = $this[0].dataset.id,
                     processName = $this[0].dataset.name;

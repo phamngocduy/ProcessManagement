@@ -215,7 +215,7 @@ namespace ProcessManagement.Services
         
         public void removeprocessrun(int idprocess)
         {
-            ProcessRun processrun = findProcessRun(idprocess);
+            ProcessRun processrun = findProcessRunByProcessId(idprocess);
             if (processrun != null)
             {
                 Process process = findProcess(processrun.Id);

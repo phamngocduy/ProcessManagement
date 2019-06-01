@@ -18,7 +18,6 @@ namespace ProcessManagement.Areas.API.Controllers
     {
         ///=============================================================================================
         ProcessService processService = new ProcessService();
-        StepService stepService = new StepService();
         RoleService roleService = new RoleService();
         TaskService taskService = new TaskService();
         ParticipateService participateService = new ParticipateService();
