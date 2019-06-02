@@ -11,12 +11,15 @@
 }
 <div class="block-header">
     <div class="row">
-        <div class="col-lg-6 col-md-8 col-sm-12">
-            <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Create New Project</h2>
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <a href="javascript:void(0);" class="btn btn-xs btn-link primary-theme btn-toggle-fullwidth primary-theme">
+                <i class="fa fa-arrow-left"></i>
+            </a>
             <ul class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index-2.html"><i class="icon-home"></i></a></li>
-                <li class="breadcrumb-item">Projects</li>
-                <li class="breadcrumb-item active">Add Project</li>
+                <li><a href="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "group", action = "index"})"><i class="icon-home"></i></a></li>
+                <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "show", groupid = group.Id })">Group: @group.Name</a></li>
+                <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupid = group.Id, processid= Model.Process.Id })">Process: @Model.Process.Name</a></li>
+                <li><a href="javascript:void(0);">Step: @Model.Name  (&ensp;<i class="icon-pencil"></i> edit&ensp;)</a></li>
             </ul>
         </div>
         @*<div class="col-lg-6 col-md-4 col-sm-12 text-right">
