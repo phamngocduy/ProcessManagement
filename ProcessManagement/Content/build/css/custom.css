@@ -1431,6 +1431,10 @@ input:read-only, textarea:read-only, select:read-only {
   pointer-events: all;
 }
 
+.swal2-container .swal2-actions button {
+  margin: 0 8px;
+}
+
 .btn-toggle-fullwidth {
   display: block;
   float: left;
