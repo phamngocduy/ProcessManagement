@@ -38,7 +38,7 @@
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vs9298.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\Dell\AppData\Local\Temp\vs85B7.tmp\Debug\</IntermediateOutputPath>
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -50,7 +50,7 @@
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\ADMIN\AppData\Local\Temp\vs9298.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\Dell\AppData\Local\Temp\vs85B7.tmp\Release\</IntermediateOutputPath>
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
