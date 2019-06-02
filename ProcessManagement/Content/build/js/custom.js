@@ -75,16 +75,19 @@
 
 
 
+var hasPrefix = false,
+    prefix = "cap21t8";
 
-function getBaseUrl() {
-    var hasPrefix = false;
-    var base = window.location.origin,
-    prefix = "cap21t8",
-    lang = getCurrentLang(),
-    url = hasPrefix ? `${base}/${prefix}/${lang}` : `${base}/${lang}`;
+function getBaseUrl(haveLang = true) {
+    var urlArr = [];
+    urlArr.push(window.location.origin);
+    if (hasPrefix) urlArr.push(prefix);
+    if (haveLang) urlArr.push(getCurrentLang());
+    var url = urlArr.join("/");
     return url;
 
 }
+
 function getCurrentLang() {
     var path = window.location.pathname;
     var lang = path.substring(1, 3);
