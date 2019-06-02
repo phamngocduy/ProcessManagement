@@ -76,7 +76,15 @@
 
 
 
+function getBaseUrl() {
+    var hasPrefix = false;
+    var base = window.location.origin,
+    prefix = "cap21t8",
+    lang = getCurrentLang(),
+    url = hasPrefix ? `${base}/${prefix}/${lang}` : `${base}/${lang}`;
+    return url;
 
+}
 function getCurrentLang() {
     var path = window.location.pathname;
     var lang = path.substring(1, 3);

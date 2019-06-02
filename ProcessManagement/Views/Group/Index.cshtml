@@ -137,11 +137,9 @@
                 "url": "@Url.Action("getgrouplist", "group", new { area = "api"})",
                 "dataSrc": function (json) {
                     json = json.data;
-                    var lang = getCurrentLang();
-                    console.log(json);
                     var return_data = [];
                     for (var i = 0; i < json.length; i++) {
-                        var action = `${lang}/${json[i].slug}-${json[i].id}/group`;
+                        var action = `${getBaseUrl()}/${json[i].slug}-${json[i].id}/group`;
                         var name = `<a href="${action}" class="primary-theme"><h6>${json[i].name}</h6></a><small>${json[i].time_ralitive}</small>`;
                         var sort = json[i].update_at.sort;
                         var owner = getOwnerAvatar(json[i].owner.name, json[i].owner.avatar);

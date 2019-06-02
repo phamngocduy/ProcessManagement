@@ -194,24 +194,14 @@
                 success: function (response) {
                     console.log(response);
                     if (response.status == 200) {
-                        const swalWithBootstrapButtons = Swal.mixin({
-                            customClass: {
-                                confirmButton: 'btn btn-primary-theme waves-effect mr-8 ml-8',
-                                cancelButton: 'btn btn-default waves-effect mr-8 ml-8'
-                            },
-                            buttonsStyling: false,
-                        });
-                        swalWithBootstrapButtons.fire({
-                            title: 'Import file sucessfully',
+                        Swal.fire({
+                            title: 'Import sucessfully',
                             type: 'success',
-                            showCancelButton: true,
-                            confirmButtonText: "View detail process",
-                            cancelButtonText: "Stay this page",
-                            reverseButtons: true
-                        }).then((result) => {
-                            if (result.value) {
-                                location.href = "google.com";
-                            }
+                            timer: 3000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            var data = response.data;
+                            location.href = `${getBaseUrl()}/${data.groupslug}-${data.groupid}/group`;
                         })
                     } else {
                         showToastr("error", response.message, "toast-bottom-left")

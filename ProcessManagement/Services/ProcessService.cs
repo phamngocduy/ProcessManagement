@@ -68,7 +68,7 @@ namespace ProcessManagement.Services
 		/// <returns></returns>
 		public List<Role> findListRole(int idProcess)
 		{
-            List<Role> roles = db.Roles.Where(x => x.IdProcess == idProcess).ToList();
+            List<Role> roles = db.Roles.Where(x => x.IdProcess == idProcess).OrderByDescending(x => x.Create_At).ToList();
 			return roles;
 		}
 		public void createProcess(int idGroup, string idUser, Process process)

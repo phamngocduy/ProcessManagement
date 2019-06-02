@@ -108,7 +108,7 @@
             var bAction = `<button id="btn-save" class="btn btn-primary-theme waves-effect">Save</button>
                             <button id="btn-back" class="btn btn-default waves-effect">Back</button>`;
             var showForm = $("#show-task").html();
-            var taskform = '@Model.ValueFormJson'.replace(/&quot;/g, "\"");
+            var taskform = `@Model.ValueFormJson`.replace(/&quot;/g, "\"");
             var formb;
             var optionRender = {
                 uploadFile: function (fieldData) {
