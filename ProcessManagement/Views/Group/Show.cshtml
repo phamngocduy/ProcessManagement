@@ -16,6 +16,8 @@
 @section CustomCss{
     <link rel="stylesheet" href="~/Content/vendor/select2/dist/css/select2.min.css" />
     <link rel="stylesheet" href="~/Content/vendor/bootstrap-multiselect/bootstrap-multiselect.css">
+    @*<link rel="stylesheet" href="~/Content/build/css/pagination.css">*@
+
     <style>
         .dropdown-menu a {
             display: block;
@@ -237,7 +239,6 @@
                     @foreach (var item in listprocess.Where(y => y.IsRun == true))
                     {
                         <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "processrun", action = "detail", processid = item.Id })">
-
                             <li class="media">
                                 <img class="mr-3 process-avatar" src="@item.Avatar" alt="Generic placeholder image">
                                 <div class="media-body">
@@ -275,39 +276,33 @@
     <div class="col-lg-4 col-md-12">
         <div class="card" style="height: 100%">
             <div class="header">
-                <h2>Processes in group</h2>
-                <ul class="header-dropdown">
+                <h2>Processes</h2>
+                <ul class="header-dropdown ">
                     <li><a class="tab_btn" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "newprocess", groupslug = Model.groupSlug, groupid = Model.Id })" data-toggle="tooltip" data-placement="top" title="Create New Process"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
-                    <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Previous"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></li>
-                    <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Next"><i class="fa fa-arrow-right" aria-hidden="true"></i></a></li>
-                    <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"></a>
-                        <ul class="dropdown-menu dropdown-menu-right animated bounceIn">
-                            <li><a href="javascript:void(0);">Action</a></li>
-                            <li><a href="javascript:void(0);">Another Action</a></li>
-                            <li><a href="javascript:void(0);">Something else</a></li>
-                        </ul>
-                    </li>
                 </ul>
+                <ul class="pagination">
+                <li class="page-item">
+                    <a id="previous-page" class="page-link" href="javascript:void(0)" aria-label="Previous">Previous</a>
+                </li>
+            </ul>
             </div>
             <div class="body process-list">
-                <ul class="list-unstyled">
+                <ul id="mylistprocess" class="list-unstyled pagination-listcard mylistprocess">
                     @foreach (var process in listprocess.Where(x => x.IsRun == null || x.IsRun == false))
                     {
-                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "Process", action = "ShowStep", groupslug = Model.groupSlug, groupid = Model.Id, processid = process.Id })">
+                        <a class="mymember" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "Process", action = "ShowStep", groupslug = Model.groupSlug, groupid = Model.Id, processid = process.Id })">
                             <li class="media">
-
                                 <div class="media-left"><img class="mr-3 process-avatar img-responsive" src="@process.Avatar" alt="@process.Name" /></div>
                                 <div class="media-body">
                                     <h5 class="mt-0 mb-1">@process.Name</h5>
-                                    @*<p>@pro.Description</p>*@
                                 </div>
                             </li>
                         </a>
                     }
-                    <li><a href="#" class="align-right displayblock primary-theme">View more...</a></li>
+                    @*<li><a href="#" class="align-right displayblock primary-theme">View more...</a></li>*@
                 </ul>
             </div>
+            
         </div>
     </div>
 </div>
@@ -365,8 +360,89 @@
 @section CustomScripts{
     <script src="~/Content/vendor/select2/dist/js/select2.min.js"></script>
     <script src="~/Content/vendor/bootstrap-multiselect/bootstrap-multiselect.js"></script>
+    @*<script src="~/Content/build/js/pagination.js"></script>*@
     <script>
         $(function () {
+            //Pagination
+            var pagination = ".pagination-listcard";
+            Pagination(pagination);
+
+            function Pagination(iddata){
+                var numberOfItem = $(iddata+" .mymember").length;
+                console.log(numberOfItem);
+                var limitPerPage = 4; // giới hạn 1 page
+                $(iddata + " .mymember:gt(" + (limitPerPage - 1) + ")").hide();
+                var totalPages = Math.round((numberOfItem / limitPerPage) + 1);// chia để lấy số page cần
+                $(".pagination").append(`<li class="current-page active page-item"><a class="page-link" href="javascript:void(0)">` + 1 + `</a></li>`);
+
+                for (var i = 2; i <= totalPages; i++) {
+                    $(".pagination").append(`<li class="current-page page-item"><a class="page-link" href="javascript:void(0)">` + i + `</a></li>`);
+                }
+
+                $(".pagination").append(`<li class="next-page page-item"><a class="page-link" href="javascript:void(0)" aria-label="Next">Next</a></li>`);
+
+                // Chức năng hiển thị các mục mới dựa trên số trang được nhấp
+                $(".pagination li.current-page").on("click", function () {
+                    if ($(this).hasClass("active")) {
+                        return false;
+                    } else {
+                        var currentPage = $(this).index();
+                        $(".pagination li").removeClass("active");
+                        $(this).addClass("active");//hiện trang click
+                        $(iddata + " .mymember").hide();//ẩn các trang còn lại
+
+                        var grandTotal = limitPerPage * currentPage;
+                        for (var i = grandTotal - limitPerPage; i < grandTotal; i++) {
+                            $(iddata + " .mymember:eq(" + i + ")").show();
+                        }
+                    }
+                });
+
+                // chức năng next page
+                $(".next-page").on("click", function(){
+                    var currentPage = $(".pagination li.active").index();
+                    //console.log(currentPage);
+                    // Kiểm tra để đảm bảo rằng điều hướng đến trang tiếp theo sẽ không vượt quá tổng số trang
+                    if(currentPage === totalPages){
+                        return false;
+                    }else{
+                        currentPage++;
+                        $(".pagination li").removeClass("active");
+                        $(iddata+" .mymember").hide();
+
+                        var grandTotal = limitPerPage * currentPage;
+                        for(var i = grandTotal - limitPerPage; i < grandTotal; i++){
+                            $(iddata+" .mymember:eq("+ i +")").show();
+                        }
+                        $(".pagination li.current-page:eq("+ (currentPage - 1) +")").addClass("active");
+
+                    }
+                });
+
+                // chức năng back page
+                $("#previous-page").on("click", function () {
+                    var currentPage = $(".pagination li.active").index();
+                    // Kiểm tra để đảm bảo rằng người dùng không ở trang 1 và đang cố điều hướng đến trang trước
+                    if (currentPage === 1) {
+                        return false;
+                    } else {
+                        currentPage--;
+                        $(".pagination li").removeClass("active");
+                        $(iddata + " .mymember").hide();
+
+                        var grandTotal = limitPerPage * currentPage;
+                        for (var i = grandTotal - limitPerPage; i < grandTotal; i++) {
+                            $(iddata + " .mymember:eq(" + i + ")").show();
+                        }
+                        $(".pagination li.current-page:eq(" + (currentPage - 1) + ")").addClass("active");
+
+                    }
+                });
+
+            }
+
+
+
             $(".btn-switch-tab").on("click", function (e) {
                 var tab = $(this).attr("href");
                 $("#group-name").val("@Html.Raw(Model.Name)");
@@ -400,7 +476,7 @@
                         for (var i = 0; i < json.length; i++) {
                             var name = json[i].name;
                             var avatar;
-                            
+
                             var jAvatar = json[i].avatar;
                             if (jAvatar.avatar == null) {
                                 avatar = `<img src="~/Content/images/xs/avatar1.jpg" class="rounded-circle width35" alt="">`;
@@ -411,7 +487,7 @@
                             var member = `${avatar}${name}`;
                             var isAdmin = json[i].isAdmin ? "selected" : "";
                             var isManager = json[i].isManager ? "selected" : "";
-                            
+
                             if (json[i].isOwner) {
                                 var role = `<select multiple="multiple" class="role multiselect" id="role-${i + 1}" data-id="${json[i].id}" disabled>
                                                 <option value="o" selected>Owner</option>
@@ -421,12 +497,12 @@
                                 var role = `<select multiple="multiple" class="role multiselect" id="role-${i + 1}" data-id="${json[i].id}">
                                                 <option value="a" ${isAdmin}>Admin</option>
                                                 <option value="m" ${isManager}>Manager</option>
-                                            </select>`; 
+                                            </select>`;
                                 var action = `<button class="btn btn-danger btn-deleteuser" value="${json[i].id}" >Delete</button>
                                             <button class="btn btn-danger btn-leavegroup" value="${json[i].id}" >Leave</button>`
-                               
+
                             }
-                           
+
                             return_data.push({
                                 "member": member,
                                 "sort": name,
@@ -530,7 +606,7 @@
                 var $this = $(this);
                 toggleLoading($this);
                 var newMember = $("#add-member-search select").select2("data")[0].id;
-               
+
                 if ( newMember == "") {
                     showToastr("error", "Please input name to invite user", "toast-bottom-left");
                     toggleLoading($this);
@@ -567,7 +643,7 @@
         });
         function displayItemSelection(item) {
             return item.text;
-        } 
+        }
         function displayItem(item) {
             if (item.loading) return item.text;
 

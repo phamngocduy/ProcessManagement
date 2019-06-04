@@ -6,18 +6,15 @@
 }
 <div class="block-header">
     <div class="row">
-        <div class="col-lg-6 col-md-8 col-sm-12">
-            <h2>
-                <a href="javascript:void(0);" class="btn btn-xs btn-link primary-theme btn-toggle-fullwidth">
-                    <i class="fa fa-arrow-left"></i>
-                </a> Add Role
-            </h2>
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <a href="javascript:void(0);" class="btn btn-xs btn-link primary-theme btn-toggle-fullwidth primary-theme">
+                <i class="fa fa-arrow-left"></i>
+            </a>
             <ul class="breadcrumb">
-                <li class="breadcrumb-item"><a href="~/Home/Index" class="primary-theme"><i class="icon-home"></i></a></li>
-                <li class="breadcrumb-item"><a href="/" class="primary-theme">Groups</a></li>
-                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = group.Id })" class="primary-theme">@group.Name</a></li>
-                <li class="breadcrumb-item"><a href="" class="primary-theme">@Model.Name</a></li>
-                <li class="breadcrumb-item"><a href="" class="primary-theme">Add Role</a></li>
+                <li><a href="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "group", action = "index"})"><i class="icon-home"></i></a></li>
+                <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "show", groupid = group.Id })">Group: @group.Name</a></li>
+                <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupid = group.Id, processid = Model.Process.Id })">Process: @Model.Process.Name</a></li>
+                <li><a href="javascript:void(0);">Role:  @Model.Name  (&ensp;<i class="icon-pencil"></i> edit&ensp;)</a></li>
             </ul>
         </div>
         @*<div class="col-lg-6 col-md-4 col-sm-12 text-right">

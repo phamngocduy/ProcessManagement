@@ -75,7 +75,18 @@
 
 
 
+var hasPrefix = false,
+    prefix = "cap21t8";
 
+function getBaseUrl(haveLang = true) {
+    var urlArr = [];
+    urlArr.push(window.location.origin);
+    if (hasPrefix) urlArr.push(prefix);
+    if (haveLang) urlArr.push(getCurrentLang());
+    var url = urlArr.join("/");
+    return url;
+
+}
 
 function getCurrentLang() {
     var path = window.location.pathname;

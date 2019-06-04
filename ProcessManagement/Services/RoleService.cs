@@ -116,7 +116,7 @@ namespace ProcessManagement.Services
         }
         public bool isNameExist(Role role,int processid)
         {
-            Role r = db.Roles.FirstOrDefault(x => x.Name.ToLower() == role.Name.ToLower().Trim() && x.IdProcess == processid);
+            Role r = db.Roles.FirstOrDefault(x => x.Name.ToLower() == role.Name.ToLower().Trim() && x.IdProcess == processid && x.Id != role.Id);
             return r != null ? true : false;
         }
         public bool isAssigned(int roleid, string userid)

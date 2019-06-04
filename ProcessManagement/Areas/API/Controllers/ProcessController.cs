@@ -736,6 +736,8 @@ namespace ProcessManagement.Areas.API.Controllers
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
+            Group group;
+            Process pr;
             try
             {
                 using (var scope = new TransactionScope())
@@ -754,9 +756,9 @@ namespace ProcessManagement.Areas.API.Controllers
                         data = JsonConvert.DeserializeObject<JObject>(sr.ReadToEnd());
                     }
                     //xử lý data
-                
+                    group = groupService.findGroup(groupid);
                     //process
-                    Process pr = new Process();
+                    pr = new Process();
                     pr.Name = (string)data["processname"];
                     pr.Description = (string)data["description"];
                     pr.IdOwner = IdUser;
@@ -959,7 +961,14 @@ namespace ProcessManagement.Areas.API.Controllers
                     scope.Complete();
                 }
                 message = "Import Sucess";
-                response = new { message = message, status = status };
+                object d = new
+                {
+                    groupid = group.Id,
+                    groupslug = group.groupSlug,
+                    processid = pr.Id,
+                };
+
+                response = new { message = message, data = d, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)

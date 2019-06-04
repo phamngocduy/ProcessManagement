@@ -377,11 +377,10 @@ namespace ProcessManagement.Controllers
         {
             Role role = roleService.findRole(roleid);
             if (role == null) return HttpNotFound();
-            int roleId = role.Id;
             Process process = processService.findProcess(role.IdProcess);
             Group group = groupService.findGroup(process.IdGroup);
             roleService.removeRole(role);
-            SetFlash(FlashType.success, "Removed " + roleId + " Successfully");
+            SetFlash(FlashType.success, "Removed Role Successfully");
 
             return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
         }
@@ -409,13 +408,13 @@ namespace ProcessManagement.Controllers
             if (role.Name == null)
             {
                 SetFlash(FlashType.error, "Name is required");
-                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "editrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
+                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "editrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id, roleid = role.Id });
             }
             bool isExist = roleService.isNameExist(role, process.Id);
             if (isExist)
             {
                 SetFlash(FlashType.error, "This name is exist in process");
-                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "editrole", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id });
+                return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "editrole", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id, roleid = role.Id });
             }
 
             roleService.editRole(role);

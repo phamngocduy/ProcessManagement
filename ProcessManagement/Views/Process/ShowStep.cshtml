@@ -323,7 +323,7 @@
                         showToastr("error", response.message, "toast-bottom-left");
                         console.error(response);
                     } else {
-                        var downloadAction = window.origin + "/file/download/" + response.data;
+                        var downloadAction = `${getBaseUrl(false)}/file/download/${response.data}`;
                         window.open(downloadAction);
                         $.alert({
                             backgroundDismiss: 'buttonName',
