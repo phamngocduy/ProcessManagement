@@ -32,7 +32,7 @@
             <div class="body" style="padding-top:0">
                 <div class="row">
                     <div id="process-import-container" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                        <input type="text" id="process-import-preview" class="form-control" readonly />
+                        <input type="text" id="process-import-preview" class="form-control" readonly data-trigger="process-import" />
                         <input type="file" accept=".pms" id="process-import" style="display:none" />
                         <button class="btn btn-none waves-effect" id="btn-trigger" data-trigger="process-import"><i class="icon-magnifier"></i></button>
                     </div>
@@ -74,7 +74,7 @@
     <script src="~/Content/vendor/select2/dist/js/select2.min.js"></script>
     <script>
         $(function () {
-            $("#btn-trigger").on("click", function () {
+            $("#btn-trigger, #process-import-preview").on("click", function () {
                 var target = $(this)[0].dataset.trigger;
                 $(`#${target}`).trigger("click");
             });
@@ -201,7 +201,7 @@
                             showConfirmButton: false
                         }).then(() => {
                             var data = response.data;
-                            location.href = `${getBaseUrl()}/${data.groupslug}-${data.groupid}/group`;
+                            location.href = `${getBaseUrl()}/${data.groupslug}-${data.groupid}/process/showstep?processid=${data.processid}`;
                         })
                     } else {
                         showToastr("error", response.message, "toast-bottom-left")

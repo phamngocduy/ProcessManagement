@@ -29,7 +29,7 @@ namespace ProcessManagement.Models
         public int Key { get; set; }
         public string Figure { get; set; }
         public Nullable<int> Status { get; set; }
-        public Nullable<System.DateTime> Created_at { get; set; }
+        public Nullable<System.DateTime> Created_At { get; set; }
         public Nullable<System.DateTime> Updated_At { get; set; }
         public string ApproveBy { get; set; }
         public Nullable<System.DateTime> Approve_At { get; set; }

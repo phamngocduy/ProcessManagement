@@ -20,6 +20,7 @@ namespace ProcessManagement.Models
             this.RoleRuns = new HashSet<RoleRun>();
             this.Comments = new HashSet<Comment>();
             this.Groups = new HashSet<Group>();
+            this.Notifies = new HashSet<Notify>();
             this.Participates = new HashSet<Participate>();
             this.Processes = new HashSet<Process>();
             this.StepRuns = new HashSet<StepRun>();
@@ -49,6 +50,8 @@ namespace ProcessManagement.Models
         public virtual ICollection<Comment> Comments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Group> Groups { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Notify> Notifies { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Participate> Participates { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

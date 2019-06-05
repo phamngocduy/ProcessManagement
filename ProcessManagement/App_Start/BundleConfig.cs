@@ -32,7 +32,9 @@ namespace ProcessManagement
                 .Include("~/Content/build/bundles/datatablescripts.bundle.js")
                 .Include("~/Content/build/js/button-ripple.js")
                 .Include("~/Content/build/js/custom.js")
-                .Include("~/Content/build/js/pages/forms/custom-validation.js");
+                .Include("~/Content/build/js/pages/forms/custom-validation.js")
+                .Include("~/Content/build/scripts/jquery.signalR-2.4.1.min.js");
+
             scriptBundle.Orderer = new PassthruBundleOrderer();
             bundles.Add(scriptBundle);
 

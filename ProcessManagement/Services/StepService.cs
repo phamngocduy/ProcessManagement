@@ -131,7 +131,7 @@ namespace ProcessManagement.Services
                 steprun.Figure = item.Figure;
                 steprun.Status = status.Id;
                 steprun.CloneFrom = item.Id;
-                steprun.Created_at = DateTime.Now;
+                steprun.Created_At = DateTime.Now;
                 steprun.Updated_At = DateTime.Now;
                 db.StepRuns.Add(steprun);
                 db.SaveChanges();
@@ -164,7 +164,7 @@ namespace ProcessManagement.Services
                 steprun.Figure = step.Figure;
                 steprun.Status = status.Id;
                 steprun.CloneFrom = step.Id;
-                steprun.Created_at = DateTime.Now;
+                steprun.Created_At = DateTime.Now;
                 steprun.Updated_At = DateTime.Now;
                 db.StepRuns.Add(steprun);
                 db.SaveChanges();
@@ -201,7 +201,7 @@ namespace ProcessManagement.Services
                 steprun.Key = step.Key;
                 steprun.Figure = step.Figure;
                 steprun.Status = status.Id;
-                steprun.Created_at = DateTime.Now;
+                steprun.Created_At = DateTime.Now;
                 steprun.Updated_At = DateTime.Now;
                 db.StepRuns.Add(steprun);
                 db.SaveChanges();

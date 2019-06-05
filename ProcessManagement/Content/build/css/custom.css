@@ -1848,6 +1848,13 @@ input:read-only, textarea:read-only, select:read-only {
   margin-left: 10px;
 }
 
+.notifications {
+  background: #ffffff;
+}
+.notifications .header {
+  color: #524f4f;
+}
+
 /* end of content */
 /* footer */
 #footer {

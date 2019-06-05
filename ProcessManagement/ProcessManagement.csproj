@@ -57,6 +57,12 @@
     <Reference Include="DotNetZip, Version=1.13.3.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetZip.1.13.3\lib\net40\DotNetZip.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.4.1\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.4.1\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.TelemetryCorrelation.1.0.5\lib\net45\Microsoft.AspNet.TelemetryCorrelation.dll</HintPath>
     </Reference>
@@ -202,6 +208,7 @@
     <Compile Include="Areas\API\APIAreaRegistration.cs" />
     <Compile Include="Areas\API\Controllers\FileController.cs" />
     <Compile Include="Areas\API\Controllers\GroupController.cs" />
+    <Compile Include="Areas\API\Controllers\NotifyController.cs" />
     <Compile Include="Areas\API\Controllers\ProcessController.cs" />
     <Compile Include="Areas\API\Controllers\ProcessRunController.cs" />
     <Compile Include="Content\resources\CWcommon.vi.Designer.cs">
@@ -317,6 +324,9 @@
     </Compile>
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Notify.cs">
+      <DependentUpon>PMS.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Participate.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
@@ -362,6 +372,8 @@
     <Compile Include="Models\TaskProcessRun.cs">
       <DependentUpon>PMS.tt</DependentUpon>
     </Compile>
+    <Compile Include="Services\NotificationService.cs" />
+    <Compile Include="NotificationHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CommonService.cs" />
     <Compile Include="Services\FileService.cs" />
@@ -5437,16 +5449,27 @@
     <Content Include="Content\vendor\roundslider\roundslider.min.css" />
     <Content Include="Content\vendor\roundslider\roundslider.min.js" />
     <Content Include="Content\vendor\roundslider\style.css" />
+    <Content Include="Content\vendor\select2\.editorconfig" />
     <Content Include="Content\vendor\select2\.gitignore" />
+    <Content Include="Content\vendor\select2\.jshintignore" />
+    <Content Include="Content\vendor\select2\.jshintrc" />
+    <Content Include="Content\vendor\select2\.travis.yml" />
+    <Content Include="Content\vendor\select2\bower.json" />
+    <Content Include="Content\vendor\select2\component.json" />
+    <Content Include="Content\vendor\select2\composer.json" />
     <Content Include="Content\vendor\select2\dist\css\select2.css" />
     <Content Include="Content\vendor\select2\dist\css\select2.min.css" />
+    <Content Include="Content\vendor\select2\dist\js\i18n\af.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\ar.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\az.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\bg.js" />
+    <Content Include="Content\vendor\select2\dist\js\i18n\bn.js" />
+    <Content Include="Content\vendor\select2\dist\js\i18n\bs.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\ca.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\cs.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\da.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\de.js" />
+    <Content Include="Content\vendor\select2\dist\js\i18n\dsb.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\el.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\en.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\es.js" />
@@ -5459,11 +5482,14 @@
     <Content Include="Content\vendor\select2\dist\js\i18n\he.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\hi.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\hr.js" />
+    <Content Include="Content\vendor\select2\dist\js\i18n\hsb.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\hu.js" />
+    <Content Include="Content\vendor\select2\dist\js\i18n\hy.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\id.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\is.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\it.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\ja.js" />
+    <Content Include="Content\vendor\select2\dist\js\i18n\ka.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\km.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\ko.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\lt.js" />
@@ -5471,17 +5497,22 @@
     <Content Include="Content\vendor\select2\dist\js\i18n\mk.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\ms.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\nb.js" />
+    <Content Include="Content\vendor\select2\dist\js\i18n\ne.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\nl.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\pl.js" />
+    <Content Include="Content\vendor\select2\dist\js\i18n\ps.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\pt-BR.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\pt.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\ro.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\ru.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\sk.js" />
+    <Content Include="Content\vendor\select2\dist\js\i18n\sl.js" />
+    <Content Include="Content\vendor\select2\dist\js\i18n\sq.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\sr-Cyrl.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\sr.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\sv.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\th.js" />
+    <Content Include="Content\vendor\select2\dist\js\i18n\tk.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\tr.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\uk.js" />
     <Content Include="Content\vendor\select2\dist\js\i18n\vi.js" />
@@ -5492,6 +5523,11 @@
     <Content Include="Content\vendor\select2\dist\js\select2.js" />
     <Content Include="Content\vendor\select2\dist\js\select2.min.js" />
     <Content Include="Content\vendor\select2\Gruntfile.js" />
+    <Content Include="Content\vendor\select2\select2-spinner.gif" />
+    <Content Include="Content\vendor\select2\select2.css" />
+    <Content Include="Content\vendor\select2\select2.min.js" />
+    <Content Include="Content\vendor\select2\select2.png" />
+    <Content Include="Content\vendor\select2\select2x2.png" />
     <Content Include="Content\vendor\select2\src\js\banner.end.js" />
     <Content Include="Content\vendor\select2\src\js\banner.start.js" />
     <Content Include="Content\vendor\select2\src\js\jquery.mousewheel.shim.js" />
@@ -5526,13 +5562,17 @@
     <Content Include="Content\vendor\select2\src\js\select2\dropdown\search.js" />
     <Content Include="Content\vendor\select2\src\js\select2\dropdown\selectOnClose.js" />
     <Content Include="Content\vendor\select2\src\js\select2\dropdown\stopPropagation.js" />
+    <Content Include="Content\vendor\select2\src\js\select2\i18n\af.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\ar.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\az.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\bg.js" />
+    <Content Include="Content\vendor\select2\src\js\select2\i18n\bn.js" />
+    <Content Include="Content\vendor\select2\src\js\select2\i18n\bs.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\ca.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\cs.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\da.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\de.js" />
+    <Content Include="Content\vendor\select2\src\js\select2\i18n\dsb.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\el.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\en.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\es.js" />
@@ -5545,11 +5585,14 @@
     <Content Include="Content\vendor\select2\src\js\select2\i18n\he.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\hi.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\hr.js" />
+    <Content Include="Content\vendor\select2\src\js\select2\i18n\hsb.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\hu.js" />
+    <Content Include="Content\vendor\select2\src\js\select2\i18n\hy.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\id.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\is.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\it.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\ja.js" />
+    <Content Include="Content\vendor\select2\src\js\select2\i18n\ka.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\km.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\ko.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\lt.js" />
@@ -5557,17 +5600,22 @@
     <Content Include="Content\vendor\select2\src\js\select2\i18n\mk.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\ms.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\nb.js" />
+    <Content Include="Content\vendor\select2\src\js\select2\i18n\ne.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\nl.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\pl.js" />
+    <Content Include="Content\vendor\select2\src\js\select2\i18n\ps.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\pt-BR.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\pt.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\ro.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\ru.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\sk.js" />
+    <Content Include="Content\vendor\select2\src\js\select2\i18n\sl.js" />
+    <Content Include="Content\vendor\select2\src\js\select2\i18n\sq.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\sr-Cyrl.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\sr.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\sv.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\th.js" />
+    <Content Include="Content\vendor\select2\src\js\select2\i18n\tk.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\tr.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\uk.js" />
     <Content Include="Content\vendor\select2\src\js\select2\i18n\vi.js" />
@@ -5589,6 +5637,18 @@
     <Content Include="Content\vendor\select2\src\js\select2\utils.js" />
     <Content Include="Content\vendor\select2\src\js\wrapper.end.js" />
     <Content Include="Content\vendor\select2\src\js\wrapper.start.js" />
+    <Content Include="Content\vendor\select2\src\scss\core.scss" />
+    <Content Include="Content\vendor\select2\src\scss\mixins\_gradients.scss" />
+    <Content Include="Content\vendor\select2\src\scss\theme\classic\layout.scss" />
+    <Content Include="Content\vendor\select2\src\scss\theme\classic\_defaults.scss" />
+    <Content Include="Content\vendor\select2\src\scss\theme\classic\_multiple.scss" />
+    <Content Include="Content\vendor\select2\src\scss\theme\classic\_single.scss" />
+    <Content Include="Content\vendor\select2\src\scss\theme\default\layout.scss" />
+    <Content Include="Content\vendor\select2\src\scss\theme\default\_multiple.scss" />
+    <Content Include="Content\vendor\select2\src\scss\theme\default\_single.scss" />
+    <Content Include="Content\vendor\select2\src\scss\_dropdown.scss" />
+    <Content Include="Content\vendor\select2\src\scss\_multiple.scss" />
+    <Content Include="Content\vendor\select2\src\scss\_single.scss" />
     <Content Include="Content\vendor\select2\tests\a11y\search-tests.js" />
     <Content Include="Content\vendor\select2\tests\a11y\selection-tests.js" />
     <Content Include="Content\vendor\select2\tests\data\array-tests.js" />
@@ -5624,6 +5684,7 @@
     <Content Include="Content\vendor\select2\tests\utils\decorator-tests.js" />
     <Content Include="Content\vendor\select2\tests\utils\escapeMarkup-tests.js" />
     <Content Include="Content\vendor\select2\tests\vendor\jquery-1.7.2.js" />
+    <Content Include="Content\vendor\select2\tests\vendor\jquery-2.2.4.js" />
     <Content Include="Content\vendor\select2\tests\vendor\qunit-1.23.1.css" />
     <Content Include="Content\vendor\select2\tests\vendor\qunit-1.23.1.js" />
     <Content Include="Content\vendor\skycons\.gitignore" />
@@ -5648,13 +5709,17 @@
     <Content Include="Content\vendor\starrr\index.html" />
     <Content Include="Content\vendor\summernote\dist\summernote.css" />
     <Content Include="Content\vendor\summernote\dist\summernote.js" />
-    <Content Include="Content\vendor\sweetalert2\bin\postinstall.js" />
+    <Content Include="Content\vendor\sweetalert2\CHANGELOG.md" />
     <Content Include="Content\vendor\sweetalert2\dist\sweetalert2.all.js" />
     <Content Include="Content\vendor\sweetalert2\dist\sweetalert2.all.min.js" />
     <Content Include="Content\vendor\sweetalert2\dist\sweetalert2.css" />
     <Content Include="Content\vendor\sweetalert2\dist\sweetalert2.js" />
     <Content Include="Content\vendor\sweetalert2\dist\sweetalert2.min.css" />
     <Content Include="Content\vendor\sweetalert2\dist\sweetalert2.min.js" />
+    <Content Include="Content\vendor\sweetalert2\LICENSE" />
+    <Content Include="Content\vendor\sweetalert2\package.json" />
+    <Content Include="Content\vendor\sweetalert2\README.md" />
+    <Content Include="Content\vendor\sweetalert2\src\animations.scss" />
     <Content Include="Content\vendor\sweetalert2\src\constants.js" />
     <Content Include="Content\vendor\sweetalert2\src\enhancers\withNoNewKeyword.js" />
     <Content Include="Content\vendor\sweetalert2\src\globalState.js" />
@@ -5667,6 +5732,7 @@
     <Content Include="Content\vendor\sweetalert2\src\instanceMethods\show-reset-validation-error.js" />
     <Content Include="Content\vendor\sweetalert2\src\instanceMethods\update.js" />
     <Content Include="Content\vendor\sweetalert2\src\instanceMethods\_main.js" />
+    <Content Include="Content\vendor\sweetalert2\src\mixins.scss" />
     <Content Include="Content\vendor\sweetalert2\src\privateMethods.js" />
     <Content Include="Content\vendor\sweetalert2\src\privateProps.js" />
     <Content Include="Content\vendor\sweetalert2\src\staticMethods.js" />
@@ -5679,6 +5745,8 @@
     <Content Include="Content\vendor\sweetalert2\src\staticMethods\timer.js" />
     <Content Include="Content\vendor\sweetalert2\src\SweetAlert.js" />
     <Content Include="Content\vendor\sweetalert2\src\sweetalert2.js" />
+    <Content Include="Content\vendor\sweetalert2\src\sweetalert2.scss" />
+    <Content Include="Content\vendor\sweetalert2\src\toasts.scss" />
     <Content Include="Content\vendor\sweetalert2\src\utils\aria.js" />
     <Content Include="Content\vendor\sweetalert2\src\utils\classes.js" />
     <Content Include="Content\vendor\sweetalert2\src\utils\defaultInputValidators.js" />
@@ -5713,6 +5781,7 @@
     <Content Include="Content\vendor\sweetalert2\src\utils\setParameters.js" />
     <Content Include="Content\vendor\sweetalert2\src\utils\Timer.js" />
     <Content Include="Content\vendor\sweetalert2\src\utils\utils.js" />
+    <Content Include="Content\vendor\sweetalert2\src\variables.scss" />
     <Content Include="Content\vendor\sweetalert\sweetalert.css" />
     <Content Include="Content\vendor\sweetalert\sweetalert.min.js" />
     <Content Include="Content\vendor\switchery\dist\switchery.css" />
@@ -5759,6 +5828,8 @@
     <Content Include="Models\PMS.edmx.diagram">
       <DependentUpon>PMS.edmx</DependentUpon>
     </Content>
+    <Content Include="Content\build\scripts\jquery.signalR-2.4.1.js" />
+    <Content Include="Content\build\scripts\jquery.signalR-2.4.1.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -5853,6 +5924,14 @@
     <Content Include="Views\Process\ImportExport.cshtml" />
     <Content Include="Views\Group\MyTask.cshtml" />
     <Content Include="Views\Shared\_NullLayout.cshtml" />
+    <Content Include="Content\vendor\select2\.github\CONTRIBUTING.md" />
+    <Content Include="Content\vendor\select2\.github\ISSUE_TEMPLATE.md" />
+    <Content Include="Content\vendor\select2\.github\PULL_REQUEST_TEMPLATE.md" />
+    <Content Include="Content\vendor\select2\.github\stale.yml" />
+    <Content Include="Content\vendor\select2\CHANGELOG.md" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

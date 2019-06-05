@@ -39,9 +39,14 @@
         </div>
     </div>
     @Scripts.Render("~/Content/js")
-
+    <script src="~/signalr/hubs" type="text/javascript"></script>
+    @if (IsSectionDefined("CustomScripts"))
+    {
+        @RenderSection("CustomScripts", required: false)
+    }
     @{
         string text = (string)TempData["FlashMessage.Text"];
+        string flash = "";
         if (!string.IsNullOrWhiteSpace(text))
         {
             FlashType type = (FlashType)TempData["FlashMessage.Type"];
@@ -71,16 +76,67 @@
                     positionClass = "toast-bottom-left";
                     break;
             }
-            <script type="text/javascript">
-                $(function() {
-                    showToastr("@type", "@text", "@positionClass");
-                });
-            </script>
+            flash = string.Format("\"{0}\", \"{1}\", \"{2}\"", type, text, positionClass);
+
         }
     }
-    @if (IsSectionDefined("CustomScripts"))
-    {
-        @RenderSection("CustomScripts", required: false)
-    }
+    <script type="text/javascript">
+        $(function () {
+            @if (flash != "") { 
+                @:showToastr(@Html.Raw(flash));
+            }
+            updateNotification();
+            $("#btn-notification").on("click", function () {
+                
+            });
+            var notificationHub = $.connection.notificationHub;
+            $.connection.hub.start().done(function () {
+                console.info("Notification hub started");
+            });
+            notificationHub.client.updateNotify = function () {
+                updateNotification();
+            }
+        });
+        function updateNotification() {
+            var notifyContainer = $("ul.notifications");
+            notifyContainer.empty();
+            notifyContainer.append("<li>Loading...</li>");
+
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("getnotifies", "notify", new { area = "api"})",
+                datatype: "json",
+                success: function (response) {
+                    notifyContainer.empty();
+                    var notifies = response.data;
+                    if (notifies.length == 0) {
+                        notifyContainer.append(`<li class="header"><strong>No data available.</strong></li>`)
+                    } else {
+                        var countNotRead = notifies.filter(noti => noti.isread == false);
+                        notifyContainer.append(`<li class="header"><strong>You have ${countNotRead.length} new Notifications</strong></li>`);
+                        notifies.forEach(function (notify) {
+                            notifyContainer.append(`<li>
+                                    <a href="javascript:void(0);">
+                                        <div class="media">
+                                            <div class="media-left">
+                                                <i class="icon-info text-warning"></i>
+                                            </div>
+                                            <div class="media-body">
+                                                <p class="text">
+                                                    ${notify.content.en}
+                                                </p>
+                                                <span class="timestamp">${notify.created_at}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>`);
+                        });
+                        notifyContainer.append(`<li class="footer"><a href="javascript:void(0);" class="more">See all notifications</a></li>`);
+                    }
+                }
+            })
+        }
+        
+    </script>
 </body>
 </html>

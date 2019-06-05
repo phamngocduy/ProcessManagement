@@ -26,6 +26,7 @@ namespace ProcessManagement.Controllers
         FileService fileService = new FileService();
         TaskService taskService = new TaskService();
         RoleService roleService = new RoleService();
+        NotificationService notificationService = new NotificationService();
         ///=============================================================================================
 
 
@@ -78,7 +79,7 @@ namespace ProcessManagement.Controllers
             //create new participate
             Participate part = new Participate();
             participateService.createParticipate(idUser, group.Id, part, true);
-
+            
             //set flash
             SetFlash(FlashType.success, "Created Group Successfully");
             return RedirectToAction("index"); 

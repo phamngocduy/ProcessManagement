@@ -523,7 +523,7 @@ namespace ProcessManagement.Areas.API.Controllers
            
             if (stepback.Figure == "Diamond")
             {
-                StepRun stepbacknotdiamond = liststeprun.Where(x => x.NextStep1 == stepback.Key).OrderByDescending(x => x.Created_at).FirstOrDefault();
+                StepRun stepbacknotdiamond = liststeprun.Where(x => x.NextStep1 == stepback.Key).OrderByDescending(x => x.Created_At).FirstOrDefault();
                 stepService.removeStepRun(stepback);
                 stepService.deletenextsteprun(runstep, stepbacknotdiamond);
             }

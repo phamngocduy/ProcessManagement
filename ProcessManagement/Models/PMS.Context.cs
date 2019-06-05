@@ -30,6 +30,7 @@ namespace ProcessManagement.Models
         public virtual DbSet<ConfigRule> ConfigRules { get; set; }
         public virtual DbSet<FileManager> FileManagers { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
+        public virtual DbSet<Notify> Notifies { get; set; }
         public virtual DbSet<Participate> Participates { get; set; }
         public virtual DbSet<Process> Processes { get; set; }
         public virtual DbSet<ProcessRun> ProcessRuns { get; set; }

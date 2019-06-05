@@ -36,12 +36,12 @@
                     @if (Request.IsAuthenticated)
                     {
                         <li class="dropdown">
-                            <a href="javascript:void(0);" class="dropdown-toggle icon-menu" data-toggle="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle icon-menu" id="btn-notification" data-toggle="dropdown" data-count="1">
                                 <i class="icon-bell"></i>
                                 <span class="notification-dot"></span>
                             </a>
-                            <ul class="dropdown-menu notifications animated shake">
-                                <li class="header"><strong>You have 4 new Notifications</strong></li>
+                            <ul class="dropdown-menu notifications animated fadeIn">
+                                @*<li class="header"><strong>You have 4 new Notifications</strong></li>
                                 <li>
                                     <a href="javascript:void(0);">
                                         <div class="media">
@@ -108,7 +108,7 @@
                                         See all
                                         notifications
                                     </a>
-                                </li>
+                                </li>*@
                             </ul>
                         </li>
                         <li class="dropdown">

@@ -76,6 +76,19 @@
           <Property Name="Created_At" Type="datetime" Nullable="false" />
           <Property Name="Updated_At" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="Notify">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdUser" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="viContent" Type="nvarchar(max)" />
+          <Property Name="ActionLink" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="isRead" Type="bit" />
+          <Property Name="Created_At" Type="datetime" Nullable="false" />
+          <Property Name="Updated_At" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="Participate">
           <Key>
             <PropertyRef Name="IdGroup" />
@@ -182,7 +195,7 @@
           <Property Name="Key" Type="int" Nullable="false" />
           <Property Name="Figure" Type="nvarchar" MaxLength="50" />
           <Property Name="Status" Type="int" />
-          <Property Name="Created_at" Type="datetime" />
+          <Property Name="Created_At" Type="datetime" />
           <Property Name="Updated_At" Type="datetime" />
           <Property Name="ApproveBy" Type="nvarchar" MaxLength="128" />
           <Property Name="Approve_At" Type="datetime" />
@@ -298,6 +311,18 @@
             </Principal>
             <Dependent Role="ProcessRun">
               <PropertyRef Name="IdProcess" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Notify_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Notify" Type="Self.Notify" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notify">
+              <PropertyRef Name="IdUser" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -511,6 +536,7 @@
           <EntitySet Name="ConfigRule" EntityType="Self.ConfigRule" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FileManager" EntityType="Self.FileManager" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Group" EntityType="Self.Group" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Notify" EntityType="Self.Notify" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Participate" EntityType="Self.Participate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Process" EntityType="Self.Process" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProcessRun" EntityType="Self.ProcessRun" Schema="dbo" store:Type="Tables" />
@@ -544,6 +570,10 @@
           <AssociationSet Name="FK_Instance_Process" Association="Self.FK_Instance_Process">
             <End Role="Process" EntitySet="Process" />
             <End Role="ProcessRun" EntitySet="ProcessRun" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Notify_AspNetUsers" Association="Self.FK_Notify_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Notify" EntitySet="Notify" />
           </AssociationSet>
           <AssociationSet Name="FK_Participate_AspNetUsers" Association="Self.FK_Participate_AspNetUsers">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -624,6 +654,7 @@
           <EntitySet Name="ConfigRules" EntityType="PMSModel.ConfigRule" />
           <EntitySet Name="FileManagers" EntityType="PMSModel.FileManager" />
           <EntitySet Name="Groups" EntityType="PMSModel.Group" />
+          <EntitySet Name="Notifies" EntityType="PMSModel.Notify" />
           <EntitySet Name="Participates" EntityType="PMSModel.Participate" />
           <EntitySet Name="Processes" EntityType="PMSModel.Process" />
           <EntitySet Name="ProcessRuns" EntityType="PMSModel.ProcessRun" />
@@ -645,6 +676,10 @@
           <AssociationSet Name="FK_Group_AspNetUsers" Association="PMSModel.FK_Group_AspNetUsers">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="Group" EntitySet="Groups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Notify_AspNetUsers" Association="PMSModel.FK_Notify_AspNetUsers">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="Notify" EntitySet="Notifies" />
           </AssociationSet>
           <AssociationSet Name="FK_Participate_AspNetUsers" Association="PMSModel.FK_Participate_AspNetUsers">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
@@ -749,6 +784,7 @@
           <NavigationProperty Name="RoleRuns" Relationship="PMSModel.FK_AssignRole_AspNetUsers" FromRole="AspNetUser" ToRole="RoleRun" />
           <NavigationProperty Name="Comments" Relationship="PMSModel.FK_Comment_AspNetUsers" FromRole="AspNetUser" ToRole="Comment" />
           <NavigationProperty Name="Groups" Relationship="PMSModel.FK_Group_AspNetUsers" FromRole="AspNetUser" ToRole="Group" />
+          <NavigationProperty Name="Notifies" Relationship="PMSModel.FK_Notify_AspNetUsers" FromRole="AspNetUser" ToRole="Notify" />
           <NavigationProperty Name="Participates" Relationship="PMSModel.FK_Participate_AspNetUsers" FromRole="AspNetUser" ToRole="Participate" />
           <NavigationProperty Name="Processes" Relationship="PMSModel.FK_Process_AspNetUsers" FromRole="AspNetUser" ToRole="Process" />
           <NavigationProperty Name="StepRuns" Relationship="PMSModel.FK_StepRun_AspNetUsers" FromRole="AspNetUser" ToRole="StepRun" />
@@ -811,6 +847,20 @@
           <NavigationProperty Name="FileManagers" Relationship="PMSModel.FK_FileManager_Group" FromRole="Group" ToRole="FileManager" />
           <NavigationProperty Name="Participates" Relationship="PMSModel.FK_Participate_Group" FromRole="Group" ToRole="Participate" />
           <NavigationProperty Name="Processes" Relationship="PMSModel.FK_Process_Group" FromRole="Group" ToRole="Process" />
+        </EntityType>
+        <EntityType Name="Notify">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdUser" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="viContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ActionLink" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="isRead" Type="Boolean" />
+          <Property Name="Created_At" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Updated_At" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="AspNetUser" Relationship="PMSModel.FK_Notify_AspNetUsers" FromRole="Notify" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="Participate">
           <Key>
@@ -939,7 +989,7 @@
           <Property Name="Key" Type="Int32" Nullable="false" />
           <Property Name="Figure" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="Int32" />
-          <Property Name="Created_at" Type="DateTime" Precision="3" />
+          <Property Name="Created_At" Type="DateTime" Precision="3" />
           <Property Name="Updated_At" Type="DateTime" Precision="3" />
           <Property Name="ApproveBy" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="Approve_At" Type="DateTime" Precision="3" />
@@ -1030,6 +1080,18 @@
             </Principal>
             <Dependent Role="Group">
               <PropertyRef Name="IdOwner" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Notify_AspNetUsers">
+          <End Type="PMSModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="PMSModel.Notify" Role="Notify" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notify">
+              <PropertyRef Name="IdUser" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1355,6 +1417,20 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Notifies">
+            <EntityTypeMapping TypeName="PMSModel.Notify">
+              <MappingFragment StoreEntitySet="Notify">
+                <ScalarProperty Name="Updated_At" ColumnName="Updated_At" />
+                <ScalarProperty Name="Created_At" ColumnName="Created_At" />
+                <ScalarProperty Name="isRead" ColumnName="isRead" />
+                <ScalarProperty Name="ActionLink" ColumnName="ActionLink" />
+                <ScalarProperty Name="viContent" ColumnName="viContent" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="IdUser" ColumnName="IdUser" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Participates">
             <EntityTypeMapping TypeName="PMSModel.Participate">
               <MappingFragment StoreEntitySet="Participate">
@@ -1461,7 +1537,7 @@
                 <ScalarProperty Name="Approve_At" ColumnName="Approve_At" />
                 <ScalarProperty Name="ApproveBy" ColumnName="ApproveBy" />
                 <ScalarProperty Name="Updated_At" ColumnName="Updated_At" />
-                <ScalarProperty Name="Created_at" ColumnName="Created_at" />
+                <ScalarProperty Name="Created_At" ColumnName="Created_At" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Figure" ColumnName="Figure" />
                 <ScalarProperty Name="Key" ColumnName="Key" />
