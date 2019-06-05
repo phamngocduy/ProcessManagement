@@ -400,10 +400,54 @@
     color: #040404;
     margin-left: 10px;
 }
-.notifications {
-    background: #ffffff;
+.navbar-nav {
+    ul {
+        &.notifications {
+            background: #ffffff;
 
-    .header {
-        color: #524f4f;
+            .badge-danger {
+                background: #de4848;
+                color: #fff;
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                padding-right: 5px;
+                padding-left: 5px;
+                padding-bottom: 3px;
+                padding-top: 3px;
+                border-radius: 50%;
+            }
+
+            li {
+                border-bottom: 1px solid #dddfe2;
+
+                &.header {
+                    color: #524f4f;
+                    padding-bottom: 8px;
+                }
+
+                &.footer {
+                    a {
+                        padding-top: 5px;
+                        text-align: center;
+                        font-size: 12px;
+                    }
+                }
+
+                &:not(.header):not(.footer) {
+                    a {
+                        padding: 10px 5px;
+                    }
+
+                    &:hover {
+                        background-color: #f5f6f7;
+                    }
+
+                    &.new {
+                        background-color: #f7fbff;
+                    }
+                }
+            }
+        }
     }
 }

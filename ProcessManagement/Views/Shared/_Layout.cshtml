@@ -87,7 +87,7 @@
             }
             updateNotification();
             $("#btn-notification").on("click", function () {
-                
+                $(".notification-dot").remove();
             });
             var notificationHub = $.connection.notificationHub;
             $.connection.hub.start().done(function () {
@@ -96,6 +96,15 @@
             notificationHub.client.updateNotify = function () {
                 updateNotification();
             }
+            $("ul.notifications").on("click", "li:not(.header):not(.footer) a", function () {
+                var id = $(this).parents("li")[0].dataset.id;
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("changestatus", "notify", new { area = "api"})",
+                    data: {id : id},
+                    datatype: "json",
+                });
+            })
         });
         function updateNotification() {
             var notifyContainer = $("ul.notifications");
@@ -109,14 +118,16 @@
                 success: function (response) {
                     notifyContainer.empty();
                     var notifies = response.data;
-                    if (notifies.length == 0) {
-                        notifyContainer.append(`<li class="header"><strong>No data available.</strong></li>`)
-                    } else {
-                        var countNotRead = notifies.filter(noti => noti.isread == false);
-                        notifyContainer.append(`<li class="header"><strong>You have ${countNotRead.length} new Notifications</strong></li>`);
+                    var count = response.count;
+                    if (count > 0 && $(".notification-dot").length == 0); {
+                        $("#btn-notification").append(`<span class="notification-dot"></span>`);
+                    }
+                    notifyContainer.append(`<li class="header"><strong>You have<span class="badge badge-danger">${count}</span>new notifications</strong></li>`);
+                    if (notifies.length > 0) {
                         notifies.forEach(function (notify) {
-                            notifyContainer.append(`<li>
-                                    <a href="javascript:void(0);">
+                            var isRead = notify.isread ? "" : "class=\"new\"";
+                            notifyContainer.append(`<li ${isRead} data-id="${notify.id}">
+                                    <a href="${getBaseUrl()}/${notify.actionlink}">
                                         <div class="media">
                                             <div class="media-left">
                                                 <i class="icon-info text-warning"></i>
@@ -131,8 +142,8 @@
                                     </a>
                                 </li>`);
                         });
-                        notifyContainer.append(`<li class="footer"><a href="javascript:void(0);" class="more">See all notifications</a></li>`);
                     }
+                    notifyContainer.append(`<li class="footer"><a href="javascript:void(0);" class="more">See all notifications</a></li>`);
                 }
             })
         }

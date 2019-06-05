@@ -18,7 +18,8 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <Use64BitIISExpress>true</Use64BitIISExpress>
+    <Use64BitIISExpress>
+    </Use64BitIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -38,7 +39,7 @@
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vs6B27.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vs7300.tmp\Debug\</IntermediateOutputPath>
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -50,7 +51,7 @@
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\DUYHO~1\AppData\Local\Temp\vs6B27.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\anngu\AppData\Local\Temp\vs7300.tmp\Release\</IntermediateOutputPath>
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -5450,11 +5451,16 @@
     <Content Include="Content\vendor\roundslider\roundslider.min.js" />
     <Content Include="Content\vendor\roundslider\style.css" />
     <Content Include="Content\vendor\select2\.editorconfig" />
+    <Content Include="Content\vendor\select2\.github\CONTRIBUTING.md" />
+    <Content Include="Content\vendor\select2\.github\ISSUE_TEMPLATE.md" />
+    <Content Include="Content\vendor\select2\.github\PULL_REQUEST_TEMPLATE.md" />
+    <Content Include="Content\vendor\select2\.github\stale.yml" />
     <Content Include="Content\vendor\select2\.gitignore" />
     <Content Include="Content\vendor\select2\.jshintignore" />
     <Content Include="Content\vendor\select2\.jshintrc" />
     <Content Include="Content\vendor\select2\.travis.yml" />
     <Content Include="Content\vendor\select2\bower.json" />
+    <Content Include="Content\vendor\select2\CHANGELOG.md" />
     <Content Include="Content\vendor\select2\component.json" />
     <Content Include="Content\vendor\select2\composer.json" />
     <Content Include="Content\vendor\select2\dist\css\select2.css" />
@@ -5523,11 +5529,9 @@
     <Content Include="Content\vendor\select2\dist\js\select2.js" />
     <Content Include="Content\vendor\select2\dist\js\select2.min.js" />
     <Content Include="Content\vendor\select2\Gruntfile.js" />
-    <Content Include="Content\vendor\select2\select2-spinner.gif" />
-    <Content Include="Content\vendor\select2\select2.css" />
-    <Content Include="Content\vendor\select2\select2.min.js" />
-    <Content Include="Content\vendor\select2\select2.png" />
-    <Content Include="Content\vendor\select2\select2x2.png" />
+    <Content Include="Content\vendor\select2\LICENSE.md" />
+    <Content Include="Content\vendor\select2\package.json" />
+    <Content Include="Content\vendor\select2\README.md" />
     <Content Include="Content\vendor\select2\src\js\banner.end.js" />
     <Content Include="Content\vendor\select2\src\js\banner.start.js" />
     <Content Include="Content\vendor\select2\src\js\jquery.mousewheel.shim.js" />
@@ -5665,6 +5669,8 @@
     <Content Include="Content\vendor\select2\tests\dropdown\selectOnClose-tests.js" />
     <Content Include="Content\vendor\select2\tests\dropdown\stopPropagation-tests.js" />
     <Content Include="Content\vendor\select2\tests\helpers.js" />
+    <Content Include="Content\vendor\select2\tests\integration-jq1.html" />
+    <Content Include="Content\vendor\select2\tests\integration-jq2.html" />
     <Content Include="Content\vendor\select2\tests\integration\dom-changes.js" />
     <Content Include="Content\vendor\select2\tests\integration\jquery-calls.js" />
     <Content Include="Content\vendor\select2\tests\integration\select2-methods.js" />
@@ -5681,6 +5687,8 @@
     <Content Include="Content\vendor\select2\tests\selection\search-tests.js" />
     <Content Include="Content\vendor\select2\tests\selection\single-tests.js" />
     <Content Include="Content\vendor\select2\tests\selection\stopPropagation-tests.js" />
+    <Content Include="Content\vendor\select2\tests\unit-jq1.html" />
+    <Content Include="Content\vendor\select2\tests\unit-jq2.html" />
     <Content Include="Content\vendor\select2\tests\utils\decorator-tests.js" />
     <Content Include="Content\vendor\select2\tests\utils\escapeMarkup-tests.js" />
     <Content Include="Content\vendor\select2\tests\vendor\jquery-1.7.2.js" />
@@ -5924,11 +5932,6 @@
     <Content Include="Views\Process\ImportExport.cshtml" />
     <Content Include="Views\Group\MyTask.cshtml" />
     <Content Include="Views\Shared\_NullLayout.cshtml" />
-    <Content Include="Content\vendor\select2\.github\CONTRIBUTING.md" />
-    <Content Include="Content\vendor\select2\.github\ISSUE_TEMPLATE.md" />
-    <Content Include="Content\vendor\select2\.github\PULL_REQUEST_TEMPLATE.md" />
-    <Content Include="Content\vendor\select2\.github\stale.yml" />
-    <Content Include="Content\vendor\select2\CHANGELOG.md" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml">
       <SubType>Designer</SubType>
     </None>
@@ -6938,28 +6941,6 @@
     <Content Include="Content\vendor\requirejs\.bower.json" />
     <Content Include="Content\vendor\requirejs\bower.json" />
     <Content Include="Content\vendor\requirejs\README.md" />
-    <Content Include="Content\vendor\select2\.editorconfig" />
-    <Content Include="Content\vendor\select2\.jshintignore" />
-    <Content Include="Content\vendor\select2\.jshintrc" />
-    <Content Include="Content\vendor\select2\.travis.yml" />
-    <Content Include="Content\vendor\select2\bower.json" />
-    <Content Include="Content\vendor\select2\component.json" />
-    <Content Include="Content\vendor\select2\composer.json" />
-    <Content Include="Content\vendor\select2\LICENSE.md" />
-    <Content Include="Content\vendor\select2\package.json" />
-    <Content Include="Content\vendor\select2\README.md" />
-    <Content Include="Content\vendor\select2\src\scss\core.scss" />
-    <Content Include="Content\vendor\select2\src\scss\mixins\_gradients.scss" />
-    <Content Include="Content\vendor\select2\src\scss\theme\classic\layout.scss" />
-    <Content Include="Content\vendor\select2\src\scss\theme\classic\_defaults.scss" />
-    <Content Include="Content\vendor\select2\src\scss\theme\classic\_multiple.scss" />
-    <Content Include="Content\vendor\select2\src\scss\theme\classic\_single.scss" />
-    <Content Include="Content\vendor\select2\src\scss\theme\default\layout.scss" />
-    <Content Include="Content\vendor\select2\src\scss\theme\default\_multiple.scss" />
-    <Content Include="Content\vendor\select2\src\scss\theme\default\_single.scss" />
-    <Content Include="Content\vendor\select2\src\scss\_dropdown.scss" />
-    <Content Include="Content\vendor\select2\src\scss\_multiple.scss" />
-    <Content Include="Content\vendor\select2\src\scss\_single.scss" />
     <Content Include="Content\vendor\skycons\.bower.json" />
     <Content Include="Content\vendor\skycons\README.md" />
     <Content Include="Content\vendor\starrr\.bower.json" />

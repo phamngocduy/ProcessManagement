@@ -18,7 +18,7 @@ namespace ProcessManagement.Services
         {
             string UserId = System.Web.HttpContext.Current.User.Identity.GetUserId();
             List<Notify> notifies = new List<Notify>();
-            string sqlCommand = @"SELECT [Id], [Content], [viContent], [ActionLink], [isRead] FROM [dbo].[Notify] WHERE [IdUser] = @IdUser";
+            string sqlCommand = @"SELECT TOP 6 [Id], [Content], [viContent], [ActionLink], [isRead], [Created_At] FROM [dbo].[Notify] WHERE [IdUser] = @IdUser ORDER BY [Created_At] DESC";
             using (SqlConnection con = new SqlConnection(connectString))
             {
                 con.Open();
@@ -33,7 +33,7 @@ namespace ProcessManagement.Services
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        notifies.Add(item: new Notify { Id = (int)reader["Id"], Content = (string)reader["Content"] });
+                        notifies.Add(item: new Notify { Id = (int)reader["Id"], Content = (string)reader["Content"], viContent = (string)reader["viContent"], ActionLink = (string)reader["ActionLink"], isRead = (bool)reader["isRead"], Created_At = (DateTime)reader["Created_At"] });
                     }
                 }
             }
@@ -68,6 +68,11 @@ namespace ProcessManagement.Services
             db.SaveChanges();
             NotificationHub.SendNotify();
         }
+        public Notify getNotify(int id)
+        {
+            Notify notify = db.Notifies.Find(id);
+            return notify;
+        }
         public List<Notify> getNotifies(string userId)
         {
             List<Notify> notifies = db.Notifies.Where(x => x.IdUser == userId).OrderByDescending(x => x.Created_At).ToList();
@@ -77,6 +82,20 @@ namespace ProcessManagement.Services
         {
             List<Notify> notifies = db.Notifies.Where(x => x.IdUser == userId).Take(quality).OrderByDescending(x => x.Created_At).ToList();
             return notifies;
+        }
+        public int countNotRead(string userId)
+        {
+            int count = db.Notifies.Where(x => x.IdUser == userId && x.isRead == false).Count();
+            return count;
+        }
+        public void changeStatus(int id, string userid)
+        {
+            Notify notify = db.Notifies.Find(id);
+            if (notify != null && notify.IdUser == userid)
+            {
+                notify.isRead = true;
+                db.SaveChanges();
+            }
         }
     }
 }

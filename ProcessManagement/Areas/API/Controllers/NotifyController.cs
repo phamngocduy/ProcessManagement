@@ -21,11 +21,13 @@ namespace ProcessManagement.Areas.API.Controllers
 
             string idUser = User.Identity.GetUserId();
             List<Notify> notifies = notificationService.RegisterNotification();
+            int countNotRead = notificationService.countNotRead(idUser);
             List<object> jNotifies = new List<object>();
             foreach (Notify notify in notifies)
             {
                 object n = new
                 {
+                    id = notify.Id,
                     content = new
                     {
                         en = notify.Content,
@@ -37,8 +39,14 @@ namespace ProcessManagement.Areas.API.Controllers
                 };
                 jNotifies.Add(n);
             }
-            response = new { data = jNotifies, status = status };
+            response = new { data = jNotifies, count = countNotRead, status = status };
             return Json(response, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public void changestatus(int id)
+        {
+            string idUser = User.Identity.GetUserId();
+            notificationService.changeStatus(id:id, userid:idUser);
         }
     }
 }

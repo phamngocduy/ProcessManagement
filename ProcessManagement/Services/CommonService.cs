@@ -122,7 +122,7 @@ namespace ProcessManagement.Services
             //if (timeSince.TotalDays < 730) return "last year"; //last but not least...
             //return string.Format("{0} years ago", Math.Round(timeSince.TotalDays / 365));
             CultureInfo ci = new CultureInfo("vi");
-            return date.ToString("dddd, dd MMMM yyyy HH:mm", ci);
+            return date.ToString("dddd, MMMM d, yyyy", ci);
         }
     }
 }
