@@ -49,7 +49,17 @@ namespace ProcessManagement.Areas.API.Controllers
             response = new { message = message, status = status };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
-
+        [HttpPost, GroupAuthorize]
+        public JsonResult checkroleexist(int processid, string rolename, int roleid = -1)
+        {
+            HttpStatusCode status = HttpStatusCode.OK;
+            string message;
+            object response;
+            var check = roleService.isNameExist(roleid: roleid, rolename: rolename, processid: processid);
+            message = "Update Step Successfully";
+            response = new { isExist = check, message = message, status = status };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
         [HttpPost]
         [GroupAuthorize(Role = new UserRole[] { UserRole.Manager })]
         public JsonResult AddTask(int stepid, string name, int? idRole, string description, string inputConfig, string fileConfig, HttpPostedFileBase fileupload)

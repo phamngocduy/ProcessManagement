@@ -20,40 +20,40 @@
             </ul>
         </div>
         @*<div class="col-lg-6 col-md-4 col-sm-12 text-right">
-            <div class="bh_chart hidden-xs">
-                <div class="float-left m-r-15">
-                    <small>Visitors</small>
-                    <h6 class="mb-0 mt-1"><i class="icon-user"></i> 1,784</h6>
+                <div class="bh_chart hidden-xs">
+                    <div class="float-left m-r-15">
+                        <small>Visitors</small>
+                        <h6 class="mb-0 mt-1"><i class="icon-user"></i> 1,784</h6>
+                    </div>
+                    <span class="bh_visitors float-right">2,5,1,8,3,6,7,5</span>
                 </div>
-                <span class="bh_visitors float-right">2,5,1,8,3,6,7,5</span>
-            </div>
-            <div class="bh_chart hidden-sm">
-                <div class="float-left m-r-15">
-                    <small>Visits</small>
-                    <h6 class="mb-0 mt-1"><i class="icon-globe"></i> 325</h6>
+                <div class="bh_chart hidden-sm">
+                    <div class="float-left m-r-15">
+                        <small>Visits</small>
+                        <h6 class="mb-0 mt-1"><i class="icon-globe"></i> 325</h6>
+                    </div>
+                    <span class="bh_visits float-right">10,8,9,3,5,8,5</span>
                 </div>
-                <span class="bh_visits float-right">10,8,9,3,5,8,5</span>
-            </div>
-            <div class="bh_chart hidden-sm">
-                <div class="float-left m-r-15">
-                    <small>Chats</small>
-                    <h6 class="mb-0 mt-1"><i class="icon-bubbles"></i> 13</h6>
+                <div class="bh_chart hidden-sm">
+                    <div class="float-left m-r-15">
+                        <small>Chats</small>
+                        <h6 class="mb-0 mt-1"><i class="icon-bubbles"></i> 13</h6>
+                    </div>
+                    <span class="bh_chats float-right">1,8,5,6,2,4,3,2</span>
                 </div>
-                <span class="bh_chats float-right">1,8,5,6,2,4,3,2</span>
-            </div>
-        </div>*@
+            </div>*@
     </div>
 </div>
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="card">
             <div class="body">
-                <form action="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "process", action = "addrole"})" method="POST">
-                    <div class="row">
+                <form action="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "process", action = "addrole"})" method="POST" id="form-add-role" novalidate>
+                    <div class="row clearfix form-validation">
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="role-name" class="required">Role Name</label>
-                                <input type="text" name="@Html.NameFor(m => m.Name)" class="form-control" id="role-name">
+                                <input type="text" name="@Html.NameFor(m => m.Name)" class="form-control" id="role-name" required maxtextlength="50">
 
                             </div>
                         </div>
@@ -64,7 +64,7 @@
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <button class="btn btn-primary-theme waves-effect" type="submit">Create</button>
+                            <button class="btn btn-primary-theme waves-effect" id="btn-add-role" type="submit" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Creating...">Create</button>
                             <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = Model.Id })" class="btn btn-default waves-effect" type="button">Back</a>
                         </div>
                     </div>
@@ -73,3 +73,55 @@
         </div>
     </div>
 </div>
+@section CustomScripts{
+    <script>
+        $(function () {
+            var form = $(".form-validation").formValidation();
+            var checkName = false;
+            $("#form-add-role").on("submit", function () {
+                var isHaveError = form.validates();
+                if (isHaveError) {
+                    showToastr("error", "Error!!");
+                    return false;
+                }
+                if (!checkName) {
+                    var container = $("#role-name");
+                    form.setFormError(container, "This name is exist in process");
+                    return false;
+                }
+                var buttonaction = $("#btn-add-role");
+                toggleLoading(buttonaction);
+                setTimeout(function () {
+                    toggleLoading(buttonaction);
+                    return true;
+                }, 2000);
+            });
+            $("#role-name").on("blur", function () {
+                var rolename = $(this).val().trim();
+                checkRoleExist(@Model.Id,rolename);
+            })
+            function checkRoleExist(processid, rolename) {
+                $.ajax({
+                    url: "@Url.Action("checkroleexist", "process", new { area ="api"})",
+                    type: "POST",
+                    data: { processid: processid, rolename: rolename },
+                    dataType: "json",
+                    success: function (response) {
+                        //thanh cong thi no tra du lieu ve
+                        var container = $("#role-name");
+                        if (response.isExist) {
+                            form.setFormError(container, "This name is exist in process");
+                            checkName = false;
+                        }
+                        else {
+                            checkName = true;
+                            form.removeFormError(container);
+                        }
+
+                    }
+                })
+            }
+        })
+        
+    </script>
+}

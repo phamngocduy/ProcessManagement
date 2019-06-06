@@ -302,7 +302,7 @@
                     @*<li><a href="#" class="align-right displayblock primary-theme">View more...</a></li>*@
                 </ul>
             </div>
-            
+            @*TODO*@
         </div>
     </div>
 </div>
@@ -382,21 +382,21 @@
                 $(".pagination").append(`<li class="next-page page-item"><a class="page-link" href="javascript:void(0)" aria-label="Next">Next</a></li>`);
 
                 // Chức năng hiển thị các mục mới dựa trên số trang được nhấp
-                $(".pagination li.current-page").on("click", function () {
-                    if ($(this).hasClass("active")) {
-                        return false;
-                    } else {
-                        var currentPage = $(this).index();
-                        $(".pagination li").removeClass("active");
-                        $(this).addClass("active");//hiện trang click
-                        $(iddata + " .mymember").hide();//ẩn các trang còn lại
+                //$(".pagination li.current-page").on("click", function () {
+                //    if ($(this).hasClass("active")) {
+                //        return false;
+                //    } else {
+                //        var currentPage = $(this).index();
+                //        $(".pagination li").removeClass("active");
+                //        $(this).addClass("active");//hiện trang click
+                //        $(iddata + " .mymember").hide();//ẩn các trang còn lại
 
-                        var grandTotal = limitPerPage * currentPage;
-                        for (var i = grandTotal - limitPerPage; i < grandTotal; i++) {
-                            $(iddata + " .mymember:eq(" + i + ")").show();
-                        }
-                    }
-                });
+                //        var grandTotal = limitPerPage * currentPage;
+                //        for (var i = grandTotal - limitPerPage; i < grandTotal; i++) {
+                //            $(iddata + " .mymember:eq(" + i + ")").show();
+                //        }
+                //    }
+                //});
 
                 // chức năng next page
                 $(".next-page").on("click", function(){

@@ -119,6 +119,20 @@ namespace ProcessManagement.Services
             Role r = db.Roles.FirstOrDefault(x => x.Name.ToLower() == role.Name.ToLower().Trim() && x.IdProcess == processid && x.Id != role.Id);
             return r != null ? true : false;
         }
+        public bool isNameExist(int roleid, string rolename, int processid)
+        {
+            Role r;
+            if (roleid > 0)
+            {
+                 r = db.Roles.FirstOrDefault(x => x.Name.ToLower() == rolename.ToLower().Trim() && x.IdProcess == processid && x.Id != roleid);
+            }
+            else
+            {
+                 r = db.Roles.FirstOrDefault(x => x.Name.ToLower() == rolename.ToLower().Trim() && x.IdProcess == processid);
+
+            }
+            return r != null ? true : false;
+        }
         public bool isAssigned(int roleid, string userid)
         {
             RoleRun role = db.RoleRuns.FirstOrDefault(x => x.IdRole == roleid && x.IdUser == userid);
