@@ -154,28 +154,38 @@ namespace ProcessManagement.Areas.API.Controllers
         public JsonResult getMemberList()
         {
             int groupid = (int)Session["groupid"];
+            string IdUser = User.Identity.GetUserId();
             Group group = groupService.findGroup(groupid);
             List<Participate> participates = participateService.findMembersInGroup(group.Id);
+            Participate user = participateService.findMemberInGroup(IdUser, group.Id);
             List<object> jMember = new List<object>();
-            foreach (Participate user in participates)
+            foreach (Participate member in participates)
             {
                 object tempdata = new
                 {
-                    id = user.Id,
-                    name = user.AspNetUser.UserName,
-                    iduser = user.IdUser,
+                    id = member.Id,
+                    name = member.AspNetUser.UserName,
+                    idUser = member.IdUser,
                     avatar = new
                     {
-                        avatar = user.AspNetUser.Avatar,
-                        avatardefault = user.AspNetUser.AvatarDefault
+                        avatar = member.AspNetUser.Avatar,
+                        avatardefault = member.AspNetUser.AvatarDefault
                     },
-                    isOwner = user.IsOwner,
-                    isAdmin = user.IsAdmin,
-                    isManager = user.IsManager
+                    isOwner = member.IsOwner,
+                    isAdmin = member.IsAdmin,
+                    isManager = member.IsManager
                 };
                 jMember.Add(tempdata);
             }
-            var response = new { data = jMember, status = HttpStatusCode.OK };
+            object jUser = new
+            {
+                idUser = user.IdUser,
+                isOwner = user.IsOwner,
+                isAdmin = user.IsAdmin,
+                isManager = user.IsManager
+            };
+
+            var response = new { data = jMember, user= jUser, status = HttpStatusCode.OK };
             return Json(response, JsonRequestBehavior.AllowGet);
 
         }
@@ -210,7 +220,7 @@ namespace ProcessManagement.Areas.API.Controllers
             var response = new { message = message, status = status };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
-        [HttpPost]
+        [HttpPost, GroupAuthorize(Role = new UserRole[] { UserRole.Admin })]
         public JsonResult editRole(int id, string roles)
         {
             HttpStatusCode status = HttpStatusCode.OK;
@@ -266,40 +276,59 @@ namespace ProcessManagement.Areas.API.Controllers
             }
         }
 
-        [HttpPost]
-        public JsonResult DeleteUser(int iduser)
+        [HttpPost, GroupAuthorize(Role = new UserRole[] { UserRole.Admin })]
+        public JsonResult DeleteUser(int groupid, string userid)
         {
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
 
-            Participate user = participateService.findMemberInGroup(iduser);
-            participateService.removeUserInGroup(user);
-
-            message = "Delete user Successfully";
-            response = new { message = message, status = status };
-
-            return Json(response, JsonRequestBehavior.AllowGet);
+            try
+            {
+                Participate user = participateService.findMemberInGroup(userid, groupid);
+                if (user == null)
+                    throw new ServerSideException("User not belong to this group");
+                participateService.removeUserInGroup(user);
+                message = "Delete user Successfully";
+                response = new { message = message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                status = HttpStatusCode.InternalServerError;
+                message = e.GetType().Name == "ServerSideException" ? e.Message : "Something not right";
+                response = new { message = message, detail = e.Message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
         }
 
-        [HttpPost]
-        public JsonResult LeaveGroup(int iduser)
+        [HttpPost, GroupAuthorize]
+        public JsonResult LeaveGroup(int groupid)
         {
             HttpStatusCode status = HttpStatusCode.OK;
             string message;
             object response;
-
-            Participate user = participateService.findMemberInGroup(iduser);
             string IdUser = User.Identity.GetUserId();
-            if (IdUser == user.IdUser)
+            try
             {
+                Participate user = participateService.findMemberInGroup(IdUser, groupid);
+                if (user == null)
+                    throw new ServerSideException("You not belong to this group");
+                if (user.IsOwner)
+                    throw new ServerSideException("You cant leave your group");
                 participateService.removeUserInGroup(user);
+                message = "Leave group successfully";
+                response = new { message = message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
             }
+            catch (Exception e)
+            {
 
-            message = "Leave group successfully";
-            response = new { message = message, status = status };
-
-            return Json(response, JsonRequestBehavior.AllowGet);
+                status = HttpStatusCode.InternalServerError;
+                message = e.GetType().Name == "ServerSideException" ? e.Message : "Something not right";
+                response = new { message = message, detail = e.Message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
         }
 
 

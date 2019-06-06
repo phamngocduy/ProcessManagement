@@ -83,9 +83,9 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IdUser" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="viContent" Type="nvarchar(max)" />
+          <Property Name="viContent" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ActionLink" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="isRead" Type="bit" />
+          <Property Name="isRead" Type="bit" Nullable="false" />
           <Property Name="Created_At" Type="datetime" Nullable="false" />
           <Property Name="Updated_At" Type="datetime" Nullable="false" />
         </EntityType>
@@ -855,9 +855,9 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IdUser" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="viContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="viContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ActionLink" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="isRead" Type="Boolean" />
+          <Property Name="isRead" Type="Boolean" Nullable="false" />
           <Property Name="Created_At" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Updated_At" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="AspNetUser" Relationship="PMSModel.FK_Notify_AspNetUsers" FromRole="Notify" ToRole="AspNetUser" />

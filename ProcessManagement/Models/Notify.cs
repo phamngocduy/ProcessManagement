@@ -19,7 +19,7 @@ namespace ProcessManagement.Models
         public string Content { get; set; }
         public string viContent { get; set; }
         public string ActionLink { get; set; }
-        public Nullable<bool> isRead { get; set; }
+        public bool isRead { get; set; }
         public System.DateTime Created_At { get; set; }
         public System.DateTime Updated_At { get; set; }
     

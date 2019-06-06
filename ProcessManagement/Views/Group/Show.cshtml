@@ -470,7 +470,7 @@
                     "type": "GET",
                     "url": "@Url.Action("getmemberlist", "group", new { area = "api" })",
                     "dataSrc": function (json) {
-                        console.log(json);
+                        user = json.user;
                         json = json.data;
                         var return_data = [];
                         for (var i = 0; i < json.length; i++) {
@@ -487,20 +487,25 @@
                             var member = `${avatar}${name}`;
                             var isAdmin = json[i].isAdmin ? "selected" : "";
                             var isManager = json[i].isManager ? "selected" : "";
-
+                            var adminRole = user.isAdmin ? true : false;
+                            var disable = user.isAdmin  ? "" : "disabled";
                             if (json[i].isOwner) {
                                 var role = `<select multiple="multiple" class="role multiselect" id="role-${i + 1}" data-id="${json[i].id}" disabled>
                                                 <option value="o" selected>Owner</option>
                                             </select>`;
                                 var action = ``;
                             } else {
-                                var role = `<select multiple="multiple" class="role multiselect" id="role-${i + 1}" data-id="${json[i].id}">
+                                var role = `<select multiple="multiple" class="role multiselect" id="role-${i + 1}" data-id="${json[i].id}" ${disable}>
                                                 <option value="a" ${isAdmin}>Admin</option>
                                                 <option value="m" ${isManager}>Manager</option>
                                             </select>`;
-                                var action = `<button class="btn btn-danger btn-deleteuser" value="${json[i].id}" >Delete</button>
-                                            <button class="btn btn-danger btn-leavegroup" value="${json[i].id}" >Leave</button>`
-
+                                var action = ``;
+                                if (adminRole) {
+                                    action += `<button class="btn btn-danger btn-delete-member" data-id="${json[i].idUser}" >Delete</button>`;
+                                }
+                                if (json[i].idUser == user.idUser) {
+                                    action += `<button class="btn btn-danger btn-leave-group" data-id="${json[i].idUser}" >Leave</button>`;
+                                }
                             }
 
                             return_data.push({
@@ -553,6 +558,7 @@
                             });
                             var userRole = {
                                 id: memberId,
+                                groupid : @Model.Id,
                                 roles: JSON.stringify({
                                     isAdmin: isAdmin,
                                     isManager: isManager
@@ -578,22 +584,23 @@
                     });
                     $(".page-item:not(.previous):not(.next) a").addClass("waves-effect");
                     $(".multiselect").addClass("waves-effect").css("box-shadow", "none");
-                    $('.btn-deleteuser').on("click", function () {
-                        var iduser = $(this).val();
+                    $('.btn-delete-member').on("click", function () {
+                        var iduser = $(this)[0].dataset.id;
                         setConfirm(null, `Are you sure you want to delete this user?`, function () {
                             let data = {
-                                iduser: iduser
+                                userid: iduser,
+                                groupid: @Model.Id
                             }
                             setTimeout(function () {
                                 DeleteUser(data);
                             }, 1000);
                         });
                     })
-                    $('.btn-leavegroup').on("click", function () {
-                        var iduser = $(this).val();
+                    $('.btn-leave-group').on("click", function () {
+                        var iduser = $(this)[0].dataset.id;
                         setConfirm(null, `Are you sure you want to leave this group?`, function () {
                             let data = {
-                                iduser: iduser
+                                groupid: @Model.Id
                             }
                             setTimeout(function () {
                                 LeaveGroup(data);
