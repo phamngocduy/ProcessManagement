@@ -96,7 +96,7 @@
             notificationHub.client.updateNotify = function () {
                 updateNotification();
             }
-            $("ul.notifications").on("click", "li:not(.header):not(.footer) a", function () {
+            $(".navbar-nav ul.notifications").on("click", "li:not(.header):not(.footer) a", function () {
                 var id = $(this).parents("li")[0].dataset.id;
                 $.ajax({
                     type: "POST",
@@ -107,7 +107,7 @@
             })
         });
         function updateNotification() {
-            var notifyContainer = $("ul.notifications");
+            var notifyContainer = $(".navbar-nav ul.notifications");
             notifyContainer.empty();
             notifyContainer.append("<li>Loading...</li>");
 
