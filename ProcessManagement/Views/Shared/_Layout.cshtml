@@ -109,7 +109,7 @@
         function updateNotification() {
             var notifyContainer = $(".navbar-nav ul.notifications");
             notifyContainer.empty();
-            notifyContainer.append("<li>Loading...</li>");
+            notifyContainer.append("<li><i class='fa fa-circle-o-notch fa-spin'></i> Loading...</li>");
 
             $.ajax({
                 type: "GET",
@@ -145,7 +145,7 @@
                     }
                     notifyContainer.append(`<li class="footer"><a href="javascript:void(0);" class="more">See all notifications</a></li>`);
                 }
-            })
+            });
         }
         
     </script>

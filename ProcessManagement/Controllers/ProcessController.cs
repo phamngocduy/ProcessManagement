@@ -167,7 +167,7 @@ namespace ProcessManagement.Controllers
             return Json(new { id = ps.Id });
         }
         [GroupAuthorize]
-        public ActionResult ShowStep(int processid)
+        public ActionResult Show(int processid)
         {
             string idUser = User.Identity.GetUserId();
             Process process = processService.findProcess(processid);
@@ -307,6 +307,14 @@ namespace ProcessManagement.Controllers
             //get maximum file config
             ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
             return View();
+        }
+
+        [GroupAuthorize]
+        public ActionResult ShowStep(int stepid)
+        {
+            Step step = stepService.findStep(stepid);
+            ViewData["tasks"] = taskService.findTaskOfStep(stepid);
+            return View(step);
         }
         [GroupAuthorize]
         public ActionResult EditStep(int stepid)

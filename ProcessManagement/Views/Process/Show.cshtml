@@ -1,0 +1,583 @@
+﻿@using ProcessManagement.Models;
+@{
+    PMSEntities db = new PMSEntities();
+    ViewBag.Title = "ShowStep";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var group = ViewData["Group"] as ProcessManagement.Models.Group;
+    var process = ViewData["Process"] as ProcessManagement.Models.Process;
+    //var statistic = ViewData["Statistic"] as dynamic;
+    var listRole = ViewData["ListRole"] as List<ProcessManagement.Models.Role>;
+    var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
+    var listnextstep1 = ViewData["listnextstep1"] as List<ProcessManagement.Models.Step>;
+    var isManager = userRole.IsManager;
+    var files = ViewData["Files"] as List<ProcessManagement.Models.FileManager>;
+    var maxFileSizeRule = ViewData["FileMaxSize"] as ProcessManagement.Models.ConfigRule;
+}
+
+
+@section CustomCss{
+    <link rel="stylesheet" href="~/Content/vendor/sortable/st/prettify/prettify.css" />
+}
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <a href="javascript:void(0);" class="btn btn-xs btn-link primary-theme btn-toggle-fullwidth primary-theme">
+                <i class="fa fa-arrow-left"></i>
+            </a>
+            <ul class="breadcrumb">
+                <li><a href="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "group", action = "index"})"><i class="icon-home"></i></a></li>
+                <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "show", groupid = group.Id })">Group: @group.Name</a></li>
+                <li><a href="javascript:void(0);">Process: @process.Name</a></li>
+            </ul>
+        </div>
+        @*<div class="col-lg-6 col-md-4 col-sm-12 text-right">
+            <div class="bh_chart hidden-xs">
+                <div class="float-left m-r-15">
+                    <small>Visitors</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-user"></i> 1,784</h6>
+                </div>
+                <span class="bh_visitors float-right">2,5,1,8,3,6,7,5</span>
+            </div>
+            <div class="bh_chart hidden-sm">
+                <div class="float-left m-r-15">
+                    <small>Visits</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-globe"></i> 325</h6>
+                </div>
+                <span class="bh_visits float-right">10,8,9,3,5,8,5</span>
+            </div>
+            <div class="bh_chart hidden-sm">
+                <div class="float-left m-r-15">
+                    <small>Chats</small>
+                    <h6 class="mb-0 mt-1"><i class="icon-bubbles"></i> 13</h6>
+                </div>
+                <span class="bh_chats float-right">1,8,5,6,2,4,3,2</span>
+            </div>
+        </div>*@
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-lg-4 col-md-12">
+        <div class="card">
+            <div class="body">
+                <h5>@process.Name</h5>
+                <p>@process.Description</p>
+                @if (isManager)
+                {
+                    <div class="progress-container progress-info m-b-25 clearfix" style="margin: 0; text-align:right">
+
+                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "EditProcess", processid = process.Id })" class="btn btn-xs btn-primary-theme waves-effect">Edit Process</a>
+                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "Setting", processid = process.Id })" class="btn btn-xs btn-default waves-effect"><i class="icon-settings"></i></a>
+                        <button class="btn btn-default waves-effect" id="btn-process-copy" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Exporting...">Export</button>
+                        <button id="btn-process-delete" title="Delete" data-id="@process.Id" data-name="@process.Name" class="btn btn-xs btn-danger waves-effect"><i class="icon-trash"></i></button>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="card">
+            <div class="body">
+                @*<ul class=" list-unstyled basic-list">
+                        <li>Create At:<span class="badge badge-primary">@process.Created_At</span></li>
+                        <li>Update_at:<span class="badge badge-info">@process.Updated_At</span></li>
+                        <li>Total Step:<span class="badge badge-danger">@statistic.totalstep steps</span></li>
+                        <li>Total Role:<span class="badge badge-warning">@statistic.totalrole roles</span></li>
+                    </ul>*@
+                @Html.Partial("~/Views/Shared/Common/_File.cshtml", new ViewDataDictionary { { "filess", files }, { "UserRoles", userRole } })
+            </div>
+        </div>
+        <div class="card">
+            <div class="header">
+                <h2 style="display:inline-block">RoleList</h2>
+                @if (isManager)
+                {
+                    <a style="float: right" class="btn btn-sm btn-primary-theme waves-effect" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "addrole", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id })">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                }
+            </div>
+            <div class="body">
+                <div class="w_user">
+                    <img class="rounded-circle" src="~/Content/images/sm/avatar4.jpg" alt="">
+                    <div class="wid-u-info">
+                        <h5>Fidel Tonn</h5>
+                        <span>info@thememakker.com</span>
+                        <p class="text-muted m-b-0">Project Lead</p>
+                    </div>
+                    <hr>
+                </div>
+                <ul class="right_chat list-unstyled mb-0">
+                    @foreach (var role in listRole.Where(x => x.IsRun == null || x.IsRun == false))
+                    {
+                        <li class="online">
+                            <div class="media">
+                                <img class="media-object " src="~/Content/images/xs/avatar4.jpg" alt="">
+                                <div class="media-body">
+                                    <span class="name">
+                                        @role.Name
+                                        @if (isManager)
+                                        {
+                                            <span style="float :right">
+                                                <a class="btn btn-sm btn-outline-success" style=" margin-left: 10px" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "editrole", roleid = role.Id})">
+                                                    <i class="icon-pencil"></i>
+                                                </a>
+                                                <a class="btn btn-sm btn-outline-danger js-sweetalert" title="Delete" style="margin-left: 10px" href="@Url.RouteUrl("GroupControlLocalizedDefault", new {controller = "process", action = "DeleteRole", roleid = role.Id})" onclick="return confirm('bạn có chắc muốn xóa không??')">
+                                                    <i class="icon-trash"></i>
+                                                </a>
+                                            </span>
+                                        }
+                                    </span>
+                                    <span class="message">
+                                        @role.Description
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="card">
+            <div class="header">
+                <h2>Create by </h2>
+            </div>
+            <div class="body text-center">
+                <div class="profile-image m-b-15"> <img src="~/Content/images/user.png" class="rounded-circle" alt=""> </div>
+                <div>
+                    <h4 class="m-b-0"><strong>@process.AspNetUser.UserName</strong></h4>
+                </div>
+                <div class="m-t-15">
+                    <button class="btn btn-primary">Profile</button>
+                    <button class="btn btn-outline-secondary">Message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8 col-md-12">
+        <div class="card">
+            <div class="header">
+                <h2>Process Flow</h2>
+            </div>
+            <div class="body process-flow">
+                <img src="@process.Avatar" style="max-width: 100%" />
+            </div>
+        </div>
+        <div class="card">
+            <div class="header">
+                <h2>List Step</h2>
+            </div>
+            <div class="body">
+                <ul class="step-list">
+                    @if (listnextstep1 != null)
+                    {
+                        foreach (var step in listnextstep1)
+                        {
+                            if (step != null && step.Figure == "Step" && (step.IsRun == false || step.IsRun == null))
+                            {
+                                List<TaskProcess> taskList = db.TaskProcesses.Where(x => x.IdStep == step.Id).OrderBy(x => x.Position).ToList();
+                                <li>
+                                    <div class="step @if (taskList.Any()) { WriteLiteral("step-has-task"); }" style="border: 2px solid @step.Color; border-left:7px solid @step.Color; color:@step.Color">
+                                        <div class="step-name">
+                                            <span data-toggle="tooltip" data-placement="top" title="@step.Description">@step.Name (@taskList.Where(x => x.IsRun == null || x.IsRun == false).Count())</span>
+                                        </div>
+                                        @if (isManager)
+                                        {
+                                            <div class="step-action dropdown">
+                                                <a style="color: @step.Color" href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></a>
+                                                <ul class="dropdown-menu notifications animated fadeIn">
+                                                    <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "editstep", groupslug = group.groupSlug, groupid = group.Id, stepid = step.Id })">Edit step</a></li>
+                                                    <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "addtask", stepid = step.Id })">Add task</a></li>
+                                                    <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "addformtask", stepid = step.Id })">Add form task</a></li>
+                                                </ul>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="task">
+                                        <ul class="task-list" id="task-of-step-@step.Id">
+                                            @foreach (var task in taskList.Where(x => x.IsRun == null || x.IsRun == false))
+                                            {
+                                                <li class="task-item" style="background-color:@task.Color" data-id="@task.Id">
+                                                    @if (task.ValueFormJson == null)
+                                                    {
+                                                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showtask", taskid = task.Id })">@task.Name</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showformtask", taskid = task.Id })">@task.Name</a>
+                                                    }
+                                                    @if (isManager)
+                                                    {
+                                                        <i class="fa fa-arrows-alt handle"></i>
+                                                    }
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </li>
+                            }
+
+                        }
+                    }
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+@section CustomScripts{
+    <script src="~/Content/vendor/sortable/sortable.min.js"></script>
+    <script src="~/Content/vendor/sortable/st/prettify/prettify.js"></script>
+    <script src="~/Content/vendor/sortable/st/prettify/run_prettify.js"></script>
+    <script>
+        $(function () {
+            $(".step-has-task .step-name").on("click", function () {
+                var step = $(this).parent(".step");
+                var task = step.next();
+                task.toggle("slow");
+            });
+            var showStep = localStorage.getItem("showStep");
+            if (showStep) {
+                localStorage.removeItem("showStep");
+                $(`#task-of-step-${showStep}`).parents(".task").show("slow");
+            }
+            var task = $(".task-list");
+            task.each(function () {
+                var element = $(this)[0];
+                Sortable.create(element, {
+                    handle: '.handle', // handle's class
+                    animation: 150,
+                    dataIdAttr: 'data-id',
+                    onUpdate: function (evt) {
+                        ////get item
+                        //var fromItem = evt.item;
+                        //var toItem = evt.item.previousElementSibling;
+                        ////get id
+                        //var fromId = fromItem.attributes["data-id"].value;
+                        //var toId = toItem.attributes["data-id"].value;
+                        //var position = {
+                        //    from: fromId,
+                        //    to: toId
+                        //}
+                        //position = JSON.stringify(position);
+                        //changePosition(position);
+
+
+
+
+
+                        //var formList = evt.from.children;
+                        //var formID = [];
+                        //for (var task of formList) {
+                        //    formID.push(task.dataset.id);
+                        //}
+                        //var toList = evt.to.children;
+                        //var toID = [];
+                        //for (var task of toList) {
+                        //    toID.push(task.dataset.id);
+                        //}
+                        //console.log(evt.from, evt.to);
+
+                        var newTaskOrder = evt.from.children;
+                        var newPositionList = [];
+                        for (var i = 0; i < newTaskOrder.length; i++) {
+                            var temp = {
+                                idTask: newTaskOrder[i].dataset.id,
+                                position: (i + 1)
+                            }
+                            newPositionList.push(temp);
+                        }
+                        console.log(newPositionList);
+                        changePosition(JSON.stringify(newPositionList));
+                    }
+                });
+            });
+            $("#btn-process-copy").on("click", function () {
+                var copyButton = $(this);
+                toggleLoading(copyButton);
+                copyProcess(copyButton,@process.Id);
+            })
+        });
+        function changePosition(position) {
+            $.ajax({
+                url: "@Url.Action("changetaskposition","process",new { area = "api"})",
+                type: "POST",
+                data: { position : position },
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status != 200) {
+                        showToastr("error", "Error!!", "toast-bottom-left")
+                        console.error(response)
+                    }
+                }
+            });
+        }
+
+        function copyProcess(element,processid){
+            $.ajax({
+                url: "@Url.Action("Export", "process", new { area = "api"})",
+                type: "POST",
+                data: { processid: processid},
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status != 200) {
+                        showToastr("error", response.message, "toast-bottom-left");
+                        console.error(response);
+                    } else {
+                        var downloadAction = `${getBaseUrl(false)}/file/download/${response.data}`;
+                        window.open(downloadAction);
+                        $.alert({
+                            backgroundDismiss: 'buttonName',
+                            title:"Tip",
+                            content: `If file not download automatically. <a href="${downloadAction}">Click Here</a>.`
+                        });
+                    }
+                    toggleLoading(element);
+                }
+            })
+        }
+    </script>
+    <script>
+        $(function () {
+            //fileupload
+            @if (maxFileSizeRule != null)
+            {
+                int value = maxFileSizeRule.Value;
+                string unit = maxFileSizeRule.Unit.ToLower().Trim();
+                int pow;
+                switch (unit)
+                {
+                    case "kb":
+                        pow = 1;
+                        break;
+                    case "mb":
+                        pow = 2;
+                        break;
+                    case "gb":
+                        pow = 3;
+                        break;
+                    default:
+                        pow = 0;
+                        break;
+                }
+                double toByte = value * Math.Pow(1024, pow);
+                @:var maxFileSize = @toByte;
+            }
+            else
+            {
+                @:var maxFileSize = null;
+            }
+            $("#btn-file").on("click", function () {
+                $("#FileUpload").trigger("click");
+            });
+            $(document).on("click", ".btn-file-remove", function () {
+                var id = this.dataset.src;
+                var fileName = $(this).parents("tr").find("td:first-child").text().trim();
+                setConfirm(null, `Are you sure you want to delete "${fileName}"?`, function () {
+                    removeFile(id);
+                });
+            })
+            $(document).on("click", ".btn-file-changename", function () {
+                var id = this.dataset.src;
+                var fileName = $(this).parents("tr").find("td:first-child").text().trim();
+                var dialog = $.confirm({
+                    title: `Change File Name (${fileName})`,
+                    content:'<div class="form-group">' +
+                        '<label>Filename</label>' +
+                        '<input type="text" placeholder="Enter your new file name" class="name form-control" required />' +
+                        '</div>',
+                    columnClass: 'medium',
+                    closeIcon: true,
+                    closeIconClass: 'fa fa-close',
+                    buttons: {
+                        save: {
+                            btnClass: 'btn-none waves-effect',
+                            action: function () {
+                                var newFileName = this.$content.find('input').val().trim();
+                                if (newFileName == "") {
+                                    showToastr("error", "File Name is required");
+                                } else {
+                                    dialog.close();
+                                    setConfirm(null, `Are you sure you want to change from <b>${fileName}</b> to <b>${newFileName}</b>?`, function () {
+                                        changeFileName(id, newFileName);
+                                    });
+
+                                }
+                                return false;
+                            }
+                        },
+                        cancel: {
+                            btnClass: 'btn-none waves-effect',
+                        }
+                    },
+                    onContentReady: function () {
+                        this.$content.find("input").val(fileName);
+                    },
+                });
+            })
+            $("#FileUpload").on("change", function () {
+                //var fileName = e.target.files[0].name;
+                var file = this.files[0];
+                var fileName = file.name;
+                var fileSize = file.size;
+                if (maxFileSize != null && fileSize > maxFileSize) {
+                    showToastr("error", `This file is too big (@maxFileSizeRule.Value @maxFileSizeRule.Unit maximum)`);
+                } else {
+                    setConfirm(null, `Are you sure you want to upload "${fileName}"?`, function () {
+                        addFile(file);
+                    });
+                }
+                $(this).val("");
+
+            });
+        });
+        function addFile(file) {
+            var data = new FormData();
+            data.append("FileUpload", file);
+            data.append("groupid", @group.Id);
+            data.append("processid",@process.Id)
+            data.append("direction", "@Direction.Process");
+            $.ajax({
+                url: "@Url.Action("uploadfile", "file", new { area = "api"})",
+                type: "POST",
+                data: data,
+                contentType: false,
+                processData: false,
+                dataType: "json",
+                success: function (response) {
+                    //thanh cong thi no tra du lieu ve
+                    console.log(response);
+                    if (response.status == 200) {
+                        showToastr("success", response.message, "toast-bottom-left");
+                        var file = renderFile(response.data)
+                        $("#file-list tbody").append(file);
+                    } else {
+                        showToastr("error", response.message, "toast-bottom-left");
+                        console.error(response);
+                    }
+                }
+            })
+        }
+        function removeFile(id) {
+            var data = {
+                id: id,
+                groupid : @group.Id
+            }
+
+            $.ajax({
+                url: "@Url.Action("removefile", "file", new { area = "api"})",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        showToastr("success", response.message, "toast-bottom-left");
+                        $(`[data-src="${id}"]`).parents("tr").fadeOut(500, function () {
+                            $(this).remove();
+                        })
+                    } else {
+                        showToastr("error", response.message, "toast-bottom-left");
+                        console.error(response);
+                    }
+                }
+            })
+        }
+        function renderFile(file) {
+            return `<tr>
+                        <td>
+                            <a href="href="/file/download/${file.id}">
+                               ${file.name}
+                            </a>
+                        </td>
+                        <td style="text-align:center">
+                            <button class="btn btn-primary-theme waves-effect btn-file-changename" data-src="${file.id}" data-toggle="tooltip" data-placement="top" title="Change Name">
+                                <i class=" icon-pencil"></i>
+                            </button>
+                            <button class="btn btn-danger waves-effect btn-file-remove" data-src="${file.id}" data-toggle="tooltip" data-placement="top" title="Remove">
+                                <i class="icon-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`
+
+        }
+        function changeFileName(id,filename) {
+            var data = {
+                id: id,
+                groupid: @group.Id,
+                filename: filename
+            }
+
+            $.ajax({
+                url: "@Url.Action("changefilename", "file", new { area = "api"})",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        showToastr("success", response.message, "toast-bottom-left");
+                        $(`[data-src="${id}"]`).parents("tr").find('td:first-child a').text(response.data.name);
+                    } else {
+                        showToastr("error", response.message, "toast-bottom-left");
+                        console.error(response);
+                    }
+                }
+            })
+        }
+
+        $(function () {
+            $('#btn-process-delete').on('click', function () {
+                var $this = $(this);
+                var processId = $this[0].dataset.id,
+                    processName = $this[0].dataset.name;
+                var content = `<div id="process-delete-confirm">
+                                    <div class="text-danger">You are going to remove <span class="text-strong">${processName}</span>. Removed this process CANNOT be restored! Are you ABSOLUTELY sure?</div>
+                                    <div>Please type <span class="text-danger background-danger">${ processName}</span> to proceed or close this modal to cancel.</div>
+                                    <div class="process-confirm form-group">
+                                        <input type="text" class="form-control">
+                                    </div>
+                               </div>`;
+                
+                setConfirm(`Confirmation required`, content, function () {
+                    var container = this.$content.find(".process-confirm");
+                    var confirm = this.$content.find(".process-confirm > input").val().trim();
+                    if (confirm == "") {
+                        container.addClass("error");
+                        container.append(`<span class="error-message">This field is required.</span>`);
+                        return false;
+                    } else {
+                        container.removeClass("error");
+                        $(".error-message").remove();
+                        if (confirm === processName) {
+                            DeleteProcess(processId);
+                        } else {
+                            container.addClass("error");
+                            container.append(`<span class="error-message">Process name not match.</span>`);
+                            return false;
+
+                        }
+                    }
+                });
+            })
+        })
+
+        function DeleteProcess(data) {
+            $.ajax({
+                url: "@Url.Action("deleteprocess", "process",new { area = "api"})",
+                type: "POST",
+                data: { processid : data },
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        location.href = '@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "show", groupid = process.IdGroup })';
+                    } else {
+                        showToastr("error", response.message, "toast-bottom-left");
+                        console.error(response)
+                    }
+                }
+            });
+        }
+
+    </script>
+}

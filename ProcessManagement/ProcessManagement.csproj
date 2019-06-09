@@ -5881,7 +5881,7 @@
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Process\AddRole.cshtml" />
     <Content Include="Views\Process\EditRole.cshtml" />
-    <Content Include="Views\Process\ShowStep.cshtml" />
+    <Content Include="Views\Process\Show.cshtml" />
     <Content Include="Views\Process\EditStep.cshtml" />
     <Content Include="Views\Group\FileManager.cshtml" />
     <Content Include="Views\Process\EditProcess.cshtml" />
@@ -5934,6 +5934,7 @@
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Views\Process\ShowStep.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
