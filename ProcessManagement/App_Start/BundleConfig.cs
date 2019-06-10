@@ -14,12 +14,13 @@ namespace ProcessManagement
         {
             Bundle cssBundle = new StyleBundle("~/Content/css")
                 .Include("~/Content/vendor/bootstrap/css/bootstrap.min.css")
-                .Include("~/Content/vendor/font-awesome-5/css/all.css")
-                .Include("~/Content/vendor/font-awesome/css/font-awesome.min.css")
                 .Include("~/Content/vendor/toastr/toastr.min.css")
                 .Include("~/Content/vendor/jquery-confirm/dist/jquery-confirm.min.css")
                 .Include("~/Content/vendor/jquery-datatable/dataTables.bootstrap4.min.css")
-                .Include("~/Content/build/css/color_skins.css");
+                .Include("~/Content/build/css/color_skins.css")
+                .Include("~/Content/build/css/main.css")
+                .Include("~/Content/build/css/custom.css");
+
             cssBundle.Orderer = new PassthruBundleOrderer();
             bundles.Add(cssBundle);
 

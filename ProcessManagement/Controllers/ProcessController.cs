@@ -313,7 +313,16 @@ namespace ProcessManagement.Controllers
         public ActionResult ShowStep(int stepid)
         {
             Step step = stepService.findStep(stepid);
-            ViewData["tasks"] = taskService.findTaskOfStep(stepid);
+            string idUser = User.Identity.GetUserId();
+
+            //file 
+            string stepPath = string.Format("Upload/{0}/{1}/{2}", step.Process.IdGroup, step.Process.Id, step.Id);
+            List<FileManager> files = fileService.findFiles(step.Process.IdGroup, stepPath);
+
+            ViewData["Files"] = files;
+            ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, step.Process.IdGroup);
+            ViewData["FileMaxSize"] = db.ConfigRules.Find("filesize");
+
             return View(step);
         }
         [GroupAuthorize]

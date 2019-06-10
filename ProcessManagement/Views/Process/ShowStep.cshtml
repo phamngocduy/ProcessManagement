@@ -2,6 +2,8 @@
 @{
     ViewBag.Title = "ShowStep";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var files = ViewData["Files"] as List<ProcessManagement.Models.FileManager>;
+    var userRole = ViewData["UserRoles"] as ProcessManagement.Models.Participate;
 }
 
 <div class="block-header">
@@ -16,37 +18,34 @@
                 <li><a href="javascript:void(0);">Process: @Model.Process.Name</a></li>
             </ul>
         </div>
-        @*<div class="col-lg-6 col-md-4 col-sm-12 text-right">
-                <div class="bh_chart hidden-xs">
-                    <div class="float-left m-r-15">
-                        <small>Visitors</small>
-                        <h6 class="mb-0 mt-1"><i class="icon-user"></i> 1,784</h6>
-                    </div>
-                    <span class="bh_visitors float-right">2,5,1,8,3,6,7,5</span>
-                </div>
-                <div class="bh_chart hidden-sm">
-                    <div class="float-left m-r-15">
-                        <small>Visits</small>
-                        <h6 class="mb-0 mt-1"><i class="icon-globe"></i> 325</h6>
-                    </div>
-                    <span class="bh_visits float-right">10,8,9,3,5,8,5</span>
-                </div>
-                <div class="bh_chart hidden-sm">
-                    <div class="float-left m-r-15">
-                        <small>Chats</small>
-                        <h6 class="mb-0 mt-1"><i class="icon-bubbles"></i> 13</h6>
-                    </div>
-                    <span class="bh_chats float-right">1,8,5,6,2,4,3,2</span>
-                </div>
-            </div>*@
     </div>
 </div>
-<div class="row clearfix">
-    <div class="offset-lg-1 col-lg-10 col-md-12">
-        <div class="card">
+<div class="row clearfix display-flex">
+    <div class="col-lg-8 col-md-12">
+        <div class="card" style="height: 100%;">
             <div class="body">
                 <h5>@Model.Name</h5>
                 <p>@Model.Description</p>
+                <div>
+                    <button class="btn btn-primary-theme waves-effect">Add Task</button>
+                    <button class="btn btn-default waves-effect">Add Role</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-12">
+        <div class="card">
+            <div class="body">
+                <h5>File Upload</h5>
+                @Html.Partial("~/Views/Shared/Common/_File.cshtml", new ViewDataDictionary { { "filess", files }, { "UserRoles", userRole } })
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8 col-md-12">
+        <div class="card" style="height: 100%;">
+            <h5>Task List</h5>
+            <div class="body">
+                <table></table>
             </div>
         </div>
     </div>

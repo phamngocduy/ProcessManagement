@@ -70,7 +70,7 @@
 </div>
 
 <div class="row clearfix display-flex">
-    <div class="col-lg-3 col-md-6" style="height:100%">
+    <div class="col-lg-3 col-md-12" style="height:100%">
         <div class="card top_counter">
             <div class="body">
                 <div class="icon"><i class="fa fa-users"></i> </div>
@@ -288,9 +288,9 @@
             </div>
             <div class="body process-list">
                 <ul id="mylistprocess" class="list-unstyled pagination-listcard mylistprocess">
-                    @foreach (var process in listprocess.Where(x => x.IsRun == null || x.IsRun == false))
+                    @foreach (var process in listprocess.Where(x => x.IsRun == false))
                     {
-                        <a class="mymember" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "Process", action = "ShowStep", groupslug = Model.groupSlug, groupid = Model.Id, processid = process.Id })">
+                        <a class="mymember" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "show", groupslug = Model.groupSlug, groupid = Model.Id, processid = process.Id })">
                             <li class="media">
                                 <div class="media-left"><img class="mr-3 process-avatar img-responsive" src="@process.Avatar" alt="@process.Name" /></div>
                                 <div class="media-body">
@@ -501,10 +501,10 @@
                                             </select>`;
                                 var action = ``;
                                 if (adminRole) {
-                                    action += `<button class="btn btn-danger btn-delete-member" data-id="${json[i].idUser}" >Delete</button>`;
+                                    action += `<button class="btn btn-danger btn-delete-member" data-id="${json[i].idUser}" data-toggle="tooltip" data-placement="top" title="Remove user grom group"><i class="icon-trash"></i></button>`;
                                 }
                                 if (json[i].idUser == user.idUser) {
-                                    action += `<button class="btn btn-danger btn-leave-group" data-id="${json[i].idUser}" >Leave</button>`;
+                                    action += `<button class="btn btn-primary-theme btn-leave-group" data-id="${json[i].idUser}" data-toggle="tooltip" data-placement="top" title="Leave your group"><i class="fas fa-sign-out-alt"></i> Leave</button>`;
                                 }
                             }
 
@@ -569,13 +569,13 @@
                         }
                     });
                     //if not admin or owner
-                    @if (!userRole.IsOwner && !userRole.IsAdmin)
+                    @*@if (!userRole.IsOwner && !userRole.IsAdmin)
                     {
                         @:$("button.multiselect").addClass("disabled");
                     }else if (userRole.IsOwner)
                     {
                         @:$("select[data-id=@userRole.Id]").parents("tr").find("button.multiselect").addClass("disabled");
-                    }
+                    }*@
                     $('.multiselect-container label.checkbox').each(function () {
                         var input = $(this).find('input'),
                             val = input.val();

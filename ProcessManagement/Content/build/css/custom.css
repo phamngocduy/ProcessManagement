@@ -1659,16 +1659,8 @@ input:read-only, textarea:read-only, select:read-only {
   top: 12px;
   right: 10px;
 }
-.step-list .step .step-action.dropdown .dropdown-toggle {
-  padding: 5px 10px;
-}
 .step-list .step .step-action.dropdown .dropdown-toggle::after {
-  content: "";
-  font-family: "FontAwesome";
-  border: 0;
-  vertical-align: middle;
-  height: auto;
-  width: auto;
+  content: unset;
 }
 .step-list .step .step-action.dropdown .dropdown-menu {
   border-radius: 0.55rem;
@@ -1763,6 +1755,9 @@ input:read-only, textarea:read-only, select:read-only {
 }
 #table-member .multiselect.dropdown-toggle {
   border: none;
+}
+#table-member .btn-leave-group {
+  margin-left: 10px;
 }
 
 #table-member_wrapper .row:nth-child(2) {
