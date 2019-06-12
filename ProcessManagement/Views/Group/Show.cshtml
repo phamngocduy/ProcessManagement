@@ -222,16 +222,16 @@
                 <h2>List Process Run</h2>
                 <ul class="header-dropdown">
                     <li><a class="tab_btn" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "newprocessrun", groupslug = Model.groupSlug, groupid = Model.Id })" data-toggle="tooltip" data-placement="top" title="Create New Process"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
-                    <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Previous"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></li>
-                    <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Next"><i class="fa fa-arrow-right" aria-hidden="true"></i></a></li>
-                    <li class="dropdown">
+                    @*<li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Previous"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></li>
+                    <li><a class="tab_btn" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Next"><i class="fa fa-arrow-right" aria-hidden="true"></i></a></li>*@
+                    @*<li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"></a>
                         <ul class="dropdown-menu dropdown-menu-right animated bounceIn">
                             <li><a href="javascript:void(0);">Action</a></li>
                             <li><a href="javascript:void(0);">Another Action</a></li>
                             <li><a href="javascript:void(0);">Something else</a></li>
                         </ul>
-                    </li>
+                    </li>*@
                 </ul>
             </div>
             <div class="body process-list" style="height: 387px">
@@ -274,14 +274,14 @@
         </div>
     </div>
     <div class="col-lg-4 col-md-12">
-        <div class="card" style="height: 100%;position:relative">>
+        <div class="card" style="height: 100%;position:relative">
             <div class="header">
                 <h2>Processes</h2>
                 <ul class="header-dropdown ">
                     <li><a class="tab_btn" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "newprocess", groupslug = Model.groupSlug, groupid = Model.Id })" data-toggle="tooltip" data-placement="top" title="Create New Process"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
                 </ul>
             </div>
-            <div class="body process-list" 
+            <div class="body process-list"> 
                 <ul id="mylistprocess" class="list-unstyled pagination-listcard mylistprocess">
                     @foreach (var process in listprocess.Where(x => x.IsRun == false))
                     {

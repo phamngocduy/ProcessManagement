@@ -4,19 +4,22 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var link = ViewData["load"];
+    var group = Model.Group as ProcessManagement.Models.Group;
 }
 
 
 
 <div class="block-header">
     <div class="row">
-        <div class="col-lg-6 col-md-8 col-sm-12">
-            <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Create New Process</h2>
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <a href="javascript:void(0);" class="btn btn-xs btn-link primary-theme btn-toggle-fullwidth primary-theme">
+                <i class="fa fa-arrow-left"></i>
+            </a>
             <ul class="breadcrumb">
-                <li class="breadcrumb-item"><a href="~/Home/Index" class="theme-color"><i class="icon-home"></i></a></li>
-                <li class="breadcrumb-item"><a href="/">Groups List</a></li>
-                <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = Model.Group.Id })">Group: @Model.Group.Name</a></li>
-                <li class="breadcrumb-item"><a href=""> Create New Process</a></li>
+                <li><a href="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "group", action = "index"})" class="theme-color"><i class="icon-home"></i></a></li>
+                <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "show", groupid = group.Id })">Group: @group.Name</a></li>
+                <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "show", groupid = group.Id, processid = Model.Id })">Process: @Model.Name</a></li>
+                <li><a href="javascript:void(0);"><i class="fa fa-pencil"></i> Draw Process</a></li>
                 
             </ul>
         </div>
@@ -47,7 +50,7 @@
 </div>
 <hr />
 <div id="sample">
-    <button id="btn-save" type="submit" class="btn btn-success"> save to db</button>
+    <button id="btn-save" type="submit" class="btn btn-primary waves-effect">Save</button>
     <div style="width: 100%; display: flex; justify-content: space-between">
         <div id="myPaletteDiv" style="width: 105px; margin-right: 2px; background-color: whitesmoke; border: solid 1px black"></div>
         <div id="myDiagramDiv" style="flex-grow: 1; height: 620px; border: solid 1px black"></div>
