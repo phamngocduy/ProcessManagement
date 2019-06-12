@@ -274,19 +274,14 @@
         </div>
     </div>
     <div class="col-lg-4 col-md-12">
-        <div class="card" style="height: 100%">
+        <div class="card" style="height: 100%;position:relative">>
             <div class="header">
                 <h2>Processes</h2>
                 <ul class="header-dropdown ">
                     <li><a class="tab_btn" href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "newprocess", groupslug = Model.groupSlug, groupid = Model.Id })" data-toggle="tooltip" data-placement="top" title="Create New Process"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
                 </ul>
-                <ul class="pagination">
-                <li class="page-item">
-                    <a id="previous-page" class="page-link" href="javascript:void(0)" aria-label="Previous">Previous</a>
-                </li>
-            </ul>
             </div>
-            <div class="body process-list">
+            <div class="body process-list" 
                 <ul id="mylistprocess" class="list-unstyled pagination-listcard mylistprocess">
                     @foreach (var process in listprocess.Where(x => x.IsRun == false))
                     {
@@ -300,6 +295,12 @@
                         </a>
                     }
                     @*<li><a href="#" class="align-right displayblock primary-theme">View more...</a></li>*@
+
+                </ul>
+                <ul class="pagination" style="position:absolute;bottom:0;left:0">
+                    <li class="page-item wave-effects previous">
+                        <a id="previous-page" class="page-link " href="javascript:void(0)" aria-label="Previous">Previous</a>
+                    </li>
                 </ul>
             </div>
             @*TODO*@
@@ -383,7 +384,7 @@
                     $(".pagination").append(`<li class="current-page page-item"><a class="page-link" href="javascript:void(0)">` + i + `</a></li>`);
                 }
 
-                $(".pagination").append(`<li class="next-page page-item"><a class="page-link" href="javascript:void(0)" aria-label="Next">Next</a></li>`);
+                $(".pagination").append(`<li class="next-page page-item next wave-effects"><a class="page-link" href="javascript:void(0)" aria-label="Next">Next</a></li>`);
 
                 // Chức năng hiển thị các mục mới dựa trên số trang được nhấp
                 //$(".pagination li.current-page").on("click", function () {
