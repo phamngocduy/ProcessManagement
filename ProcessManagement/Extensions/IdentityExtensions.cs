@@ -1,14 +1,25 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Web;
+using ProcessManagement.Models;
+using ProcessManagement.Controllers;
+using Microsoft.AspNet.Identity;
 
 namespace ProcessManagement.Extensions
 {
     public static class IdentityExtensions
     {
+        public static string GetEmail(this IIdentity identity)
+        {
+            var userId = identity.GetUserId ();
+            ApplicationUser user = new ApplicationDbContext().Users.FirstOrDefault(s => s.Id == userId);
+            return user.Email;
+
+        }
         public static string GetNickName(this IIdentity identity)
         {
             Claim claim = ((ClaimsIdentity)identity).FindFirst("NickName");
@@ -28,5 +39,6 @@ namespace ProcessManagement.Extensions
             return (avatar != null) ? avatar.Value : string.Empty;
 
         }
+
     }
 }

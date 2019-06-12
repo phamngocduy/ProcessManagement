@@ -210,20 +210,23 @@
         });
     })
     function getOwnerAvatar(name, avatar) {
-        if (avatar.avatar != "") {
+        @*if (avatar.avatar != "") {
             return `<img src="Content/images/xs/avatar1.jpg" data-toggle="tooltip" data-placement="top" title="${name}" alt="Avatar" class="width35 rounded">`;
         } else {
             var avatardefault = JSON.parse(avatar.avatardefault);
             return `<div data-toggle="tooltip" data-placement="top" title="${name}" class="width35 rounded owner-default" style="background-color:${avatardefault.background}">${avatardefault.name}</div>`
-        }
+        }*@
+        return `<img data-toggle="tooltip" data-placement="top" title="${name}" class="width35 rounded owner-default" src="data:image/png;base64,${avatar.avatardefault}"/>`
+
     }
     function getMemberAvatar(name, avatar) {
-        if (avatar.avatar != "") {
+        @*if (avatar.avatar != "") {
             return `<img src="Content/images/xs/avatar1.jpg" data-toggle="tooltip" data-placement="top" title="${name}" alt="Avatar">`;
         } else {
             var avatardefault = JSON.parse(avatar.avatardefault);
             return `<div data-toggle="tooltip" data-placement="top" title="${name}" class="member-default" style="background-color:${avatardefault.background}">${avatardefault.name}</div>`;
-        }
+        }*@
+        return `<img data-toggle="tooltip" data-placement="top" title="${name}" class="member-default" src="data:image/png;base64,${avatar.avatardefault}" />`;
     }
     function getMemberLeft(memberleft) {
         return `<div data-toggle="tooltip" data-placement="top" title="and ${memberleft} member more..." class="member-default member-left">${memberleft}+</div>`;

@@ -60,6 +60,41 @@ namespace ProcessManagement.Areas.API.Controllers
             response = new { isExist = check, message = message, status = status };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
+        [GroupAuthorize]
+        public JsonResult GetTaskList(int stepid)
+        {
+            HttpStatusCode status = HttpStatusCode.OK;
+            string message;
+            object response;
+
+            try
+            {
+                var tasks = taskService.findTaskOfStep(stepid);
+                List<object> jTaskList = new List<object>();
+                foreach (var task in tasks.OrderByDescending(x => x.Position))
+                {
+                    object jTask = new
+                    {
+                        id = task.Id,
+                        name = task.Name,
+                        description = task.Description,
+                        color = task.Color,
+                        role = task.Role.Name
+                    };
+                    jTaskList.Add(jTask);
+                }
+                response = new { data = jTaskList, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+
+                status = HttpStatusCode.InternalServerError;
+                message = e.GetType().Name == "ServerSideException" ? e.Message : "Something not right";
+                response = new { message = message, detail = e.Message, status = status };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+        }
         [HttpPost]
         [GroupAuthorize(Role = new UserRole[] { UserRole.Manager })]
         public JsonResult AddTask(int stepid, string name, int? idRole, string description, string inputConfig, string fileConfig, HttpPostedFileBase fileupload)
@@ -74,7 +109,7 @@ namespace ProcessManagement.Areas.API.Controllers
             if (name == "")
             {
                 status = HttpStatusCode.InternalServerError;
-                message = "Created Task Successfully";
+                message = "Name task is required";
                 response = new { message = message, status = status };
                 return Json(response, JsonRequestBehavior.AllowGet);
             }

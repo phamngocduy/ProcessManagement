@@ -1,6 +1,6 @@
 @{ 
-    var avatar = User.Identity.GetAvatar();
-    var avatardefault = User.Identity.GetDefaultAvatar();
+    //var avatar = User.Identity.GetAvatar();
+    //var avatardefault = User.Identity.GetDefaultAvatar();
     var id = ViewContext.RouteData.Values["parameterName"];
     var groupSlug = ViewContext.RouteData.Values["groupslug"];
     var groupId = ViewContext.RouteData.Values["groupid"];
@@ -8,7 +8,7 @@
 <div id="left-sidebar" class="sidebar">
     <div class="sidebar-scroll">
         <div class="user-account">
-            @if (avatar != "")
+            @*@if (avatar != "")
             {
                 <img src="~/Content/images/user.png" class="rounded-circle user-photo" alt="User Profile Picture">
             }
@@ -21,7 +21,8 @@
                         @jDefault["name"]
                     </div>
                 }
-            }
+            }*@
+            <img src="data:image/png;base64,@APIController.GetAvatar(User.Identity.GetEmail())" class="rounded-circle user-photo"/>
             <div class="dropdown">
                 <span>Welcome,</span>
                 <a href="javascript:void(0);" class="dropdown-toggle user-name"
@@ -119,7 +120,7 @@
                         </li>
                     </ul>
                     <hr>
-                    <h6>General Settings</h6>
+                    @*<h6>General Settings</h6>
                     <ul class="setting-list list-unstyled">
                         <li>
                             <label class="fancy-checkbox">
@@ -157,7 +158,7 @@
                                 <span>Location Permission</span>
                             </label>
                         </li>
-                    </ul>
+                    </ul>*@
                 </div>
             </div>
         </div>

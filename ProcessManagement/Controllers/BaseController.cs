@@ -1,10 +1,8 @@
 ﻿using ProcessManagement.Helpers;
 using System;
-using System.Threading;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using ProcessManagement.Models;
+
 namespace ProcessManagement.Controllers
 {
     public enum UserRole

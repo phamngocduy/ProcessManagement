@@ -20,6 +20,19 @@ namespace ProcessManagement.Services
             List<Role> listrole = db.Roles.Where(x => x.IdProcess == idProcess).ToList();
             return listrole;
         }
+        public void addRole(Role role)
+        {
+            Role roles = new Role();
+            roles.IdProcess = role.IdProcess;
+            roles.Name = role.Name;
+            roles.Description = role.Description;
+            roles.Color = role.Color;
+            roles.IsRun = false;
+            roles.Create_At = DateTime.Now;
+            roles.Update_At = DateTime.Now;
+            db.Roles.Add(roles);
+            db.SaveChanges();
+        }
         public List<Role> addRoleRun(List<Role> listrole, int idprocessrun)
         {
             foreach (Role item in listrole)

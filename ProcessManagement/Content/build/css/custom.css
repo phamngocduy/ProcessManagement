@@ -2,6 +2,10 @@
 /* font */
 @import url("https://fonts.googleapis.com/css?family=Poppins");
 @import url("https://fonts.googleapis.com/css?family=Gentium+Basic:700");
+.fa {
+  font-family: "FontAwesome" !important;
+}
+
 /* end of font */
 /* responsive */
 /* end of responsive */

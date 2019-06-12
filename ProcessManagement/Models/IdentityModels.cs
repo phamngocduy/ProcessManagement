@@ -12,19 +12,23 @@ namespace ProcessManagement.Models
         public string NickName { get; set; }
         public string AvatarDefault { get; set; }
         public string Avatar { get; set; }
+        public override string Email { get; set; }
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             ClaimsIdentity userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
+            userIdentity.AddClaim(new Claim("Email", this.Email.ToString()));
             userIdentity.AddClaim(new Claim("NickName", this.NickName.ToString()));
             userIdentity.AddClaim(new Claim("AvatarDefault", this.AvatarDefault.ToString()));
             userIdentity.AddClaim(new Claim("Avatar", this.Avatar.ToString()));
-
             return userIdentity;
         }
     }
-
+    public class AvatarBase64
+    {
+        public string Avatar { get; set; }
+    }
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()

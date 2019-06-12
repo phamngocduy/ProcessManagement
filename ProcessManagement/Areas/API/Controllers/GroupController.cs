@@ -64,7 +64,8 @@ namespace ProcessManagement.Areas.API.Controllers
                     avatar = new
                     {
                         avatar = group.AspNetUser.Avatar,
-                        avatardefault = group.AspNetUser.AvatarDefault
+                        //avatardefault = group.AspNetUser.AvatarDefault
+                        avatardefault = APIController.GetAvatar(group.AspNetUser.Email)
                     },
                 };
 
@@ -84,7 +85,8 @@ namespace ProcessManagement.Areas.API.Controllers
                             avatar = new
                             {
                                 avatar = member.AspNetUser.Avatar,
-                                avatardefault = member.AspNetUser.AvatarDefault
+                                //avatardefault = member.AspNetUser.AvatarDefault
+                                avatardefault = APIController.GetAvatar(member.AspNetUser.Email)
                             },
                         };
                         memberList.Add(jMember);
@@ -142,8 +144,8 @@ namespace ProcessManagement.Areas.API.Controllers
                         id = member.Id,
                         text = member.UserName,
                         email = member.Email,
-                        avatar = member.Avatar,
-                        avatardefault = member.AvatarDefault
+                        //avatardefault = member.AvatarDefault,
+                        avatardefault = APIController.GetAvatar(member.Email)
                     };
                     jMember.Add(tempData);
                 }
@@ -169,7 +171,8 @@ namespace ProcessManagement.Areas.API.Controllers
                     avatar = new
                     {
                         avatar = member.AspNetUser.Avatar,
-                        avatardefault = member.AspNetUser.AvatarDefault
+                        //avatardefault = member.AspNetUser.AvatarDefault
+                        avatardefault = APIController.GetAvatar(member.AspNetUser.Email)
                     },
                     isOwner = member.IsOwner,
                     isAdmin = member.IsAdmin,

@@ -345,7 +345,7 @@
 
             </div>
             <div class="body text-center">
-                <div class="profile-image m-b-15"> <img src="~/Content/images/user.png" class="rounded-circle" alt=""> </div>
+                <div class="profile-image m-b-15"> <img src="data:image/png;base64,@APIController.GetAvatar(Model.AspNetUser.Email)" style="width:140px;height:140px" class="rounded-circle" alt=""> </div>
                 <div>
                     <h4 class="m-b-0">@Model.AspNetUser.UserName</h4>
                 </div>
@@ -478,12 +478,13 @@
                             var avatar;
 
                             var jAvatar = json[i].avatar;
-                            if (jAvatar.avatar == null) {
+                            @*if (jAvatar.avatar == null) {
                                 avatar = `<img src="~/Content/images/xs/avatar1.jpg" class="rounded-circle width35" alt="">`;
                             } else {
                                 var avatardefault = JSON.parse(jAvatar.avatardefault);
                                 avatar = `<div class="width35 rounded owner-default" style="background-color:${avatardefault.background}">${avatardefault.name}</div>`
-                            }
+                            }*@
+                            avatar = `<img src="data:image/png;base64,${jAvatar.avatardefault}" class="rounded owner-default width35" alt="">`
                             var member = `${avatar}${name}`;
                             var isAdmin = json[i].isAdmin ? "selected" : "";
                             var isManager = json[i].isManager ? "selected" : "";
@@ -654,8 +655,9 @@
         function displayItem(item) {
             if (item.loading) return item.text;
 
-            var avatardefault = JSON.parse(item.avatardefault);
-            return `<div class="width35 rounded owner-default" style="background-color:${avatardefault.background};margin-right:10px">${avatardefault.name}</div>${item.text}<span class="select2-member-email">< ${item.email} ></span>`;
+            return `<img class="width35 rounded owner-default" style="margin-right:10px" src="data:image/png;base64,${item.avatardefault}"/>${item.text}<span class="select2-member-email">< ${item.email} ></span>`;
+            //var avatardefault = JSON.parse(item.avatardefault);
+            //return `<div class="width35 rounded owner-default" style="background-color:${avatardefault.background};margin-right:10px">${avatardefault.name}</div>${item.text}<span class="select2-member-email">< ${item.email} ></span>`;
         }
         function editGroup(newGroup) {
             $.ajax({

@@ -98,19 +98,6 @@ namespace ProcessManagement.Services
             ps.Avatar = imageprocess;
             db.SaveChanges();
 		}
-		public void createRole(Role role)
-		{
-            Role roles = new Role();
-            roles.IdProcess = role.IdProcess;
-            roles.Name = role.Name;
-            roles.Description = role.Description;
-            roles.Color = role.Color;
-            roles.IsRun = false;
-            roles.Create_At = DateTime.Now;
-            roles.Update_At = DateTime.Now;
-			db.Roles.Add(roles);
-			db.SaveChanges();
-		}
         public int countProcessOfGroup(int idGroup)
         {
             int count = db.Processes.Where(m => m.IdGroup == idGroup).Count();

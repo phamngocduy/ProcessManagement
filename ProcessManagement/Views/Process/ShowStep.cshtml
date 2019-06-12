@@ -21,32 +21,53 @@
     </div>
 </div>
 <div class="row clearfix display-flex">
-    <div class="col-lg-8 col-md-12">
+    <div class="col-lg-4 col-md-12">
         <div class="card" style="height: 100%;">
             <div class="body">
                 <h5>@Model.Name</h5>
                 <p>@Model.Description</p>
+                @Html.Partial("~/Views/Shared/Common/_File.cshtml", new ViewDataDictionary { { "filess", files }, { "UserRoles", userRole } })
                 <div>
-                    <button class="btn btn-primary-theme waves-effect">Add Task</button>
-                    <button class="btn btn-default waves-effect">Add Role</button>
+
+                   
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-lg-4 col-md-12">
         <div class="card">
             <div class="body">
-                <h5>File Upload</h5>
-                @Html.Partial("~/Views/Shared/Common/_File.cshtml", new ViewDataDictionary { { "filess", files }, { "UserRoles", userRole } })
+                <h5>Roles</h5>
+                <button class="btn btn-primary-theme waves-effect" style="margin-top: 5px;">Add Role</button>
             </div>
         </div>
     </div>
     <div class="col-lg-8 col-md-12">
-        <div class="card" style="height: 100%;">
-            <h5>Task List</h5>
+        <div class="card">
             <div class="body">
-                <table></table>
+                <h5>Task List</h5>
+                <button class="btn btn-primary-theme waves-effect" style="margin-top: 5px;">Add Task</button>
+                <div class="task"></div>
             </div>
         </div>
     </div>
 </div>
+@section CustomScripts{
+    <script src="~/Content/vendor/sortable/sortable.min.js"></script>
+    <script src="~/Content/vendor/sortable/st/prettify/prettify.js"></script>
+    <script src="~/Content/vendor/sortable/st/prettify/run_prettify.js"></script>
+    <script>
+        $(function () {
+            getTaskList(@Model.Id);
+        })
+        function getTaskList(stepid) {
+            $.ajax({
+                url: "@Url.Action("getlisttask", "process", new { area = "api"})",
+                type: "GET",
+                data: stepid,
+                dataType: "json",
+                success: function (response) {
+                    
+                }
+            });
+        }
+    </script>
+}

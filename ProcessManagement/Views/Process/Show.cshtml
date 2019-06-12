@@ -12,6 +12,7 @@
     var isManager = userRole.IsManager;
     var files = ViewData["Files"] as List<ProcessManagement.Models.FileManager>;
     var maxFileSizeRule = ViewData["FileMaxSize"] as ProcessManagement.Models.ConfigRule;
+    var listManager = ViewData["ListManager"] as List<ProcessManagement.Models.Participate>;
 }
 
 
@@ -96,21 +97,25 @@
                 }
             </div>
             <div class="body">
-                <div class="w_user">
-                    <img class="rounded-circle" src="~/Content/images/sm/avatar4.jpg" alt="">
+                @foreach (var manager in listManager)
+                {
+                <div class="w_user clearfix" style="margin-bottom:10px">
+                    <img class="rounded-circle" src="data:image/png;base64,@APIController.GetAvatar(manager.AspNetUser.Email)" />
                     <div class="wid-u-info">
-                        <h5>Fidel Tonn</h5>
-                        <span>info@thememakker.com</span>
-                        <p class="text-muted m-b-0">Project Lead</p>
+                        <h5>@manager.AspNetUser.UserName</h5>
+                        <span>@manager.AspNetUser.Email</span>
+                        <p class="text-muted m-b-0">Process Manager</p>
                     </div>
-                    <hr>
+
                 </div>
+                }
+                <hr>
                 <ul class="right_chat list-unstyled mb-0">
-                    @foreach (var role in listRole.Where(x => x.IsRun == null || x.IsRun == false))
+                    @foreach (var role in listRole.Where(x => x.IsRun == false))
                     {
                         <li class="online">
                             <div class="media">
-                                <img class="media-object " src="~/Content/images/xs/avatar4.jpg" alt="">
+                                <div class="media-object"></div>
                                 <div class="media-body">
                                     <span class="name">
                                         @role.Name
@@ -141,7 +146,7 @@
                 <h2>Create by </h2>
             </div>
             <div class="body text-center">
-                <div class="profile-image m-b-15"> <img src="~/Content/images/user.png" class="rounded-circle" alt=""> </div>
+                <div class="profile-image m-b-15"> <img src="data:image/png;base64,@APIController.GetAvatar(process.AspNetUser.Email)" style="width:140px;height:140px" class="rounded-circle" alt=""> </div>
                 <div>
                     <h4 class="m-b-0"><strong>@process.AspNetUser.UserName</strong></h4>
                 </div>

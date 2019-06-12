@@ -302,6 +302,7 @@ namespace ProcessManagement.Controllers
             ViewData["ListRole"] = listRole;
             //ViewData["Statistic"] = processStatisticModel;
             ViewData["UserRoles"] = participateService.getRoleOfMember(idUser, group.Id);
+            ViewData["ListManager"] = participateService.findMembersInGroup(group.Id).Where(x => x.IsManager).ToList();
             ViewData["Files"] = files;
             ViewData["listnextstep1"] = liststepshow;
             //get maximum file config
@@ -385,7 +386,7 @@ namespace ProcessManagement.Controllers
             }
 
             role.IdProcess = process.Id;
-            processService.createRole(role);
+            roleService.addRole(role);
             SetFlash(FlashType.success, "Created Role Successfully");
             return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id });
         }

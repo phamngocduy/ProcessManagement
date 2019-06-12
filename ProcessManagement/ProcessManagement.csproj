@@ -288,6 +288,7 @@
       <DependentUpon>CWregister.vi.resx</DependentUpon>
     </Compile>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\APIController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\FileController.cs" />
@@ -4659,6 +4660,7 @@
     <Folder Include="Content\vendor\jquery.file.upload\server\gae-python\static\" />
     <Folder Include="Content\vendor\jquery.file.upload\server\php\files\" />
     <Folder Include="Content\vendor\jquery.file.upload\test\" />
+    <Folder Include="Views\API\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\build\scripts\jquery-3.3.1.min.map" />
