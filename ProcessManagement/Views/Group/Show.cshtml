@@ -345,7 +345,11 @@
 
             </div>
             <div class="body text-center">
-                <div class="profile-image m-b-15"> <img src="data:image/png;base64,@APIController.GetAvatar(Model.AspNetUser.Email)" style="width:140px;height:140px" class="rounded-circle" alt=""> </div>
+                @{
+                    JObject javatar = JObject.Parse(Model.AspNetUser.AvatarDefault);
+
+                }
+                <div class="profile-image m-b-15"> <div style="width:140px;height:140px;margin: 0 auto;font-size: 90px;background:@javatar["background"]" class="rounded-circle" alt="">@javatar["name"]</div> </div>
                 <div>
                     <h4 class="m-b-0">@Model.AspNetUser.UserName</h4>
                 </div>

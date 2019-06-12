@@ -100,7 +100,11 @@
                 @foreach (var manager in listManager)
                 {
                 <div class="w_user clearfix" style="margin-bottom:10px">
-                    <img class="rounded-circle" src="data:image/png;base64,@APIController.GetAvatar(manager.AspNetUser.Email)" />
+                    @{
+                        JObject jmanager = JObject.Parse(manager.AspNetUser.AvatarDefault);
+
+                    }
+                    <div class="rounded-circle" style="width:72px;height:72px;background:@jmanager["background"];float: left;text-align: center;font-size: 47px;">@jmanager["name"]</div>
                     <div class="wid-u-info">
                         <h5>@manager.AspNetUser.UserName</h5>
                         <span>@manager.AspNetUser.Email</span>
@@ -146,7 +150,11 @@
                 <h2>Create by </h2>
             </div>
             <div class="body text-center">
-                <div class="profile-image m-b-15"> <img src="data:image/png;base64,@APIController.GetAvatar(process.AspNetUser.Email)" style="width:140px;height:140px" class="rounded-circle" alt=""> </div>
+                 @{
+                    JObject javatar = JObject.Parse(process.AspNetUser.AvatarDefault);
+
+                }
+                <div class="profile-image m-b-15"> <div style="width:140px;height:140px;margin: 0 auto;font-size: 90px;background:@javatar["background"]" class="rounded-circle" alt="">@javatar["name"]</div> </div>
                 <div>
                     <h4 class="m-b-0"><strong>@process.AspNetUser.UserName</strong></h4>
                 </div>
