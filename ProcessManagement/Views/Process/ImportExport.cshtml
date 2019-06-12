@@ -201,7 +201,7 @@
                             showConfirmButton: false
                         }).then(() => {
                             var data = response.data;
-                            location.href = `${getBaseUrl()}/${data.groupslug}-${data.groupid}/process/showstep?processid=${data.processid}`;
+                            location.href = `${getBaseUrl()}/${data.groupslug}-${data.groupid}/process/show?processid=${data.processid}`;
                         })
                     } else {
                         showToastr("error", response.message, "toast-bottom-left")

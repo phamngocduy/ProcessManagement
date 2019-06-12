@@ -62,16 +62,18 @@
             <div class="body">
                 <h5>@process.Name</h5>
                 <p>@process.Description</p>
-                @if (isManager)
-                {
-                    <div class="progress-container progress-info m-b-25 clearfix" style="margin: 0; text-align:right">
-
+               
+                <div class="progress-container progress-info m-b-25 clearfix" style="margin: 0; text-align:right">
+                    @if (isManager)
+                    {
                         <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process", action = "EditProcess", processid = process.Id })" class="btn btn-xs btn-primary-theme waves-effect">Edit Process</a>
                         <a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "Setting", processid = process.Id })" class="btn btn-xs btn-default waves-effect"><i class="icon-settings"></i></a>
-                        <button class="btn btn-default waves-effect" id="btn-process-copy" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Exporting...">Export</button>
                         <button id="btn-process-delete" title="Delete" data-id="@process.Id" data-name="@process.Name" class="btn btn-xs btn-danger waves-effect"><i class="icon-trash"></i></button>
-                    </div>
-                }
+                    }
+                    <button class="btn btn-default waves-effect" id="btn-process-copy" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Exporting...">Export</button>
+
+                </div>
+                
             </div>
         </div>
         <div class="card">

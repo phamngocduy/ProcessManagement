@@ -20,7 +20,7 @@
     themeOptions.each(function (i, option) {
         let colorData = option.getAttribute("data-theme");
         let color = getCookie("colortheme");
-        if (colorData == color) {
+        if (colorData === color) {
             option.classList.add("active")
             return false;
         }
@@ -36,7 +36,7 @@
     var menuItem = $(".main-menu.metismenu li>a");
     menuItem.each(function () {
         var href = $(this).attr("href");
-        if (pathHaveLang == href) {
+        if (pathHaveLang === href) {
             $(this).parent("li").addClass("active");
             var parent = $(this).parents("ul");
             if (parent.hasClass("collapse")) {
@@ -50,7 +50,7 @@
     $(".input-has-prefix input").on("change paste keyup", function () {
         var val = $(this).val();
         var parent = $(this).parents(".input-has-prefix");
-        if (val == "") {
+        if (val === "") {
             parent.removeClass("hide-prefix");
         } else {
             parent.addClass("hide-prefix");
@@ -60,7 +60,7 @@
     $(".limit-length").on("keypress", function (e) {
         var maxlengthNumber = parseInt($(this).attr("maxlength"));
         var inputValueLength = $(this).val().length + 1;
-        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+        if (e.which !== 8 && e.which !== 0 && (e.which < 48 || e.which > 57)) {
 
             return false;
         }
@@ -91,7 +91,7 @@ function getBaseUrl(haveLang = true) {
 function getCurrentLang() {
     var path = window.location.pathname;
     var lang = path.substring(1, 3);
-    if (lang == "vi") {
+    if (lang === "vi") {
         return "vi";
     } else {
         return "en";
@@ -110,10 +110,10 @@ function getCookie(cname) {
     var ca = decodedCookie.split(";");
     for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
-        while (c.charAt(0) == " ") {
+        while (c.charAt(0) === " ") {
             c = c.substring(1);
         }
-        if (c.indexOf(name) == 0) {
+        if (c.indexOf(name) === 0) {
             return c.substring(name.length, c.length);
         }
     }
@@ -126,7 +126,7 @@ function setTheme() {
     let theme = "theme-";
     let defaultColor = "blue";
     let color = getCookie("colortheme");
-    color = color == "" ? defaultColor : color;
+    color = color === "" ? defaultColor : color;
 
     switch (color) {
         case "blue":
@@ -215,7 +215,7 @@ function setConfirm(title, content, okfunction, cancelfunction) {
             }
         },
     };
-    if (title != null) option.title = title;
+    if (title !== null) option.title = title;
     else option.title = "Confirm!"; 
     $.confirm(option);
 }
