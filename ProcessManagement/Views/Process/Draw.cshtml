@@ -683,7 +683,7 @@
                 dataType: "json",
                 success: function (response) {
                     //thanh cong thi no tra du lieu ve
-                    location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "Process" ,action = "ShowStep", groupslug = Model.Group.groupSlug, groupid = Model.Group.Id, processid = Model.Id })' ;
+                    location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "show", groupslug = Model.Group.groupSlug, groupid = Model.Group.Id, processid = Model.Id })' ;
                 }
             })
         })

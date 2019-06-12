@@ -25,7 +25,7 @@
             <ul class="breadcrumb">
                 <li><a href="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "group", action = "index"})"><i class="icon-home"></i></a></li>
                 <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "show", groupid = group.Id })">Group: @group.Name</a></li>
-                <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupid = group.Id, processid = step.Process.Id })">Process: @step.Process.Name</a></li>
+                <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "show", groupid = group.Id, processid = step.Process.Id })">Process: @step.Process.Name</a></li>
                 <li><a href="javascript:void(0);">Step: @step.Name</a></li>
                 <li><a href="javascript:void(0);"><i class="fa fa-plus"></i> New Task Form</a></li>
             </ul>
@@ -103,7 +103,7 @@
                         <div class="mt-2">
                             <button id="btn-save" class="btn btn-primary-theme" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Creating...">Create</button>
                             <button id="btn-save-new" class="btn btn-primary-theme waves-effect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Creating...">Create & New</button>
-                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })" class="btn btn-default">Go Back</a>
+                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "show", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })" class="btn btn-default">Go Back</a>
                         </div>
                     </div>
                 </div>
@@ -263,7 +263,7 @@
                         if (reload) {
                             location.reload();
                         } else {
-                            location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })';
+                            location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "show", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })';
                         }
                     } else {
                         showToastr("error", response.message, "toast-bottom-left")

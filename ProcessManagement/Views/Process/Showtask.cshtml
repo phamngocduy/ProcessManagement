@@ -37,7 +37,7 @@
             <ul class="breadcrumb">
                 <li><a href="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "group", action = "index"})"><i class="icon-home"></i></a></li>
                 <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "show", groupid = group.Id })">Group: @group.Name</a></li>
-                <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupid = group.Id, processid= step.Process.Id })">Process: @step.Process.Name</a></li>
+                <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "show", groupid = group.Id, processid= step.Process.Id })">Process: @step.Process.Name</a></li>
                 <li><a href="javascript:void(0);">Step: @step.Name</a></li>
                 <li><a href="javascript:void(0);">Task: @Model.Name  (&ensp;<i class="icon-pencil"></i> edit&ensp;)</a></li>
             </ul>
@@ -276,7 +276,7 @@
                     console.log(response);
                     if (response.status == 200) {
                         localStorage.setItem("showStep", @step.Id);
-                        location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })';
+                        location.href = '@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "show", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess })';
                     } else {
                         console.error(response)
                     }

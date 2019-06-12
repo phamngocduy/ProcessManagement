@@ -352,7 +352,7 @@ namespace ProcessManagement.Controllers
             Step step = db.Steps.Find(model.Id);
             step.Description = model.Description;
             db.SaveChanges();
-            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, processid = step.Process.Id });
+            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "show", groupslug = group.groupSlug, groupid = group.Id, processid = step.Process.Id });
         }
         [GroupAuthorize]
         public ActionResult AddRole(int processid)
@@ -388,7 +388,7 @@ namespace ProcessManagement.Controllers
             role.IdProcess = process.Id;
             roleService.addRole(role);
             SetFlash(FlashType.success, "Created Role Successfully");
-            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id });
+            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "show", groupslug = process.Group.groupSlug, groupid = process.Group.Id, processid = process.Id });
         }
         [GroupAuthorize]
         public ActionResult DeleteRole(int roleid)
@@ -400,7 +400,7 @@ namespace ProcessManagement.Controllers
             roleService.removeRole(role);
             SetFlash(FlashType.success, "Removed Role Successfully");
 
-            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
+            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "show", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
         }
         [GroupAuthorize]
         public ActionResult EditRole(int roleid)
@@ -437,7 +437,7 @@ namespace ProcessManagement.Controllers
 
             roleService.editRole(role);
             SetFlash(FlashType.success, "Edited Role Successfully");
-            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
+            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "show", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
         }
 
         [Authorize]
@@ -480,7 +480,7 @@ namespace ProcessManagement.Controllers
             
 			processService.EditProcess(process.Id, model);
 			SetFlash(FlashType.success, "Edit Process Successfully");
-			return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
+			return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "show", groupslug = group.groupSlug, groupid = group.Id, processid = process.Id });
 
         }
         [Authorize]
@@ -756,7 +756,7 @@ namespace ProcessManagement.Controllers
             taskService.deletetask(task);
 
             SetFlash(FlashType.success, "Delete Successfully");
-            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "Process", action = "ShowStep", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess });
+            return RedirectToRoute("GroupControlLocalizedDefault", new { controller = "process", action = "show", groupslug = group.groupSlug, groupid = group.Id, processid = step.IdProcess });
         }
 
         [Authorize]

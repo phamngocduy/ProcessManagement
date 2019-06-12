@@ -16,8 +16,8 @@
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="~/Home/Index" class="theme-color"><i class="icon-home"></i></a></li>
                     <li class="breadcrumb-item"><a href="/">Groups List</a></li>
-                    <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "Show", groupid = Model.Group.Id })">Group: @Model.Group.Name</a></li>
-                    <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "ShowStep", processid = Model.Id })">@Model.Name </a></li>
+                    <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "show", groupid = Model.Group.Id })">Group: @Model.Group.Name</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "show", processid = Model.Id })">@Model.Name </a></li>
 
                 </ul>
             </div>
@@ -668,7 +668,7 @@
                 dataType: "json",
                 success: function (response) {
                     //thanh cong thi no tra du lieu ve
-                    location.href = '@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "Process", action = "ShowStep", groupslug = Model.Group.groupSlug, groupid = Model.Group.Id, processid = Model.Id })' ;
+                    location.href = '@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "show", groupslug = Model.Group.groupSlug, groupid = Model.Group.Id, processid = Model.Id })' ;
                 }
             })
         })

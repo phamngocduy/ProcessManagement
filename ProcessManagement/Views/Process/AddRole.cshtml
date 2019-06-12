@@ -15,7 +15,7 @@
             <ul class="breadcrumb">
                 <li><a href="@Url.RouteUrl("GroupLocalizedDefault", new { controller = "group", action = "index"})"><i class="icon-home"></i></a></li>
                 <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "group", action = "show", groupid = group.Id })">Group: @group.Name</a></li>
-                <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "showstep", groupid = group.Id, processid= Model.Id })">Process: @Model.Name</a></li>
+                <li><a href="@Url.RouteUrl("GroupControlLocalizedDefault", new { controller = "process", action = "show", groupid = group.Id, processid= Model.Id })">Process: @Model.Name</a></li>
                 <li><a href="javascript:void(0);"><i class="fa fa-plus"></i> Add Role</a></li>
             </ul>
         </div>
@@ -65,7 +65,7 @@
                         </div>
                         <div class="col-sm-12">
                             <button class="btn btn-primary-theme waves-effect" id="btn-add-role" type="submit" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Creating...">Create</button>
-                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "showstep", groupslug = group.groupSlug, groupid = group.Id, processid = Model.Id })" class="btn btn-default waves-effect" type="button">Back</a>
+                            <a href="@Url.RouteUrl("GroupControlLocalizedDefault",new { controller = "process" ,action = "show", groupslug = group.groupSlug, groupid = group.Id, processid = Model.Id })" class="btn btn-default waves-effect" type="button">Back</a>
                         </div>
                     </div>
                 </form>

@@ -147,7 +147,7 @@
                     $("#process-export-container").append(`<button class="btn btn-warning waves-effect" id="btn-process-detail"><i class="icon-info"></i> Detail</button>`);
                     $("#btn-process-detail").on("click", function () {
                         var strWindownFeatures = `toolbars=no,scrollbars=yes,status=no,resizable=no,location=no,width=${$(window).width()},height=${$(window).height()}`;
-                        var url = `http://localhost:8080/en/my-group-6128/process/showstep?processid=4382`;
+                        var url = `http://localhost:8080/en/my-group-6128/process/show?processid=4382`;
                         WindowObject = window.open(url, "ProcessName::Detail", strWindownFeatures);
                         WindowObject.document.close();
                         WindowObject.focus();
