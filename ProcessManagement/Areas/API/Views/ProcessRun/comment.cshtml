@@ -6,10 +6,9 @@
     <div class="comments">
         @foreach (var comment in comments)
         {
+            JObject javatar = JObject.Parse(comment.AspNetUser.AvatarDefault);
             <div class="comment">
-                <div class="comment-avatar">
-                    <img src="http://lorempixel.com/200/200/people/">
-                </div>
+                <div class="comment-avatar" style="background:@javatar["background"]">@javatar["name"]</div>
                 <div class="comment-box">
                     <div class="comment-text">@comment.Content</div>
                     <div class="comment-footer">

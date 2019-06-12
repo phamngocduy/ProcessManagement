@@ -34,7 +34,9 @@
             text-shadow: 0 0 2px rgba(152, 152, 152, 1);
         }
 
-        .comment-form .comment-avatar {
+        .comment-avatar {
+            font-size: 48px;
+            text-align: center;
         }
 
         .comment-form .form {
@@ -330,9 +332,10 @@
                     <!-- Comment -->
                     <div class="task-comment">
                         <div class="comment-form">
-                            <div class="comment-avatar">
-                                <img src="http://lorempixel.com/200/200/people">
-                            </div>
+                            @{
+                                JObject javatar = JObject.Parse(userRole.AspNetUser.AvatarDefault);
+                            }
+                            <div class="comment-avatar" style="background:@javatar["background"]">@javatar["name"]</div>
                             <div class="form">
                                 <div class="form-row">
                                     <textarea class="input" placeholder="Add comment..." id="comment-content"></textarea>
@@ -684,9 +687,7 @@
                 dataType: "html",
                 success: function (response) {
                     console.log(response);
-                    $(".comments").hide("slow", function () {
-                        $(this).remove();
-                    });
+                    $(".comments").remove(); 
                     $(".task-comment").append(response);
                 }
             });
